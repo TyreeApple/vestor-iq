@@ -68,7 +68,10 @@ const OperationDetails = ({ open, onOpenChange, operation, onEdit }: OperationDe
         <DialogHeader>
           <DialogTitle className="flex items-center gap-2">
             <span className="text-xl">Operação #{operation.id}</span>
-            <Badge variant={operation.status === 'active' ? 'success' : 'default'}>
+            <Badge 
+              variant={operation.status === 'active' ? 'default' : 'secondary'}
+              className={operation.status === 'active' ? 'bg-green-500 text-white' : ''}
+            >
               {operation.status === 'active' ? 'Em Andamento' : 'Concluída'}
             </Badge>
           </DialogTitle>
