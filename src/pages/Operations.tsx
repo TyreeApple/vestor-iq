@@ -6,11 +6,13 @@ import { Button } from "@/components/ui/button";
 import { useIsMobile } from '@/hooks/use-mobile';
 import { cn } from '@/lib/utils';
 import { Input } from '@/components/ui/input';
-import { Calendar, Clock, Filter, Plus, Search, Truck, User } from 'lucide-react';
+import { Calendar, Clock, Plus, Search, Truck, User } from 'lucide-react';
 import { Operation } from '@/types';
 import { useToast } from '@/hooks/use-toast';
 import OperationDialog from '@/components/operations/OperationDialog';
 import OperationDetails from '@/components/operations/OperationDetails';
+import AdvancedFilters from '@/components/common/AdvancedFilters';
+import { useFilters } from '@/hooks/use-filters';
 
 // Mock data for operations
 const initialOperations: Operation[] = [
@@ -87,9 +89,6 @@ const availableForklifts = [
 const OperationsPage = () => {
   const isMobile = useIsMobile();
   const { toast } = useToast();
-  const [search, setSearch] = useState('');
-  const [status, setStatus] = useState<string>('all');
-  const [sector, setSector] = useState<string>('all');
   const [operations, setOperations] = useState<Operation[]>(initialOperations);
   
   // Dialog states
@@ -98,22 +97,55 @@ const OperationsPage = () => {
   const [detailsDialogOpen, setDetailsDialogOpen] = useState(false);
   const [selectedOperation, setSelectedOperation] = useState<Operation | null>(null);
   
-  // Filter operations based on search and filters
-  const filteredOperations = operations.filter(operation => {
-    // Search filter
-    const matchesSearch = operation.operatorName.toLowerCase().includes(search.toLowerCase()) || 
-                          operation.forkliftModel.toLowerCase().includes(search.toLowerCase()) ||
-                          operation.sector.toLowerCase().includes(search.toLowerCase()) ||
-                          operation.id.toLowerCase().includes(search.toLowerCase());
-    
-    // Status filter
-    const matchesStatus = status === 'all' || operation.status === status;
-    
-    // Sector filter
-    const matchesSector = sector === 'all' || operation.sector === sector;
-    
-    return matchesSearch && matchesStatus && matchesSector;
+  // Use filters hook
+  const {
+    search,
+    setSearch,
+    filters,
+    setFilters,
+    filteredData: filteredOperations,
+    clearFilters
+  } = useFilters({
+    data: operations,
+    searchFields: ['operatorName', 'forkliftModel', 'sector', 'id']
   });
+
+  // Filter configuration for advanced filters
+  const filterOptions = [
+    {
+      key: 'status',
+      label: 'Status',
+      type: 'select' as const,
+      options: [
+        { value: 'active', label: 'Em Andamento' },
+        { value: 'completed', label: 'Concluídas' }
+      ]
+    },
+    {
+      key: 'sector',
+      label: 'Setor',
+      type: 'select' as const,
+      options: [
+        { value: 'Armazém A', label: 'Armazém A' },
+        { value: 'Armazém B', label: 'Armazém B' },
+        { value: 'Expedição', label: 'Expedição' },
+        { value: 'Recebimento', label: 'Recebimento' },
+        { value: 'Produção', label: 'Produção' }
+      ]
+    },
+    {
+      key: 'operatorName',
+      label: 'Operador',
+      type: 'select' as const,
+      options: availableOperators.map(op => ({ value: op.name, label: op.name }))
+    },
+    {
+      key: 'forkliftModel',
+      label: 'Empilhadeira',
+      type: 'select' as const,
+      options: availableForklifts.map(f => ({ value: f.model, label: f.model }))
+    }
+  ];
 
   // Format date
   const formatDate = (dateString: string) => {
@@ -133,9 +165,16 @@ const OperationsPage = () => {
       minute: '2-digit'
     });
   };
-  
-  // Get unique sectors for filter
-  const sectors = [...new Set(operations.map(op => op.sector))];
+
+  // Calculate operation duration
+  const calculateDuration = (operation: Operation) => {
+    const startTime = new Date(operation.startTime);
+    const endTime = operation.endTime ? new Date(operation.endTime) : new Date();
+    const diff = endTime.getTime() - startTime.getTime();
+    const hours = Math.floor(diff / (1000 * 60 * 60));
+    const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+    return `${hours}h ${minutes}m${!operation.endTime ? ' (em andamento)' : ''}`;
+  };
 
   // Handle save operation
   const handleSaveOperation = (operationData: Operation) => {
@@ -172,13 +211,34 @@ const OperationsPage = () => {
     setEditDialogOpen(true);
   };
 
+  // Delete operation
+  const handleDeleteOperation = (id: string) => {
+    if (confirm("Tem certeza que deseja excluir esta operação?")) {
+      setOperations(prev => prev.filter(op => op.id !== id));
+      toast({
+        title: "Operação excluída",
+        description: "A operação foi excluída com sucesso."
+      });
+    }
+  };
+
+  // Get statistics
+  const stats = {
+    total: operations.length,
+    active: operations.filter(op => op.status === 'active').length,
+    completed: operations.filter(op => op.status === 'completed').length,
+    totalGasConsumption: operations
+      .filter(op => op.gasConsumption)
+      .reduce((sum, op) => sum + (op.gasConsumption || 0), 0)
+  };
+
   return (
     <div className="flex min-h-screen bg-background">
       <Sidebar />
       
       <div className={cn(
         "flex-1 flex flex-col",
-        !isMobile && "ml-64" // Offset for sidebar when not mobile
+        !isMobile && "ml-64"
       )}>
         <Navbar 
           title="Operações" 
@@ -186,6 +246,26 @@ const OperationsPage = () => {
         />
         
         <main className="flex-1 px-6 py-6">
+          {/* Statistics */}
+          <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
+            <div className="bg-card border rounded-lg p-4 shadow">
+              <h3 className="text-sm font-medium text-muted-foreground mb-2">Total de Operações</h3>
+              <p className="text-2xl font-bold">{stats.total}</p>
+            </div>
+            <div className="bg-card border rounded-lg p-4 shadow">
+              <h3 className="text-sm font-medium text-muted-foreground mb-2">Em Andamento</h3>
+              <p className="text-2xl font-bold text-green-600">{stats.active}</p>
+            </div>
+            <div className="bg-card border rounded-lg p-4 shadow">
+              <h3 className="text-sm font-medium text-muted-foreground mb-2">Concluídas</h3>
+              <p className="text-2xl font-bold text-blue-600">{stats.completed}</p>
+            </div>
+            <div className="bg-card border rounded-lg p-4 shadow">
+              <h3 className="text-sm font-medium text-muted-foreground mb-2">Consumo Total (L)</h3>
+              <p className="text-2xl font-bold">{stats.totalGasConsumption.toFixed(1)}</p>
+            </div>
+          </div>
+
           {/* Filter section */}
           <div className="flex flex-col sm:flex-row justify-between gap-4 mb-6">
             <div className="relative flex-1 max-w-md">
@@ -199,12 +279,12 @@ const OperationsPage = () => {
               />
             </div>
             <div className="flex gap-2">
-              <div className="relative">
-                <Button variant="outline" className="flex items-center gap-2">
-                  <Filter className="w-4 h-4" />
-                  Filtrar
-                </Button>
-              </div>
+              <AdvancedFilters
+                filters={filterOptions}
+                values={filters}
+                onFiltersChange={setFilters}
+                onClearFilters={clearFilters}
+              />
               <Button 
                 className="gap-2"
                 onClick={() => {
@@ -218,35 +298,6 @@ const OperationsPage = () => {
             </div>
           </div>
           
-          {/* Filter options */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
-            <div className="space-y-2">
-              <h4 className="text-sm font-medium">Status</h4>
-              <select 
-                className="w-full p-2 rounded-md border border-input bg-background"
-                value={status}
-                onChange={(e) => setStatus(e.target.value)}
-              >
-                <option value="all">Todos</option>
-                <option value="active">Em Andamento</option>
-                <option value="completed">Concluídas</option>
-              </select>
-            </div>
-            <div className="space-y-2">
-              <h4 className="text-sm font-medium">Setor</h4>
-              <select 
-                className="w-full p-2 rounded-md border border-input bg-background"
-                value={sector}
-                onChange={(e) => setSector(e.target.value)}
-              >
-                <option value="all">Todos</option>
-                {sectors.map((s) => (
-                  <option key={s} value={s}>{s}</option>
-                ))}
-              </select>
-            </div>
-          </div>
-          
           {/* Active Operations */}
           <div className="mb-8">
             <h2 className="text-2xl font-semibold mb-4">Operações em Andamento</h2>
@@ -254,14 +305,14 @@ const OperationsPage = () => {
               {filteredOperations
                 .filter(op => op.status === 'active')
                 .map((operation) => (
-                  <div key={operation.id} className="bg-card border rounded-lg overflow-hidden shadow">
+                  <div key={operation.id} className="bg-card border rounded-lg overflow-hidden shadow hover:shadow-md transition-shadow">
                     <div className="p-4">
                       <div className="flex justify-between items-start mb-3">
                         <div>
                           <h3 className="font-medium">{operation.operatorName}</h3>
                           <p className="text-sm text-muted-foreground">ID: {operation.id}</p>
                         </div>
-                        <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs bg-status-operational/10 text-status-operational">
+                        <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs bg-green-100 text-green-800">
                           Em Andamento
                         </span>
                       </div>
@@ -281,20 +332,32 @@ const OperationsPage = () => {
                         </div>
                         <div className="flex items-center gap-2">
                           <Clock className="w-4 h-4 text-muted-foreground" />
-                          <span className="text-sm">Início: {formatTime(operation.startTime)}</span>
+                          <span className="text-sm">Duração: {calculateDuration(operation)}</span>
                         </div>
                       </div>
                     </div>
                     
                     <div className="border-t px-4 py-3 bg-muted/30 flex justify-between">
                       <span className="text-sm">Setor: {operation.sector}</span>
-                      <Button 
-                        variant="ghost" 
-                        size="sm"
-                        onClick={() => handleViewDetails(operation)}
-                      >
-                        Detalhes
-                      </Button>
+                      <div className="flex gap-2">
+                        <Button 
+                          variant="ghost" 
+                          size="sm"
+                          onClick={() => handleViewDetails(operation)}
+                        >
+                          Detalhes
+                        </Button>
+                        <Button 
+                          variant="ghost" 
+                          size="sm"
+                          onClick={() => {
+                            setSelectedOperation(operation);
+                            setEditDialogOpen(true);
+                          }}
+                        >
+                          Editar
+                        </Button>
+                      </div>
                     </div>
                   </div>
                 ))}
@@ -320,7 +383,8 @@ const OperationsPage = () => {
                       <th className="p-4 text-left font-medium text-muted-foreground">Empilhadeira</th>
                       <th className="p-4 text-left font-medium text-muted-foreground">Setor</th>
                       <th className="p-4 text-left font-medium text-muted-foreground">Data</th>
-                      <th className="p-4 text-left font-medium text-muted-foreground">Período</th>
+                      <th className="p-4 text-left font-medium text-muted-foreground">Duração</th>
+                      <th className="p-4 text-left font-medium text-muted-foreground">Consumo (L)</th>
                       <th className="p-4 text-left font-medium text-muted-foreground">Ações</th>
                     </tr>
                   </thead>
@@ -337,17 +401,26 @@ const OperationsPage = () => {
                           </td>
                           <td className="p-4">{operation.sector}</td>
                           <td className="p-4">{formatDate(operation.startTime)}</td>
+                          <td className="p-4">{calculateDuration(operation)}</td>
+                          <td className="p-4">{operation.gasConsumption?.toFixed(1) || '-'}</td>
                           <td className="p-4">
-                            {formatTime(operation.startTime)} - {operation.endTime ? formatTime(operation.endTime) : 'Em andamento'}
-                          </td>
-                          <td className="p-4">
-                            <Button 
-                              variant="ghost" 
-                              size="sm"
-                              onClick={() => handleViewDetails(operation)}
-                            >
-                              Detalhes
-                            </Button>
+                            <div className="flex gap-2">
+                              <Button 
+                                variant="ghost" 
+                                size="sm"
+                                onClick={() => handleViewDetails(operation)}
+                              >
+                                Detalhes
+                              </Button>
+                              <Button 
+                                variant="ghost" 
+                                size="sm"
+                                className="text-red-500 hover:text-red-700 hover:bg-red-50"
+                                onClick={() => handleDeleteOperation(operation.id)}
+                              >
+                                Excluir
+                              </Button>
+                            </div>
                           </td>
                         </tr>
                       ))}
