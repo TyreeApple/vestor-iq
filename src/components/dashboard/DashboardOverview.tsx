@@ -86,22 +86,22 @@ const DashboardOverview: React.FC<DashboardOverviewProps> = ({
           title="Empilhadeiras Totais"
           value={stats.totalForklifts}
           icon={Truck}
-          colorFrom="from-fuchsia-700"
-          colorTo="to-purple-900"
+          colorFrom="from-purple-500"
+          colorTo="to-fuchsia-600"
         />
         <PremiumSummaryCard
           title="Total de Operadores"
           value={stats.totalOperators}
           icon={Users}
-          colorFrom="from-blue-800"
-          colorTo="to-cyan-900"
+          colorFrom="from-blue-500"
+          colorTo="to-indigo-600"
         />
         <PremiumSummaryCard
           title="Pendências de Manutenção"
           value={stats.pendingMaintenances}
           icon={Settings}
-          colorFrom="from-yellow-700"
-          colorTo="to-yellow-800"
+          colorFrom="from-orange-500"
+          colorTo="to-amber-600"
         />
       </div>
     </section>
