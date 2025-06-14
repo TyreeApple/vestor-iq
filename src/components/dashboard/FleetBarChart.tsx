@@ -24,7 +24,7 @@ export default function FleetBarChart() {
             <XAxis dataKey="name" tick={{ fill: "hsl(var(--muted-foreground))", fontSize: 14 }} />
             <YAxis hide />
             <Tooltip />
-            <Bar dataKey="value" barRadius={18}>
+            <Bar dataKey="value" radius={18}>
               {data.map((entry, idx) => (
                 <Cell key={`cell-${idx}`} fill={barColors[idx]} />
               ))}
