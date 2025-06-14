@@ -1,3 +1,4 @@
+
 import React, { useState } from 'react';
 import Navbar from '@/components/layout/Navbar';
 import Sidebar from '@/components/layout/Sidebar';
@@ -12,6 +13,8 @@ import { Checkbox } from '@/components/ui/checkbox';
 
 const ReportsPage = () => {
   const isMobile = useIsMobile();
+  const [date, setDate] = useState<Date | undefined>(new Date());
+  const [isFiltersOpen, setIsFiltersOpen] = useState(true);
 
   return (
     <div className="flex min-h-screen bg-background">
