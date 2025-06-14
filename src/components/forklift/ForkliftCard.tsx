@@ -75,20 +75,21 @@ const ForkliftCard: React.FC<ForkliftCardProps> = ({ forklift, onClick, onDelete
         e.currentTarget.style.boxShadow = '0 4px 12px rgba(0,0,0,0.15)';
       }}
     >
-      {/* Delete button */}
+      {/* Delete button - Always visible for better UX */}
       {onDelete && (
         <Button
           variant="ghost"
           size="sm"
           onClick={handleDelete}
-          className="absolute top-4 right-4 h-8 w-8 p-0 text-slate-400 hover:text-red-400 hover:bg-red-500/10 opacity-0 group-hover:opacity-100 transition-all duration-200 z-10"
+          className="absolute top-3 right-3 h-8 w-8 p-0 text-slate-400 hover:text-red-400 hover:bg-red-500/20 transition-all duration-200 z-20 bg-slate-800/80 backdrop-blur-sm border border-slate-600/50 rounded-full opacity-80 hover:opacity-100"
+          title="Excluir empilhadeira"
         >
           <Trash2 className="h-4 w-4" />
         </Button>
       )}
 
       {/* Header */}
-      <div className="flex items-start justify-between mb-4">
+      <div className="flex items-start justify-between mb-4 pr-10">
         <div className="flex-1">
           <h3 className="text-xl font-bold text-white mb-1 tracking-wide" style={{ fontSize: '20px', fontWeight: 700 }}>
             {forklift.id}
