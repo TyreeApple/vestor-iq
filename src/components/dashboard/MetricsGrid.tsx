@@ -53,20 +53,20 @@ const MetricCard: React.FC<MetricCardProps> = ({
   };
 
   const colorClasses = {
-    blue: 'from-blue-500 to-blue-600 shadow-blue-500/25',
-    green: 'from-green-500 to-green-600 shadow-green-500/25',
-    orange: 'from-orange-500 to-orange-600 shadow-orange-500/25',
-    red: 'from-red-500 to-red-600 shadow-red-500/25',
-    purple: 'from-purple-500 to-purple-600 shadow-purple-500/25',
-    indigo: 'from-indigo-500 to-indigo-600 shadow-indigo-500/25',
+    blue: 'from-blue-500 to-blue-600 shadow-blue-500/25 dark:from-blue-600 dark:to-blue-700 dark:shadow-blue-500/20',
+    green: 'from-green-500 to-green-600 shadow-green-500/25 dark:from-green-600 dark:to-green-700 dark:shadow-green-500/20',
+    orange: 'from-orange-500 to-orange-600 shadow-orange-500/25 dark:from-orange-600 dark:to-orange-700 dark:shadow-orange-500/20',
+    red: 'from-red-500 to-red-600 shadow-red-500/25 dark:from-red-600 dark:to-red-700 dark:shadow-red-500/20',
+    purple: 'from-purple-500 to-purple-600 shadow-purple-500/25 dark:from-purple-600 dark:to-purple-700 dark:shadow-purple-500/20',
+    indigo: 'from-indigo-500 to-indigo-600 shadow-indigo-500/25 dark:from-indigo-600 dark:to-indigo-700 dark:shadow-indigo-500/20',
   };
 
   return (
     <div className="relative overflow-hidden">
-      <div className="bg-white rounded-2xl p-6 shadow-lg border border-slate-100 hover:shadow-xl transition-all duration-300 hover:-translate-y-1">
+      <div className="bg-white dark:bg-card rounded-2xl p-6 shadow-lg border border-slate-100 dark:border-border hover:shadow-xl dark:hover:shadow-2xl transition-all duration-300 hover:-translate-y-1">
         {/* Background gradient overlay */}
         <div className={cn(
-          "absolute top-0 right-0 w-24 h-24 bg-gradient-to-br opacity-10 rounded-full transform translate-x-8 -translate-y-8",
+          "absolute top-0 right-0 w-24 h-24 bg-gradient-to-br opacity-10 dark:opacity-20 rounded-full transform translate-x-8 -translate-y-8",
           colorClasses[color]
         )} />
         
@@ -83,8 +83,8 @@ const MetricCard: React.FC<MetricCardProps> = ({
               <div className={cn(
                 "flex items-center space-x-1 px-2 py-1 rounded-full text-xs font-medium",
                 trend.isPositive 
-                  ? "bg-green-100 text-green-700" 
-                  : "bg-red-100 text-red-700"
+                  ? "bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-400" 
+                  : "bg-red-100 dark:bg-red-900/30 text-red-700 dark:text-red-400"
               )}>
                 {trend.isPositive ? (
                   <TrendingUp className="w-3 h-3" />
@@ -97,8 +97,8 @@ const MetricCard: React.FC<MetricCardProps> = ({
           </div>
           
           <div className="space-y-1">
-            <h3 className="text-sm font-medium text-slate-600">{title}</h3>
-            <p className="text-2xl font-bold text-slate-900">
+            <h3 className="text-sm font-medium text-slate-600 dark:text-slate-400">{title}</h3>
+            <p className="text-2xl font-bold text-slate-900 dark:text-white">
               {formatValue(value)}
             </p>
           </div>

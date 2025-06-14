@@ -27,9 +27,20 @@ export default function FleetBarChart() {
       <ChartContainer config={{}}>
         <ResponsiveContainer width="100%" height="100%">
           <BarChart data={data}>
-            <XAxis dataKey="name" tick={{ fill: "hsl(var(--muted-foreground))", fontSize: 14 }} />
+            <XAxis 
+              dataKey="name" 
+              tick={{ fill: "hsl(var(--muted-foreground))", fontSize: 14 }} 
+              className="text-slate-600 dark:text-slate-400"
+            />
             <YAxis hide />
-            <Tooltip />
+            <Tooltip 
+              contentStyle={{ 
+                backgroundColor: "hsl(var(--card))", 
+                border: "1px solid hsl(var(--border))",
+                borderRadius: "8px",
+                color: "hsl(var(--card-foreground))"
+              }}
+            />
             <Bar dataKey="value" radius={16}>
               {data.map((entry, idx) => (
                 <Cell key={`cell-${idx}`} fill={barColors[idx]} />
@@ -40,7 +51,7 @@ export default function FleetBarChart() {
       </ChartContainer>
       <div className="flex items-center justify-center gap-4 mt-4">
         {legend.map((item, idx) => (
-          <span key={idx} className="flex items-center gap-1 text-sm">
+          <span key={idx} className="flex items-center gap-1 text-sm text-slate-600 dark:text-slate-400">
             <span className="inline-block w-3 h-3 rounded-full" style={{ background: item.color }} />
             {item.label}
           </span>
