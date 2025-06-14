@@ -1,9 +1,6 @@
+
 import React from "react";
-import { Truck, Settings, Clock, ClipboardList, Users } from "lucide-react";
-import ModernKpiCard from "./ModernKpiCard";
-import FleetBarChart from "./FleetBarChart";
-import PremiumSummaryCard from "./PremiumSummaryCard";
-import QuickActions from "./QuickActions";
+import { Truck, Users, Check, Triangle } from "lucide-react";
 import { DashboardStats } from "@/types";
 
 const initialStats: DashboardStats = {
@@ -23,88 +20,57 @@ interface DashboardOverviewProps {
   stats?: DashboardStats;
 }
 
+const TOP_CARDS = [
+  {
+    title: "Total Frota",
+    value: (stats: DashboardStats) => stats.totalForklifts,
+    icon: Truck,
+    color: "bg-blue-600",
+  },
+  {
+    title: "Operacionais",
+    value: (stats: DashboardStats) => stats.operationalForklifts,
+    icon: Check,
+    color: "bg-green-600",
+  },
+  {
+    title: "Manutenção",
+    value: (stats: DashboardStats) => stats.maintenanceForklifts,
+    icon: Triangle,
+    color: "bg-orange-600",
+  },
+  {
+    title: "Operadores",
+    value: (stats: DashboardStats) => stats.totalOperators,
+    icon: Users,
+    color: "bg-violet-600",
+  },
+];
+
 const DashboardOverview: React.FC<DashboardOverviewProps> = ({
   stats = initialStats
 }) => {
   return (
-    <section className="flex flex-col gap-10 px-2 md:px-0 max-w-screen-xl mx-auto animate-fade-in">
-      {/* KPIs Linha Superior */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-2">
-        <ModernKpiCard
-          title="Operacionais"
-          value={stats.operationalForklifts}
-          icon={Truck}
-          colorFrom="from-green-500"
-          colorTo="to-green-800"
-          trend="up"
-          trendValue={3}
-        />
-        <ModernKpiCard
-          title="Manutenção"
-          value={stats.maintenanceForklifts}
-          icon={Settings}
-          colorFrom="from-yellow-400"
-          colorTo="to-yellow-700"
-          trend="down"
-          trendValue={-1}
-        />
-        <ModernKpiCard
-          title="Paradas"
-          value={stats.stoppedForklifts}
-          icon={Clock}
-          colorFrom="from-red-400"
-          colorTo="to-red-700"
-          trend="down"
-          trendValue={-1}
-        />
-        <ModernKpiCard
-          title="Ativas"
-          value={stats.activeOperations}
-          icon={ClipboardList}
-          colorFrom="from-blue-500"
-          colorTo="to-violet-800"
-          trend="up"
-          trendValue={2}
-        />
-      </div>
-
-      {/* Gráfico Central */}
-      <div className="bg-card rounded-2xl shadow-lg p-4">
-        <div className="mb-2">
-          <h3 className="text-lg font-semibold text-foreground mb-1">Status da Frota</h3>
-        </div>
-        <FleetBarChart />
-      </div>
-
-      {/* Atalhos Ações Rápidas */}
-      <QuickActions />
-
-      {/* Cards Resumo */}
-      <div className="grid grid-cols-1 sm:grid-cols-3 gap-6 mt-2">
-        <PremiumSummaryCard
-          title="Empilhadeiras Totais"
-          value={stats.totalForklifts}
-          icon={Truck}
-          colorFrom="from-blue-400"
-          colorTo="to-indigo-400"
-        />
-        <PremiumSummaryCard
-          title="Total de Operadores"
-          value={stats.totalOperators}
-          icon={Users}
-          colorFrom="from-slate-300"
-          colorTo="to-slate-500"
-        />
-        <PremiumSummaryCard
-          title="Pendências de Manutenção"
-          value={stats.pendingMaintenances}
-          icon={Settings}
-          colorFrom="from-orange-300"
-          colorTo="to-orange-400"
-        />
+    <section className="w-full max-w-screen-xl mx-auto px-2 md:px-0 mt-4">
+      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-5">
+        {TOP_CARDS.map(card => (
+          <div
+            key={card.title}
+            className={`flex justify-between items-center rounded-xl shadow-md p-5 md:p-6 ${card.color}`}
+          >
+            <div>
+              <div className="text-white text-base font-normal mb-0.5">{card.title}</div>
+              <div className="text-white text-3xl font-bold leading-snug">{card.value(stats)}</div>
+            </div>
+            <div>
+              <card.icon className="w-10 h-10 text-white opacity-95" />
+            </div>
+          </div>
+        ))}
       </div>
     </section>
   );
 };
 
 export default DashboardOverview;
+
