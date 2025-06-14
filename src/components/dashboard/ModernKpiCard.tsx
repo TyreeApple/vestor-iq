@@ -56,13 +56,19 @@ const ModernKpiCard: React.FC<ModernKpiCardProps> = ({
       </span>
       {/* Animated value + trend */}
       <div className="flex items-baseline mt-1 gap-2">
-        <span className="text-3xl font-extrabold text-white drop-shadow-glow">
+        <span
+          className="text-3xl font-extrabold text-gray-50 drop-shadow-[0_2px_8px_rgba(0,0,0,0.45)] 
+                     [text-shadow:_0_2px_6px_rgba(0,0,0,0.7),0_1px_0_#ffffff20]"
+        >
           <AnimatedCounter value={value} />
         </span>
         {trend !== undefined && trend !== null && (
           <span className={cn(
-            "flex items-center px-2 py-0.5 rounded-full text-xs ml-2 font-bold shadow bg-white/20",
-            trend === "up" ? "text-green-300" : "text-red-300"
+            "flex items-center px-2 py-0.5 rounded-full text-xs ml-2 font-bold shadow",
+            "bg-white/40 backdrop-blur-xs border border-white/40",
+            trend === "up"
+              ? "text-green-100 drop-shadow-[0_2px_8px_rgba(34,197,94,0.30)]"
+              : "text-red-100 drop-shadow-[0_2px_8px_rgba(239,68,68,0.30)]"
           )}>
             {trend === "up" ? (
               <svg width="14" height="14" className="mr-1" fill="none" viewBox="0 0 24 24"><path stroke="currentColor" strokeWidth="2" d="M12 19V5M5 12l7-7 7 7" /></svg>
