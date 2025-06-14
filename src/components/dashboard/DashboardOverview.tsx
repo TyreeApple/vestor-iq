@@ -1,6 +1,7 @@
 
 import React from "react";
-import { Truck, Users, Check, Triangle } from "lucide-react";
+import { AiOutlineCar, AiOutlineCheckCircle } from "react-icons/ai";
+import { MdEngineering, MdPeopleAlt } from "react-icons/md";
 import { DashboardStats } from "@/types";
 import { cn } from "@/lib/utils";
 
@@ -25,38 +26,42 @@ const CARDS = [
   {
     title: "Total Frota",
     value: (stats: DashboardStats) => stats.totalForklifts,
-    icon: Truck,
+    icon: AiOutlineCar,
     colorFrom: "from-blue-200",
     colorTo: "to-blue-500",
     iconBg: "bg-blue-100/70 border-blue-300/60",
     shadow: "shadow-[0_2px_16px_0_rgba(64,132,230,0.13)]",
+    iconColor: "text-blue-700 group-hover:text-blue-900"
   },
   {
     title: "Operacionais",
     value: (stats: DashboardStats) => stats.operationalForklifts,
-    icon: Check,
+    icon: AiOutlineCheckCircle,
     colorFrom: "from-green-200",
     colorTo: "to-green-400",
     iconBg: "bg-green-100/70 border-green-300/60",
     shadow: "shadow-[0_2px_16px_0_rgba(54,180,99,0.12)]",
+    iconColor: "text-green-700 group-hover:text-green-900"
   },
   {
     title: "Manutenção",
     value: (stats: DashboardStats) => stats.maintenanceForklifts,
-    icon: Triangle,
+    icon: MdEngineering,
     colorFrom: "from-orange-200",
     colorTo: "to-orange-400",
     iconBg: "bg-orange-50/70 border-orange-200/60",
     shadow: "shadow-[0_2px_16px_0_rgba(255,180,70,0.10)]",
+    iconColor: "text-orange-700 group-hover:text-orange-900"
   },
   {
     title: "Operadores",
     value: (stats: DashboardStats) => stats.totalOperators,
-    icon: Users,
+    icon: MdPeopleAlt,
     colorFrom: "from-slate-100",
     colorTo: "to-slate-300",
     iconBg: "bg-slate-50/80 border-slate-200/60",
     shadow: "shadow-[0_2px_16px_0_rgba(100,125,148,0.12)]",
+    iconColor: "text-slate-700 group-hover:text-slate-900"
   },
 ];
 
@@ -88,15 +93,14 @@ const DashboardOverview: React.FC<DashboardOverviewProps> = ({
               </defs>
               <rect width="64" height="64" fill={`url(#dots-${card.title})`} />
             </svg>
-            {/* Ícone destacado */}
+            {/* Ícone sofisticado */}
             <span
               className={cn(
-                "relative z-10 flex items-center justify-center w-12 h-12 mb-3 rounded-full border shadow-md backdrop-blur",
-                card.iconBg,
-                "group-hover:ring-2 group-hover:ring-white/80 transition"
+                "relative z-10 flex items-center justify-center w-14 h-14 mb-3 rounded-full border shadow-md backdrop-blur-lg ring-2 ring-white/40 group-hover:ring-4 transition",
+                card.iconBg
               )}
             >
-              <card.icon className="w-7 h-7 text-blue-700/80 group-hover:text-blue-900/90 drop-shadow-md transition" strokeWidth={2.2} />
+              <card.icon className={cn("w-9 h-9 drop-shadow-xl transition-all duration-300", card.iconColor)} />
             </span>
             {/* Valor e título */}
             <span className="z-10 text-3xl font-bold text-slate-900 drop-shadow-sm">
