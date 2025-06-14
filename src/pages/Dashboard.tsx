@@ -2,244 +2,107 @@
 import React from 'react';
 import { motion } from 'framer-motion';
 import MetricsGrid from '@/components/dashboard/MetricsGrid';
-import { AlertTriangle, TrendingUp, Activity, Clock } from 'lucide-react';
 import { useAppStore } from '@/stores/useAppStore';
-import { Button } from '@/components/ui/button';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
+import { AlertTriangle, Clock, TrendingUp } from 'lucide-react';
 
 const Dashboard: React.FC = () => {
-  const { metricas, alertas } = useAppStore();
+  const { alertas, notificacoes } = useAppStore();
 
-  const alertasRecentes = [
-    {
-      id: '1',
-      tipo: 'Manutenção',
-      titulo: 'Manutenção Vencida',
-      descricao: 'Empilhadeira EMP-001 com manutenção preventiva vencida há 3 dias',
-      nivel: 'Alto',
-      tempo: '2h atrás'
-    },
-    {
-      id: '2',
-      tipo: 'Certificação',
-      titulo: 'Certificação Expirando',
-      descricao: 'NR-11 do operador João Silva vence em 7 dias',
-      nivel: 'Médio',
-      tempo: '4h atrás'
-    },
-    {
-      id: '3',
-      tipo: 'Operação',
-      titulo: 'Operação Atrasada',
-      descricao: 'Operação no Setor A está 25 minutos atrasada',
-      nivel: 'Baixo',
-      tempo: '1h atrás'
-    }
-  ];
-
-  const operacoesRecentes = [
-    {
-      id: 'OP-2024-001',
-      empilhadeira: 'EMP-001',
-      operador: 'Carlos Silva',
-      setor: 'Armazém A',
-      inicio: '08:30',
-      status: 'Em Andamento'
-    },
-    {
-      id: 'OP-2024-002',
-      empilhadeira: 'EMP-003',
-      operador: 'Maria Santos',
-      setor: 'Expedição',
-      inicio: '09:15',
-      status: 'Concluída'
-    },
-    {
-      id: 'OP-2024-003',
-      empilhadeira: 'EMP-007',
-      operador: 'João Pereira',
-      setor: 'Recebimento',
-      inicio: '10:00',
-      status: 'Em Andamento'
-    }
-  ];
+  const pageVariants = {
+    initial: { opacity: 0, y: 20 },
+    in: { opacity: 1, y: 0 },
+    out: { opacity: 0, y: -20 }
+  };
 
   return (
-    <div className="space-y-8">
+    <motion.div
+      initial="initial"
+      animate="in"
+      exit="out"
+      variants={pageVariants}
+      transition={{ duration: 0.3 }}
+      className="space-y-6"
+    >
       {/* Header */}
-      <motion.div
-        initial={{ opacity: 0, y: -20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.5 }}
-      >
-        <div className="flex items-center justify-between">
-          <div>
-            <h1 className="text-3xl font-bold text-slate-900">
-              Dashboard de Controle
-            </h1>
-            <p className="text-slate-600 mt-1">
-              Visão geral completa das operações da frota
-            </p>
-          </div>
-          <div className="flex space-x-3">
-            <Button variant="outline" className="flex items-center space-x-2">
-              <TrendingUp className="w-4 h-4" />
-              <span>Relatório</span>
-            </Button>
-            <Button className="flex items-center space-x-2">
-              <Activity className="w-4 h-4" />
-              <span>Nova Operação</span>
-            </Button>
+      <div className="flex items-center justify-between">
+        <div>
+          <h1 className="text-3xl font-bold text-slate-900">Dashboard de Controle</h1>
+          <p className="text-slate-600 mt-1">
+            Visão geral da operação em tempo real
+          </p>
+        </div>
+        <div className="flex items-center space-x-2">
+          <Badge variant="outline" className="bg-green-50 text-green-700 border-green-200">
+            Sistema Online
+          </Badge>
+          <div className="flex items-center text-sm text-slate-500">
+            <Clock className="w-4 h-4 mr-1" />
+            Atualizado agora
           </div>
         </div>
-      </motion.div>
+      </div>
 
       {/* Metrics Grid */}
       <MetricsGrid />
 
-      {/* Content Grid */}
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-        {/* Alertas Críticos */}
-        <motion.div
-          initial={{ opacity: 0, x: -20 }}
-          animate={{ opacity: 1, x: 0 }}
-          transition={{ duration: 0.5, delay: 0.3 }}
-          className="lg:col-span-2"
-        >
-          <div className="bg-white rounded-2xl p-6 shadow-lg border border-slate-100">
-            <div className="flex items-center justify-between mb-6">
-              <div className="flex items-center space-x-3">
-                <div className="p-2 bg-red-100 rounded-lg">
-                  <AlertTriangle className="w-5 h-5 text-red-600" />
-                </div>
-                <div>
-                  <h2 className="text-lg font-semibold text-slate-900">
-                    Alertas Críticos
-                  </h2>
-                  <p className="text-sm text-slate-500">
-                    Itens que precisam de atenção imediata
-                  </p>
-                </div>
-              </div>
-              <Badge variant="destructive">
-                {alertasRecentes.length}
-              </Badge>
-            </div>
-
-            <div className="space-y-4">
-              {alertasRecentes.map((alerta) => (
-                <div
-                  key={alerta.id}
-                  className="flex items-start space-x-4 p-4 bg-slate-50 rounded-lg hover:bg-slate-100 transition-colors cursor-pointer"
-                >
-                  <div className={`p-2 rounded-lg ${
-                    alerta.nivel === 'Alto' ? 'bg-red-100 text-red-600' :
-                    alerta.nivel === 'Médio' ? 'bg-orange-100 text-orange-600' :
-                    'bg-yellow-100 text-yellow-600'
-                  }`}>
-                    <AlertTriangle className="w-4 h-4" />
+      {/* Recent Activity & Alerts */}
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        {/* Recent Operations */}
+        <Card>
+          <CardHeader>
+            <CardTitle className="flex items-center">
+              <TrendingUp className="w-5 h-5 mr-2 text-blue-600" />
+              Operações Recentes
+            </CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div className="space-y-3">
+              {[1, 2, 3].map((item) => (
+                <div key={item} className="flex items-center justify-between p-3 bg-slate-50 rounded-lg">
+                  <div>
+                    <p className="font-medium text-slate-900">Operação #{item}234</p>
+                    <p className="text-sm text-slate-600">Empilhadeira EMP-{item}5 • Setor A</p>
                   </div>
-                  <div className="flex-1">
-                    <div className="flex items-center justify-between">
-                      <h3 className="font-medium text-slate-900">
-                        {alerta.titulo}
-                      </h3>
-                      <span className="text-xs text-slate-500">
-                        {alerta.tempo}
-                      </span>
-                    </div>
-                    <p className="text-sm text-slate-600 mt-1">
-                      {alerta.descricao}
-                    </p>
-                    <div className="flex items-center space-x-2 mt-2">
-                      <Badge variant="outline" className="text-xs">
-                        {alerta.tipo}
-                      </Badge>
-                      <Badge 
-                        variant={alerta.nivel === 'Alto' ? 'destructive' : 'secondary'}
-                        className="text-xs"
-                      >
-                        {alerta.nivel}
-                      </Badge>
-                    </div>
-                  </div>
+                  <Badge variant="secondary">Em Andamento</Badge>
                 </div>
               ))}
             </div>
+          </CardContent>
+        </Card>
 
-            <div className="mt-6 pt-4 border-t border-slate-200">
-              <Button variant="outline" className="w-full">
-                Ver Todos os Alertas
-              </Button>
-            </div>
-          </div>
-        </motion.div>
-
-        {/* Operações Recentes */}
-        <motion.div
-          initial={{ opacity: 0, x: 20 }}
-          animate={{ opacity: 1, x: 0 }}
-          transition={{ duration: 0.5, delay: 0.4 }}
-        >
-          <div className="bg-white rounded-2xl p-6 shadow-lg border border-slate-100">
-            <div className="flex items-center space-x-3 mb-6">
-              <div className="p-2 bg-blue-100 rounded-lg">
-                <Activity className="w-5 h-5 text-blue-600" />
-              </div>
-              <div>
-                <h2 className="text-lg font-semibold text-slate-900">
-                  Operações Recentes
-                </h2>
-                <p className="text-sm text-slate-500">
-                  Últimas atividades da frota
-                </p>
-              </div>
-            </div>
-
-            <div className="space-y-4">
-              {operacoesRecentes.map((operacao) => (
-                <div
-                  key={operacao.id}
-                  className="flex items-center justify-between p-3 bg-slate-50 rounded-lg hover:bg-slate-100 transition-colors cursor-pointer"
-                >
-                  <div className="flex-1">
-                    <div className="flex items-center justify-between">
-                      <h4 className="font-medium text-slate-900 text-sm">
-                        {operacao.id}
-                      </h4>
-                      <Badge 
-                        variant={operacao.status === 'Em Andamento' ? 'default' : 'secondary'}
-                        className="text-xs"
-                      >
-                        {operacao.status}
-                      </Badge>
-                    </div>
-                    <p className="text-xs text-slate-600 mt-1">
-                      {operacao.empilhadeira} • {operacao.operador}
-                    </p>
-                    <div className="flex items-center justify-between mt-2">
-                      <span className="text-xs text-slate-500">
-                        {operacao.setor}
-                      </span>
-                      <div className="flex items-center space-x-1 text-xs text-slate-500">
-                        <Clock className="w-3 h-3" />
-                        <span>{operacao.inicio}</span>
-                      </div>
-                    </div>
-                  </div>
+        {/* Alerts */}
+        <Card>
+          <CardHeader>
+            <CardTitle className="flex items-center">
+              <AlertTriangle className="w-5 h-5 mr-2 text-orange-600" />
+              Alertas do Sistema
+            </CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div className="space-y-3">
+              {alertas.length === 0 ? (
+                <div className="text-center py-8 text-slate-500">
+                  <AlertTriangle className="w-8 h-8 mx-auto mb-2 text-slate-300" />
+                  <p>Nenhum alerta crítico</p>
                 </div>
-              ))}
+              ) : (
+                alertas.slice(0, 3).map((alerta) => (
+                  <div key={alerta.id} className="flex items-center justify-between p-3 bg-red-50 rounded-lg border border-red-200">
+                    <div>
+                      <p className="font-medium text-red-900">{alerta.titulo}</p>
+                      <p className="text-sm text-red-700">{alerta.descricao}</p>
+                    </div>
+                    <Badge variant="destructive">{alerta.nivel}</Badge>
+                  </div>
+                ))
+              )}
             </div>
-
-            <div className="mt-6 pt-4 border-t border-slate-200">
-              <Button variant="outline" className="w-full">
-                Ver Todas as Operações
-              </Button>
-            </div>
-          </div>
-        </motion.div>
+          </CardContent>
+        </Card>
       </div>
-    </div>
+    </motion.div>
   );
 };
 

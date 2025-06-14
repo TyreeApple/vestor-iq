@@ -79,6 +79,13 @@ export enum FuncaoOperador {
   GERENTE = "Gerente"
 }
 
+// Legacy type aliases for backward compatibility
+export type ForkliftStatus = StatusEmpilhadeira;
+export type ForkliftType = TipoEmpilhadeira;
+export type MaintenanceStatus = StatusManutencao;
+export type CertificateStatus = StatusCertificacao;
+export type UserRole = FuncaoOperador;
+
 // ===== INTERFACES PRINCIPAIS =====
 
 export interface Empilhadeira {
@@ -106,6 +113,9 @@ export interface Empilhadeira {
   coordenadas?: [number, number];
 }
 
+// Legacy alias
+export type Forklift = Empilhadeira;
+
 export interface Operador {
   id: string;
   nome: string;
@@ -124,6 +134,9 @@ export interface Operador {
   status: 'Ativo' | 'Inativo' | 'Férias' | 'Licença';
   observacoes?: string;
 }
+
+// Legacy alias
+export type User = Operador;
 
 export interface Certificacao {
   id: string;
@@ -168,6 +181,9 @@ export interface Operacao {
   custoOperacional?: number;
 }
 
+// Legacy alias
+export type Operation = Operacao;
+
 export interface OrdemServico {
   id: string;
   empilhadeiraId: string;
@@ -190,6 +206,9 @@ export interface OrdemServico {
   anexos: string[];
   observacoes?: string;
 }
+
+// Legacy alias
+export type Maintenance = OrdemServico;
 
 export interface CustosManutencao {
   pecas: number;
@@ -226,6 +245,9 @@ export interface Abastecimento {
   foto?: string;
 }
 
+// Legacy alias
+export type GasSupply = Abastecimento;
+
 export interface Setor {
   id: string;
   nome: string;
@@ -255,6 +277,9 @@ export interface MetricasDashboard {
   tempoMedioOperacao: number;
   alertasCriticos: number;
 }
+
+// Legacy alias
+export type DashboardStats = MetricasDashboard;
 
 export interface AlertaCritico {
   id: string;
@@ -344,4 +369,13 @@ export interface ConfiguracaoNotificacao {
   sms: boolean;
   push: boolean;
   webhook?: string;
+}
+
+// ===== LEGACY COMPONENT PROPS =====
+
+export interface StatusCardProps {
+  title: string;
+  value: string | number;
+  icon: React.ComponentType;
+  color: string;
 }
