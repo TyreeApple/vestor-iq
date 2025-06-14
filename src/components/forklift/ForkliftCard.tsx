@@ -1,168 +1,162 @@
 
 import React from 'react';
-import { Forklift, StatusEmpilhadeira, TipoEmpilhadeira } from '@/types';
 import { cn } from '@/lib/utils';
+import { Forklift, StatusEmpilhadeira } from '@/types';
+import { Calendar, MapPin, Clock, Trash2 } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
-import { Clock, Settings, Calendar, Gauge, MapPin, CheckCircle, Wrench } from 'lucide-react';
+import { Button } from '@/components/ui/button';
 
 interface ForkliftCardProps {
   forklift: Forklift;
-  onClick?: () => void;
+  onClick: () => void;
+  onDelete?: () => void;
 }
 
-const ForkliftCard: React.FC<ForkliftCardProps> = ({ forklift, onClick }) => {
-  // Determine the status color and icon
-  const getStatusConfig = (status: StatusEmpilhadeira) => {
+const ForkliftCard: React.FC<ForkliftCardProps> = ({ forklift, onClick, onDelete }) => {
+  // Get status color classes with gradients
+  const getStatusBadge = (status: StatusEmpilhadeira) => {
     switch (status) {
       case StatusEmpilhadeira.OPERACIONAL:
-        return {
-          color: 'bg-gradient-to-r from-emerald-500 to-emerald-600 text-white border-emerald-500/20',
-          icon: CheckCircle,
-          pulse: false
-        };
+        return (
+          <Badge className="bg-gradient-to-r from-emerald-500 to-emerald-600 hover:from-emerald-600 hover:to-emerald-700 text-white border-0 font-semibold tracking-wide shadow-lg shadow-emerald-500/25">
+            ✓ Operacional
+          </Badge>
+        );
       case StatusEmpilhadeira.EM_MANUTENCAO:
-        return {
-          color: 'bg-gradient-to-r from-amber-500 to-orange-600 text-white border-amber-500/20 animate-pulse',
-          icon: Wrench,
-          pulse: true
-        };
+        return (
+          <Badge className="bg-gradient-to-r from-amber-500 to-orange-600 hover:from-amber-600 hover:to-orange-700 text-white border-0 font-semibold tracking-wide shadow-lg shadow-amber-500/25 animate-pulse">
+            🔧 Em Manutenção
+          </Badge>
+        );
       case StatusEmpilhadeira.PARADA:
-        return {
-          color: 'bg-gradient-to-r from-red-500 to-red-600 text-white border-red-500/20',
-          icon: Wrench,
-          pulse: false
-        };
+        return (
+          <Badge className="bg-gradient-to-r from-red-500 to-red-600 hover:from-red-600 hover:to-red-700 text-white border-0 font-semibold tracking-wide shadow-lg shadow-red-500/25">
+            ⚠ Parada
+          </Badge>
+        );
       default:
-        return {
-          color: 'bg-gradient-to-r from-gray-500 to-gray-600 text-white border-gray-500/20',
-          icon: Settings,
-          pulse: false
-        };
+        return (
+          <Badge className="bg-gradient-to-r from-slate-500 to-slate-600 text-white border-0 font-semibold tracking-wide">
+            {status}
+          </Badge>
+        );
     }
   };
 
-  // Get type color
-  const getTypeColor = (tipo: TipoEmpilhadeira) => {
-    switch (tipo) {
-      case TipoEmpilhadeira.GAS:
-        return 'bg-blue-500/10 text-blue-400 border-blue-500/30';
-      case TipoEmpilhadeira.ELETRICA:
-        return 'bg-green-500/10 text-green-400 border-green-500/30';
-      case TipoEmpilhadeira.RETRATIL:
-        return 'bg-purple-500/10 text-purple-400 border-purple-500/30';
-      default:
-        return 'bg-gray-500/10 text-gray-400 border-gray-500/30';
-    }
+  // Get type color for badge
+  const getTypeBadge = (tipo: string) => {
+    const colors = {
+      'Gás': 'bg-blue-500/20 text-blue-300 border-blue-400/30',
+      'Elétrica': 'bg-emerald-500/20 text-emerald-300 border-emerald-400/30',
+      'Retrátil': 'bg-purple-500/20 text-purple-300 border-purple-400/30'
+    };
+    
+    return colors[tipo as keyof typeof colors] || 'bg-slate-500/20 text-slate-300 border-slate-400/30';
   };
 
-  const statusConfig = getStatusConfig(forklift.status);
-  const StatusIcon = statusConfig.icon;
-  const formattedHourMeter = forklift.horimetro.toString().padStart(5, '0');
+  const handleDelete = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    if (onDelete) {
+      onDelete();
+    }
+  };
 
   return (
     <div 
-      className={cn(
-        "group relative overflow-hidden rounded-xl border border-white/10",
-        "bg-gradient-to-br from-slate-800/80 to-slate-900/80 backdrop-blur-sm",
-        "shadow-lg hover:shadow-2xl transition-all duration-300 ease-out",
-        "cursor-pointer hover:scale-102 hover:-translate-y-1",
-        "focus-within:ring-2 focus-within:ring-blue-500/50 focus-within:outline-none",
-        "active:scale-98",
-        "p-6"
-      )}
+      className="group relative bg-gradient-to-br from-slate-800/60 to-slate-900/80 backdrop-blur-sm border border-slate-700/50 rounded-xl p-6 cursor-pointer transition-all duration-300 ease-out hover:shadow-2xl hover:shadow-slate-900/40 hover:scale-102 hover:-translate-y-1 hover:border-slate-600/60 animate-fade-in"
       onClick={onClick}
-      tabIndex={0}
-      role="button"
+      style={{
+        boxShadow: '0 4px 12px rgba(0,0,0,0.15)',
+      }}
+      onMouseEnter={(e) => {
+        e.currentTarget.style.boxShadow = '0 8px 24px rgba(0,0,0,0.25)';
+      }}
+      onMouseLeave={(e) => {
+        e.currentTarget.style.boxShadow = '0 4px 12px rgba(0,0,0,0.15)';
+      }}
     >
-      {/* Background Pattern */}
-      <div className="absolute inset-0 opacity-5">
-        <svg className="w-full h-full" viewBox="0 0 100 100" fill="none">
-          <pattern id="grid" width="10" height="10" patternUnits="userSpaceOnUse">
-            <path d="M 10 0 L 0 0 0 10" fill="none" stroke="white" strokeWidth="0.5"/>
-          </pattern>
-          <rect width="100" height="100" fill="url(#grid)" />
-        </svg>
-      </div>
+      {/* Delete button */}
+      {onDelete && (
+        <Button
+          variant="ghost"
+          size="sm"
+          onClick={handleDelete}
+          className="absolute top-4 right-4 h-8 w-8 p-0 text-slate-400 hover:text-red-400 hover:bg-red-500/10 opacity-0 group-hover:opacity-100 transition-all duration-200 z-10"
+        >
+          <Trash2 className="h-4 w-4" />
+        </Button>
+      )}
 
-      {/* Header with ID and Status */}
-      <div className="relative z-10 flex items-start justify-between mb-4">
+      {/* Header */}
+      <div className="flex items-start justify-between mb-4">
         <div className="flex-1">
-          <div className="flex items-center gap-3 mb-2">
-            <h3 className="text-xl font-bold text-white tracking-tight">{forklift.id}</h3>
-            <Badge className={cn(
-              "text-xs font-semibold tracking-wide border px-2.5 py-1",
-              "flex items-center gap-1.5",
-              statusConfig.color
-            )}>
-              <StatusIcon className="w-3 h-3" />
-              {forklift.status}
-            </Badge>
-          </div>
-          <p className="text-base font-medium text-slate-300 mb-1">{forklift.modelo}</p>
-          <p className="text-sm text-slate-500">{forklift.marca}</p>
+          <h3 className="text-xl font-bold text-white mb-1 tracking-wide" style={{ fontSize: '20px', fontWeight: 700 }}>
+            {forklift.id}
+          </h3>
+          <p className="text-slate-400 font-medium tracking-wide" style={{ fontSize: '16px', fontWeight: 500, color: '#94a3b8' }}>
+            {forklift.modelo}
+          </p>
+          <p className="text-slate-500 text-sm tracking-wide" style={{ color: '#64748b' }}>
+            {forklift.marca}
+          </p>
+        </div>
+        <div className="flex flex-col items-end gap-2">
+          {getStatusBadge(forklift.status)}
         </div>
       </div>
 
       {/* Type Badge */}
-      <div className="relative z-10 mb-4">
-        <Badge className={cn(
-          "text-xs font-medium border px-2.5 py-1 flex items-center gap-1.5 w-fit",
-          getTypeColor(forklift.tipo)
-        )}>
-          <Settings className="w-3 h-3" />
+      <div className="mb-4">
+        <Badge variant="outline" className={cn("border font-semibold text-xs tracking-wider", getTypeBadge(forklift.tipo))}>
           {forklift.tipo}
         </Badge>
       </div>
-      
-      {/* Key Information Grid */}
-      <div className="relative z-10 space-y-3 mb-5">
-        <div className="flex items-center justify-between">
-          <div className="flex items-center text-slate-400">
-            <Gauge className="w-4 h-4 mr-2 text-blue-400" />
-            <span className="text-sm font-medium">Horímetro</span>
+
+      {/* Capacity Highlight */}
+      <div className="bg-slate-800/40 rounded-lg p-4 mb-4 border border-slate-700/30">
+        <div className="text-center">
+          <div className="text-slate-400 text-sm font-medium tracking-wider uppercase mb-1" style={{ color: '#64748b', letterSpacing: '0.5px' }}>
+            CAPACIDADE
           </div>
-          <span className="font-mono font-bold text-slate-200 bg-slate-700/50 px-2.5 py-1 rounded-md text-sm border border-slate-600/50">
-            {formattedHourMeter}h
+          <div className="text-3xl font-extrabold tracking-tight" style={{ fontSize: '24px', fontWeight: 800, color: '#3b82f6' }}>
+            {forklift.capacidade.toLocaleString()}
+            <span className="text-lg font-semibold text-slate-300 ml-1">kg</span>
+          </div>
+        </div>
+      </div>
+
+      {/* Details */}
+      <div className="space-y-3">
+        <div className="flex items-center justify-between text-sm">
+          <div className="flex items-center gap-2 text-slate-400" style={{ color: '#64748b' }}>
+            <Clock className="w-4 h-4" />
+            <span className="font-medium tracking-wide">Horímetro</span>
+          </div>
+          <span className="font-mono font-semibold text-slate-200 bg-slate-700/50 px-2 py-1 rounded text-xs" style={{ color: '#e2e8f0' }}>
+            {forklift.horimetro?.toString().padStart(5, '0') || 'N/A'}
           </span>
         </div>
-        
-        <div className="flex items-center justify-between">
-          <div className="flex items-center text-slate-400">
-            <Calendar className="w-4 h-4 mr-2 text-emerald-400" />
-            <span className="text-sm font-medium">Últ. Manutenção</span>
+
+        <div className="flex items-center justify-between text-sm">
+          <div className="flex items-center gap-2 text-slate-400" style={{ color: '#64748b' }}>
+            <Calendar className="w-4 h-4" />
+            <span className="font-medium tracking-wide">Últ. Manutenção</span>
           </div>
-          <span className="text-sm font-semibold text-slate-300">{forklift.ultimaManutencao}</span>
+          <span className="font-semibold text-slate-200" style={{ color: '#e2e8f0' }}>
+            {forklift.ultimaManutencao || 'N/A'}
+          </span>
         </div>
 
-        <div className="flex items-center justify-between">
-          <div className="flex items-center text-slate-400">
-            <MapPin className="w-4 h-4 mr-2 text-amber-400" />
-            <span className="text-sm font-medium">Localização</span>
+        <div className="flex items-center justify-between text-sm">
+          <div className="flex items-center gap-2 text-slate-400" style={{ color: '#64748b' }}>
+            <MapPin className="w-4 h-4" />
+            <span className="font-medium tracking-wide">Localização</span>
           </div>
-          <span className="text-sm font-semibold text-slate-300">{forklift.localizacaoAtual}</span>
+          <span className="font-semibold text-slate-200" style={{ color: '#e2e8f0' }}>
+            {forklift.localizacaoAtual || forklift.setor || 'N/A'}
+          </span>
         </div>
       </div>
-      
-      {/* Capacity Highlight Section */}
-      <div className="relative z-10 pt-4 border-t border-slate-700/50">
-        <div className="bg-slate-800/60 rounded-lg p-4 border border-slate-600/30">
-          <div className="flex justify-between items-center">
-            <span className="text-sm font-medium text-slate-400 tracking-wide">CAPACIDADE</span>
-            <div className="text-right">
-              <span className="text-2xl font-black text-blue-400 tracking-tight">
-                {forklift.capacidade.toLocaleString()}
-              </span>
-              <span className="text-sm font-semibold text-slate-400 ml-1">kg</span>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      {/* Hover Effect Overlay */}
-      <div className="absolute inset-0 bg-gradient-to-br from-blue-500/5 to-purple-500/5 opacity-0 group-hover:opacity-100 transition-opacity duration-300 rounded-xl pointer-events-none" />
-      
-      {/* Glow Effect */}
-      <div className="absolute inset-0 rounded-xl bg-gradient-to-br from-blue-500/10 to-transparent opacity-0 group-hover:opacity-50 transition-opacity duration-300 blur-xl" />
     </div>
   );
 };

@@ -16,6 +16,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Badge } from '@/components/ui/badge';
 import PageHeader from '@/components/layout/PageHeader';
 import ForkliftStatsCard from '@/components/forklift/ForkliftStatsCard';
+import ForkliftDeleteDialog from '@/components/forklift/ForkliftDeleteDialog';
 
 // Mock data for the forklifts
 const initialForklifts: Forklift[] = [
@@ -116,6 +117,7 @@ const ForkliftsPage = () => {
   const [addDialogOpen, setAddDialogOpen] = useState(false);
   const [editDialogOpen, setEditDialogOpen] = useState(false);
   const [detailsDialogOpen, setDetailsDialogOpen] = useState(false);
+  const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
   const [selectedForklift, setSelectedForklift] = useState<Forklift | null>(null);
 
   // Advanced filter options
@@ -247,14 +249,25 @@ const ForkliftsPage = () => {
     setEditDialogOpen(true);
   };
 
-  // Handle delete forklift
+  // Handle delete forklift - open confirmation dialog
   const handleDeleteForklift = (id: string) => {
-    if (confirm("Tem certeza que deseja excluir esta empilhadeira?")) {
-      setForklifts(prev => prev.filter(f => f.id !== id));
+    const forklift = forklifts.find(f => f.id === id);
+    if (forklift) {
+      setSelectedForklift(forklift);
+      setDeleteDialogOpen(true);
+    }
+  };
+
+  // Confirm delete forklift
+  const handleConfirmDelete = () => {
+    if (selectedForklift) {
+      setForklifts(prev => prev.filter(f => f.id !== selectedForklift.id));
       toast({
         title: "Empilhadeira excluída",
-        description: "A empilhadeira foi excluída com sucesso."
+        description: `A empilhadeira ${selectedForklift.id} foi excluída com sucesso.`,
+        variant: "destructive"
       });
+      setSelectedForklift(null);
     }
   };
 
@@ -435,6 +448,7 @@ const ForkliftsPage = () => {
                   <ForkliftCard
                     forklift={forklift}
                     onClick={() => handleForkliftClick(forklift.id)}
+                    onDelete={() => handleDeleteForklift(forklift.id)}
                   />
                 </div>
               ))}
@@ -493,6 +507,14 @@ const ForkliftsPage = () => {
         onOpenChange={setDetailsDialogOpen}
         forklift={selectedForklift}
         onEdit={handleEditFromDetails}
+      />
+      
+      {/* Delete Confirmation Dialog */}
+      <ForkliftDeleteDialog
+        open={deleteDialogOpen}
+        onOpenChange={setDeleteDialogOpen}
+        forklift={selectedForklift}
+        onConfirmDelete={handleConfirmDelete}
       />
     </div>
   );
