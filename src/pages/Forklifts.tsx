@@ -6,11 +6,12 @@ import { Button } from '@/components/ui/button';
 import { Plus, Filter, Search, Grid, List, Download, Upload, Truck, CheckCircle, Wrench, AlertTriangle } from 'lucide-react';
 import ForkliftList from '@/components/forklift/ForkliftList';
 import ForkliftCard from '@/components/forklift/ForkliftCard';
-import { Pagination, PaginationContent, PaginationItem, PaginationLink, PaginationNext, PaginationPrevious } from '@/components/ui/pagination';
 import ForkliftDialog from '@/components/forklift/ForkliftDialog';
 import ForkliftDetails from '@/components/forklift/ForkliftDetails';
 import AdvancedFilters from '@/components/common/AdvancedFilters';
+import PaginationControls from '@/components/common/PaginationControls';
 import { useToast } from '@/hooks/use-toast';
+import { usePagination } from '@/hooks/usePagination';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import PageHeader from '@/components/layout/PageHeader';
@@ -186,6 +187,24 @@ const ForkliftsPage = () => {
     return true;
   });
 
+  // Pagination hook
+  const {
+    currentPage,
+    totalPages,
+    paginatedData,
+    goToPage,
+    nextPage,
+    previousPage,
+    canGoNext,
+    canGoPrevious,
+    startIndex,
+    endIndex,
+    totalItems
+  } = usePagination({
+    data: filteredForklifts,
+    itemsPerPage: viewMode === 'grid' ? 12 : 10
+  });
+
   // Calculate summary statistics
   const stats = {
     total: forklifts.length,
@@ -256,7 +275,7 @@ const ForkliftsPage = () => {
   };
 
   return (
-    <div className="space-y-4">
+    <div className="space-y-6">
       {/* Page Header */}
       <PageHeader 
         title="Gerenciamento de Empilhadeiras"
@@ -404,10 +423,10 @@ const ForkliftsPage = () => {
             </CardTitle>
           </div>
         </CardHeader>
-        <CardContent>
+        <CardContent className="space-y-4">
           {viewMode === 'grid' ? (
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
-              {filteredForklifts.map((forklift) => (
+              {paginatedData.map((forklift) => (
                 <ForkliftCard
                   key={forklift.id}
                   forklift={forklift}
@@ -417,7 +436,7 @@ const ForkliftsPage = () => {
             </div>
           ) : (
             <ForkliftList 
-              forklifts={filteredForklifts}
+              forklifts={paginatedData}
               onForkliftClick={handleForkliftClick}
               onDeleteForklift={handleDeleteForklift}
             />
@@ -433,29 +452,18 @@ const ForkliftsPage = () => {
         </CardContent>
       </Card>
       
-      {/* Pagination */}
+      {/* Enhanced Pagination */}
       {filteredForklifts.length > 0 && (
-        <div className="flex justify-center">
-          <Pagination>
-            <PaginationContent>
-              <PaginationItem>
-                <PaginationPrevious href="#" />
-              </PaginationItem>
-              <PaginationItem>
-                <PaginationLink href="#" isActive>1</PaginationLink>
-              </PaginationItem>
-              <PaginationItem>
-                <PaginationLink href="#">2</PaginationLink>
-              </PaginationItem>
-              <PaginationItem>
-                <PaginationLink href="#">3</PaginationLink>
-              </PaginationItem>
-              <PaginationItem>
-                <PaginationNext href="#" />
-              </PaginationItem>
-            </PaginationContent>
-          </Pagination>
-        </div>
+        <PaginationControls
+          currentPage={currentPage}
+          totalPages={totalPages}
+          onPageChange={goToPage}
+          canGoPrevious={canGoPrevious}
+          canGoNext={canGoNext}
+          startIndex={startIndex}
+          endIndex={endIndex}
+          totalItems={totalItems}
+        />
       )}
       
       {/* Add/Edit Forklift Dialog */}
