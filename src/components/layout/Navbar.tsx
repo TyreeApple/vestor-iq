@@ -1,8 +1,8 @@
-
 import React from 'react';
 import { Bell, Search, ChevronDown } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import Badge from '@/components/common/Badge';
+import ThemeToggle from "@/components/common/ThemeToggle";
 
 interface NavbarProps {
   title: string;
@@ -42,6 +42,9 @@ const Navbar: React.FC<NavbarProps> = ({ title, subtitle }) => {
           </button>
         </div>
         
+        {/* Theme Toggle */}
+        <ThemeToggle />
+
         {/* User Menu */}
         <div className="flex items-center gap-2">
           <div className="w-8 h-8 rounded-full bg-primary dark:bg-accent flex items-center justify-center text-primary-foreground font-bold shadow">
