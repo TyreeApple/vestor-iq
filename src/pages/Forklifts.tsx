@@ -3,7 +3,7 @@ import { Forklift, StatusEmpilhadeira, TipoEmpilhadeira } from '@/types';
 import { useIsMobile } from '@/hooks/use-mobile';
 import { cn } from '@/lib/utils';
 import { Button } from '@/components/ui/button';
-import { Plus, Filter, Search, Grid, List, Download, Upload } from 'lucide-react';
+import { Plus, Filter, Search, Grid, List, Download, Upload, Truck, CheckCircle, Wrench, AlertTriangle } from 'lucide-react';
 import ForkliftList from '@/components/forklift/ForkliftList';
 import ForkliftCard from '@/components/forklift/ForkliftCard';
 import { Pagination, PaginationContent, PaginationItem, PaginationLink, PaginationNext, PaginationPrevious } from '@/components/ui/pagination';
@@ -14,6 +14,7 @@ import { useToast } from '@/hooks/use-toast';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import PageHeader from '@/components/layout/PageHeader';
+import PremiumSummaryCard from '@/components/dashboard/PremiumSummaryCard';
 
 // Mock data for the forklifts
 const initialForklifts: Forklift[] = [
@@ -282,45 +283,41 @@ const ForkliftsPage = () => {
 
       {/* Statistics Cards */}
       <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-        <Card>
-          <CardHeader className="pb-2">
-            <CardTitle className="text-sm font-medium text-muted-foreground">Total</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold">{stats.total}</div>
-            <Badge variant="outline" className="mt-1">Empilhadeiras</Badge>
-          </CardContent>
-        </Card>
+        <PremiumSummaryCard
+          title="Total"
+          value={stats.total}
+          icon={Truck}
+          colorFrom="from-blue-900"
+          colorTo="to-blue-600"
+          info="Empilhadeiras"
+        />
         
-        <Card>
-          <CardHeader className="pb-2">
-            <CardTitle className="text-sm font-medium text-muted-foreground">Operacionais</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold text-green-600">{stats.operational}</div>
-            <Badge variant="secondary" className="mt-1 bg-green-100 text-green-800">Ativas</Badge>
-          </CardContent>
-        </Card>
+        <PremiumSummaryCard
+          title="Operacionais"
+          value={stats.operational}
+          icon={CheckCircle}
+          colorFrom="from-green-900"
+          colorTo="to-green-600"
+          info="Ativas"
+        />
         
-        <Card>
-          <CardHeader className="pb-2">
-            <CardTitle className="text-sm font-medium text-muted-foreground">Em Manutenção</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold text-yellow-600">{stats.maintenance}</div>
-            <Badge variant="secondary" className="mt-1 bg-yellow-100 text-yellow-800">Manutenção</Badge>
-          </CardContent>
-        </Card>
+        <PremiumSummaryCard
+          title="Em Manutenção"
+          value={stats.maintenance}
+          icon={Wrench}
+          colorFrom="from-yellow-900"
+          colorTo="to-yellow-600"
+          info="Manutenção"
+        />
         
-        <Card>
-          <CardHeader className="pb-2">
-            <CardTitle className="text-sm font-medium text-muted-foreground">Paradas</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold text-red-600">{stats.stopped}</div>
-            <Badge variant="secondary" className="mt-1 bg-red-100 text-red-800">Inativas</Badge>
-          </CardContent>
-        </Card>
+        <PremiumSummaryCard
+          title="Paradas"
+          value={stats.stopped}
+          icon={AlertTriangle}
+          colorFrom="from-red-900"
+          colorTo="to-red-600"
+          info="Inativas"
+        />
       </div>
       
       {/* Filters and Search */}
