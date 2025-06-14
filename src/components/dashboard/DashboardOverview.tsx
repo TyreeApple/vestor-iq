@@ -1,4 +1,3 @@
-
 import React from "react";
 import { Truck, Settings, Clock, ClipboardList, Users } from "lucide-react";
 import ModernKpiCard from "./ModernKpiCard";
@@ -86,22 +85,22 @@ const DashboardOverview: React.FC<DashboardOverviewProps> = ({
           title="Empilhadeiras Totais"
           value={stats.totalForklifts}
           icon={Truck}
-          colorFrom="from-purple-500"
-          colorTo="to-fuchsia-600"
+          colorFrom="from-blue-400"
+          colorTo="to-indigo-400"
         />
         <PremiumSummaryCard
           title="Total de Operadores"
           value={stats.totalOperators}
           icon={Users}
-          colorFrom="from-blue-500"
-          colorTo="to-indigo-600"
+          colorFrom="from-slate-300"
+          colorTo="to-slate-500"
         />
         <PremiumSummaryCard
           title="Pendências de Manutenção"
           value={stats.pendingMaintenances}
           icon={Settings}
-          colorFrom="from-orange-500"
-          colorTo="to-amber-600"
+          colorFrom="from-orange-300"
+          colorTo="to-orange-400"
         />
       </div>
     </section>
