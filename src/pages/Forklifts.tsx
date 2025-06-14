@@ -256,22 +256,22 @@ const ForkliftsPage = () => {
   };
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-4">
       {/* Page Header */}
       <PageHeader 
         title="Gerenciamento de Empilhadeiras"
         subtitle="Gerencie sua frota de empilhadeiras de forma inteligente"
       >
         <div className="flex flex-wrap gap-2">
-          <Button variant="outline" onClick={handleImportData}>
+          <Button variant="outline" size="sm" onClick={handleImportData}>
             <Upload className="w-4 h-4 mr-2" />
             Importar
           </Button>
-          <Button variant="outline" onClick={handleExportData}>
+          <Button variant="outline" size="sm" onClick={handleExportData}>
             <Download className="w-4 h-4 mr-2" />
             Exportar
           </Button>
-          <Button onClick={() => {
+          <Button size="sm" onClick={() => {
             setSelectedForklift(null);
             setAddDialogOpen(true);
           }}>
@@ -282,7 +282,7 @@ const ForkliftsPage = () => {
       </PageHeader>
 
       {/* Enhanced Statistics Cards */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
         <ForkliftStatsCard
           title="Total"
           value={stats.total}
@@ -320,38 +320,18 @@ const ForkliftsPage = () => {
         />
       </div>
       
-      {/* Filters and Search */}
-      <Card>
-        <CardHeader>
-          <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
-            <CardTitle className="text-lg">Filtros e Busca</CardTitle>
-            <div className="flex items-center gap-2">
-              <Button
-                variant={viewMode === 'grid' ? 'default' : 'outline'}
-                size="sm"
-                onClick={() => setViewMode('grid')}
-              >
-                <Grid className="w-4 h-4" />
-              </Button>
-              <Button
-                variant={viewMode === 'list' ? 'default' : 'outline'}
-                size="sm"
-                onClick={() => setViewMode('list')}
-              >
-                <List className="w-4 h-4" />
-              </Button>
-            </div>
-          </div>
-        </CardHeader>
-        <CardContent>
-          <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-4">
+      {/* Compact Filters Section */}
+      <div className="bg-background/60 backdrop-blur-sm border rounded-xl p-4 shadow-sm">
+        <div className="flex flex-col lg:flex-row gap-4">
+          {/* Left side - Search and basic filters */}
+          <div className="flex-1 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
             {/* Search */}
             <div className="relative">
-              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground" size={18} />
+              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground" size={16} />
               <input
                 type="text"
                 placeholder="Buscar por ID ou modelo..."
-                className="pl-10 h-10 w-full rounded-md border border-input bg-background px-3 py-2"
+                className="pl-9 h-9 w-full rounded-lg border border-input bg-background/80 px-3 py-2 text-sm placeholder:text-muted-foreground focus:border-primary focus:outline-none"
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
               />
@@ -359,7 +339,7 @@ const ForkliftsPage = () => {
             
             {/* Status filter */}
             <select 
-              className="h-10 w-full rounded-md border border-input bg-background px-3 py-2"
+              className="h-9 w-full rounded-lg border border-input bg-background/80 px-3 py-1 text-sm focus:border-primary focus:outline-none"
               value={statusFilter}
               onChange={(e) => setStatusFilter(e.target.value as StatusEmpilhadeira | 'all')}
             >
@@ -371,7 +351,7 @@ const ForkliftsPage = () => {
             
             {/* Type filter */}
             <select 
-              className="h-10 w-full rounded-md border border-input bg-background px-3 py-2"
+              className="h-9 w-full rounded-lg border border-input bg-background/80 px-3 py-1 text-sm focus:border-primary focus:outline-none"
               value={typeFilter}
               onChange={(e) => setTypeFilter(e.target.value as TipoEmpilhadeira | 'all')}
             >
@@ -380,7 +360,10 @@ const ForkliftsPage = () => {
               <option value={TipoEmpilhadeira.ELETRICA}>{TipoEmpilhadeira.ELETRICA}</option>
               <option value={TipoEmpilhadeira.RETRATIL}>{TipoEmpilhadeira.RETRATIL}</option>
             </select>
+          </div>
 
+          {/* Right side - Advanced filters and view mode */}
+          <div className="flex items-center gap-2">
             {/* Advanced filters */}
             <AdvancedFilters
               filters={filterOptions}
@@ -388,15 +371,35 @@ const ForkliftsPage = () => {
               onFiltersChange={setAdvancedFilters}
               onClearFilters={() => setAdvancedFilters({})}
             />
+            
+            {/* View mode toggle */}
+            <div className="flex items-center bg-muted/50 rounded-lg p-1">
+              <Button
+                variant={viewMode === 'grid' ? 'default' : 'ghost'}
+                size="sm"
+                onClick={() => setViewMode('grid')}
+                className="h-7 px-2"
+              >
+                <Grid className="w-4 h-4" />
+              </Button>
+              <Button
+                variant={viewMode === 'list' ? 'default' : 'ghost'}
+                size="sm"
+                onClick={() => setViewMode('list')}
+                className="h-7 px-2"
+              >
+                <List className="w-4 h-4" />
+              </Button>
+            </div>
           </div>
-        </CardContent>
-      </Card>
+        </div>
+      </div>
       
       {/* Results */}
       <Card>
-        <CardHeader>
+        <CardHeader className="pb-4">
           <div className="flex justify-between items-center">
-            <CardTitle>
+            <CardTitle className="text-lg">
               Empilhadeiras ({filteredForklifts.length} de {forklifts.length})
             </CardTitle>
           </div>
