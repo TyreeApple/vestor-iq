@@ -8,9 +8,14 @@ import ThemeToggle from '@/components/common/ThemeToggle';
 const Navbar: React.FC = () => {
   return (
     <header className="h-16 bg-white dark:bg-card border-b border-slate-200 dark:border-border flex items-center justify-between px-6">
-      {/* Search */}
-      <div className="flex-1 max-w-lg">
-        <div className="relative">
+      {/* Left spacer */}
+      <div className="flex items-center space-x-4 min-w-0">
+        <ThemeToggle />
+      </div>
+
+      {/* Centered Search */}
+      <div className="flex-1 flex justify-center max-w-2xl mx-auto">
+        <div className="relative w-full max-w-lg">
           <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-slate-400 w-4 h-4" />
           <input
             type="text"
@@ -22,9 +27,6 @@ const Navbar: React.FC = () => {
 
       {/* Right side */}
       <div className="flex items-center space-x-4">
-        {/* Theme Toggle */}
-        <ThemeToggle />
-        
         {/* Notifications */}
         <Button variant="ghost" size="icon" className="relative">
           <Bell className="w-5 h-5" />
