@@ -1,3 +1,4 @@
+
 // ===== SISTEMA AVANÇADO DE GESTÃO DE FROTAS =====
 // Tipos TypeScript completos e robustos
 
@@ -78,12 +79,19 @@ export enum FuncaoOperador {
   GERENTE = "Gerente"
 }
 
-// Legacy type aliases for backward compatibility
-export type ForkliftStatus = StatusEmpilhadeira;
-export type ForkliftType = TipoEmpilhadeira;
-export type MaintenanceStatus = StatusManutencao;
-export type CertificateStatus = StatusCertificacao;
-export type UserRole = FuncaoOperador;
+// Export legacy type aliases for backward compatibility
+export const ForkliftStatus = StatusEmpilhadeira;
+export const ForkliftType = TipoEmpilhadeira;
+export const MaintenanceStatus = StatusManutencao;
+export const CertificateStatus = StatusCertificacao;
+export const UserRole = FuncaoOperador;
+
+// Export type aliases as well
+export type ForkliftStatusType = StatusEmpilhadeira;
+export type ForkliftTypeType = TipoEmpilhadeira;
+export type MaintenanceStatusType = StatusManutencao;
+export type CertificateStatusType = StatusCertificacao;
+export type UserRoleType = FuncaoOperador;
 
 // ===== INTERFACES PRINCIPAIS =====
 
@@ -223,6 +231,13 @@ export interface OrdemServico {
   pecasUtilizadas: PecaUtilizada[];
   anexos: string[];
   observacoes?: string;
+  
+  // Legacy English properties for backward compatibility
+  forkliftId?: string;
+  forkliftModel?: string;
+  issue?: string;
+  reportedBy?: string;
+  reportedDate?: string;
 }
 
 // Legacy alias
@@ -261,6 +276,15 @@ export interface Abastecimento {
   eficiencia?: number; // L/h
   observacoes?: string;
   foto?: string;
+  
+  // Legacy English properties for backward compatibility
+  date?: string;
+  forkliftId?: string;
+  forkliftModel?: string;
+  operator?: string;
+  quantity?: number;
+  hourMeterBefore?: number;
+  hourMeterAfter?: number;
 }
 
 // Legacy alias
