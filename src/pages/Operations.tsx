@@ -1,3 +1,4 @@
+
 import React, { useState } from 'react';
 import Navbar from '@/components/layout/Navbar';
 import Sidebar from '@/components/layout/Sidebar';
@@ -13,7 +14,7 @@ import OperationDetails from '@/components/operations/OperationDetails';
 import AdvancedFilters from '@/components/common/AdvancedFilters';
 import { useFilters } from '@/hooks/use-filters';
 
-// Mock data for operations - fixed to match Portuguese interface
+// Mock data for operations - using proper Portuguese interface
 const initialOperations: Operacao[] = [
   {
     id: 'OP001',
@@ -62,14 +63,7 @@ const initialOperations: Operacao[] = [
     localizacao: 'Setor A',
     dataInicio: '2023-11-20T08:00:00',
     duracaoEstimada: 480,
-    // Legacy properties for compatibility
-    operatorName: 'Carlos Silva',
-    forkliftModel: 'Toyota 8FGU25',
-    sector: 'Armazém A',
-    initialHourMeter: 12500,
-    currentHourMeter: 12583,
-    gasConsumption: 25.5,
-    startTime: '2023-11-20T08:00:00'
+    consumoGas: 25.5
   },
   {
     id: 'OP002',
@@ -112,19 +106,14 @@ const initialOperations: Operacao[] = [
       status: 'Ativo'
     },
     tipo: TipoOperacao.CARGA,
-    status: StatusOperacao.EM_ANDAMENTO,
+    status: StatusOperacao.CONCLUIDA,
     prioridade: PrioridadeOperacao.ALTA,
     setor: 'Expedição',
     localizacao: 'Expedição',
     dataInicio: '2023-11-20T14:00:00',
+    dataFim: '2023-11-20T18:00:00',
     duracaoEstimada: 240,
-    // Legacy properties for compatibility
-    operatorName: 'Maria Oliveira',
-    forkliftModel: 'Hyster E50XN',
-    sector: 'Expedição',
-    initialHourMeter: 8400,
-    currentHourMeter: 8452,
-    startTime: '2023-11-20T14:00:00'
+    duracaoReal: 240
   }
 ];
 
@@ -155,7 +144,7 @@ const OperationsPage = () => {
   const [detailsDialogOpen, setDetailsDialogOpen] = useState(false);
   const [selectedOperation, setSelectedOperation] = useState<Operacao | null>(null);
   
-  // Use filters hook
+  // Use filters hook with corrected search fields
   const {
     search,
     setSearch,
@@ -165,7 +154,7 @@ const OperationsPage = () => {
     clearFilters
   } = useFilters({
     data: operations,
-    searchFields: ['operador.nome', 'empilhadeira.modelo', 'setor', 'id']
+    searchFields: ['id', 'setor']
   });
 
   // Filter configuration for advanced filters
@@ -214,12 +203,12 @@ const OperationsPage = () => {
 
   // Calculate operation duration
   const calculateDuration = (operation: Operacao) => {
-    const startTime = new Date(operation.dataInicio || operation.startTime || '');
-    const endTime = operation.dataFim ? new Date(operation.dataFim) : (operation.endTime ? new Date(operation.endTime) : new Date());
+    const startTime = new Date(operation.dataInicio);
+    const endTime = operation.dataFim ? new Date(operation.dataFim) : new Date();
     const diff = endTime.getTime() - startTime.getTime();
     const hours = Math.floor(diff / (1000 * 60 * 60));
     const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
-    return `${hours}h ${minutes}m${!operation.dataFim && !operation.endTime ? ' (em andamento)' : ''}`;
+    return `${hours}h ${minutes}m${!operation.dataFim ? ' (em andamento)' : ''}`;
   };
 
   // Handle save operation
@@ -274,8 +263,8 @@ const OperationsPage = () => {
     active: operations.filter(op => op.status === StatusOperacao.EM_ANDAMENTO).length,
     completed: operations.filter(op => op.status === StatusOperacao.CONCLUIDA).length,
     totalGasConsumption: operations
-      .filter(op => op.consumoGas || op.gasConsumption)
-      .reduce((sum, op) => sum + (op.consumoGas || op.gasConsumption || 0), 0)
+      .filter(op => op.consumoGas)
+      .reduce((sum, op) => sum + (op.consumoGas || 0), 0)
   };
 
   return (
@@ -358,7 +347,7 @@ const OperationsPage = () => {
                     <div className="p-4">
                       <div className="flex justify-between items-start mb-3">
                         <div>
-                          <h3 className="font-medium">{operation.operador?.nome || operation.operatorName}</h3>
+                          <h3 className="font-medium">{operation.operador?.nome}</h3>
                           <p className="text-sm text-muted-foreground">ID: {operation.id}</p>
                         </div>
                         <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs bg-green-100 text-green-800">
@@ -369,15 +358,15 @@ const OperationsPage = () => {
                       <div className="space-y-2">
                         <div className="flex items-center gap-2">
                           <Truck className="w-4 h-4 text-muted-foreground" />
-                          <span className="text-sm">{operation.empilhadeira?.modelo || operation.forkliftModel} ({operation.empilhadeiraId})</span>
+                          <span className="text-sm">{operation.empilhadeira?.modelo} ({operation.empilhadeiraId})</span>
                         </div>
                         <div className="flex items-center gap-2">
                           <User className="w-4 h-4 text-muted-foreground" />
-                          <span className="text-sm">{operation.operador?.nome || operation.operatorName}</span>
+                          <span className="text-sm">{operation.operador?.nome}</span>
                         </div>
                         <div className="flex items-center gap-2">
                           <Calendar className="w-4 h-4 text-muted-foreground" />
-                          <span className="text-sm">{formatDate(operation.dataInicio || operation.startTime || '')}</span>
+                          <span className="text-sm">{formatDate(operation.dataInicio)}</span>
                         </div>
                         <div className="flex items-center gap-2">
                           <Clock className="w-4 h-4 text-muted-foreground" />
@@ -387,7 +376,7 @@ const OperationsPage = () => {
                     </div>
                     
                     <div className="border-t px-4 py-3 bg-muted/30 flex justify-between">
-                      <span className="text-sm">Setor: {operation.setor || operation.sector}</span>
+                      <span className="text-sm">Setor: {operation.setor}</span>
                       <div className="flex gap-2">
                         <Button 
                           variant="ghost" 
@@ -443,15 +432,15 @@ const OperationsPage = () => {
                       .map((operation) => (
                         <tr key={operation.id} className="hover:bg-muted/50 transition-colors">
                           <td className="p-4">{operation.id}</td>
-                          <td className="p-4">{operation.operador?.nome || operation.operatorName}</td>
+                          <td className="p-4">{operation.operador?.nome}</td>
                           <td className="p-4">
-                            <div>{operation.empilhadeira?.modelo || operation.forkliftModel}</div>
+                            <div>{operation.empilhadeira?.modelo}</div>
                             <div className="text-xs text-muted-foreground">{operation.empilhadeiraId}</div>
                           </td>
-                          <td className="p-4">{operation.setor || operation.sector}</td>
-                          <td className="p-4">{formatDate(operation.dataInicio || operation.startTime || '')}</td>
+                          <td className="p-4">{operation.setor}</td>
+                          <td className="p-4">{formatDate(operation.dataInicio)}</td>
                           <td className="p-4">{calculateDuration(operation)}</td>
-                          <td className="p-4">{(operation.consumoGas || operation.gasConsumption || 0).toFixed(1)}</td>
+                          <td className="p-4">{(operation.consumoGas || 0).toFixed(1)}</td>
                           <td className="p-4">
                             <div className="flex gap-2">
                               <Button 

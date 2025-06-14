@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import Navbar from '@/components/layout/Navbar';
 import Sidebar from '@/components/layout/Sidebar';
@@ -247,12 +246,9 @@ const OperatorsPage = () => {
       
       <div className={cn(
         "flex-1 flex flex-col",
-        !isMobile && "ml-64" // Offset for sidebar when not mobile
+        !isMobile && "ml-64"
       )}>
-        <Navbar 
-          title="Operadores" 
-          subtitle="Gerenciamento de Operadores"
-        />
+        <Navbar />
         
         <main className="flex-1 px-6 py-6">
           {/* Filter section */}

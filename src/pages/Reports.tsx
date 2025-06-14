@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import Navbar from '@/components/layout/Navbar';
 import Sidebar from '@/components/layout/Sidebar';
@@ -11,10 +10,8 @@ import { Button } from '@/components/ui/button';
 import { ChevronDown, Download, FileBarChart, Filter } from 'lucide-react';
 import { Checkbox } from '@/components/ui/checkbox';
 
-const ReportsPage: React.FC = () => {
+const ReportsPage = () => {
   const isMobile = useIsMobile();
-  const [date, setDate] = useState<Date | undefined>(new Date());
-  const [isFiltersOpen, setIsFiltersOpen] = useState(false);
 
   return (
     <div className="flex min-h-screen bg-background">
@@ -22,12 +19,9 @@ const ReportsPage: React.FC = () => {
       
       <div className={cn(
         "flex-1 flex flex-col",
-        !isMobile && "ml-64" // Offset for sidebar when not mobile
+        !isMobile && "ml-64"
       )}>
-        <Navbar 
-          title="Relatórios" 
-          subtitle="Visualização e exportação de dados"
-        />
+        <Navbar />
         
         <main className="flex-1 px-6 py-6">
           <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-6">
