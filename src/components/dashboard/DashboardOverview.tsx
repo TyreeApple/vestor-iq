@@ -1,9 +1,9 @@
 
 import React from "react";
-import { Truck, Settings, Clock, ClipboardList, Users, FileText } from "lucide-react";
-import KpiCard from "./KpiCard";
+import { Truck, Settings, Clock, ClipboardList, Users } from "lucide-react";
+import ModernKpiCard from "./ModernKpiCard";
 import FleetBarChart from "./FleetBarChart";
-import SummaryCard from "./SummaryCard";
+import PremiumSummaryCard from "./PremiumSummaryCard";
 import QuickActions from "./QuickActions";
 import { DashboardStats } from "@/types";
 
@@ -30,30 +30,42 @@ const DashboardOverview: React.FC<DashboardOverviewProps> = ({
   return (
     <section className="flex flex-col gap-10 px-2 md:px-0 max-w-screen-xl mx-auto animate-fade-in">
       {/* KPIs Linha Superior */}
-      <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 mb-2">
-        <KpiCard
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-2">
+        <ModernKpiCard
           title="Operacionais"
           value={stats.operationalForklifts}
           icon={Truck}
-          color="bg-status-operational/90 text-white"
+          colorFrom="from-green-500"
+          colorTo="to-green-800"
+          trend="up"
+          trendValue={3}
         />
-        <KpiCard
+        <ModernKpiCard
           title="Manutenção"
           value={stats.maintenanceForklifts}
           icon={Settings}
-          color="bg-status-maintenance/90 text-white"
+          colorFrom="from-yellow-400"
+          colorTo="to-yellow-700"
+          trend="down"
+          trendValue={-1}
         />
-        <KpiCard
+        <ModernKpiCard
           title="Paradas"
           value={stats.stoppedForklifts}
           icon={Clock}
-          color="bg-status-warning/80 text-white"
+          colorFrom="from-red-400"
+          colorTo="to-red-700"
+          trend="down"
+          trendValue={-1}
         />
-        <KpiCard
+        <ModernKpiCard
           title="Ativas"
           value={stats.activeOperations}
           icon={ClipboardList}
-          color="bg-primary"
+          colorFrom="from-blue-500"
+          colorTo="to-violet-800"
+          trend="up"
+          trendValue={2}
         />
       </div>
 
@@ -70,23 +82,26 @@ const DashboardOverview: React.FC<DashboardOverviewProps> = ({
 
       {/* Cards Resumo */}
       <div className="grid grid-cols-1 sm:grid-cols-3 gap-6 mt-2">
-        <SummaryCard
+        <PremiumSummaryCard
           title="Empilhadeiras Totais"
           value={stats.totalForklifts}
           icon={Truck}
-          color="bg-accent/30"
+          colorFrom="from-fuchsia-700"
+          colorTo="to-purple-900"
         />
-        <SummaryCard
+        <PremiumSummaryCard
           title="Total de Operadores"
           value={stats.totalOperators}
           icon={Users}
-          color="bg-accent/30"
+          colorFrom="from-blue-800"
+          colorTo="to-cyan-900"
         />
-        <SummaryCard
+        <PremiumSummaryCard
           title="Pendências de Manutenção"
           value={stats.pendingMaintenances}
           icon={Settings}
-          color="bg-status-maintenance/15"
+          colorFrom="from-yellow-700"
+          colorTo="to-yellow-800"
         />
       </div>
     </section>
