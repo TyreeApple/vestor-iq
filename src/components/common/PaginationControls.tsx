@@ -43,6 +43,14 @@ const PaginationControls: React.FC<PaginationControlsProps> = ({
       let start = Math.max(2, currentPage - 1);
       let end = Math.min(totalPages - 1, currentPage + 1);
       
+      // Adjust range if too close to start or end
+      if (currentPage <= 3) {
+        end = Math.min(4, totalPages - 1);
+      }
+      if (currentPage >= totalPages - 2) {
+        start = Math.max(totalPages - 3, 2);
+      }
+      
       // Add ellipsis if needed
       if (start > 2) {
         pages.push('...');
@@ -50,7 +58,9 @@ const PaginationControls: React.FC<PaginationControlsProps> = ({
       
       // Add pages around current
       for (let i = start; i <= end; i++) {
-        pages.push(i);
+        if (i !== 1 && i !== totalPages) {
+          pages.push(i);
+        }
       }
       
       // Add ellipsis if needed
@@ -70,62 +80,81 @@ const PaginationControls: React.FC<PaginationControlsProps> = ({
   if (totalPages <= 1) return null;
 
   return (
-    <div className="flex flex-col sm:flex-row items-center justify-between gap-4 p-4 bg-background/60 backdrop-blur-sm border rounded-xl">
-      {/* Results info */}
-      <div className="text-sm text-muted-foreground">
-        Mostrando <span className="font-medium">{startIndex}</span> a{' '}
-        <span className="font-medium">{endIndex}</span> de{' '}
-        <span className="font-medium">{totalItems}</span> empilhadeiras
-      </div>
-
-      {/* Pagination controls */}
-      <div className="flex items-center gap-1">
-        {/* Previous button */}
-        <Button
-          variant="outline"
-          size="sm"
-          onClick={() => onPageChange(currentPage - 1)}
-          disabled={!canGoPrevious}
-          className="h-9 px-3"
-        >
-          <ChevronLeft className="w-4 h-4 mr-1" />
-          Anterior
-        </Button>
-
-        {/* Page numbers */}
-        <div className="flex items-center gap-1 mx-2">
-          {getPageNumbers().map((page, index) => (
-            <React.Fragment key={index}>
-              {page === '...' ? (
-                <span className="px-2 py-1 text-muted-foreground">...</span>
-              ) : (
-                <Button
-                  variant={currentPage === page ? 'default' : 'ghost'}
-                  size="sm"
-                  onClick={() => onPageChange(page as number)}
-                  className={cn(
-                    "h-9 w-9 p-0",
-                    currentPage === page && "bg-primary text-primary-foreground"
-                  )}
-                >
-                  {page}
-                </Button>
-              )}
-            </React.Fragment>
-          ))}
+    <div className="pagination-container mt-8">
+      <div className="flex flex-col lg:flex-row items-center justify-between gap-6 p-6 bg-gradient-to-r from-slate-800/50 to-slate-900/50 backdrop-blur-sm border border-slate-700/50 rounded-xl shadow-lg">
+        {/* Results info */}
+        <div className="pagination-info">
+          <span className="text-sm font-medium text-slate-300 tracking-wide">
+            Mostrando <span className="font-bold text-white">{startIndex}</span> a{' '}
+            <span className="font-bold text-white">{endIndex}</span> de{' '}
+            <span className="font-bold text-blue-400">{totalItems}</span> empilhadeiras
+          </span>
         </div>
 
-        {/* Next button */}
-        <Button
-          variant="outline"
-          size="sm"
-          onClick={() => onPageChange(currentPage + 1)}
-          disabled={!canGoNext}
-          className="h-9 px-3"
-        >
-          Próximo
-          <ChevronRight className="w-4 h-4 ml-1" />
-        </Button>
+        {/* Pagination controls */}
+        <div className="pagination-controls flex items-center gap-2">
+          {/* Previous button */}
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={() => onPageChange(currentPage - 1)}
+            disabled={!canGoPrevious}
+            className={cn(
+              "pagination-btn prev h-10 px-4 bg-slate-700/50 border-slate-600/50 text-slate-200",
+              "hover:bg-slate-600/60 hover:border-slate-500/50 hover:text-white",
+              "disabled:opacity-50 disabled:cursor-not-allowed",
+              "transition-all duration-200 ease-out",
+              "flex items-center gap-2 font-medium tracking-wide"
+            )}
+          >
+            <ChevronLeft className="w-4 h-4" />
+            <span className="hidden sm:inline">Anterior</span>
+          </Button>
+
+          {/* Page numbers */}
+          <div className="pagination-numbers flex items-center gap-1 mx-3">
+            {getPageNumbers().map((page, index) => (
+              <React.Fragment key={index}>
+                {page === '...' ? (
+                  <span className="px-3 py-2 text-slate-500 font-medium">...</span>
+                ) : (
+                  <button
+                    onClick={() => onPageChange(page as number)}
+                    className={cn(
+                      "page-number w-10 h-10 rounded-lg font-semibold text-sm",
+                      "transition-all duration-200 ease-out",
+                      "border border-transparent",
+                      "focus:outline-none focus:ring-2 focus:ring-blue-500/50",
+                      currentPage === page
+                        ? "bg-blue-500 text-white shadow-lg shadow-blue-500/25 border-blue-400/30"
+                        : "bg-slate-700/40 text-slate-300 border-slate-600/30 hover:bg-slate-600/50 hover:text-white hover:border-slate-500/40"
+                    )}
+                  >
+                    {page}
+                  </button>
+                )}
+              </React.Fragment>
+            ))}
+          </div>
+
+          {/* Next button */}
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={() => onPageChange(currentPage + 1)}
+            disabled={!canGoNext}
+            className={cn(
+              "pagination-btn next h-10 px-4 bg-slate-700/50 border-slate-600/50 text-slate-200",
+              "hover:bg-slate-600/60 hover:border-slate-500/50 hover:text-white",
+              "disabled:opacity-50 disabled:cursor-not-allowed",
+              "transition-all duration-200 ease-out",
+              "flex items-center gap-2 font-medium tracking-wide"
+            )}
+          >
+            <span className="hidden sm:inline">Próxima</span>
+            <ChevronRight className="w-4 h-4" />
+          </Button>
+        </div>
       </div>
     </div>
   );

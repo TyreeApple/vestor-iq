@@ -3,7 +3,7 @@ import React from 'react';
 import { Forklift, StatusEmpilhadeira, TipoEmpilhadeira } from '@/types';
 import { cn } from '@/lib/utils';
 import { Badge } from '@/components/ui/badge';
-import { Clock, Settings, Calendar, Gauge, MapPin } from 'lucide-react';
+import { Clock, Settings, Calendar, Gauge, MapPin, CheckCircle, Wrench } from 'lucide-react';
 
 interface ForkliftCardProps {
   forklift: Forklift;
@@ -11,17 +11,33 @@ interface ForkliftCardProps {
 }
 
 const ForkliftCard: React.FC<ForkliftCardProps> = ({ forklift, onClick }) => {
-  // Determine the status color
-  const getStatusColor = (status: StatusEmpilhadeira) => {
+  // Determine the status color and icon
+  const getStatusConfig = (status: StatusEmpilhadeira) => {
     switch (status) {
       case StatusEmpilhadeira.OPERACIONAL:
-        return 'bg-emerald-500/10 text-emerald-700 border-emerald-200 dark:bg-emerald-500/20 dark:text-emerald-400 dark:border-emerald-800';
+        return {
+          color: 'bg-gradient-to-r from-emerald-500 to-emerald-600 text-white border-emerald-500/20',
+          icon: CheckCircle,
+          pulse: false
+        };
       case StatusEmpilhadeira.EM_MANUTENCAO:
-        return 'bg-amber-500/10 text-amber-700 border-amber-200 dark:bg-amber-500/20 dark:text-amber-400 dark:border-amber-800';
+        return {
+          color: 'bg-gradient-to-r from-amber-500 to-orange-600 text-white border-amber-500/20 animate-pulse',
+          icon: Wrench,
+          pulse: true
+        };
       case StatusEmpilhadeira.PARADA:
-        return 'bg-red-500/10 text-red-700 border-red-200 dark:bg-red-500/20 dark:text-red-400 dark:border-red-800';
+        return {
+          color: 'bg-gradient-to-r from-red-500 to-red-600 text-white border-red-500/20',
+          icon: Wrench,
+          pulse: false
+        };
       default:
-        return 'bg-gray-500/10 text-gray-700 border-gray-200 dark:bg-gray-500/20 dark:text-gray-400 dark:border-gray-800';
+        return {
+          color: 'bg-gradient-to-r from-gray-500 to-gray-600 text-white border-gray-500/20',
+          icon: Settings,
+          pulse: false
+        };
     }
   };
 
@@ -29,106 +45,124 @@ const ForkliftCard: React.FC<ForkliftCardProps> = ({ forklift, onClick }) => {
   const getTypeColor = (tipo: TipoEmpilhadeira) => {
     switch (tipo) {
       case TipoEmpilhadeira.GAS:
-        return 'bg-blue-500/10 text-blue-700 border-blue-200 dark:bg-blue-500/20 dark:text-blue-400';
+        return 'bg-blue-500/10 text-blue-400 border-blue-500/30';
       case TipoEmpilhadeira.ELETRICA:
-        return 'bg-green-500/10 text-green-700 border-green-200 dark:bg-green-500/20 dark:text-green-400';
+        return 'bg-green-500/10 text-green-400 border-green-500/30';
       case TipoEmpilhadeira.RETRATIL:
-        return 'bg-purple-500/10 text-purple-700 border-purple-200 dark:bg-purple-500/20 dark:text-purple-400';
+        return 'bg-purple-500/10 text-purple-400 border-purple-500/30';
       default:
-        return 'bg-gray-500/10 text-gray-700 border-gray-200';
+        return 'bg-gray-500/10 text-gray-400 border-gray-500/30';
     }
   };
 
-  // Status indicator dot
-  const getStatusDot = (status: StatusEmpilhadeira) => {
-    switch (status) {
-      case StatusEmpilhadeira.OPERACIONAL:
-        return 'bg-emerald-500';
-      case StatusEmpilhadeira.EM_MANUTENCAO:
-        return 'bg-amber-500';
-      case StatusEmpilhadeira.PARADA:
-        return 'bg-red-500';
-      default:
-        return 'bg-gray-500';
-    }
-  };
-
+  const statusConfig = getStatusConfig(forklift.status);
+  const StatusIcon = statusConfig.icon;
   const formattedHourMeter = forklift.horimetro.toString().padStart(5, '0');
 
   return (
     <div 
       className={cn(
-        "group relative overflow-hidden rounded-xl border bg-card text-card-foreground shadow-sm",
-        "transition-all duration-300 hover:shadow-lg hover:shadow-primary/5 hover:-translate-y-1",
-        "cursor-pointer backdrop-blur-sm border-border/50",
-        "p-4"
+        "group relative overflow-hidden rounded-xl border border-white/10",
+        "bg-gradient-to-br from-slate-800/80 to-slate-900/80 backdrop-blur-sm",
+        "shadow-lg hover:shadow-2xl transition-all duration-300 ease-out",
+        "cursor-pointer hover:scale-102 hover:-translate-y-1",
+        "focus-within:ring-2 focus-within:ring-blue-500/50 focus-within:outline-none",
+        "active:scale-98",
+        "p-6"
       )}
       onClick={onClick}
+      tabIndex={0}
+      role="button"
     >
+      {/* Background Pattern */}
+      <div className="absolute inset-0 opacity-5">
+        <svg className="w-full h-full" viewBox="0 0 100 100" fill="none">
+          <pattern id="grid" width="10" height="10" patternUnits="userSpaceOnUse">
+            <path d="M 10 0 L 0 0 0 10" fill="none" stroke="white" strokeWidth="0.5"/>
+          </pattern>
+          <rect width="100" height="100" fill="url(#grid)" />
+        </svg>
+      </div>
+
       {/* Header with ID and Status */}
-      <div className="flex items-start justify-between mb-3">
+      <div className="relative z-10 flex items-start justify-between mb-4">
         <div className="flex-1">
-          <div className="flex items-center gap-2 mb-1">
-            <h3 className="text-lg font-bold text-foreground">{forklift.id}</h3>
-            <div className={cn("w-2 h-2 rounded-full", getStatusDot(forklift.status))} />
+          <div className="flex items-center gap-3 mb-2">
+            <h3 className="text-xl font-bold text-white tracking-tight">{forklift.id}</h3>
+            <Badge className={cn(
+              "text-xs font-semibold tracking-wide border px-2.5 py-1",
+              "flex items-center gap-1.5",
+              statusConfig.color
+            )}>
+              <StatusIcon className="w-3 h-3" />
+              {forklift.status}
+            </Badge>
           </div>
-          <p className="text-sm font-medium text-muted-foreground">{forklift.modelo}</p>
-          <p className="text-xs text-muted-foreground">{forklift.marca}</p>
+          <p className="text-base font-medium text-slate-300 mb-1">{forklift.modelo}</p>
+          <p className="text-sm text-slate-500">{forklift.marca}</p>
         </div>
-        <Badge variant="outline" className={cn("text-xs font-medium", getStatusColor(forklift.status))}>
-          {forklift.status}
-        </Badge>
       </div>
 
       {/* Type Badge */}
-      <div className="mb-3">
-        <Badge variant="outline" className={cn("text-xs", getTypeColor(forklift.tipo))}>
-          <Settings className="w-3 h-3 mr-1" />
+      <div className="relative z-10 mb-4">
+        <Badge className={cn(
+          "text-xs font-medium border px-2.5 py-1 flex items-center gap-1.5 w-fit",
+          getTypeColor(forklift.tipo)
+        )}>
+          <Settings className="w-3 h-3" />
           {forklift.tipo}
         </Badge>
       </div>
       
       {/* Key Information Grid */}
-      <div className="space-y-2 mb-4">
-        <div className="flex items-center justify-between text-sm">
-          <div className="flex items-center text-muted-foreground">
-            <Gauge className="w-4 h-4 mr-2" />
-            <span>Horímetro</span>
+      <div className="relative z-10 space-y-3 mb-5">
+        <div className="flex items-center justify-between">
+          <div className="flex items-center text-slate-400">
+            <Gauge className="w-4 h-4 mr-2 text-blue-400" />
+            <span className="text-sm font-medium">Horímetro</span>
           </div>
-          <span className="font-mono font-semibold bg-muted/50 px-2 py-1 rounded text-xs">
+          <span className="font-mono font-bold text-slate-200 bg-slate-700/50 px-2.5 py-1 rounded-md text-sm border border-slate-600/50">
             {formattedHourMeter}h
           </span>
         </div>
         
-        <div className="flex items-center justify-between text-sm">
-          <div className="flex items-center text-muted-foreground">
-            <Calendar className="w-4 h-4 mr-2" />
-            <span>Últ. Manutenção</span>
+        <div className="flex items-center justify-between">
+          <div className="flex items-center text-slate-400">
+            <Calendar className="w-4 h-4 mr-2 text-emerald-400" />
+            <span className="text-sm font-medium">Últ. Manutenção</span>
           </div>
-          <span className="text-xs font-medium">{forklift.ultimaManutencao}</span>
+          <span className="text-sm font-semibold text-slate-300">{forklift.ultimaManutencao}</span>
         </div>
 
-        <div className="flex items-center justify-between text-sm">
-          <div className="flex items-center text-muted-foreground">
-            <MapPin className="w-4 h-4 mr-2" />
-            <span>Localização</span>
+        <div className="flex items-center justify-between">
+          <div className="flex items-center text-slate-400">
+            <MapPin className="w-4 h-4 mr-2 text-amber-400" />
+            <span className="text-sm font-medium">Localização</span>
           </div>
-          <span className="text-xs font-medium">{forklift.localizacaoAtual}</span>
+          <span className="text-sm font-semibold text-slate-300">{forklift.localizacaoAtual}</span>
         </div>
       </div>
       
-      {/* Capacity Footer */}
-      <div className="pt-3 border-t border-border/50">
-        <div className="flex justify-between items-center">
-          <span className="text-xs text-muted-foreground">Capacidade</span>
-          <span className="font-bold text-sm bg-gradient-to-r from-primary to-primary/80 bg-clip-text text-transparent">
-            {forklift.capacidade} kg
-          </span>
+      {/* Capacity Highlight Section */}
+      <div className="relative z-10 pt-4 border-t border-slate-700/50">
+        <div className="bg-slate-800/60 rounded-lg p-4 border border-slate-600/30">
+          <div className="flex justify-between items-center">
+            <span className="text-sm font-medium text-slate-400 tracking-wide">CAPACIDADE</span>
+            <div className="text-right">
+              <span className="text-2xl font-black text-blue-400 tracking-tight">
+                {forklift.capacidade.toLocaleString()}
+              </span>
+              <span className="text-sm font-semibold text-slate-400 ml-1">kg</span>
+            </div>
+          </div>
         </div>
       </div>
 
       {/* Hover Effect Overlay */}
-      <div className="absolute inset-0 bg-gradient-to-br from-primary/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 rounded-xl pointer-events-none" />
+      <div className="absolute inset-0 bg-gradient-to-br from-blue-500/5 to-purple-500/5 opacity-0 group-hover:opacity-100 transition-opacity duration-300 rounded-xl pointer-events-none" />
+      
+      {/* Glow Effect */}
+      <div className="absolute inset-0 rounded-xl bg-gradient-to-br from-blue-500/10 to-transparent opacity-0 group-hover:opacity-50 transition-opacity duration-300 blur-xl" />
     </div>
   );
 };

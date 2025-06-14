@@ -340,17 +340,17 @@ const ForkliftsPage = () => {
       </div>
       
       {/* Compact Filters Section */}
-      <div className="bg-background/60 backdrop-blur-sm border rounded-xl p-4 shadow-sm">
+      <div className="bg-slate-800/30 backdrop-blur-sm border border-slate-700/50 rounded-xl p-4 shadow-lg">
         <div className="flex flex-col lg:flex-row gap-4">
           {/* Left side - Search and basic filters */}
           <div className="flex-1 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
             {/* Search */}
             <div className="relative">
-              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground" size={16} />
+              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-slate-400" size={16} />
               <input
                 type="text"
                 placeholder="Buscar por ID ou modelo..."
-                className="pl-9 h-9 w-full rounded-lg border border-input bg-background/80 px-3 py-2 text-sm placeholder:text-muted-foreground focus:border-primary focus:outline-none"
+                className="pl-9 h-9 w-full rounded-lg border border-slate-600/50 bg-slate-700/50 px-3 py-2 text-sm text-slate-200 placeholder:text-slate-400 focus:border-blue-500/50 focus:outline-none focus:ring-1 focus:ring-blue-500/25"
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
               />
@@ -358,7 +358,7 @@ const ForkliftsPage = () => {
             
             {/* Status filter */}
             <select 
-              className="h-9 w-full rounded-lg border border-input bg-background/80 px-3 py-1 text-sm focus:border-primary focus:outline-none"
+              className="h-9 w-full rounded-lg border border-slate-600/50 bg-slate-700/50 px-3 py-1 text-sm text-slate-200 focus:border-blue-500/50 focus:outline-none focus:ring-1 focus:ring-blue-500/25"
               value={statusFilter}
               onChange={(e) => setStatusFilter(e.target.value as StatusEmpilhadeira | 'all')}
             >
@@ -370,7 +370,7 @@ const ForkliftsPage = () => {
             
             {/* Type filter */}
             <select 
-              className="h-9 w-full rounded-lg border border-input bg-background/80 px-3 py-1 text-sm focus:border-primary focus:outline-none"
+              className="h-9 w-full rounded-lg border border-slate-600/50 bg-slate-700/50 px-3 py-1 text-sm text-slate-200 focus:border-blue-500/50 focus:outline-none focus:ring-1 focus:ring-blue-500/25"
               value={typeFilter}
               onChange={(e) => setTypeFilter(e.target.value as TipoEmpilhadeira | 'all')}
             >
@@ -392,7 +392,7 @@ const ForkliftsPage = () => {
             />
             
             {/* View mode toggle */}
-            <div className="flex items-center bg-muted/50 rounded-lg p-1">
+            <div className="flex items-center bg-slate-700/30 rounded-lg p-1 border border-slate-600/30">
               <Button
                 variant={viewMode === 'grid' ? 'default' : 'ghost'}
                 size="sm"
@@ -415,38 +415,45 @@ const ForkliftsPage = () => {
       </div>
       
       {/* Results */}
-      <Card>
+      <Card className="bg-slate-800/20 border-slate-700/50 shadow-xl">
         <CardHeader className="pb-4">
           <div className="flex justify-between items-center">
-            <CardTitle className="text-lg">
+            <CardTitle className="text-lg text-slate-200">
               Empilhadeiras ({filteredForklifts.length} de {forklifts.length})
             </CardTitle>
           </div>
         </CardHeader>
         <CardContent className="space-y-4">
           {viewMode === 'grid' ? (
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
-              {paginatedData.map((forklift) => (
-                <ForkliftCard
+            <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4 gap-6 animate-fade-in">
+              {paginatedData.map((forklift, index) => (
+                <div 
                   key={forklift.id}
-                  forklift={forklift}
-                  onClick={() => handleForkliftClick(forklift.id)}
-                />
+                  className="animate-fade-in"
+                  style={{ animationDelay: `${index * 100}ms` }}
+                >
+                  <ForkliftCard
+                    forklift={forklift}
+                    onClick={() => handleForkliftClick(forklift.id)}
+                  />
+                </div>
               ))}
             </div>
           ) : (
-            <ForkliftList 
-              forklifts={paginatedData}
-              onForkliftClick={handleForkliftClick}
-              onDeleteForklift={handleDeleteForklift}
-            />
+            <div className="animate-fade-in">
+              <ForkliftList 
+                forklifts={paginatedData}
+                onForkliftClick={handleForkliftClick}
+                onDeleteForklift={handleDeleteForklift}
+              />
+            </div>
           )}
           
           {filteredForklifts.length === 0 && (
-            <div className="text-center py-12 text-muted-foreground">
-              <div className="text-4xl mb-4">🔍</div>
-              <h3 className="text-lg font-medium mb-2">Nenhuma empilhadeira encontrada</h3>
-              <p>Tente ajustar os filtros ou adicionar uma nova empilhadeira.</p>
+            <div className="text-center py-16 text-slate-400 animate-fade-in">
+              <div className="text-6xl mb-6 opacity-50">🔍</div>
+              <h3 className="text-xl font-semibold mb-3 text-slate-300">Nenhuma empilhadeira encontrada</h3>
+              <p className="text-slate-400">Tente ajustar os filtros ou adicionar uma nova empilhadeira.</p>
             </div>
           )}
         </CardContent>
