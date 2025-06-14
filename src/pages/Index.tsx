@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import Navbar from '@/components/layout/Navbar';
 import Sidebar from '@/components/layout/Sidebar';
@@ -7,6 +6,7 @@ import ForkliftCard from '@/components/forklift/ForkliftCard';
 import { Forklift, ForkliftStatus, ForkliftType } from '@/types';
 import { useIsMobile } from '@/hooks/use-mobile';
 import { cn } from '@/lib/utils';
+import { useSidebarGlobal } from '@/components/layout/SidebarContext';
 
 // Mock data for the dashboard
 const mockForklifts: Forklift[] = [
@@ -54,41 +54,52 @@ const mockForklifts: Forklift[] = [
 
 const Index = () => {
   const isMobile = useIsMobile();
+  const { state: sidebarState } = useSidebarGlobal();
   const [currentDate, setCurrentDate] = useState<string>('');
-  
+
   useEffect(() => {
     // Set current date in Brazilian format
     const now = new Date();
-    const options: Intl.DateTimeFormatOptions = { 
-      weekday: 'long', 
-      year: 'numeric', 
-      month: 'long', 
-      day: 'numeric' 
+    const options: Intl.DateTimeFormatOptions = {
+      weekday: 'long',
+      year: 'numeric',
+      month: 'long',
+      day: 'numeric'
     };
     setCurrentDate(now.toLocaleDateString('pt-BR', options));
-    
+
     // First letter uppercase
-    setCurrentDate(prev => 
+    setCurrentDate(prev =>
       prev.charAt(0).toUpperCase() + prev.slice(1)
     );
   }, []);
 
+  // Calcula largura da sidebar
+  const getSidebarWidth = () => {
+    if (isMobile) return 0;
+    if (sidebarState === 'collapsed') return 64;
+    return 256;
+  };
+
   return (
     <div className="flex min-h-screen bg-background">
       <Sidebar />
-      
-      <div className={cn(
-        "flex-1 flex flex-col",
-        !isMobile && "ml-64" // Offset for sidebar when not mobile
-      )}>
-        <Navbar 
-          title="Dashboard" 
+      <div
+        className={cn(
+          "flex-1 flex flex-col transition-all duration-300",
+        )}
+        style={{
+          marginLeft: isMobile ? 0 : getSidebarWidth(),
+        }}
+      >
+        <Navbar
+          title="Dashboard"
           subtitle={currentDate}
         />
-        
+
         <main className="flex-1 px-6 py-6">
           <DashboardOverview />
-          
+
           <section className="mt-8 slide-enter" style={{ animationDelay: '0.4s' }}>
             <div className="flex justify-between items-center mb-4">
               <h2 className="text-2xl font-semibold">Empilhadeiras Em Destaque</h2>
@@ -96,12 +107,12 @@ const Index = () => {
                 Ver todas
               </button>
             </div>
-            
+
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
               {mockForklifts.map((forklift) => (
-                <ForkliftCard 
-                  key={forklift.id} 
-                  forklift={forklift} 
+                <ForkliftCard
+                  key={forklift.id}
+                  forklift={forklift}
                   onClick={() => console.log(`Clicked on ${forklift.id}`)}
                 />
               ))}
