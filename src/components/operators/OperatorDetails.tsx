@@ -9,7 +9,7 @@ import {
   DialogFooter,
 } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
-import { User } from '@/types';
+import { User, StatusCertificacao } from '@/types';
 import { Badge } from "@/components/ui/badge";
 import { cn } from '@/lib/utils';
 import { BadgeCheck, Calendar, CalendarDays, Clock, FileText, Phone, User as UserIcon } from 'lucide-react';
@@ -27,11 +27,11 @@ const OperatorDetails = ({ open, onOpenChange, operator, onEdit }: OperatorDetai
   // Get status color classes
   const getStatusClass = (status: string) => {
     switch (status) {
-      case 'Regular':
+      case StatusCertificacao.VALIDO:
         return 'bg-green-100 text-green-800 border-green-200';
-      case 'Próximo do Vencimento':
+      case StatusCertificacao.VENCENDO:
         return 'bg-yellow-100 text-yellow-800 border-yellow-200';
-      case 'Vencido':
+      case StatusCertificacao.VENCIDO:
         return 'bg-red-100 text-red-800 border-red-200';
       default:
         return 'bg-gray-100 text-gray-800 border-gray-200';
@@ -43,8 +43,8 @@ const OperatorDetails = ({ open, onOpenChange, operator, onEdit }: OperatorDetai
       <DialogContent className="sm:max-w-[600px]">
         <DialogHeader>
           <DialogTitle className="flex items-center gap-2">
-            <span className="text-xl">{operator.name}</span>
-            <Badge variant="outline">{operator.role}</Badge>
+            <span className="text-xl">{operator.name || operator.nome}</span>
+            <Badge variant="outline">{operator.role || operator.funcao}</Badge>
           </DialogTitle>
           <DialogDescription>
             ID: {operator.id}
@@ -68,14 +68,14 @@ const OperatorDetails = ({ open, onOpenChange, operator, onEdit }: OperatorDetai
                 <span className="text-muted-foreground">Contato:</span>
                 <span className="ml-2 flex items-center">
                   <Phone className="h-3 w-3 mr-1" />
-                  {operator.contact}
+                  {operator.contact || operator.telefone}
                 </span>
               </div>
               
               <div className="text-sm">
                 <span className="text-muted-foreground">Turno:</span>
                 <span className="ml-2">
-                  <Badge variant="secondary" className="font-normal">{operator.shift}</Badge>
+                  <Badge variant="secondary" className="font-normal">{operator.shift || operator.turno}</Badge>
                 </span>
               </div>
             </div>
@@ -87,7 +87,7 @@ const OperatorDetails = ({ open, onOpenChange, operator, onEdit }: OperatorDetai
             
             <div className="text-sm">
               <span className="text-muted-foreground">Data de Registro:</span>
-              <span className="ml-2">{operator.registrationDate}</span>
+              <span className="ml-2">{operator.registrationDate || operator.dataAdmissao}</span>
             </div>
           </div>
           
@@ -101,28 +101,28 @@ const OperatorDetails = ({ open, onOpenChange, operator, onEdit }: OperatorDetai
               <div className="p-3 rounded-md border">
                 <div className="flex justify-between items-center mb-2">
                   <span className="text-sm font-medium">ASO</span>
-                  <Badge className={cn("font-normal", getStatusClass(operator.asoStatus))}>
+                  <Badge className={cn("font-normal", getStatusClass(operator.asoStatus || StatusCertificacao.VALIDO))}>
                     <BadgeCheck className="mr-1 h-3 w-3" />
-                    {operator.asoStatus}
+                    {operator.asoStatus || StatusCertificacao.VALIDO}
                   </Badge>
                 </div>
                 <div className="flex items-center text-sm text-muted-foreground">
                   <Calendar className="h-3 w-3 mr-1" />
-                  <span>Validade: {operator.asoExpirationDate}</span>
+                  <span>Validade: {operator.asoExpirationDate || 'N/A'}</span>
                 </div>
               </div>
               
               <div className="p-3 rounded-md border">
                 <div className="flex justify-between items-center mb-2">
                   <span className="text-sm font-medium">NR-11</span>
-                  <Badge className={cn("font-normal", getStatusClass(operator.nrStatus))}>
+                  <Badge className={cn("font-normal", getStatusClass(operator.nrStatus || StatusCertificacao.VALIDO))}>
                     <BadgeCheck className="mr-1 h-3 w-3" />
-                    {operator.nrStatus}
+                    {operator.nrStatus || StatusCertificacao.VALIDO}
                   </Badge>
                 </div>
                 <div className="flex items-center text-sm text-muted-foreground">
                   <Calendar className="h-3 w-3 mr-1" />
-                  <span>Validade: {operator.nrExpirationDate}</span>
+                  <span>Validade: {operator.nrExpirationDate || 'N/A'}</span>
                 </div>
               </div>
             </div>

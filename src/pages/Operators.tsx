@@ -5,7 +5,7 @@ import Sidebar from '@/components/layout/Sidebar';
 import { Button } from "@/components/ui/button";
 import { useIsMobile } from '@/hooks/use-mobile';
 import { cn } from '@/lib/utils';
-import { CertificateStatus, User, UserRole } from '@/types';
+import { StatusCertificacao, User, FuncaoOperador } from '@/types';
 import { BadgeCheck, Filter, Search, UserPlus } from 'lucide-react';
 import { Input } from '@/components/ui/input';
 import OperatorDialog from '@/components/operators/OperatorDialog';
@@ -16,68 +16,128 @@ import { useToast } from '@/hooks/use-toast';
 const initialOperators: User[] = [
   {
     id: 'OP001',
+    nome: 'Carlos Silva',
     name: 'Carlos Silva',
-    role: UserRole.OPERATOR,
+    funcao: FuncaoOperador.OPERADOR,
+    role: FuncaoOperador.OPERADOR,
     cpf: '123.456.789-10',
+    telefone: '(11) 98765-4321',
     contact: '(11) 98765-4321',
+    turno: 'Manhã',
     shift: 'Manhã',
+    dataAdmissao: '15/03/2022',
     registrationDate: '15/03/2022',
     asoExpirationDate: '15/03/2024',
     nrExpirationDate: '20/05/2024',
-    asoStatus: CertificateStatus.REGULAR,
-    nrStatus: CertificateStatus.REGULAR
+    asoStatus: StatusCertificacao.VALIDO,
+    nrStatus: StatusCertificacao.VALIDO,
+    email: 'carlos.silva@empresa.com',
+    setor: 'Armazém',
+    certificacoes: [],
+    avaliacoes: [],
+    horasTrabalhadas: 1200,
+    produtividade: 92.5,
+    status: 'Ativo'
   },
   {
     id: 'OP002',
+    nome: 'Maria Oliveira',
     name: 'Maria Oliveira',
-    role: UserRole.OPERATOR,
+    funcao: FuncaoOperador.OPERADOR,
+    role: FuncaoOperador.OPERADOR,
     cpf: '987.654.321-00',
+    telefone: '(11) 91234-5678',
     contact: '(11) 91234-5678',
+    turno: 'Tarde',
     shift: 'Tarde',
+    dataAdmissao: '10/06/2022',
     registrationDate: '10/06/2022',
     asoExpirationDate: '10/06/2023',
     nrExpirationDate: '15/08/2023',
-    asoStatus: CertificateStatus.EXPIRED,
-    nrStatus: CertificateStatus.EXPIRED
+    asoStatus: StatusCertificacao.VENCIDO,
+    nrStatus: StatusCertificacao.VENCIDO,
+    email: 'maria.oliveira@empresa.com',
+    setor: 'Produção',
+    certificacoes: [],
+    avaliacoes: [],
+    horasTrabalhadas: 980,
+    produtividade: 88.3,
+    status: 'Ativo'
   },
   {
     id: 'OP003',
+    nome: 'João Pereira',
     name: 'João Pereira',
-    role: UserRole.OPERATOR,
+    funcao: FuncaoOperador.OPERADOR,
+    role: FuncaoOperador.OPERADOR,
     cpf: '456.789.123-45',
+    telefone: '(11) 97654-3210',
     contact: '(11) 97654-3210',
+    turno: 'Noite',
     shift: 'Noite',
+    dataAdmissao: '05/01/2023',
     registrationDate: '05/01/2023',
     asoExpirationDate: '05/01/2024',
     nrExpirationDate: '10/02/2024',
-    asoStatus: CertificateStatus.WARNING,
-    nrStatus: CertificateStatus.REGULAR
+    asoStatus: StatusCertificacao.VENCENDO,
+    nrStatus: StatusCertificacao.VALIDO,
+    email: 'joao.pereira@empresa.com',
+    setor: 'Logística',
+    certificacoes: [],
+    avaliacoes: [],
+    horasTrabalhadas: 756,
+    produtividade: 95.1,
+    status: 'Ativo'
   },
   {
     id: 'OP004',
+    nome: 'Ana Costa',
     name: 'Ana Costa',
-    role: UserRole.OPERATOR,
+    funcao: FuncaoOperador.OPERADOR,
+    role: FuncaoOperador.OPERADOR,
     cpf: '789.123.456-78',
+    telefone: '(11) 94321-8765',
     contact: '(11) 94321-8765',
+    turno: 'Manhã',
     shift: 'Manhã',
+    dataAdmissao: '20/04/2023',
     registrationDate: '20/04/2023',
     asoExpirationDate: '20/04/2024',
     nrExpirationDate: '25/06/2023',
-    asoStatus: CertificateStatus.REGULAR,
-    nrStatus: CertificateStatus.WARNING
+    asoStatus: StatusCertificacao.VALIDO,
+    nrStatus: StatusCertificacao.VENCENDO,
+    email: 'ana.costa@empresa.com',
+    setor: 'Expedição',
+    certificacoes: [],
+    avaliacoes: [],
+    horasTrabalhadas: 420,
+    produtividade: 91.7,
+    status: 'Ativo'
   },
   {
     id: 'SV001',
+    nome: 'Pedro Santos',
     name: 'Pedro Santos',
-    role: UserRole.SUPERVISOR,
+    funcao: FuncaoOperador.SUPERVISOR,
+    role: FuncaoOperador.SUPERVISOR,
     cpf: '321.654.987-00',
+    telefone: '(11) 95678-1234',
     contact: '(11) 95678-1234',
+    turno: 'Integral',
     shift: 'Integral',
+    dataAdmissao: '12/11/2021',
     registrationDate: '12/11/2021',
     asoExpirationDate: '12/11/2023',
     nrExpirationDate: '20/01/2024',
-    asoStatus: CertificateStatus.WARNING,
-    nrStatus: CertificateStatus.WARNING
+    asoStatus: StatusCertificacao.VENCENDO,
+    nrStatus: StatusCertificacao.VENCENDO,
+    email: 'pedro.santos@empresa.com',
+    setor: 'Supervisão',
+    certificacoes: [],
+    avaliacoes: [],
+    horasTrabalhadas: 1850,
+    produtividade: 97.2,
+    status: 'Ativo'
   }
 ];
 
@@ -98,37 +158,37 @@ const OperatorsPage = () => {
   // Filter operators based on search and filters
   const filteredOperators = operators.filter(operator => {
     // Search filter
-    const matchesSearch = operator.name.toLowerCase().includes(search.toLowerCase()) || 
+    const matchesSearch = (operator.name || operator.nome || '').toLowerCase().includes(search.toLowerCase()) || 
                           operator.id.toLowerCase().includes(search.toLowerCase());
     
     // Role filter
     const matchesRole = role === 'all' || 
-                       (role === 'operator' && operator.role === UserRole.OPERATOR) ||
-                       (role === 'supervisor' && operator.role === UserRole.SUPERVISOR);
+                       (role === 'operator' && (operator.role === FuncaoOperador.OPERADOR || operator.funcao === FuncaoOperador.OPERADOR)) ||
+                       (role === 'supervisor' && (operator.role === FuncaoOperador.SUPERVISOR || operator.funcao === FuncaoOperador.SUPERVISOR));
     
     // Certificate status filter
     const matchesCertStatus = certStatus === 'all' || 
                              (certStatus === 'regular' && 
-                              operator.asoStatus === CertificateStatus.REGULAR && 
-                              operator.nrStatus === CertificateStatus.REGULAR) ||
+                              operator.asoStatus === StatusCertificacao.VALIDO && 
+                              operator.nrStatus === StatusCertificacao.VALIDO) ||
                              (certStatus === 'warning' && 
-                              (operator.asoStatus === CertificateStatus.WARNING || 
-                               operator.nrStatus === CertificateStatus.WARNING)) ||
+                              (operator.asoStatus === StatusCertificacao.VENCENDO || 
+                               operator.nrStatus === StatusCertificacao.VENCENDO)) ||
                              (certStatus === 'expired' && 
-                              (operator.asoStatus === CertificateStatus.EXPIRED || 
-                               operator.nrStatus === CertificateStatus.EXPIRED));
+                              (operator.asoStatus === StatusCertificacao.VENCIDO || 
+                               operator.nrStatus === StatusCertificacao.VENCIDO));
     
     return matchesSearch && matchesRole && matchesCertStatus;
   });
 
   // Get status color classes
-  const getStatusClass = (status: CertificateStatus) => {
+  const getStatusClass = (status: StatusCertificacao) => {
     switch (status) {
-      case CertificateStatus.REGULAR:
+      case StatusCertificacao.VALIDO:
         return 'bg-status-operational/10 text-status-operational';
-      case CertificateStatus.WARNING:
+      case StatusCertificacao.VENCENDO:
         return 'bg-status-maintenance/10 text-status-maintenance';
-      case CertificateStatus.EXPIRED:
+      case StatusCertificacao.VENCIDO:
         return 'bg-status-warning/10 text-status-warning';
       default:
         return 'bg-muted text-muted-foreground';
@@ -279,32 +339,32 @@ const OperatorsPage = () => {
                     <tr key={operator.id} className="hover:bg-muted/50 transition-colors">
                       <td className="p-4">{operator.id}</td>
                       <td className="p-4">
-                        <div className="font-medium">{operator.name}</div>
-                        <div className="text-sm text-muted-foreground">{operator.contact}</div>
+                        <div className="font-medium">{operator.name || operator.nome}</div>
+                        <div className="text-sm text-muted-foreground">{operator.contact || operator.telefone}</div>
                       </td>
-                      <td className="p-4">{operator.role}</td>
+                      <td className="p-4">{operator.role || operator.funcao}</td>
                       <td className="p-4">
                         <div className={cn(
                           "inline-flex items-center px-2.5 py-0.5 rounded-full text-xs",
-                          getStatusClass(operator.asoStatus)
+                          getStatusClass(operator.asoStatus || StatusCertificacao.VALIDO)
                         )}>
                           <BadgeCheck className="w-3 h-3 mr-1" />
-                          {operator.asoStatus}
+                          {operator.asoStatus || StatusCertificacao.VALIDO}
                         </div>
                         <div className="text-xs text-muted-foreground mt-1">
-                          Vence: {operator.asoExpirationDate}
+                          Vence: {operator.asoExpirationDate || 'N/A'}
                         </div>
                       </td>
                       <td className="p-4">
                         <div className={cn(
                           "inline-flex items-center px-2.5 py-0.5 rounded-full text-xs",
-                          getStatusClass(operator.nrStatus)
+                          getStatusClass(operator.nrStatus || StatusCertificacao.VALIDO)
                         )}>
                           <BadgeCheck className="w-3 h-3 mr-1" />
-                          {operator.nrStatus}
+                          {operator.nrStatus || StatusCertificacao.VALIDO}
                         </div>
                         <div className="text-xs text-muted-foreground mt-1">
-                          Vence: {operator.nrExpirationDate}
+                          Vence: {operator.nrExpirationDate || 'N/A'}
                         </div>
                       </td>
                       <td className="p-4">

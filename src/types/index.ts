@@ -3,7 +3,7 @@
 
 export enum StatusEmpilhadeira {
   OPERACIONAL = "Operacional",
-  EM_MANUTENCAO = "Em Manutenção",
+  EM_MANUTENCAO = "Em Manutenção", 
   PARADA = "Parada",
   EM_REPARO = "Em Reparo",
   DISPONIVEL = "Disponível"
@@ -140,6 +140,17 @@ export interface Operador {
   produtividade: number;
   status: 'Ativo' | 'Inativo' | 'Férias' | 'Licença';
   observacoes?: string;
+  
+  // Legacy English properties for backward compatibility
+  name?: string;
+  role?: FuncaoOperador;
+  contact?: string;
+  shift?: string;
+  registrationDate?: string;
+  asoExpirationDate?: string;
+  nrExpirationDate?: string;
+  asoStatus?: StatusCertificacao;
+  nrStatus?: StatusCertificacao;
 }
 
 // Legacy alias

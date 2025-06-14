@@ -1,8 +1,7 @@
-
 import React, { useState } from 'react';
 import Navbar from '@/components/layout/Navbar';
 import Sidebar from '@/components/layout/Sidebar';
-import { Forklift, ForkliftStatus, ForkliftType } from '@/types';
+import { Forklift, StatusEmpilhadeira, TipoEmpilhadeira } from '@/types';
 import { useIsMobile } from '@/hooks/use-mobile';
 import { cn } from '@/lib/utils';
 import { Button } from '@/components/ui/button';
@@ -17,82 +16,218 @@ import { useToast } from '@/hooks/use-toast';
 const initialForklifts: Forklift[] = [
   {
     id: 'G001',
+    modelo: 'Toyota 8FGU25',
+    marca: 'Toyota',
+    tipo: TipoEmpilhadeira.GAS,
+    status: StatusEmpilhadeira.OPERACIONAL,
+    capacidade: 2500,
+    anoFabricacao: 2022,
+    dataAquisicao: '10/05/2022',
+    numeroSerie: 'TOY001',
+    horimetro: 12583,
+    ultimaManutencao: '15/09/2023',
+    proximaManutencao: '15/12/2023',
+    localizacaoAtual: 'Setor A',
+    setor: 'Armazém',
+    custoHora: 45.50,
+    eficiencia: 87.5,
+    disponibilidade: 92.3,
+    qrCode: 'QR001',
+    // Legacy properties for compatibility
     model: 'Toyota 8FGU25',
-    type: ForkliftType.GAS,
+    type: TipoEmpilhadeira.GAS,
     capacity: '2.500 kg',
     acquisitionDate: '10/05/2022',
     lastMaintenance: '15/09/2023',
-    status: ForkliftStatus.OPERATIONAL,
     hourMeter: 12583,
   },
   {
     id: 'E002',
+    modelo: 'Hyster E50XN',
+    marca: 'Hyster',
+    tipo: TipoEmpilhadeira.ELETRICA,
+    status: StatusEmpilhadeira.OPERACIONAL,
+    capacidade: 2250,
+    anoFabricacao: 2021,
+    dataAquisicao: '22/11/2021',
+    numeroSerie: 'HYS002',
+    horimetro: 8452,
+    ultimaManutencao: '30/10/2023',
+    proximaManutencao: '30/01/2024',
+    localizacaoAtual: 'Setor B',
+    setor: 'Produção',
+    custoHora: 38.75,
+    eficiencia: 89.2,
+    disponibilidade: 94.1,
+    qrCode: 'QR002',
+    // Legacy properties for compatibility
     model: 'Hyster E50XN',
-    type: ForkliftType.ELECTRIC,
+    type: TipoEmpilhadeira.ELETRICA,
     capacity: '2.250 kg',
     acquisitionDate: '22/11/2021',
     lastMaintenance: '30/10/2023',
-    status: ForkliftStatus.OPERATIONAL,
     hourMeter: 8452,
   },
   {
     id: 'R003',
+    modelo: 'Crown RR5725',
+    marca: 'Crown',
+    tipo: TipoEmpilhadeira.RETRATIL,
+    status: StatusEmpilhadeira.EM_MANUTENCAO,
+    capacidade: 1800,
+    anoFabricacao: 2022,
+    dataAquisicao: '04/03/2022',
+    numeroSerie: 'CRW003',
+    horimetro: 10974,
+    ultimaManutencao: '12/08/2023',
+    proximaManutencao: '12/11/2023',
+    localizacaoAtual: 'Oficina',
+    setor: 'Manutenção',
+    custoHora: 42.30,
+    eficiencia: 85.1,
+    disponibilidade: 88.7,
+    qrCode: 'QR003',
+    // Legacy properties for compatibility
     model: 'Crown RR5725',
-    type: ForkliftType.RETRACTABLE,
+    type: TipoEmpilhadeira.RETRATIL,
     capacity: '1.800 kg',
     acquisitionDate: '04/03/2022',
     lastMaintenance: '12/08/2023',
-    status: ForkliftStatus.MAINTENANCE,
     hourMeter: 10974,
   },
   {
     id: 'G004',
+    modelo: 'Yale GLP050',
+    marca: 'Yale',
+    tipo: TipoEmpilhadeira.GAS,
+    status: StatusEmpilhadeira.PARADA,
+    capacidade: 2200,
+    anoFabricacao: 2022,
+    dataAquisicao: '18/07/2022',
+    numeroSerie: 'YAL004',
+    horimetro: 6782,
+    ultimaManutencao: '05/11/2023',
+    proximaManutencao: '05/14/2024',
+    localizacaoAtual: 'Setor C',
+    setor: 'Armazém',
+    custoHora: 40.25,
+    eficiencia: 86.8,
+    disponibilidade: 91.5,
+    qrCode: 'QR004',
+    // Legacy properties for compatibility
     model: 'Yale GLP050',
-    type: ForkliftType.GAS,
+    type: TipoEmpilhadeira.GAS,
     capacity: '2.200 kg',
     acquisitionDate: '18/07/2022',
     lastMaintenance: '05/11/2023',
-    status: ForkliftStatus.STOPPED,
     hourMeter: 6782,
   },
   {
     id: 'E005',
+    modelo: 'Toyota 8FBMT30',
+    marca: 'Toyota',
+    tipo: TipoEmpilhadeira.ELETRICA,
+    status: StatusEmpilhadeira.OPERACIONAL,
+    capacidade: 3000,
+    anoFabricacao: 2023,
+    dataAquisicao: '25/02/2023',
+    numeroSerie: 'TOY005',
+    horimetro: 3209,
+    ultimaManutencao: '10/11/2023',
+    proximaManutencao: '10/14/2024',
+    localizacaoAtual: 'Setor D',
+    setor: 'Produção',
+    custoHora: 42.50,
+    eficiencia: 88.1,
+    disponibilidade: 93.2,
+    qrCode: 'QR005',
+    // Legacy properties for compatibility
     model: 'Toyota 8FBMT30',
-    type: ForkliftType.ELECTRIC,
+    type: TipoEmpilhadeira.ELETRICA,
     capacity: '3.000 kg',
     acquisitionDate: '25/02/2023',
     lastMaintenance: '10/11/2023',
-    status: ForkliftStatus.OPERATIONAL,
     hourMeter: 3209,
   },
   {
     id: 'G006',
+    modelo: 'Caterpillar DP40',
+    marca: 'Caterpillar',
+    tipo: TipoEmpilhadeira.GAS,
+    status: StatusEmpilhadeira.OPERACIONAL,
+    capacidade: 4000,
+    anoFabricacao: 2021,
+    dataAquisicao: '12/08/2021',
+    numeroSerie: 'CAT006',
+    horimetro: 15842,
+    ultimaManutencao: '22/09/2023',
+    proximaManutencao: '22/12/2024',
+    localizacaoAtual: 'Oficina',
+    setor: 'Manutenção',
+    custoHora: 45.00,
+    eficiencia: 89.0,
+    disponibilidade: 95.0,
+    qrCode: 'QR006',
+    // Legacy properties for compatibility
     model: 'Caterpillar DP40',
-    type: ForkliftType.GAS,
+    type: TipoEmpilhadeira.GAS,
     capacity: '4.000 kg',
     acquisitionDate: '12/08/2021',
     lastMaintenance: '22/09/2023',
-    status: ForkliftStatus.OPERATIONAL,
     hourMeter: 15842,
   },
   {
     id: 'R007',
+    modelo: 'Jungheinrich ETR340',
+    marca: 'Jungheinrich',
+    tipo: TipoEmpilhadeira.RETRATIL,
+    status: StatusEmpilhadeira.PARADA,
+    capacidade: 1400,
+    anoFabricacao: 2022,
+    dataAquisicao: '30/05/2022',
+    numeroSerie: 'JUN007',
+    horimetro: 7632,
+    ultimaManutencao: '17/10/2023',
+    proximaManutencao: '17/12/2024',
+    localizacaoAtual: 'Setor E',
+    setor: 'Armazém',
+    custoHora: 39.00,
+    eficiencia: 84.5,
+    disponibilidade: 90.0,
+    qrCode: 'QR007',
+    // Legacy properties for compatibility
     model: 'Jungheinrich ETR340',
-    type: ForkliftType.RETRACTABLE,
+    type: TipoEmpilhadeira.RETRATIL,
     capacity: '1.400 kg',
     acquisitionDate: '30/05/2022',
     lastMaintenance: '17/10/2023',
-    status: ForkliftStatus.STOPPED,
     hourMeter: 7632,
   },
   {
     id: 'E008',
+    modelo: 'Linde E20PH',
+    marca: 'Linde',
+    tipo: TipoEmpilhadeira.ELETRICA,
+    status: StatusEmpilhadeira.MAINTENANCE,
+    capacidade: 2000,
+    anoFabricacao: 2022,
+    dataAquisicao: '05/11/2022',
+    numeroSerie: 'LIN008',
+    horimetro: 5216,
+    ultimaManutencao: '01/11/2023',
+    proximaManutencao: '01/14/2024',
+    localizacaoAtual: 'Setor F',
+    setor: 'Produção',
+    custoHora: 41.00,
+    eficiencia: 87.0,
+    disponibilidade: 92.0,
+    qrCode: 'QR008',
+    // Legacy properties for compatibility
     model: 'Linde E20PH',
-    type: ForkliftType.ELECTRIC,
+    type: TipoEmpilhadeira.ELETRICA,
     capacity: '2.000 kg',
     acquisitionDate: '05/11/2022',
     lastMaintenance: '01/11/2023',
-    status: ForkliftStatus.MAINTENANCE,
     hourMeter: 5216,
   },
 ];
@@ -102,8 +237,8 @@ const ForkliftsPage = () => {
   const { toast } = useToast();
   const [forklifts, setForklifts] = useState<Forklift[]>(initialForklifts);
   const [currentDate, setCurrentDate] = useState<string>('');
-  const [statusFilter, setStatusFilter] = useState<ForkliftStatus | 'all'>('all');
-  const [typeFilter, setTypeFilter] = useState<ForkliftType | 'all'>('all');
+  const [statusFilter, setStatusFilter] = useState<StatusEmpilhadeira | 'all'>('all');
+  const [typeFilter, setTypeFilter] = useState<TipoEmpilhadeira | 'all'>('all');
   const [searchQuery, setSearchQuery] = useState<string>('');
   
   // Dialog states
@@ -134,13 +269,13 @@ const ForkliftsPage = () => {
     }
     
     // Type filter
-    if (typeFilter !== 'all' && forklift.type !== typeFilter) {
+    if (typeFilter !== 'all' && forklift.tipo !== typeFilter) {
       return false;
     }
     
     // Search query
     if (searchQuery && !forklift.id.toLowerCase().includes(searchQuery.toLowerCase()) && 
-        !forklift.model.toLowerCase().includes(searchQuery.toLowerCase())) {
+        !forklift.modelo.toLowerCase().includes(searchQuery.toLowerCase())) {
       return false;
     }
     
@@ -252,12 +387,12 @@ const ForkliftsPage = () => {
                 <select 
                   className="h-10 w-full rounded-md border border-input bg-background px-3 py-2"
                   value={statusFilter}
-                  onChange={(e) => setStatusFilter(e.target.value as ForkliftStatus | 'all')}
+                  onChange={(e) => setStatusFilter(e.target.value as StatusEmpilhadeira | 'all')}
                 >
                   <option value="all">Todos os Status</option>
-                  <option value={ForkliftStatus.OPERATIONAL}>{ForkliftStatus.OPERATIONAL}</option>
-                  <option value={ForkliftStatus.MAINTENANCE}>{ForkliftStatus.MAINTENANCE}</option>
-                  <option value={ForkliftStatus.STOPPED}>{ForkliftStatus.STOPPED}</option>
+                  <option value={StatusEmpilhadeira.OPERACIONAL}>{StatusEmpilhadeira.OPERACIONAL}</option>
+                  <option value={StatusEmpilhadeira.EM_MANUTENCAO}>{StatusEmpilhadeira.EM_MANUTENCAO}</option>
+                  <option value={StatusEmpilhadeira.PARADA}>{StatusEmpilhadeira.PARADA}</option>
                 </select>
               </div>
               
@@ -266,12 +401,12 @@ const ForkliftsPage = () => {
                 <select 
                   className="h-10 w-full rounded-md border border-input bg-background px-3 py-2"
                   value={typeFilter}
-                  onChange={(e) => setTypeFilter(e.target.value as ForkliftType | 'all')}
+                  onChange={(e) => setTypeFilter(e.target.value as TipoEmpilhadeira | 'all')}
                 >
                   <option value="all">Todos os Tipos</option>
-                  <option value={ForkliftType.GAS}>{ForkliftType.GAS}</option>
-                  <option value={ForkliftType.ELECTRIC}>{ForkliftType.ELECTRIC}</option>
-                  <option value={ForkliftType.RETRACTABLE}>{ForkliftType.RETRACTABLE}</option>
+                  <option value={TipoEmpilhadeira.GAS}>{TipoEmpilhadeira.GAS}</option>
+                  <option value={TipoEmpilhadeira.ELETRICA}>{TipoEmpilhadeira.ELETRICA}</option>
+                  <option value={TipoEmpilhadeira.RETRATIL}>{TipoEmpilhadeira.RETRATIL}</option>
                 </select>
               </div>
             </div>

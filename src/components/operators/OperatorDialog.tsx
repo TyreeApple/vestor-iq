@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { Button } from "@/components/ui/button";
 import {
@@ -11,7 +10,7 @@ import {
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { CertificateStatus, User, UserRole } from '@/types';
+import { StatusCertificacao, User, FuncaoOperador } from '@/types';
 import { useToast } from '@/hooks/use-toast';
 import { Calendar } from '@/components/ui/calendar';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
@@ -36,15 +35,27 @@ const OperatorDialog = ({ open, onOpenChange, operator, onSave }: OperatorDialog
     operator || {
       id: `OP${Math.floor(Math.random() * 10000).toString().padStart(3, '0')}`,
       name: '',
-      role: UserRole.OPERATOR,
+      nome: '',
+      role: FuncaoOperador.OPERADOR,
+      funcao: FuncaoOperador.OPERADOR,
       cpf: '',
       contact: '',
+      telefone: '',
       shift: 'Manhã',
+      turno: 'Manhã',
       registrationDate: format(new Date(), 'dd/MM/yyyy'),
+      dataAdmissao: format(new Date(), 'dd/MM/yyyy'),
       asoExpirationDate: format(new Date(new Date().setMonth(new Date().getMonth() + 12)), 'dd/MM/yyyy'),
       nrExpirationDate: format(new Date(new Date().setMonth(new Date().getMonth() + 12)), 'dd/MM/yyyy'),
-      asoStatus: CertificateStatus.REGULAR,
-      nrStatus: CertificateStatus.REGULAR
+      asoStatus: StatusCertificacao.VALIDO,
+      nrStatus: StatusCertificacao.VALIDO,
+      certificacoes: [],
+      avaliacoes: [],
+      horasTrabalhadas: 0,
+      produtividade: 0,
+      status: 'Ativo',
+      email: '',
+      setor: ''
     }
   );
 
@@ -56,7 +67,21 @@ const OperatorDialog = ({ open, onOpenChange, operator, onSave }: OperatorDialog
 
   // Handle form field changes
   const handleChange = (field: keyof User, value: string) => {
-    setFormData(prev => ({ ...prev, [field]: value }));
+    setFormData(prev => ({ 
+      ...prev, 
+      [field]: value,
+      // Keep both Portuguese and English properties in sync
+      ...(field === 'name' && { nome: value }),
+      ...(field === 'nome' && { name: value }),
+      ...(field === 'role' && { funcao: value as FuncaoOperador }),
+      ...(field === 'funcao' && { role: value as FuncaoOperador }),
+      ...(field === 'contact' && { telefone: value }),
+      ...(field === 'telefone' && { contact: value }),
+      ...(field === 'shift' && { turno: value }),
+      ...(field === 'turno' && { shift: value }),
+      ...(field === 'registrationDate' && { dataAdmissao: value }),
+      ...(field === 'dataAdmissao' && { registrationDate: value })
+    }));
   };
 
   // Handle date changes
@@ -72,13 +97,13 @@ const OperatorDialog = ({ open, onOpenChange, operator, onSave }: OperatorDialog
     const diffTime = expirationDate.getTime() - today.getTime();
     const diffDays = Math.ceil(diffTime / (1000 * 3600 * 24));
     
-    let status: CertificateStatus;
+    let status: StatusCertificacao;
     if (diffDays < 0) {
-      status = CertificateStatus.EXPIRED;
+      status = StatusCertificacao.VENCIDO;
     } else if (diffDays < 30) {
-      status = CertificateStatus.WARNING;
+      status = StatusCertificacao.VENCENDO;
     } else {
-      status = CertificateStatus.REGULAR;
+      status = StatusCertificacao.VALIDO;
     }
     
     const statusField = field === 'asoExpirationDate' ? 'asoStatus' : 'nrStatus';
@@ -90,7 +115,7 @@ const OperatorDialog = ({ open, onOpenChange, operator, onSave }: OperatorDialog
     e.preventDefault();
     
     // Validate form
-    if (!formData.name || !formData.cpf || !formData.contact) {
+    if (!formData.name && !formData.nome || !formData.cpf || (!formData.contact && !formData.telefone)) {
       toast({
         title: "Erro ao salvar",
         description: "Preencha todos os campos obrigatórios",
@@ -107,15 +132,27 @@ const OperatorDialog = ({ open, onOpenChange, operator, onSave }: OperatorDialog
       setFormData({
         id: `OP${Math.floor(Math.random() * 10000).toString().padStart(3, '0')}`,
         name: '',
-        role: UserRole.OPERATOR,
+        nome: '',
+        role: FuncaoOperador.OPERADOR,
+        funcao: FuncaoOperador.OPERADOR,
         cpf: '',
         contact: '',
+        telefone: '',
         shift: 'Manhã',
+        turno: 'Manhã',
         registrationDate: format(new Date(), 'dd/MM/yyyy'),
+        dataAdmissao: format(new Date(), 'dd/MM/yyyy'),
         asoExpirationDate: format(new Date(new Date().setMonth(new Date().getMonth() + 12)), 'dd/MM/yyyy'),
         nrExpirationDate: format(new Date(new Date().setMonth(new Date().getMonth() + 12)), 'dd/MM/yyyy'),
-        asoStatus: CertificateStatus.REGULAR,
-        nrStatus: CertificateStatus.REGULAR
+        asoStatus: StatusCertificacao.VALIDO,
+        nrStatus: StatusCertificacao.VALIDO,
+        certificacoes: [],
+        avaliacoes: [],
+        horasTrabalhadas: 0,
+        produtividade: 0,
+        status: 'Ativo',
+        email: '',
+        setor: ''
       });
     }
     
@@ -123,7 +160,7 @@ const OperatorDialog = ({ open, onOpenChange, operator, onSave }: OperatorDialog
     
     toast({
       title: isEditing ? "Operador atualizado" : "Operador adicionado",
-      description: `${formData.name} foi ${isEditing ? 'atualizado' : 'adicionado'} com sucesso!`
+      description: `${formData.name || formData.nome} foi ${isEditing ? 'atualizado' : 'adicionado'} com sucesso!`
     });
   };
 
@@ -145,7 +182,7 @@ const OperatorDialog = ({ open, onOpenChange, operator, onSave }: OperatorDialog
               <Label htmlFor="name">Nome Completo</Label>
               <Input 
                 id="name" 
-                value={formData.name} 
+                value={formData.name || formData.nome || ''} 
                 onChange={(e) => handleChange('name', e.target.value)}
                 placeholder="Nome do operador"
               />
@@ -154,15 +191,15 @@ const OperatorDialog = ({ open, onOpenChange, operator, onSave }: OperatorDialog
             <div className="space-y-2">
               <Label htmlFor="role">Função</Label>
               <Select 
-                value={formData.role} 
+                value={formData.role || formData.funcao || ''} 
                 onValueChange={(value) => handleChange('role', value)}
               >
                 <SelectTrigger>
                   <SelectValue placeholder="Selecione a função" />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value={UserRole.OPERATOR}>Operador</SelectItem>
-                  <SelectItem value={UserRole.SUPERVISOR}>Supervisor</SelectItem>
+                  <SelectItem value={FuncaoOperador.OPERADOR}>Operador</SelectItem>
+                  <SelectItem value={FuncaoOperador.SUPERVISOR}>Supervisor</SelectItem>
                 </SelectContent>
               </Select>
             </div>
@@ -171,7 +208,7 @@ const OperatorDialog = ({ open, onOpenChange, operator, onSave }: OperatorDialog
               <Label htmlFor="cpf">CPF</Label>
               <Input 
                 id="cpf" 
-                value={formData.cpf} 
+                value={formData.cpf || ''} 
                 onChange={(e) => handleChange('cpf', e.target.value)}
                 placeholder="000.000.000-00"
               />
@@ -181,7 +218,7 @@ const OperatorDialog = ({ open, onOpenChange, operator, onSave }: OperatorDialog
               <Label htmlFor="contact">Contato</Label>
               <Input 
                 id="contact" 
-                value={formData.contact} 
+                value={formData.contact || formData.telefone || ''} 
                 onChange={(e) => handleChange('contact', e.target.value)}
                 placeholder="(00) 00000-0000"
               />
@@ -190,7 +227,7 @@ const OperatorDialog = ({ open, onOpenChange, operator, onSave }: OperatorDialog
             <div className="space-y-2">
               <Label htmlFor="shift">Turno</Label>
               <Select 
-                value={formData.shift} 
+                value={formData.shift || formData.turno || ''} 
                 onValueChange={(value) => handleChange('shift', value)}
               >
                 <SelectTrigger>
@@ -215,7 +252,7 @@ const OperatorDialog = ({ open, onOpenChange, operator, onSave }: OperatorDialog
                   className="w-full justify-start text-left font-normal"
                 >
                   <CalendarIcon className="mr-2 h-4 w-4" />
-                  {formData.asoExpirationDate}
+                  {formData.asoExpirationDate || ''}
                 </Button>
               </PopoverTrigger>
               <PopoverContent className="w-auto p-0" align="start">
@@ -239,7 +276,7 @@ const OperatorDialog = ({ open, onOpenChange, operator, onSave }: OperatorDialog
                   className="w-full justify-start text-left font-normal"
                 >
                   <CalendarIcon className="mr-2 h-4 w-4" />
-                  {formData.nrExpirationDate}
+                  {formData.nrExpirationDate || ''}
                 </Button>
               </PopoverTrigger>
               <PopoverContent className="w-auto p-0" align="start">
