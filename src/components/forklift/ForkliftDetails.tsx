@@ -9,7 +9,7 @@ import {
   DialogFooter,
 } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
-import { Forklift, ForkliftStatus } from '@/types';
+import { Empilhadeira, StatusEmpilhadeira } from '@/types';
 import { Badge } from "@/components/ui/badge";
 import { BarChart3, Calendar, Gauge, Info, Settings, Wrench, Truck } from 'lucide-react';
 import { cn } from '@/lib/utils';
@@ -17,7 +17,7 @@ import { cn } from '@/lib/utils';
 interface ForkliftDetailsProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
-  forklift: Forklift | null;
+  forklift: Empilhadeira | null;
   onEdit: () => void;
 }
 
@@ -25,13 +25,13 @@ const ForkliftDetails = ({ open, onOpenChange, forklift, onEdit }: ForkliftDetai
   if (!forklift) return null;
 
   // Get status color classes
-  const getStatusClass = (status: ForkliftStatus) => {
+  const getStatusClass = (status: StatusEmpilhadeira) => {
     switch (status) {
-      case ForkliftStatus.OPERATIONAL:
+      case StatusEmpilhadeira.OPERACIONAL:
         return 'bg-green-100 text-green-800 border-green-200';
-      case ForkliftStatus.MAINTENANCE:
+      case StatusEmpilhadeira.EM_MANUTENCAO:
         return 'bg-yellow-100 text-yellow-800 border-yellow-200';
-      case ForkliftStatus.STOPPED:
+      case StatusEmpilhadeira.PARADA:
         return 'bg-red-100 text-red-800 border-red-200';
       default:
         return 'bg-gray-100 text-gray-800 border-gray-200';
@@ -43,7 +43,7 @@ const ForkliftDetails = ({ open, onOpenChange, forklift, onEdit }: ForkliftDetai
       <DialogContent className="sm:max-w-[600px]">
         <DialogHeader>
           <DialogTitle className="flex items-center gap-2">
-            <span className="text-xl">{forklift.model}</span>
+            <span className="text-xl">{forklift.modelo}</span>
             <Badge variant="outline" className={cn(getStatusClass(forklift.status))}>
               {forklift.status}
             </Badge>
@@ -66,7 +66,7 @@ const ForkliftDetails = ({ open, onOpenChange, forklift, onEdit }: ForkliftDetai
                   <Truck className="h-4 w-4 text-muted-foreground" />
                   <span className="text-sm">Tipo</span>
                 </div>
-                <span className="text-sm font-medium">{forklift.type}</span>
+                <span className="text-sm font-medium">{forklift.tipo}</span>
               </div>
               
               <div className="flex items-center justify-between border-b pb-2">
@@ -74,7 +74,7 @@ const ForkliftDetails = ({ open, onOpenChange, forklift, onEdit }: ForkliftDetai
                   <Settings className="h-4 w-4 text-muted-foreground" />
                   <span className="text-sm">Capacidade</span>
                 </div>
-                <span className="text-sm font-medium">{forklift.capacity}</span>
+                <span className="text-sm font-medium">{forklift.capacidade} kg</span>
               </div>
               
               <div className="flex items-center justify-between border-b pb-2">
@@ -82,7 +82,7 @@ const ForkliftDetails = ({ open, onOpenChange, forklift, onEdit }: ForkliftDetai
                   <Gauge className="h-4 w-4 text-muted-foreground" />
                   <span className="text-sm">Horímetro</span>
                 </div>
-                <span className="text-sm font-medium">{forklift.hourMeter} horas</span>
+                <span className="text-sm font-medium">{forklift.horimetro} horas</span>
               </div>
             </div>
           </div>
@@ -96,12 +96,12 @@ const ForkliftDetails = ({ open, onOpenChange, forklift, onEdit }: ForkliftDetai
             <div className="space-y-3">
               <div className="flex items-center justify-between border-b pb-2">
                 <span className="text-sm">Data de Aquisição</span>
-                <span className="text-sm font-medium">{forklift.acquisitionDate}</span>
+                <span className="text-sm font-medium">{forklift.dataAquisicao}</span>
               </div>
               
               <div className="flex items-center justify-between border-b pb-2">
                 <span className="text-sm">Última Manutenção</span>
-                <span className="text-sm font-medium">{forklift.lastMaintenance}</span>
+                <span className="text-sm font-medium">{forklift.ultimaManutencao}</span>
               </div>
             </div>
             

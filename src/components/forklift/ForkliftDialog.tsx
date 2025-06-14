@@ -11,7 +11,7 @@ import {
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Forklift, ForkliftStatus, ForkliftType } from '@/types';
+import { Empilhadeira, StatusEmpilhadeira, TipoEmpilhadeira } from '@/types';
 import { useToast } from '@/hooks/use-toast';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { format } from 'date-fns';
@@ -24,29 +24,39 @@ import { CalendarIcon } from 'lucide-react';
 interface ForkliftDialogProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
-  forklift?: Forklift;
-  onSave: (forklift: Forklift) => void;
+  forklift?: Empilhadeira;
+  onSave: (forklift: Empilhadeira) => void;
 }
 
 const ForkliftDialog = ({ open, onOpenChange, forklift, onSave }: ForkliftDialogProps) => {
   const { toast } = useToast();
   const isEditing = !!forklift;
   
-  const [formData, setFormData] = useState<Partial<Forklift>>(
+  const [formData, setFormData] = useState<Partial<Empilhadeira>>(
     forklift || {
       id: `${Math.random().toString(36).substring(2, 6).toUpperCase()}`,
-      model: '',
-      type: ForkliftType.GAS,
-      capacity: '',
-      acquisitionDate: '01/01/2023',
-      lastMaintenance: format(new Date(), 'dd/MM/yyyy'),
-      status: ForkliftStatus.OPERATIONAL,
-      hourMeter: 0
+      modelo: '',
+      marca: 'Toyota',
+      tipo: TipoEmpilhadeira.GAS,
+      capacidade: 2500,
+      anoFabricacao: new Date().getFullYear(),
+      dataAquisicao: '01/01/2023',
+      numeroSerie: '',
+      horimetro: 0,
+      ultimaManutencao: format(new Date(), 'dd/MM/yyyy'),
+      proximaManutencao: '',
+      localizacaoAtual: '',
+      setor: '',
+      custoHora: 0,
+      eficiencia: 85,
+      disponibilidade: 95,
+      qrCode: '',
+      status: StatusEmpilhadeira.OPERACIONAL
     }
   );
 
   // Handle form field changes
-  const handleChange = (field: keyof Forklift, value: any) => {
+  const handleChange = (field: keyof Empilhadeira, value: any) => {
     setFormData(prev => ({ ...prev, [field]: value }));
   };
 
@@ -70,7 +80,7 @@ const ForkliftDialog = ({ open, onOpenChange, forklift, onSave }: ForkliftDialog
     e.preventDefault();
     
     // Validate form
-    if (!formData.model || !formData.capacity) {
+    if (!formData.modelo || !formData.capacidade) {
       toast({
         title: "Erro ao salvar",
         description: "Preencha todos os campos obrigatórios",
@@ -80,19 +90,29 @@ const ForkliftDialog = ({ open, onOpenChange, forklift, onSave }: ForkliftDialog
     }
     
     // Save forklift
-    onSave(formData as Forklift);
+    onSave(formData as Empilhadeira);
     
     // Reset form and close dialog
     if (!isEditing) {
       setFormData({
         id: `${Math.random().toString(36).substring(2, 6).toUpperCase()}`,
-        model: '',
-        type: ForkliftType.GAS,
-        capacity: '',
-        acquisitionDate: '01/01/2023',
-        lastMaintenance: format(new Date(), 'dd/MM/yyyy'),
-        status: ForkliftStatus.OPERATIONAL,
-        hourMeter: 0
+        modelo: '',
+        marca: 'Toyota',
+        tipo: TipoEmpilhadeira.GAS,
+        capacidade: 2500,
+        anoFabricacao: new Date().getFullYear(),
+        dataAquisicao: '01/01/2023',
+        numeroSerie: '',
+        horimetro: 0,
+        ultimaManutencao: format(new Date(), 'dd/MM/yyyy'),
+        proximaManutencao: '',
+        localizacaoAtual: '',
+        setor: '',
+        custoHora: 0,
+        eficiencia: 85,
+        disponibilidade: 95,
+        qrCode: '',
+        status: StatusEmpilhadeira.OPERACIONAL
       });
     }
     
@@ -100,7 +120,7 @@ const ForkliftDialog = ({ open, onOpenChange, forklift, onSave }: ForkliftDialog
     
     toast({
       title: isEditing ? "Empilhadeira atualizada" : "Empilhadeira adicionada",
-      description: `${formData.model} foi ${isEditing ? 'atualizada' : 'adicionada'} com sucesso!`
+      description: `${formData.modelo} foi ${isEditing ? 'atualizada' : 'adicionada'} com sucesso!`
     });
   };
 
@@ -129,50 +149,51 @@ const ForkliftDialog = ({ open, onOpenChange, forklift, onSave }: ForkliftDialog
             </div>
             
             <div className="space-y-2">
-              <Label htmlFor="type">Tipo</Label>
+              <Label htmlFor="tipo">Tipo</Label>
               <Select 
-                value={formData.type} 
-                onValueChange={(value) => handleChange('type', value)}
+                value={formData.tipo} 
+                onValueChange={(value) => handleChange('tipo', value)}
               >
                 <SelectTrigger>
                   <SelectValue placeholder="Selecione o tipo" />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value={ForkliftType.GAS}>Gás</SelectItem>
-                  <SelectItem value={ForkliftType.ELECTRIC}>Elétrica</SelectItem>
-                  <SelectItem value={ForkliftType.RETRACTABLE}>Retrátil</SelectItem>
+                  <SelectItem value={TipoEmpilhadeira.GAS}>Gás</SelectItem>
+                  <SelectItem value={TipoEmpilhadeira.ELETRICA}>Elétrica</SelectItem>
+                  <SelectItem value={TipoEmpilhadeira.RETRATIL}>Retrátil</SelectItem>
                 </SelectContent>
               </Select>
             </div>
             
             <div className="space-y-2">
-              <Label htmlFor="model">Modelo</Label>
+              <Label htmlFor="modelo">Modelo</Label>
               <Input 
-                id="model" 
-                value={formData.model} 
-                onChange={(e) => handleChange('model', e.target.value)}
+                id="modelo" 
+                value={formData.modelo} 
+                onChange={(e) => handleChange('modelo', e.target.value)}
                 placeholder="Ex: Toyota 8FGU25"
               />
             </div>
             
             <div className="space-y-2">
-              <Label htmlFor="capacity">Capacidade</Label>
+              <Label htmlFor="capacidade">Capacidade (kg)</Label>
               <Input 
-                id="capacity" 
-                value={formData.capacity} 
-                onChange={(e) => handleChange('capacity', e.target.value)}
-                placeholder="Ex: 2.500 kg"
+                id="capacidade" 
+                type="number"
+                value={formData.capacidade} 
+                onChange={(e) => handleChange('capacidade', parseInt(e.target.value))}
+                placeholder="Ex: 2500"
               />
             </div>
             
             <div className="space-y-2">
-              <Label htmlFor="hourMeter">Horímetro</Label>
+              <Label htmlFor="horimetro">Horímetro</Label>
               <Input 
-                id="hourMeter" 
+                id="horimetro" 
                 type="number"
                 min="0"
-                value={formData.hourMeter} 
-                onChange={(e) => handleChange('hourMeter', parseInt(e.target.value))}
+                value={formData.horimetro} 
+                onChange={(e) => handleChange('horimetro', parseInt(e.target.value))}
               />
             </div>
             
@@ -186,9 +207,9 @@ const ForkliftDialog = ({ open, onOpenChange, forklift, onSave }: ForkliftDialog
                   <SelectValue placeholder="Selecione o status" />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value={ForkliftStatus.OPERATIONAL}>Em Operação</SelectItem>
-                  <SelectItem value={ForkliftStatus.MAINTENANCE}>Aguardando Manutenção</SelectItem>
-                  <SelectItem value={ForkliftStatus.STOPPED}>Parada</SelectItem>
+                  <SelectItem value={StatusEmpilhadeira.OPERACIONAL}>Operacional</SelectItem>
+                  <SelectItem value={StatusEmpilhadeira.EM_MANUTENCAO}>Em Manutenção</SelectItem>
+                  <SelectItem value={StatusEmpilhadeira.PARADA}>Parada</SelectItem>
                 </SelectContent>
               </Select>
             </div>
@@ -203,14 +224,14 @@ const ForkliftDialog = ({ open, onOpenChange, forklift, onSave }: ForkliftDialog
                   className="w-full justify-start text-left font-normal"
                 >
                   <CalendarIcon className="mr-2 h-4 w-4" />
-                  {formData.acquisitionDate}
+                  {formData.dataAquisicao}
                 </Button>
               </PopoverTrigger>
               <PopoverContent className="w-auto p-0" align="start">
                 <Calendar
                   mode="single"
-                  selected={parseDate(formData.acquisitionDate || '')}
-                  onSelect={(date) => handleChange('acquisitionDate', formatDateString(date || new Date()))}
+                  selected={parseDate(formData.dataAquisicao || '')}
+                  onSelect={(date) => handleChange('dataAquisicao', formatDateString(date || new Date()))}
                   locale={ptBR}
                   className={cn("p-3 pointer-events-auto")}
                 />
@@ -227,14 +248,14 @@ const ForkliftDialog = ({ open, onOpenChange, forklift, onSave }: ForkliftDialog
                   className="w-full justify-start text-left font-normal"
                 >
                   <CalendarIcon className="mr-2 h-4 w-4" />
-                  {formData.lastMaintenance}
+                  {formData.ultimaManutencao}
                 </Button>
               </PopoverTrigger>
               <PopoverContent className="w-auto p-0" align="start">
                 <Calendar
                   mode="single"
-                  selected={parseDate(formData.lastMaintenance || '')}
-                  onSelect={(date) => handleChange('lastMaintenance', formatDateString(date || new Date()))}
+                  selected={parseDate(formData.ultimaManutencao || '')}
+                  onSelect={(date) => handleChange('ultimaManutencao', formatDateString(date || new Date()))}
                   locale={ptBR}
                   className={cn("p-3 pointer-events-auto")}
                 />

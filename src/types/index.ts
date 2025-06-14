@@ -1,4 +1,3 @@
-
 // ===== SISTEMA AVANÇADO DE GESTÃO DE FROTAS =====
 // Tipos TypeScript completos e robustos
 
@@ -111,6 +110,14 @@ export interface Empilhadeira {
   qrCode: string;
   observacoes?: string;
   coordenadas?: [number, number];
+  
+  // Legacy English properties for backward compatibility
+  model?: string;
+  type?: TipoEmpilhadeira;
+  capacity?: string;
+  hourMeter?: number;
+  lastMaintenance?: string;
+  acquisitionDate?: string;
 }
 
 // Legacy alias
@@ -276,6 +283,18 @@ export interface MetricasDashboard {
   produtividadeMedia: number;
   tempoMedioOperacao: number;
   alertasCriticos: number;
+  
+  // Legacy English properties for backward compatibility
+  totalForklifts?: number;
+  operationalForklifts?: number;
+  maintenanceForklifts?: number;
+  stoppedForklifts?: number;
+  totalOperators?: number;
+  operatorsWithValidCertificates?: number;
+  operatorsWithWarningCertificates?: number;
+  operatorsWithExpiredCertificates?: number;
+  activeOperations?: number;
+  pendingMaintenances?: number;
 }
 
 // Legacy alias
@@ -376,6 +395,6 @@ export interface ConfiguracaoNotificacao {
 export interface StatusCardProps {
   title: string;
   value: string | number;
-  icon: React.ComponentType;
-  color: string;
+  icon: React.ComponentType<{ className?: string }>;
+  status?: 'success' | 'warning' | 'danger' | 'info' | 'neutral';
 }

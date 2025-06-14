@@ -1,11 +1,11 @@
 
 import React from 'react';
 import { cn } from '@/lib/utils';
-import { Forklift, ForkliftStatus } from '@/types';
+import { Empilhadeira, StatusEmpilhadeira } from '@/types';
 import { Trash2 } from 'lucide-react';
 
 interface ForkliftListProps {
-  forklifts: Forklift[];
+  forklifts: Empilhadeira[];
   onForkliftClick: (id: string) => void;
   onDeleteForklift?: (id: string) => void;
 }
@@ -16,13 +16,13 @@ const ForkliftList: React.FC<ForkliftListProps> = ({
   onDeleteForklift 
 }) => {
   // Get status color classes
-  const getStatusColor = (status: ForkliftStatus) => {
+  const getStatusColor = (status: StatusEmpilhadeira) => {
     switch (status) {
-      case ForkliftStatus.OPERATIONAL:
+      case StatusEmpilhadeira.OPERACIONAL:
         return 'bg-status-operational text-status-operational';
-      case ForkliftStatus.MAINTENANCE:
+      case StatusEmpilhadeira.EM_MANUTENCAO:
         return 'bg-status-maintenance text-status-maintenance';
-      case ForkliftStatus.STOPPED:
+      case StatusEmpilhadeira.PARADA:
         return 'bg-status-warning text-status-warning';
       default:
         return 'bg-muted text-muted-foreground';
@@ -76,19 +76,19 @@ const ForkliftList: React.FC<ForkliftListProps> = ({
               >
                 <td className="py-4 px-4 text-sm">{forklift.id}</td>
                 <td className="py-4 px-4">
-                  <div className="text-sm font-medium">{forklift.model}</div>
+                  <div className="text-sm font-medium">{forklift.modelo}</div>
                 </td>
                 <td className="py-4 px-4">
                   <span className={cn(
                     "px-2 py-1 text-xs font-medium rounded-full border",
-                    getTypeColor(forklift.type)
+                    getTypeColor(forklift.tipo)
                   )}>
-                    {forklift.type}
+                    {forklift.tipo}
                   </span>
                 </td>
-                <td className="py-4 px-4 text-sm">{forklift.capacity}</td>
-                <td className="py-4 px-4 text-sm">{forklift.hourMeter}</td>
-                <td className="py-4 px-4 text-sm">{forklift.lastMaintenance}</td>
+                <td className="py-4 px-4 text-sm">{forklift.capacidade} kg</td>
+                <td className="py-4 px-4 text-sm">{forklift.horimetro}</td>
+                <td className="py-4 px-4 text-sm">{forklift.ultimaManutencao}</td>
                 <td className="py-4 px-4">
                   <div className="flex items-center">
                     <div className={cn(

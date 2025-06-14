@@ -1,31 +1,34 @@
-
 import React from "react";
 import { AiOutlineCheckCircle } from "react-icons/ai";
 import { MdEngineering, MdPeopleAlt, MdForklift } from "react-icons/md";
-import { DashboardStats } from "@/types";
+import { MetricasDashboard } from "@/types";
 import { cn } from "@/lib/utils";
 
-const initialStats: DashboardStats = {
-  totalForklifts: 15,
-  operationalForklifts: 9,
-  stoppedForklifts: 3,
-  maintenanceForklifts: 3,
-  totalOperators: 20,
-  operatorsWithValidCertificates: 16,
-  operatorsWithWarningCertificates: 3,
-  operatorsWithExpiredCertificates: 1,
-  activeOperations: 7,
-  pendingMaintenances: 4,
+const initialStats: MetricasDashboard = {
+  frotaTotal: 15,
+  empilhadeirasOperacionais: 9,
+  empilhadeirasParadas: 3,
+  empilhadeirasManutencao: 3,
+  operadoresAtivos: 20,
+  operacoesAtivas: 7,
+  operacoesConcluidas: 147,
+  eficienciaGeral: 87.5,
+  disponibilidadeGeral: 92.3,
+  consumoGasTotal: 2450.8,
+  custoOperacionalDia: 15420.50,
+  produtividadeMedia: 94.2,
+  tempoMedioOperacao: 45,
+  alertasCriticos: 3
 };
 
 interface DashboardOverviewProps {
-  stats?: DashboardStats;
+  stats?: MetricasDashboard;
 }
 
 const CARDS = [
   {
     title: "Total Frota",
-    value: (stats: DashboardStats) => stats.totalForklifts,
+    value: (stats: MetricasDashboard) => stats.frotaTotal,
     icon: MdForklift,
     cardBg: "bg-gradient-to-br from-[#b8caf8] to-[#66a9f7]",
     iconBg: "bg-white/50 border-2 border-blue-200",
@@ -35,7 +38,7 @@ const CARDS = [
   },
   {
     title: "Operacionais",
-    value: (stats: DashboardStats) => stats.operationalForklifts,
+    value: (stats: MetricasDashboard) => stats.empilhadeirasOperacionais,
     icon: AiOutlineCheckCircle,
     cardBg: "bg-gradient-to-br from-green-100 to-green-300",
     iconBg: "bg-white/50 border-2 border-green-100",
@@ -45,7 +48,7 @@ const CARDS = [
   },
   {
     title: "Manutenção",
-    value: (stats: DashboardStats) => stats.maintenanceForklifts,
+    value: (stats: MetricasDashboard) => stats.empilhadeirasManutencao,
     icon: MdEngineering,
     cardBg: "bg-gradient-to-br from-orange-100 to-orange-300",
     iconBg: "bg-white/50 border-2 border-orange-100",
@@ -55,7 +58,7 @@ const CARDS = [
   },
   {
     title: "Operadores",
-    value: (stats: DashboardStats) => stats.totalOperators,
+    value: (stats: MetricasDashboard) => stats.operadoresAtivos,
     icon: MdPeopleAlt,
     cardBg: "bg-gradient-to-br from-slate-50 to-slate-200",
     iconBg: "bg-white/40 border-2 border-slate-100",
@@ -154,4 +157,3 @@ const DashboardOverview: React.FC<DashboardOverviewProps> = ({
 };
 
 export default DashboardOverview;
-
