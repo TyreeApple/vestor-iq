@@ -1,13 +1,10 @@
 
-import React from 'react';
-import StatusCard from './StatusCard';
-import { 
-  Truck, Users, AlertTriangle, CheckCircle, 
-  Clock, Fuel, Settings, Calendar
-} from 'lucide-react';
-import { DashboardStats } from '@/types';
+import React from "react";
+import StatusCard from "./StatusCard";
+import FleetBarChart from "./FleetBarChart";
+import { Truck, Settings, Clock } from "lucide-react";
+import { DashboardStats } from "@/types";
 
-// Mock data for initial rendering
 const initialStats: DashboardStats = {
   totalForklifts: 15,
   operationalForklifts: 9,
@@ -25,101 +22,61 @@ interface DashboardOverviewProps {
   stats?: DashboardStats;
 }
 
-const DashboardOverview: React.FC<DashboardOverviewProps> = ({ 
-  stats = initialStats 
+const DashboardOverview: React.FC<DashboardOverviewProps> = ({
+  stats = initialStats
 }) => {
   return (
-    <section className="space-y-8 md:space-y-10 px-2 md:px-0 transition-colors duration-300">
-      <div className="slide-enter animate-fade-in" style={{ animationDelay: '0.1s' }}>
-        <h2 className="text-2xl md:text-3xl font-semibold mb-4 text-primary dark:text-primary">Status da Frota</h2>
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 md:gap-8">
-          <StatusCard 
-            title="Total de Empilhadeiras" 
-            value={stats.totalForklifts} 
-            icon={Truck} 
-            status="info" 
-          />
-          <StatusCard 
-            title="Em Operação" 
-            value={stats.operationalForklifts} 
-            icon={CheckCircle} 
-            status="success"
-            change={{ value: 12, trend: 'up' }}
-          />
-          <StatusCard 
-            title="Em Manutenção" 
-            value={stats.maintenanceForklifts} 
-            icon={Settings} 
-            status="warning" 
-          />
-          <StatusCard 
-            title="Paradas" 
-            value={stats.stoppedForklifts} 
-            icon={Clock} 
-            status="neutral" 
-          />
+    <section className="flex flex-col gap-10 px-2 md:px-0">
+      {/* HERO GRID */}
+      <div className="w-full grid grid-cols-1 md:grid-cols-4 gap-6 animate-fade-in" style={{ animationDelay: "0.1s" }}>
+        <StatusCard
+          title="Em Operação"
+          value={stats.operationalForklifts}
+          icon={Truck}
+          status="success"
+        />
+        <StatusCard
+          title="Em Manutenção"
+          value={stats.maintenanceForklifts}
+          icon={Settings}
+          status="warning"
+        />
+        <div className="md:col-span-2 flex items-center justify-center bg-card rounded-2xl p-0 md:p-2 shadow">
+          <FleetBarChart />
         </div>
       </div>
-
-      <div className="slide-enter animate-fade-in" style={{ animationDelay: '0.2s' }}>
-        <h2 className="text-2xl md:text-3xl font-semibold mb-4 text-primary dark:text-primary">Status dos Operadores</h2>
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 md:gap-8">
-          <StatusCard 
-            title="Total de Operadores" 
-            value={stats.totalOperators} 
-            icon={Users} 
-            status="info" 
-          />
-          <StatusCard 
-            title="ASO e NR Regulares" 
-            value={stats.operatorsWithValidCertificates} 
-            icon={CheckCircle} 
-            status="success" 
-          />
-          <StatusCard 
-            title="Próximo do Vencimento" 
-            value={stats.operatorsWithWarningCertificates} 
-            icon={AlertTriangle} 
-            status="warning" 
-          />
-          <StatusCard 
-            title="ASO/NR Vencidos" 
-            value={stats.operatorsWithExpiredCertificates} 
-            icon={AlertTriangle} 
-            status="danger" 
-          />
-        </div>
+      {/* KPIs ADICIONAIS EM GRID */}
+      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-6">
+        <StatusCard
+          title="Paradas"
+          value={stats.stoppedForklifts}
+          icon={Clock}
+          status="neutral"
+        />
+        <StatusCard
+          title="Total de Empilhadeiras"
+          value={stats.totalForklifts}
+          icon={Truck}
+          status="info"
+        />
+        <StatusCard
+          title="Total de Operadores"
+          value={stats.totalOperators}
+          icon={Truck}
+          status="info"
+        />
+        <StatusCard
+          title="Operações Ativas"
+          value={stats.activeOperations}
+          icon={Truck}
+          status="success"
+        />
       </div>
-
-      <div className="slide-enter animate-fade-in" style={{ animationDelay: '0.3s' }}>
-        <h2 className="text-2xl md:text-3xl font-semibold mb-4 text-primary dark:text-primary">Operação Atual</h2>
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 md:gap-8">
-          <StatusCard 
-            title="Operações Ativas" 
-            value={stats.activeOperations} 
-            icon={Truck} 
-            status="success"
-            change={{ value: 5, trend: 'up' }}
-          />
-          <StatusCard 
-            title="Manutenções Pendentes" 
-            value={stats.pendingMaintenances} 
-            icon={Settings} 
-            status="warning" 
-          />
-          <StatusCard 
-            title="Abastecimentos Hoje" 
-            value={3} 
-            icon={Fuel} 
-            status="info" 
-          />
-          <StatusCard 
-            title="ASOs a Vencer (30d)" 
-            value={4} 
-            icon={Calendar} 
-            status="warning" 
-          />
-        </div>
+      {/* BOTÃO DE DETALHES */}
+      <div className="flex justify-center mt-4">
+        <button className="px-6 py-2 text-base rounded-lg bg-primary text-white font-semibold shadow hover:scale-105 transition">
+          Visualizar Detalhes da Frota
+        </button>
       </div>
     </section>
   );
