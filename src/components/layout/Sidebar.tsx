@@ -75,9 +75,20 @@ const Sidebar: React.FC = () => {
           </div>
         )}
         
+        {sidebarCollapsed && (
+          <div className="flex items-center justify-center w-full">
+            <div className="p-2 bg-white/20 dark:bg-white/10 rounded-lg">
+              <Gauge className="w-6 h-6 text-white" />
+            </div>
+          </div>
+        )}
+        
         <button
           onClick={() => setSidebarCollapsed(!sidebarCollapsed)}
-          className="p-2 rounded-lg hover:bg-white/20 dark:hover:bg-white/10 transition-colors text-white"
+          className={cn(
+            "p-2 rounded-lg hover:bg-white/20 dark:hover:bg-white/10 transition-colors text-white",
+            sidebarCollapsed && "absolute top-4 right-2"
+          )}
         >
           {sidebarCollapsed ? (
             <ChevronRight className="w-4 h-4" />
@@ -88,28 +99,39 @@ const Sidebar: React.FC = () => {
       </div>
 
       {/* Navigation */}
-      <nav className="flex-1 p-4 space-y-2">
+      <nav className="flex-1 p-2 space-y-1">
         {menuItems.map((item) => (
           <NavLink
             key={item.id}
             to={item.path}
             className={({ isActive }) => cn(
-              "flex items-center space-x-3 px-3 py-2.5 rounded-lg transition-colors group relative",
+              "flex items-center rounded-lg transition-all duration-200 group relative overflow-hidden",
+              sidebarCollapsed ? "justify-center p-3 mx-1" : "space-x-3 px-3 py-2.5",
               isActive
                 ? "bg-blue-50 dark:bg-blue-900/30 text-blue-700 dark:text-blue-300 border border-blue-200 dark:border-blue-800"
                 : "text-slate-600 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-800 hover:text-slate-900 dark:hover:text-slate-100"
             )}
+            title={sidebarCollapsed ? item.label : undefined}
           >
-            <item.icon className="w-5 h-5 flex-shrink-0" />
+            <div className="flex items-center justify-center flex-shrink-0">
+              <item.icon className="w-5 h-5" />
+            </div>
+            
             {!sidebarCollapsed && (
               <>
-                <span className="font-medium truncate">{item.label}</span>
+                <span className="font-medium truncate flex-1">{item.label}</span>
                 {item.badge && (
-                  <span className="ml-auto bg-red-500 dark:bg-red-600 text-white text-xs px-2 py-0.5 rounded-full">
+                  <span className="bg-red-500 dark:bg-red-600 text-white text-xs px-2 py-0.5 rounded-full flex-shrink-0">
                     {item.badge}
                   </span>
                 )}
               </>
+            )}
+            
+            {sidebarCollapsed && item.badge && (
+              <span className="absolute -top-1 -right-1 bg-red-500 dark:bg-red-600 text-white text-xs w-5 h-5 rounded-full flex items-center justify-center">
+                {item.badge}
+              </span>
             )}
           </NavLink>
         ))}
