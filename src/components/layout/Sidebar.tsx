@@ -1,174 +1,160 @@
 
 import React from 'react';
-import { Link, useLocation } from 'react-router-dom';
-import { cn } from '@/lib/utils';
-import {
-  Truck, Users, ClipboardList, Fuel,
-  Settings, FileText, LayoutDashboard, Menu, ChevronLeft, ChevronRight
+import { NavLink } from 'react-router-dom';
+import { motion, AnimatePresence } from 'framer-motion';
+import { 
+  BarChart3, 
+  Truck, 
+  Users, 
+  Activity, 
+  Wrench, 
+  Fuel, 
+  FileText,
+  ChevronLeft,
+  ChevronRight,
+  Gauge
 } from 'lucide-react';
-import { useIsMobile } from '@/hooks/use-mobile';
-import { useSidebarGlobal } from './SidebarContext';
+import { MdForklift } from 'react-icons/md';
+import { useAppStore } from '@/stores/useAppStore';
+import { cn } from '@/lib/utils';
 
-interface SidebarLinkProps {
-  to: string;
-  icon: React.ElementType;
+interface MenuItem {
+  id: string;
   label: string;
-  isActive: boolean;
-  collapsed: boolean;
-  onClick?: () => void;
+  icon: React.ElementType;
+  path: string;
+  badge?: number;
 }
 
-const SidebarLink: React.FC<SidebarLinkProps> = ({
-  to, icon: Icon, label, isActive, collapsed, onClick
-}) => (
-  <Link
-    to={to}
-    className={cn(
-      "flex items-center gap-3 px-4 py-3 rounded-lg transition-all duration-300 group relative",
-      isActive
-        ? "bg-sidebar-primary text-sidebar-primary-foreground font-medium"
-        : "text-sidebar-foreground/90 hover:bg-sidebar-accent hover:text-sidebar-accent-foreground"
-    )}
-    onClick={onClick}
-    tabIndex={0}
-  >
-    <span className="w-5 h-5 flex items-center justify-center">
-      <Icon className="w-5 h-5" />
-    </span>
-    {!collapsed && <span className="whitespace-nowrap">{label}</span>}
-    {collapsed &&
-      <span className="absolute left-full top-1/2 -translate-y-1/2 ml-3 pointer-events-none z-50 bg-sidebar text-sidebar-foreground text-xs px-2 py-1 rounded shadow opacity-0 group-hover:opacity-100 transition">
-        {label}
-      </span>
-    }
-  </Link>
-);
+const menuItems: MenuItem[] = [
+  { id: 'dashboard', label: 'Dashboard', icon: BarChart3, path: '/' },
+  { id: 'empilhadeiras', label: 'Empilhadeiras', icon: MdForklift, path: '/empilhadeiras' },
+  { id: 'operadores', label: 'Operadores', icon: Users, path: '/operadores' },
+  { id: 'operacoes', label: 'Operações', icon: Activity, path: '/operacoes', badge: 12 },
+  { id: 'manutencao', label: 'Manutenção', icon: Wrench, path: '/manutencao', badge: 4 },
+  { id: 'abastecimento', label: 'Abastecimento', icon: Fuel, path: '/abastecimento' },
+  { id: 'relatorios', label: 'Relatórios', icon: FileText, path: '/relatorios' },
+];
 
 const Sidebar: React.FC = () => {
-  const { state, toggle } = useSidebarGlobal();
-  const location = useLocation();
-  const isMobile = useIsMobile();
-  const collapsed = !isMobile && state === 'collapsed';
+  const { sidebarCollapsed, setSidebarCollapsed } = useAppStore();
 
-  const links = [
-    { to: "/", icon: LayoutDashboard, label: "Dashboard" },
-    { to: "/forklifts", icon: Truck, label: "Empilhadeiras" },
-    { to: "/operators", icon: Users, label: "Operadores" },
-    { to: "/operations", icon: ClipboardList, label: "Operações" },
-    { to: "/maintenance", icon: Settings, label: "Manutenção" },
-    { to: "/gas-supply", icon: Fuel, label: "Abastecimento" },
-    { to: "/reports", icon: FileText, label: "Relatórios" },
-  ];
+  const sidebarVariants = {
+    expanded: { width: 256 },
+    collapsed: { width: 64 }
+  };
 
-  // MOBILE DRAWER - Mantém comportamento original
-  if (isMobile) {
-    const [open, setOpen] = React.useState(false);
-    return (
-      <>
-        <button
-          onClick={() => setOpen(true)}
-          className="fixed top-4 left-4 z-50 p-2 rounded-lg bg-primary text-primary-foreground"
-          aria-label="Abrir Menu"
-        >
-          <Menu className="w-5 h-5" />
-        </button>
-        {open && (
-          <>
-            <div
-              className="fixed inset-0 bg-black/50 z-40 backdrop-blur-sm transition-opacity duration-300"
-              onClick={() => setOpen(false)}
-            />
-            <aside
-              className="fixed top-0 left-0 z-50 h-full w-64 bg-sidebar transition-transform duration-300 animate-slide-in-right"
-            >
-              <div className="flex flex-col h-full">
-                <div className="flex items-center justify-between px-4 py-5">
-                  <h1 className="text-xl font-bold text-sidebar-foreground">Forklift Manager</h1>
-                  <button onClick={() => setOpen(false)} className="p-1 rounded-lg text-sidebar-foreground">
-                    <ChevronLeft className="w-5 h-5" />
-                  </button>
-                </div>
-                <nav className="flex-1 px-3 py-4 space-y-1">
-                  {links.map((link) => (
-                    <SidebarLink
-                      key={link.to}
-                      to={link.to}
-                      icon={link.icon}
-                      label={link.label}
-                      isActive={location.pathname === link.to}
-                      collapsed={false}
-                      onClick={() => setOpen(false)}
-                    />
-                  ))}
-                </nav>
-              </div>
-            </aside>
-          </>
-        )}
-      </>
-    );
-  }
-
-  // DESKTOP EXPANDIDA/COLAPSADA
   return (
-    <aside
-      className={cn(
-        "fixed top-0 left-0 z-40 h-full bg-sidebar transition-all duration-300 flex flex-col border-r border-sidebar-border",
-        collapsed ? "w-16" : "w-64"
-      )}
-      style={{ minWidth: collapsed ? 64 : 256 }}
+    <motion.div
+      initial={false}
+      animate={sidebarCollapsed ? 'collapsed' : 'expanded'}
+      variants={sidebarVariants}
+      transition={{ duration: 0.3, ease: 'easeInOut' }}
+      className="fixed left-0 top-0 h-full bg-white border-r border-slate-200 shadow-xl z-50 flex flex-col"
     >
-      <div className="flex items-center justify-between px-4 py-5">
-        {!collapsed ?
-          <h1 className="text-xl font-bold text-sidebar-foreground truncate">Forklift Manager</h1>
-          : <span className="text-xl font-bold text-sidebar-foreground">F</span>
-        }
-        <button
-          onClick={toggle}
-          className={cn(
-            "p-1 rounded-lg text-sidebar-foreground transition hover:bg-sidebar-accent relative",
-            "ml-auto"
+      {/* Header */}
+      <div className="h-16 flex items-center justify-between px-4 border-b border-slate-200 bg-gradient-to-r from-blue-600 to-indigo-600">
+        <AnimatePresence mode="wait">
+          {!sidebarCollapsed && (
+            <motion.div
+              initial={{ opacity: 0, x: -20 }}
+              animate={{ opacity: 1, x: 0 }}
+              exit={{ opacity: 0, x: -20 }}
+              transition={{ duration: 0.2 }}
+              className="flex items-center space-x-3"
+            >
+              <div className="p-2 bg-white/20 rounded-lg">
+                <Gauge className="w-6 h-6 text-white" />
+              </div>
+              <div className="text-white">
+                <h1 className="font-bold text-lg">FleetPro</h1>
+                <p className="text-xs text-blue-100">Gestão de Frotas</p>
+              </div>
+            </motion.div>
           )}
-          aria-label="Alternar tamanho do menu"
+        </AnimatePresence>
+        
+        <button
+          onClick={() => setSidebarCollapsed(!sidebarCollapsed)}
+          className="p-2 rounded-lg hover:bg-white/20 transition-colors text-white"
         >
-          {collapsed
-            ? <ChevronRight className="w-5 h-5" />
-            : <ChevronLeft className="w-5 h-5" />
-          }
+          {sidebarCollapsed ? (
+            <ChevronRight className="w-4 h-4" />
+          ) : (
+            <ChevronLeft className="w-4 h-4" />
+          )}
         </button>
       </div>
-      <nav className={cn("flex-1 px-1 py-2 space-y-1")}>
-        {links.map((link) => (
-          <SidebarLink
-            key={link.to}
-            to={link.to}
-            icon={link.icon}
-            label={link.label}
-            isActive={location.pathname === link.to}
-            collapsed={collapsed}
-          />
-        ))}
-      </nav>
-      <div className={cn(
-        "p-3 border-t border-sidebar-border transition-all",
-        collapsed && "justify-center flex"
-      )}>
-        <div className="flex items-center gap-3">
-          <div className={cn(
-            "rounded-full bg-sidebar-accent flex items-center justify-center",
-            collapsed ? "w-8 h-8" : "w-8 h-8"
-          )}>
-            <Users className="w-4 h-4 text-sidebar-accent-foreground" />
-          </div>
-          {!collapsed &&
-            <div>
-              <p className="text-sm font-medium text-sidebar-foreground">Administrador</p>
-              <p className="text-xs text-sidebar-foreground/70">v1.0.0</p>
-            </div>
-          }
+
+      {/* Navigation */}
+      <nav className="flex-1 overflow-y-auto py-4">
+        <div className="space-y-1 px-3">
+          {menuItems.map((item) => (
+            <NavLink
+              key={item.id}
+              to={item.path}
+              className={({ isActive }) =>
+                cn(
+                  "group flex items-center px-3 py-3 text-sm font-medium rounded-lg transition-all duration-200",
+                  isActive
+                    ? "bg-blue-50 text-blue-700 border-r-2 border-blue-700"
+                    : "text-slate-600 hover:bg-slate-50 hover:text-slate-900"
+                )
+              }
+            >
+              {({ isActive }) => (
+                <>
+                  <item.icon 
+                    className={cn(
+                      "flex-shrink-0 w-5 h-5 transition-colors",
+                      isActive ? "text-blue-700" : "text-slate-400 group-hover:text-slate-600"
+                    )} 
+                  />
+                  
+                  <AnimatePresence mode="wait">
+                    {!sidebarCollapsed && (
+                      <motion.div
+                        initial={{ opacity: 0, x: -10 }}
+                        animate={{ opacity: 1, x: 0 }}
+                        exit={{ opacity: 0, x: -10 }}
+                        transition={{ duration: 0.2 }}
+                        className="ml-3 flex items-center justify-between w-full"
+                      >
+                        <span>{item.label}</span>
+                        {item.badge && (
+                          <span className="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-red-100 text-red-800">
+                            {item.badge}
+                          </span>
+                        )}
+                      </motion.div>
+                    )}
+                  </AnimatePresence>
+                </>
+              )}
+            </NavLink>
+          ))}
         </div>
+      </nav>
+
+      {/* Footer */}
+      <div className="p-4 border-t border-slate-200">
+        <AnimatePresence mode="wait">
+          {!sidebarCollapsed && (
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              transition={{ duration: 0.2 }}
+              className="text-center"
+            >
+              <p className="text-xs text-slate-500">
+                v2.1.0 - 2024
+              </p>
+            </motion.div>
+          )}
+        </AnimatePresence>
       </div>
-    </aside>
+    </motion.div>
   );
 };
 

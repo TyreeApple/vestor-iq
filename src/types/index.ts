@@ -1,123 +1,347 @@
 
-// Forklift Types
-export enum ForkliftType {
+// ===== SISTEMA AVANÇADO DE GESTÃO DE FROTAS =====
+// Tipos TypeScript completos e robustos
+
+export enum StatusEmpilhadeira {
+  OPERACIONAL = "Operacional",
+  EM_MANUTENCAO = "Em Manutenção",
+  PARADA = "Parada",
+  EM_REPARO = "Em Reparo",
+  DISPONIVEL = "Disponível"
+}
+
+export enum TipoEmpilhadeira {
   GAS = "Gás",
-  ELECTRIC = "Elétrica",
-  RETRACTABLE = "Retrátil"
+  ELETRICA = "Elétrica",
+  RETRATIL = "Retrátil",
+  REACH_TRUCK = "Reach Truck",
+  CONTRA_BALANCEADA = "Contra-balanceada"
 }
 
-export enum ForkliftStatus {
-  OPERATIONAL = "Em Operação",
-  STOPPED = "Parada",
-  MAINTENANCE = "Aguardando Manutenção"
+export enum TipoOperacao {
+  CARGA = "Carga",
+  DESCARGA = "Descarga",
+  MOVIMENTACAO = "Movimentação",
+  ESTOQUE = "Estoque",
+  PICKING = "Picking"
 }
 
-export interface Forklift {
-  id: string;
-  model: string;
-  type: ForkliftType;
-  capacity: string;
-  acquisitionDate: string;
-  lastMaintenance: string;
-  status: ForkliftStatus;
-  hourMeter: number;
+export enum StatusOperacao {
+  PLANEJADA = "Planejada",
+  EM_ANDAMENTO = "Em Andamento",
+  PAUSADA = "Pausada",
+  CONCLUIDA = "Concluída",
+  CANCELADA = "Cancelada"
 }
 
-// User/Operator Types
-export enum UserRole {
-  OPERATOR = "Operador",
+export enum PrioridadeOperacao {
+  BAIXA = "Baixa",
+  NORMAL = "Normal",
+  ALTA = "Alta",
+  CRITICA = "Crítica"
+}
+
+export enum TipoManutencao {
+  PREVENTIVA = "Preventiva",
+  CORRETIVA = "Corretiva",
+  PREDITIVA = "Preditiva",
+  URGENTE = "Urgente"
+}
+
+export enum StatusManutencao {
+  ABERTA = "Aberta",
+  EM_ANDAMENTO = "Em Andamento",
+  AGUARDANDO_PECAS = "Aguardando Peças",
+  CONCLUIDA = "Concluída",
+  CANCELADA = "Cancelada"
+}
+
+export enum TipoCertificacao {
+  NR11 = "NR-11",
+  ASO = "ASO",
+  TREINAMENTO = "Treinamento",
+  HABILITACAO = "Habilitação",
+  RENOVACAO = "Renovação"
+}
+
+export enum StatusCertificacao {
+  VALIDO = "Válido",
+  VENCENDO = "Vencendo",
+  VENCIDO = "Vencido",
+  SUSPENSO = "Suspenso"
+}
+
+export enum FuncaoOperador {
+  OPERADOR = "Operador",
   SUPERVISOR = "Supervisor",
-  ADMIN = "Administrador"
+  TECNICO = "Técnico",
+  COORDENADOR = "Coordenador",
+  GERENTE = "Gerente"
 }
 
-export enum CertificateStatus {
-  REGULAR = "Regular",
-  WARNING = "Próximo do Vencimento",
-  EXPIRED = "Vencido"
-}
+// ===== INTERFACES PRINCIPAIS =====
 
-export interface User {
+export interface Empilhadeira {
   id: string;
-  name: string;
-  role: UserRole;
+  modelo: string;
+  marca: string;
+  tipo: TipoEmpilhadeira;
+  status: StatusEmpilhadeira;
+  capacidade: number; // em kg
+  anoFabricacao: number;
+  dataAquisicao: string;
+  numeroSerie: string;
+  horimetro: number;
+  ultimaManutencao: string;
+  proximaManutencao: string;
+  localizacaoAtual: string;
+  setor: string;
+  operadorAtual?: string;
+  custoHora: number;
+  eficiencia: number; // %
+  disponibilidade: number; // %
+  foto?: string;
+  qrCode: string;
+  observacoes?: string;
+  coordenadas?: [number, number];
+}
+
+export interface Operador {
+  id: string;
+  nome: string;
   cpf: string;
-  contact: string;
-  shift: string;
-  registrationDate: string;
-  asoExpirationDate: string;
-  nrExpirationDate: string;
-  asoStatus: CertificateStatus;
-  nrStatus: CertificateStatus;
+  email: string;
+  telefone: string;
+  funcao: FuncaoOperador;
+  dataAdmissao: string;
+  turno: string;
+  setor: string;
+  foto?: string;
+  certificacoes: Certificacao[];
+  avaliacoes: Avaliacao[];
+  horasTrabalhadas: number;
+  produtividade: number;
+  status: 'Ativo' | 'Inativo' | 'Férias' | 'Licença';
+  observacoes?: string;
 }
 
-// Operation Types
-export interface Operation {
+export interface Certificacao {
   id: string;
-  operatorId: string;
-  operatorName: string;
-  forkliftId: string;
-  forkliftModel: string;
-  sector: string;
-  initialHourMeter: number;
-  currentHourMeter?: number;
-  gasConsumption?: number;
-  startTime: string;
-  endTime?: string;
-  status: "active" | "completed";
+  tipo: TipoCertificacao;
+  numero: string;
+  dataEmissao: string;
+  dataVencimento: string;
+  orgaoEmissor: string;
+  status: StatusCertificacao;
+  arquivo?: string;
+  observacoes?: string;
 }
 
-// Maintenance Types
-export enum MaintenanceStatus {
-  WAITING = "Aguardando",
-  IN_PROGRESS = "Em andamento",
-  COMPLETED = "Concluído"
-}
-
-export interface Maintenance {
+export interface Avaliacao {
   id: string;
-  forkliftId: string;
-  forkliftModel: string;
-  issue: string;
-  reportedBy: string;
-  reportedDate: string;
-  status: MaintenanceStatus;
-  completedDate?: string;
+  data: string;
+  nota: number;
+  avaliador: string;
+  comentarios: string;
+  pontosMelhoria: string[];
 }
 
-// Gas Supply Types
-export interface GasSupply {
+export interface Operacao {
   id: string;
-  date: string;
-  forkliftId: string;
-  forkliftModel: string;
-  quantity: number;
-  hourMeterBefore: number;
-  hourMeterAfter: number;
-  operator: string;
+  empilhadeiraId: string;
+  empilhadeira: Empilhadeira;
+  operadorId: string;
+  operador: Operador;
+  tipo: TipoOperacao;
+  status: StatusOperacao;
+  prioridade: PrioridadeOperacao;
+  setor: string;
+  localizacao: string;
+  dataInicio: string;
+  dataFim?: string;
+  duracaoEstimada: number; // em minutos
+  duracaoReal?: number;
+  produtividade?: number;
+  observacoes?: string;
+  coordenadas?: [number, number];
+  consumoGas?: number;
+  custoOperacional?: number;
 }
 
-// Dashboard Types
-export interface DashboardStats {
-  totalForklifts: number;
-  operationalForklifts: number;
-  stoppedForklifts: number;
-  maintenanceForklifts: number;
-  totalOperators: number;
-  operatorsWithValidCertificates: number;
-  operatorsWithWarningCertificates: number;
-  operatorsWithExpiredCertificates: number;
-  activeOperations: number;
-  pendingMaintenances: number;
+export interface OrdemServico {
+  id: string;
+  empilhadeiraId: string;
+  empilhadeira: Empilhadeira;
+  tipo: TipoManutencao;
+  status: StatusManutencao;
+  prioridade: PrioridadeOperacao;
+  problema: string;
+  diagnostico?: string;
+  solucao?: string;
+  tecnicoId?: string;
+  tecnico?: Operador;
+  dataAbertura: string;
+  dataInicio?: string;
+  dataConclusao?: string;
+  horimetroInicio?: number;
+  horimetroFim?: number;
+  custos: CustosManutencao;
+  pecasUtilizadas: PecaUtilizada[];
+  anexos: string[];
+  observacoes?: string;
 }
 
-// Common Component Props
-export interface StatusCardProps {
-  title: string;
-  value: number;
-  icon: React.ElementType;
-  status?: "success" | "warning" | "danger" | "info" | "neutral";
-  change?: {
-    value: number;
-    trend: "up" | "down" | "neutral";
+export interface CustosManutencao {
+  pecas: number;
+  maoObra: number;
+  terceiros: number;
+  total: number;
+}
+
+export interface PecaUtilizada {
+  id: string;
+  nome: string;
+  codigo: string;
+  quantidade: number;
+  valorUnitario: number;
+  valorTotal: number;
+}
+
+export interface Abastecimento {
+  id: string;
+  empilhadeiraId: string;
+  empilhadeira: Empilhadeira;
+  operadorId: string;
+  operador: Operador;
+  dataAbastecimento: string;
+  horimetroInicial: number;
+  horimetroFinal?: number;
+  quantidadeLitros: number;
+  custoTotal: number;
+  precoLitro: number;
+  fornecedor: string;
+  localAbastecimento: string;
+  eficiencia?: number; // L/h
+  observacoes?: string;
+  foto?: string;
+}
+
+export interface Setor {
+  id: string;
+  nome: string;
+  descricao: string;
+  responsavel: string;
+  area: number; // em m²
+  capacidadeMaxima: number;
+  empilhadeirasAlocadas: string[];
+  observacoes?: string;
+}
+
+// ===== DASHBOARD E MÉTRICAS =====
+
+export interface MetricasDashboard {
+  frotaTotal: number;
+  empilhadeirasOperacionais: number;
+  empilhadeirasManutencao: number;
+  empilhadeirasParadas: number;
+  operadoresAtivos: number;
+  operacoesAtivas: number;
+  operacoesConcluidas: number;
+  eficienciaGeral: number;
+  disponibilidadeGeral: number;
+  consumoGasTotal: number;
+  custoOperacionalDia: number;
+  produtividadeMedia: number;
+  tempoMedioOperacao: number;
+  alertasCriticos: number;
+}
+
+export interface AlertaCritico {
+  id: string;
+  tipo: 'Manutenção' | 'Certificação' | 'Operação' | 'Sistema';
+  nivel: 'Baixo' | 'Médio' | 'Alto' | 'Crítico';
+  titulo: string;
+  descricao: string;
+  dataOcorrencia: string;
+  responsavel?: string;
+  acao?: string;
+  status: 'Pendente' | 'Em Andamento' | 'Resolvido';
+}
+
+// ===== RELATÓRIOS =====
+
+export interface RelatorioTemplate {
+  id: string;
+  nome: string;
+  categoria: 'Operacional' | 'Financeiro' | 'Manutenção' | 'Compliance' | 'Ambiental';
+  descricao: string;
+  parametros: ParametroRelatorio[];
+  formato: 'PDF' | 'Excel' | 'Dashboard' | 'CSV';
+  agendamento?: AgendamentoRelatorio;
+  ultimaExecucao?: string;
+}
+
+export interface ParametroRelatorio {
+  nome: string;
+  tipo: 'data' | 'periodo' | 'lista' | 'numero' | 'texto';
+  obrigatorio: boolean;
+  valorPadrao?: any;
+  opcoes?: string[];
+}
+
+export interface AgendamentoRelatorio {
+  frequencia: 'Diário' | 'Semanal' | 'Mensal' | 'Trimestral';
+  diasSemana?: number[];
+  diaMes?: number;
+  hora: string;
+  emails: string[];
+  ativo: boolean;
+}
+
+// ===== FILTROS E BUSCA =====
+
+export interface FiltrosAvancados {
+  busca?: string;
+  status?: string[];
+  tipo?: string[];
+  setor?: string[];
+  periodo?: {
+    inicio: string;
+    fim: string;
   };
+  capacidade?: {
+    min: number;
+    max: number;
+  };
+  horimetro?: {
+    min: number;
+    max: number;
+  };
+  eficiencia?: {
+    min: number;
+    max: number;
+  };
+}
+
+// ===== NOTIFICAÇÕES =====
+
+export interface Notificacao {
+  id: string;
+  tipo: 'Info' | 'Sucesso' | 'Aviso' | 'Erro';
+  titulo: string;
+  mensagem: string;
+  dataCreacao: string;
+  lida: boolean;
+  acao?: {
+    texto: string;
+    url: string;
+  };
+}
+
+export interface ConfiguracaoNotificacao {
+  inApp: boolean;
+  email: boolean;
+  sms: boolean;
+  push: boolean;
+  webhook?: string;
 }
