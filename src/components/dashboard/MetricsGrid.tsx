@@ -1,6 +1,5 @@
 
 import React from 'react';
-import { motion } from 'framer-motion';
 import { 
   TrendingUp, 
   TrendingDown, 
@@ -25,7 +24,6 @@ interface MetricCardProps {
   };
   format?: 'number' | 'currency' | 'percentage' | 'time';
   color: 'blue' | 'green' | 'orange' | 'red' | 'purple' | 'indigo';
-  delay?: number;
 }
 
 const MetricCard: React.FC<MetricCardProps> = ({
@@ -34,8 +32,7 @@ const MetricCard: React.FC<MetricCardProps> = ({
   icon: Icon,
   trend,
   format = 'number',
-  color,
-  delay = 0
+  color
 }) => {
   const formatValue = (val: number | string) => {
     if (typeof val === 'string') return val;
@@ -65,12 +62,7 @@ const MetricCard: React.FC<MetricCardProps> = ({
   };
 
   return (
-    <motion.div
-      initial={{ opacity: 0, y: 20 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.5, delay }}
-      className="relative overflow-hidden"
-    >
+    <div className="relative overflow-hidden">
       <div className="bg-white rounded-2xl p-6 shadow-lg border border-slate-100 hover:shadow-xl transition-all duration-300 hover:-translate-y-1">
         {/* Background gradient overlay */}
         <div className={cn(
@@ -112,7 +104,7 @@ const MetricCard: React.FC<MetricCardProps> = ({
           </div>
         </div>
       </div>
-    </motion.div>
+    </div>
   );
 };
 
@@ -183,11 +175,10 @@ const MetricsGrid: React.FC = () => {
 
   return (
     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-      {metrics.map((metric, index) => (
+      {metrics.map((metric) => (
         <MetricCard
           key={metric.title}
           {...metric}
-          delay={index * 0.1}
         />
       ))}
     </div>

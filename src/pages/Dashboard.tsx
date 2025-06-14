@@ -1,6 +1,5 @@
 
 import React from 'react';
-import { motion } from 'framer-motion';
 import MetricsGrid from '@/components/dashboard/MetricsGrid';
 import { useAppStore } from '@/stores/useAppStore';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
@@ -8,23 +7,10 @@ import { Badge } from '@/components/ui/badge';
 import { AlertTriangle, Clock, TrendingUp } from 'lucide-react';
 
 const Dashboard: React.FC = () => {
-  const { alertas, notificacoes } = useAppStore();
-
-  const pageVariants = {
-    initial: { opacity: 0, y: 20 },
-    in: { opacity: 1, y: 0 },
-    out: { opacity: 0, y: -20 }
-  };
+  const { alertas } = useAppStore();
 
   return (
-    <motion.div
-      initial="initial"
-      animate="in"
-      exit="out"
-      variants={pageVariants}
-      transition={{ duration: 0.3 }}
-      className="space-y-6"
-    >
+    <div className="space-y-6">
       {/* Header */}
       <div className="flex items-center justify-between">
         <div>
@@ -102,7 +88,7 @@ const Dashboard: React.FC = () => {
           </CardContent>
         </Card>
       </div>
-    </motion.div>
+    </div>
   );
 };
 
