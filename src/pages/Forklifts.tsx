@@ -6,12 +6,16 @@ import { Forklift, StatusEmpilhadeira, TipoEmpilhadeira } from '@/types';
 import { useIsMobile } from '@/hooks/use-mobile';
 import { cn } from '@/lib/utils';
 import { Button } from '@/components/ui/button';
-import { Plus, Filter, Search } from 'lucide-react';
+import { Plus, Filter, Search, Grid, List, Download, Upload } from 'lucide-react';
 import ForkliftList from '@/components/forklift/ForkliftList';
+import ForkliftCard from '@/components/forklift/ForkliftCard';
 import { Pagination, PaginationContent, PaginationItem, PaginationLink, PaginationNext, PaginationPrevious } from '@/components/ui/pagination';
 import ForkliftDialog from '@/components/forklift/ForkliftDialog';
 import ForkliftDetails from '@/components/forklift/ForkliftDetails';
+import AdvancedFilters from '@/components/common/AdvancedFilters';
 import { useToast } from '@/hooks/use-toast';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { Badge } from '@/components/ui/badge';
 
 // Mock data for the forklifts
 const initialForklifts: Forklift[] = [
@@ -102,32 +106,53 @@ const ForkliftsPage = () => {
   const isMobile = useIsMobile();
   const { toast } = useToast();
   const [forklifts, setForklifts] = useState<Forklift[]>(initialForklifts);
-  const [currentDate, setCurrentDate] = useState<string>('');
+  const [viewMode, setViewMode] = useState<'grid' | 'list'>('grid');
   const [statusFilter, setStatusFilter] = useState<StatusEmpilhadeira | 'all'>('all');
   const [typeFilter, setTypeFilter] = useState<TipoEmpilhadeira | 'all'>('all');
   const [searchQuery, setSearchQuery] = useState<string>('');
+  const [advancedFilters, setAdvancedFilters] = useState<Record<string, any>>({});
   
   // Dialog states
   const [addDialogOpen, setAddDialogOpen] = useState(false);
   const [editDialogOpen, setEditDialogOpen] = useState(false);
   const [detailsDialogOpen, setDetailsDialogOpen] = useState(false);
   const [selectedForklift, setSelectedForklift] = useState<Forklift | null>(null);
-  
-  React.useEffect(() => {
-    // Set current date in Brazilian format
-    const now = new Date();
-    const options: Intl.DateTimeFormatOptions = { 
-      weekday: 'long', 
-      year: 'numeric', 
-      month: 'long', 
-      day: 'numeric' 
-    };
-    const dateStr = now.toLocaleDateString('pt-BR', options);
-    // First letter uppercase
-    setCurrentDate(dateStr.charAt(0).toUpperCase() + dateStr.slice(1));
-  }, []);
 
-  // Filter forklifts based on status, type, and search query
+  // Advanced filter options
+  const filterOptions = [
+    {
+      key: 'capacidadeMin',
+      label: 'Capacidade Mínima',
+      type: 'number' as const,
+    },
+    {
+      key: 'capacidadeMax',
+      label: 'Capacidade Máxima',
+      type: 'number' as const,
+    },
+    {
+      key: 'anoFabricacao',
+      label: 'Ano de Fabricação',
+      type: 'select' as const,
+      options: [
+        { value: '2021', label: '2021' },
+        { value: '2022', label: '2022' },
+        { value: '2023', label: '2023' },
+      ],
+    },
+    {
+      key: 'setor',
+      label: 'Setor',
+      type: 'select' as const,
+      options: [
+        { value: 'Armazém', label: 'Armazém' },
+        { value: 'Produção', label: 'Produção' },
+        { value: 'Manutenção', label: 'Manutenção' },
+      ],
+    },
+  ];
+
+  // Filter forklifts based on all filters
   const filteredForklifts = forklifts.filter(forklift => {
     // Status filter
     if (statusFilter !== 'all' && forklift.status !== statusFilter) {
@@ -144,20 +169,48 @@ const ForkliftsPage = () => {
         !forklift.modelo.toLowerCase().includes(searchQuery.toLowerCase())) {
       return false;
     }
+
+    // Advanced filters
+    if (advancedFilters.capacidadeMin && forklift.capacidade < parseInt(advancedFilters.capacidadeMin)) {
+      return false;
+    }
+    if (advancedFilters.capacidadeMax && forklift.capacidade > parseInt(advancedFilters.capacidadeMax)) {
+      return false;
+    }
+    if (advancedFilters.anoFabricacao && forklift.anoFabricacao.toString() !== advancedFilters.anoFabricacao) {
+      return false;
+    }
+    if (advancedFilters.setor && forklift.setor !== advancedFilters.setor) {
+      return false;
+    }
     
     return true;
   });
 
+  // Calculate summary statistics
+  const stats = {
+    total: forklifts.length,
+    operational: forklifts.filter(f => f.status === StatusEmpilhadeira.OPERACIONAL).length,
+    maintenance: forklifts.filter(f => f.status === StatusEmpilhadeira.EM_MANUTENCAO).length,
+    stopped: forklifts.filter(f => f.status === StatusEmpilhadeira.PARADA).length,
+  };
+
   // Handle add/edit forklift
   const handleSaveForklift = (forkliftData: Forklift) => {
     if (editDialogOpen) {
-      // Update existing forklift
       setForklifts(prev => 
         prev.map(f => f.id === forkliftData.id ? forkliftData : f)
       );
+      toast({
+        title: "Empilhadeira atualizada",
+        description: "A empilhadeira foi atualizada com sucesso."
+      });
     } else {
-      // Add new forklift
       setForklifts(prev => [...prev, forkliftData]);
+      toast({
+        title: "Empilhadeira adicionada",
+        description: "A empilhadeira foi adicionada com sucesso."
+      });
     }
   };
 
@@ -187,66 +240,140 @@ const ForkliftsPage = () => {
     }
   };
 
+  // Handle export data
+  const handleExportData = () => {
+    toast({
+      title: "Exportando dados",
+      description: "Funcionalidade de exportação será implementada em breve."
+    });
+  };
+
+  // Handle import data
+  const handleImportData = () => {
+    toast({
+      title: "Importando dados",
+      description: "Funcionalidade de importação será implementada em breve."
+    });
+  };
+
   return (
     <div className="flex min-h-screen bg-background">
       <Sidebar />
       
       <div className={cn(
         "flex-1 flex flex-col",
-        !isMobile && "ml-64" // Offset for sidebar when not mobile
+        !isMobile && "ml-64"
       )}>
         <Navbar />
         
-        <main className="flex-1 px-6 py-6">
-          {/* Header with actions */}
-          <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-6 gap-4">
+        <main className="flex-1 p-4 md:p-6 space-y-6">
+          {/* Page Header */}
+          <div className="flex flex-col lg:flex-row justify-between items-start lg:items-center gap-4">
             <div>
-              <h1 className="text-2xl font-bold">Gerenciamento de Empilhadeiras</h1>
-              <p className="text-muted-foreground">Gerencie sua frota de empilhadeiras</p>
+              <h1 className="text-2xl md:text-3xl font-bold">Gerenciamento de Empilhadeiras</h1>
+              <p className="text-muted-foreground">Gerencie sua frota de empilhadeiras de forma inteligente</p>
             </div>
             
-            <div className="flex gap-2">
-              <Button 
-                variant="outline" 
-                className="flex gap-2 items-center"
-                onClick={() => toast({
-                  title: "Filtros avançados",
-                  description: "Esta funcionalidade permitiria filtros mais avançados."
-                })}
-              >
-                <Filter size={16} />
-                Filtrar
+            <div className="flex flex-wrap gap-2">
+              <Button variant="outline" onClick={handleImportData}>
+                <Upload className="w-4 h-4 mr-2" />
+                Importar
               </Button>
-              <Button 
-                className="flex gap-2 items-center"
-                onClick={() => {
-                  setSelectedForklift(null);
-                  setAddDialogOpen(true);
-                }}
-              >
-                <Plus size={16} />
+              <Button variant="outline" onClick={handleExportData}>
+                <Download className="w-4 h-4 mr-2" />
+                Exportar
+              </Button>
+              <Button onClick={() => {
+                setSelectedForklift(null);
+                setAddDialogOpen(true);
+              }}>
+                <Plus className="w-4 h-4 mr-2" />
                 Nova Empilhadeira
               </Button>
             </div>
           </div>
+
+          {/* Statistics Cards */}
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+            <Card>
+              <CardHeader className="pb-2">
+                <CardTitle className="text-sm font-medium text-muted-foreground">Total</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <div className="text-2xl font-bold">{stats.total}</div>
+                <Badge variant="outline" className="mt-1">Empilhadeiras</Badge>
+              </CardContent>
+            </Card>
+            
+            <Card>
+              <CardHeader className="pb-2">
+                <CardTitle className="text-sm font-medium text-muted-foreground">Operacionais</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <div className="text-2xl font-bold text-green-600">{stats.operational}</div>
+                <Badge variant="secondary" className="mt-1 bg-green-100 text-green-800">Ativas</Badge>
+              </CardContent>
+            </Card>
+            
+            <Card>
+              <CardHeader className="pb-2">
+                <CardTitle className="text-sm font-medium text-muted-foreground">Em Manutenção</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <div className="text-2xl font-bold text-yellow-600">{stats.maintenance}</div>
+                <Badge variant="secondary" className="mt-1 bg-yellow-100 text-yellow-800">Manutenção</Badge>
+              </CardContent>
+            </Card>
+            
+            <Card>
+              <CardHeader className="pb-2">
+                <CardTitle className="text-sm font-medium text-muted-foreground">Paradas</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <div className="text-2xl font-bold text-red-600">{stats.stopped}</div>
+                <Badge variant="secondary" className="mt-1 bg-red-100 text-red-800">Inativas</Badge>
+              </CardContent>
+            </Card>
+          </div>
           
-          {/* Search and filters */}
-          <div className="glass-card p-4 mb-6">
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-              {/* Search */}
-              <div className="relative">
-                <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground" size={18} />
-                <input
-                  type="text"
-                  placeholder="Buscar por ID ou modelo..."
-                  className="pl-10 h-10 w-full rounded-md border border-input bg-background px-3 py-2"
-                  value={searchQuery}
-                  onChange={(e) => setSearchQuery(e.target.value)}
-                />
+          {/* Filters and Search */}
+          <Card>
+            <CardHeader>
+              <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+                <CardTitle className="text-lg">Filtros e Busca</CardTitle>
+                <div className="flex items-center gap-2">
+                  <Button
+                    variant={viewMode === 'grid' ? 'default' : 'outline'}
+                    size="sm"
+                    onClick={() => setViewMode('grid')}
+                  >
+                    <Grid className="w-4 h-4" />
+                  </Button>
+                  <Button
+                    variant={viewMode === 'list' ? 'default' : 'outline'}
+                    size="sm"
+                    onClick={() => setViewMode('list')}
+                  >
+                    <List className="w-4 h-4" />
+                  </Button>
+                </div>
               </div>
-              
-              {/* Status filter */}
-              <div>
+            </CardHeader>
+            <CardContent>
+              <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-4">
+                {/* Search */}
+                <div className="relative">
+                  <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground" size={18} />
+                  <input
+                    type="text"
+                    placeholder="Buscar por ID ou modelo..."
+                    className="pl-10 h-10 w-full rounded-md border border-input bg-background px-3 py-2"
+                    value={searchQuery}
+                    onChange={(e) => setSearchQuery(e.target.value)}
+                  />
+                </div>
+                
+                {/* Status filter */}
                 <select 
                   className="h-10 w-full rounded-md border border-input bg-background px-3 py-2"
                   value={statusFilter}
@@ -257,10 +384,8 @@ const ForkliftsPage = () => {
                   <option value={StatusEmpilhadeira.EM_MANUTENCAO}>{StatusEmpilhadeira.EM_MANUTENCAO}</option>
                   <option value={StatusEmpilhadeira.PARADA}>{StatusEmpilhadeira.PARADA}</option>
                 </select>
-              </div>
-              
-              {/* Type filter */}
-              <div>
+                
+                {/* Type filter */}
                 <select 
                   className="h-10 w-full rounded-md border border-input bg-background px-3 py-2"
                   value={typeFilter}
@@ -271,20 +396,59 @@ const ForkliftsPage = () => {
                   <option value={TipoEmpilhadeira.ELETRICA}>{TipoEmpilhadeira.ELETRICA}</option>
                   <option value={TipoEmpilhadeira.RETRATIL}>{TipoEmpilhadeira.RETRATIL}</option>
                 </select>
+
+                {/* Advanced filters */}
+                <AdvancedFilters
+                  filters={filterOptions}
+                  values={advancedFilters}
+                  onFiltersChange={setAdvancedFilters}
+                  onClearFilters={() => setAdvancedFilters({})}
+                />
               </div>
-            </div>
-          </div>
+            </CardContent>
+          </Card>
           
-          {/* Forklift list */}
-          <div className="slide-enter">
-            <ForkliftList 
-              forklifts={filteredForklifts}
-              onForkliftClick={handleForkliftClick}
-              onDeleteForklift={handleDeleteForklift}
-            />
-            
-            {/* Pagination */}
-            <div className="mt-6">
+          {/* Results */}
+          <Card>
+            <CardHeader>
+              <div className="flex justify-between items-center">
+                <CardTitle>
+                  Empilhadeiras ({filteredForklifts.length} de {forklifts.length})
+                </CardTitle>
+              </div>
+            </CardHeader>
+            <CardContent>
+              {viewMode === 'grid' ? (
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
+                  {filteredForklifts.map((forklift) => (
+                    <ForkliftCard
+                      key={forklift.id}
+                      forklift={forklift}
+                      onClick={() => handleForkliftClick(forklift.id)}
+                    />
+                  ))}
+                </div>
+              ) : (
+                <ForkliftList 
+                  forklifts={filteredForklifts}
+                  onForkliftClick={handleForkliftClick}
+                  onDeleteForklift={handleDeleteForklift}
+                />
+              )}
+              
+              {filteredForklifts.length === 0 && (
+                <div className="text-center py-12 text-muted-foreground">
+                  <div className="text-4xl mb-4">🔍</div>
+                  <h3 className="text-lg font-medium mb-2">Nenhuma empilhadeira encontrada</h3>
+                  <p>Tente ajustar os filtros ou adicionar uma nova empilhadeira.</p>
+                </div>
+              )}
+            </CardContent>
+          </Card>
+          
+          {/* Pagination */}
+          {filteredForklifts.length > 0 && (
+            <div className="flex justify-center">
               <Pagination>
                 <PaginationContent>
                   <PaginationItem>
@@ -305,7 +469,7 @@ const ForkliftsPage = () => {
                 </PaginationContent>
               </Pagination>
             </div>
-          </div>
+          )}
         </main>
       </div>
       
