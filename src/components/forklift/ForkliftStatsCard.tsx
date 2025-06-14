@@ -31,7 +31,7 @@ const ForkliftStatsCard: React.FC<ForkliftStatsCardProps> = ({
         "bg-gradient-to-br", colorFrom, colorTo,
         "hover:shadow-2xl hover:scale-105 focus-within:scale-105",
         "border border-white/10",
-        "p-4 sm:p-5" // Responsive padding
+        "p-3 sm:p-4" // Reduced padding by 5px
       )}
       onClick={onClick}
       role="button"
