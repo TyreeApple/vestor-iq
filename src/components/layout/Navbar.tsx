@@ -1,8 +1,7 @@
 
 import React from 'react';
-import { Search, Bell, User } from 'lucide-react';
+import { Search, User } from 'lucide-react';
 import { Button } from '@/components/ui/button';
-import { Badge } from '@/components/ui/badge';
 import ThemeToggle from '@/components/common/ThemeToggle';
 
 const Navbar: React.FC = () => {
@@ -29,14 +28,6 @@ const Navbar: React.FC = () => {
         {/* Theme Toggle */}
         <ThemeToggle />
         
-        {/* Notifications */}
-        <Button variant="ghost" size="icon" className="relative">
-          <Bell className="w-5 h-5" />
-          <Badge className="absolute -top-1 -right-1 px-1 py-0 text-xs min-w-[18px] h-[18px] bg-red-500">
-            3
-          </Badge>
-        </Button>
-
         {/* User menu */}
         <Button variant="ghost" size="icon">
           <User className="w-5 h-5" />
