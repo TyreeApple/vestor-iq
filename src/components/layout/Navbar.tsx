@@ -3,10 +3,11 @@ import React from 'react';
 import { Search, Bell, User } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
+import ThemeToggle from '@/components/common/ThemeToggle';
 
 const Navbar: React.FC = () => {
   return (
-    <header className="h-16 bg-white border-b border-slate-200 flex items-center justify-between px-6">
+    <header className="h-16 bg-white dark:bg-card border-b border-slate-200 dark:border-border flex items-center justify-between px-6">
       {/* Search */}
       <div className="flex-1 max-w-lg">
         <div className="relative">
@@ -14,13 +15,16 @@ const Navbar: React.FC = () => {
           <input
             type="text"
             placeholder="Buscar empilhadeiras, operadores..."
-            className="w-full pl-10 pr-4 py-2 border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+            className="w-full pl-10 pr-4 py-2 border border-slate-200 dark:border-border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-background text-foreground"
           />
         </div>
       </div>
 
       {/* Right side */}
       <div className="flex items-center space-x-4">
+        {/* Theme Toggle */}
+        <ThemeToggle />
+        
         {/* Notifications */}
         <Button variant="ghost" size="icon" className="relative">
           <Bell className="w-5 h-5" />
