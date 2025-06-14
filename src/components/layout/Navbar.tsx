@@ -9,8 +9,7 @@ const Navbar: React.FC = () => {
   return (
     <header className="h-16 bg-white dark:bg-card border-b border-slate-200 dark:border-border flex items-center justify-between px-6">
       {/* Left spacer */}
-      <div className="flex items-center space-x-4 min-w-0">
-        <ThemeToggle />
+      <div className="min-w-0">
       </div>
 
       {/* Centered Search */}
@@ -27,6 +26,9 @@ const Navbar: React.FC = () => {
 
       {/* Right side */}
       <div className="flex items-center space-x-4">
+        {/* Theme Toggle */}
+        <ThemeToggle />
+        
         {/* Notifications */}
         <Button variant="ghost" size="icon" className="relative">
           <Bell className="w-5 h-5" />
