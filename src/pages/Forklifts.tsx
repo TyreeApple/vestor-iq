@@ -438,7 +438,7 @@ const ForkliftsPage = () => {
         </CardHeader>
         <CardContent className="space-y-4">
           {viewMode === 'grid' ? (
-            <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 2xl:grid-cols-4 gap-6 animate-fade-in">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5 gap-4 animate-fade-in">
               {paginatedData.map((forklift, index) => (
                 <div 
                   key={forklift.id}

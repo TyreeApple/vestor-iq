@@ -18,25 +18,25 @@ const ForkliftCard: React.FC<ForkliftCardProps> = ({ forklift, onClick, onDelete
     switch (status) {
       case StatusEmpilhadeira.OPERACIONAL:
         return (
-          <Badge className="bg-gradient-to-r from-emerald-500 to-emerald-600 hover:from-emerald-600 hover:to-emerald-700 text-white border-0 font-semibold tracking-wide shadow-lg shadow-emerald-500/25">
+          <Badge className="bg-gradient-to-r from-emerald-500 to-emerald-600 hover:from-emerald-600 hover:to-emerald-700 text-white border-0 font-semibold tracking-wide shadow-lg shadow-emerald-500/25 text-xs px-2 py-0.5">
             ✓ Operacional
           </Badge>
         );
       case StatusEmpilhadeira.EM_MANUTENCAO:
         return (
-          <Badge className="bg-gradient-to-r from-amber-500 to-orange-600 hover:from-amber-600 hover:to-orange-700 text-white border-0 font-semibold tracking-wide shadow-lg shadow-amber-500/25 animate-pulse">
+          <Badge className="bg-gradient-to-r from-amber-500 to-orange-600 hover:from-amber-600 hover:to-orange-700 text-white border-0 font-semibold tracking-wide shadow-lg shadow-amber-500/25 animate-pulse text-xs px-2 py-0.5">
             🔧 Em Manutenção
           </Badge>
         );
       case StatusEmpilhadeira.PARADA:
         return (
-          <Badge className="bg-gradient-to-r from-red-500 to-red-600 hover:from-red-600 hover:to-red-700 text-white border-0 font-semibold tracking-wide shadow-lg shadow-red-500/25">
+          <Badge className="bg-gradient-to-r from-red-500 to-red-600 hover:from-red-600 hover:to-red-700 text-white border-0 font-semibold tracking-wide shadow-lg shadow-red-500/25 text-xs px-2 py-0.5">
             ⚠ Parada
           </Badge>
         );
       default:
         return (
-          <Badge className="bg-gradient-to-r from-slate-500 to-slate-600 text-white border-0 font-semibold tracking-wide">
+          <Badge className="bg-gradient-to-r from-slate-500 to-slate-600 text-white border-0 font-semibold tracking-wide text-xs px-2 py-0.5">
             {status}
           </Badge>
         );
@@ -63,7 +63,7 @@ const ForkliftCard: React.FC<ForkliftCardProps> = ({ forklift, onClick, onDelete
 
   return (
     <div 
-      className="group relative bg-gradient-to-br from-slate-800/60 to-slate-900/80 backdrop-blur-sm border border-slate-700/50 rounded-xl p-6 cursor-pointer transition-all duration-300 ease-out hover:shadow-2xl hover:shadow-slate-900/40 hover:scale-102 hover:-translate-y-1 hover:border-slate-600/60 animate-fade-in"
+      className="group relative bg-gradient-to-br from-slate-800/60 to-slate-900/80 backdrop-blur-sm border border-slate-700/50 rounded-xl p-4 cursor-pointer transition-all duration-300 ease-out hover:shadow-2xl hover:shadow-slate-900/40 hover:scale-102 hover:-translate-y-1 hover:border-slate-600/60 animate-fade-in"
       onClick={onClick}
       style={{
         boxShadow: '0 4px 12px rgba(0,0,0,0.15)',
@@ -81,79 +81,79 @@ const ForkliftCard: React.FC<ForkliftCardProps> = ({ forklift, onClick, onDelete
           variant="ghost"
           size="sm"
           onClick={handleDelete}
-          className="absolute top-3 right-3 h-8 w-8 p-0 text-slate-400 hover:text-red-400 hover:bg-red-500/20 transition-all duration-200 z-20 bg-slate-800/80 backdrop-blur-sm border border-slate-600/50 rounded-full opacity-80 hover:opacity-100"
+          className="absolute top-2 right-2 h-6 w-6 p-0 text-slate-400 hover:text-red-400 hover:bg-red-500/20 transition-all duration-200 z-20 bg-slate-800/80 backdrop-blur-sm border border-slate-600/50 rounded-full opacity-80 hover:opacity-100"
           title="Excluir empilhadeira"
         >
-          <Trash2 className="h-4 w-4" />
+          <Trash2 className="h-3 w-3" />
         </Button>
       )}
 
       {/* Header */}
-      <div className="flex items-start justify-between mb-4 pr-10">
+      <div className="flex items-start justify-between mb-3 pr-8">
         <div className="flex-1">
-          <h3 className="text-xl font-bold text-white mb-1 tracking-wide" style={{ fontSize: '20px', fontWeight: 700 }}>
+          <h3 className="text-lg font-bold text-white mb-0.5 tracking-wide">
             {forklift.id}
           </h3>
-          <p className="text-slate-400 font-medium tracking-wide" style={{ fontSize: '16px', fontWeight: 500, color: '#94a3b8' }}>
+          <p className="text-slate-400 font-medium tracking-wide text-sm" style={{ color: '#94a3b8' }}>
             {forklift.modelo}
           </p>
-          <p className="text-slate-500 text-sm tracking-wide" style={{ color: '#64748b' }}>
+          <p className="text-slate-500 text-xs tracking-wide" style={{ color: '#64748b' }}>
             {forklift.marca}
           </p>
         </div>
-        <div className="flex flex-col items-end gap-2">
+        <div className="flex flex-col items-end gap-1">
           {getStatusBadge(forklift.status)}
         </div>
       </div>
 
       {/* Type Badge */}
-      <div className="mb-4">
+      <div className="mb-3">
         <Badge variant="outline" className={cn("border font-semibold text-xs tracking-wider", getTypeBadge(forklift.tipo))}>
           {forklift.tipo}
         </Badge>
       </div>
 
       {/* Capacity Highlight */}
-      <div className="bg-slate-800/40 rounded-lg p-4 mb-4 border border-slate-700/30">
+      <div className="bg-slate-800/40 rounded-lg p-3 mb-3 border border-slate-700/30">
         <div className="text-center">
-          <div className="text-slate-400 text-sm font-medium tracking-wider uppercase mb-1" style={{ color: '#64748b', letterSpacing: '0.5px' }}>
+          <div className="text-slate-400 text-xs font-medium tracking-wider uppercase mb-0.5" style={{ color: '#64748b', letterSpacing: '0.5px' }}>
             CAPACIDADE
           </div>
-          <div className="text-3xl font-extrabold tracking-tight" style={{ fontSize: '24px', fontWeight: 800, color: '#3b82f6' }}>
+          <div className="text-xl font-extrabold tracking-tight" style={{ color: '#3b82f6' }}>
             {forklift.capacidade.toLocaleString()}
-            <span className="text-lg font-semibold text-slate-300 ml-1">kg</span>
+            <span className="text-sm font-semibold text-slate-300 ml-1">kg</span>
           </div>
         </div>
       </div>
 
       {/* Details */}
-      <div className="space-y-3">
-        <div className="flex items-center justify-between text-sm">
-          <div className="flex items-center gap-2 text-slate-400" style={{ color: '#64748b' }}>
-            <Clock className="w-4 h-4" />
+      <div className="space-y-2">
+        <div className="flex items-center justify-between text-xs">
+          <div className="flex items-center gap-1.5 text-slate-400" style={{ color: '#64748b' }}>
+            <Clock className="w-3 h-3" />
             <span className="font-medium tracking-wide">Horímetro</span>
           </div>
-          <span className="font-mono font-semibold text-slate-200 bg-slate-700/50 px-2 py-1 rounded text-xs" style={{ color: '#e2e8f0' }}>
+          <span className="font-mono font-semibold text-slate-200 bg-slate-700/50 px-1.5 py-0.5 rounded text-xs" style={{ color: '#e2e8f0' }}>
             {forklift.horimetro?.toString().padStart(5, '0') || 'N/A'}
           </span>
         </div>
 
-        <div className="flex items-center justify-between text-sm">
-          <div className="flex items-center gap-2 text-slate-400" style={{ color: '#64748b' }}>
-            <Calendar className="w-4 h-4" />
+        <div className="flex items-center justify-between text-xs">
+          <div className="flex items-center gap-1.5 text-slate-400" style={{ color: '#64748b' }}>
+            <Calendar className="w-3 h-3" />
             <span className="font-medium tracking-wide">Últ. Manutenção</span>
           </div>
-          <span className="font-semibold text-slate-200" style={{ color: '#e2e8f0' }}>
+          <span className="font-semibold text-slate-200 text-xs" style={{ color: '#e2e8f0' }}>
             {forklift.ultimaManutencao || 'N/A'}
           </span>
         </div>
 
-        <div className="flex items-center justify-between text-sm">
-          <div className="flex items-center gap-2 text-slate-400" style={{ color: '#64748b' }}>
-            <MapPin className="w-4 h-4" />
+        <div className="flex items-center justify-between text-xs">
+          <div className="flex items-center gap-1.5 text-slate-400" style={{ color: '#64748b' }}>
+            <MapPin className="w-3 h-3" />
             <span className="font-medium tracking-wide">Localização</span>
           </div>
-          <span className="font-semibold text-slate-200" style={{ color: '#e2e8f0' }}>
+          <span className="font-semibold text-slate-200 text-xs" style={{ color: '#e2e8f0' }}>
             {forklift.localizacaoAtual || forklift.setor || 'N/A'}
           </span>
         </div>
