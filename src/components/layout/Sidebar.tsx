@@ -62,22 +62,22 @@ const Sidebar: React.FC = () => {
       sidebarCollapsed ? "w-16" : "w-64"
     )}>
       {/* Header */}
-      <div className="h-16 flex items-center justify-between px-4 border-b border-slate-200 dark:border-border bg-gradient-to-r from-blue-600 to-indigo-600 dark:from-blue-700 dark:to-indigo-800">
+      <div className="h-16 flex items-center justify-between px-4 border-b border-slate-200 dark:border-border bg-gradient-to-r from-blue-600 to-indigo-600 dark:from-slate-800 dark:to-slate-900">
         {!sidebarCollapsed && (
           <div className="flex items-center space-x-3">
-            <div className="p-2 bg-white/20 dark:bg-white/25 rounded-lg">
+            <div className="p-2 bg-white/20 dark:bg-white/10 rounded-lg">
               <Gauge className="w-6 h-6 text-white" />
             </div>
             <div className="text-white">
               <h1 className="font-bold text-lg">FleetPro</h1>
-              <p className="text-xs text-blue-100 dark:text-blue-200">Gestão de Frotas</p>
+              <p className="text-xs text-blue-100 dark:text-slate-300">Gestão de Frotas</p>
             </div>
           </div>
         )}
         
         <button
           onClick={() => setSidebarCollapsed(!sidebarCollapsed)}
-          className="p-2 rounded-lg hover:bg-white/20 dark:hover:bg-white/25 transition-colors text-white"
+          className="p-2 rounded-lg hover:bg-white/20 dark:hover:bg-white/10 transition-colors text-white"
         >
           {sidebarCollapsed ? (
             <ChevronRight className="w-4 h-4" />
