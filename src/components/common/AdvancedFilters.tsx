@@ -43,21 +43,21 @@ const AdvancedFilters = ({
     onFiltersChange(newValues);
   };
 
-  const activeFiltersCount = Object.keys(values).filter(key => values[key] && values[key] !== '').length;
+  const activeFiltersCount = Object.keys(values).filter(key => values[key] && values[key] !== '' && values[key] !== 'all').length;
 
   const renderFilter = (filter: FilterOption) => {
     switch (filter.type) {
       case 'select':
         return (
           <Select
-            value={values[filter.key] || ''}
-            onValueChange={(value) => handleFilterChange(filter.key, value)}
+            value={values[filter.key] || 'all'}
+            onValueChange={(value) => handleFilterChange(filter.key, value === 'all' ? '' : value)}
           >
             <SelectTrigger>
               <SelectValue placeholder={`Selecione ${filter.label.toLowerCase()}`} />
             </SelectTrigger>
             <SelectContent>
-              <SelectItem value="">Todos</SelectItem>
+              <SelectItem value="all">Todos</SelectItem>
               {filter.options?.map(option => (
                 <SelectItem key={option.value} value={option.value}>
                   {option.label}
@@ -131,7 +131,7 @@ const AdvancedFilters = ({
               <div key={filter.key} className="space-y-2">
                 <div className="flex items-center justify-between">
                   <Label className="text-sm font-medium">{filter.label}</Label>
-                  {values[filter.key] && (
+                  {values[filter.key] && values[filter.key] !== 'all' && (
                     <Button
                       variant="ghost"
                       size="sm"
