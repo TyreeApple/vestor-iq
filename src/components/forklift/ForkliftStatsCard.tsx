@@ -32,6 +32,7 @@ const ForkliftStatsCard: React.FC<ForkliftStatsCardProps> = ({
         "hover:shadow-2xl hover:scale-105 focus-within:scale-105",
         "border border-white/10"
       )}
+      style={{ padding: '25px' }}
       onClick={onClick}
       role="button"
       tabIndex={0}
@@ -47,17 +48,17 @@ const ForkliftStatsCard: React.FC<ForkliftStatsCardProps> = ({
       </div>
 
       {/* Floating Elements */}
-      <div className="absolute right-4 top-4 w-20 h-20 rounded-full bg-white/5 blur-xl animate-pulse" />
-      <div className="absolute left-2 bottom-2 w-16 h-16 rounded-full bg-white/5 blur-lg" />
+      <div className="absolute right-3 top-3 w-16 h-16 rounded-full bg-white/5 blur-xl animate-pulse" />
+      <div className="absolute left-1 bottom-1 w-12 h-12 rounded-full bg-white/5 blur-lg" />
 
       {/* Icon Container */}
-      <div className="relative z-10 flex items-center justify-between mb-4">
+      <div className="relative z-10 flex items-center justify-between mb-3">
         <div className={cn(
-          "flex items-center justify-center w-14 h-14 rounded-xl",
+          "flex items-center justify-center w-12 h-12 rounded-xl",
           "bg-white/20 backdrop-blur-sm border border-white/30",
           "shadow-lg group-hover:scale-110 transition-transform duration-300"
         )}>
-          <Icon className={cn("w-7 h-7", textColor, "drop-shadow-sm")} />
+          <Icon className={cn("w-6 h-6", textColor, "drop-shadow-sm")} />
         </div>
         
         {/* Decorative element */}
@@ -66,7 +67,7 @@ const ForkliftStatsCard: React.FC<ForkliftStatsCardProps> = ({
             <div
               key={i}
               className={cn(
-                "w-2 h-2 rounded-full bg-white/30",
+                "w-1.5 h-1.5 rounded-full bg-white/30",
                 "animate-pulse",
                 `animation-delay-${i * 100}ms`
               )}
@@ -79,7 +80,7 @@ const ForkliftStatsCard: React.FC<ForkliftStatsCardProps> = ({
       <div className="relative z-10">
         <div className="flex items-baseline space-x-2 mb-2">
           <span className={cn(
-            "text-4xl font-black tracking-tight",
+            "text-3xl font-black tracking-tight",
             textColor,
             "drop-shadow-lg [text-shadow:_0_2px_8px_rgba(0,0,0,0.3)]"
           )}>
@@ -88,7 +89,7 @@ const ForkliftStatsCard: React.FC<ForkliftStatsCardProps> = ({
         </div>
         
         <h3 className={cn(
-          "text-lg font-semibold mb-1",
+          "text-base font-semibold mb-1",
           textColor,
           "drop-shadow-sm"
         )}>
