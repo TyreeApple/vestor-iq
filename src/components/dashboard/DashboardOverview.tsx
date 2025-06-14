@@ -29,9 +29,9 @@ const DashboardOverview: React.FC<DashboardOverviewProps> = ({
   stats = initialStats 
 }) => {
   return (
-    <section className="space-y-8 md:space-y-10 px-2 md:px-0">
+    <section className="space-y-8 md:space-y-10 px-2 md:px-0 transition-colors duration-300">
       <div className="slide-enter animate-fade-in" style={{ animationDelay: '0.1s' }}>
-        <h2 className="text-2xl md:text-3xl font-semibold mb-4 text-primary">Status da Frota</h2>
+        <h2 className="text-2xl md:text-3xl font-semibold mb-4 text-primary dark:text-primary">Status da Frota</h2>
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 md:gap-8">
           <StatusCard 
             title="Total de Empilhadeiras" 
@@ -62,7 +62,7 @@ const DashboardOverview: React.FC<DashboardOverviewProps> = ({
       </div>
 
       <div className="slide-enter animate-fade-in" style={{ animationDelay: '0.2s' }}>
-        <h2 className="text-2xl md:text-3xl font-semibold mb-4 text-primary">Status dos Operadores</h2>
+        <h2 className="text-2xl md:text-3xl font-semibold mb-4 text-primary dark:text-primary">Status dos Operadores</h2>
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 md:gap-8">
           <StatusCard 
             title="Total de Operadores" 
@@ -92,7 +92,7 @@ const DashboardOverview: React.FC<DashboardOverviewProps> = ({
       </div>
 
       <div className="slide-enter animate-fade-in" style={{ animationDelay: '0.3s' }}>
-        <h2 className="text-2xl md:text-3xl font-semibold mb-4 text-primary">Operação Atual</h2>
+        <h2 className="text-2xl md:text-3xl font-semibold mb-4 text-primary dark:text-primary">Operação Atual</h2>
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 md:gap-8">
           <StatusCard 
             title="Operações Ativas" 
