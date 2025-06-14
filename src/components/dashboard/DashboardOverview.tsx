@@ -1,7 +1,7 @@
 
 import React from "react";
-import { AiOutlineCar, AiOutlineCheckCircle } from "react-icons/ai";
-import { MdEngineering, MdPeopleAlt } from "react-icons/md";
+import { AiOutlineCheckCircle } from "react-icons/ai";
+import { MdEngineering, MdPeopleAlt, MdForklift } from "react-icons/md";
 import { DashboardStats } from "@/types";
 import { cn } from "@/lib/utils";
 
@@ -15,7 +15,7 @@ const initialStats: DashboardStats = {
   operatorsWithWarningCertificates: 3,
   operatorsWithExpiredCertificates: 1,
   activeOperations: 7,
-  pendingMaintenances: 4
+  pendingMaintenances: 4,
 };
 
 interface DashboardOverviewProps {
@@ -26,87 +26,126 @@ const CARDS = [
   {
     title: "Total Frota",
     value: (stats: DashboardStats) => stats.totalForklifts,
-    icon: AiOutlineCar,
-    colorFrom: "from-blue-200",
-    colorTo: "to-blue-500",
-    iconBg: "bg-blue-100/70 border-blue-300/60",
-    shadow: "shadow-[0_2px_16px_0_rgba(64,132,230,0.13)]",
-    iconColor: "text-blue-700 group-hover:text-blue-900"
+    icon: MdForklift,
+    cardBg: "bg-gradient-to-br from-[#b8caf8] to-[#66a9f7]",
+    iconBg: "bg-white/50 border-2 border-blue-200",
+    shadow: "shadow-[0_2px_24px_0_rgba(102,169,247,0.12)]",
+    iconColor: "text-blue-600",
+    ring: "ring-2 ring-blue-100/80",
   },
   {
     title: "Operacionais",
     value: (stats: DashboardStats) => stats.operationalForklifts,
     icon: AiOutlineCheckCircle,
-    colorFrom: "from-green-200",
-    colorTo: "to-green-400",
-    iconBg: "bg-green-100/70 border-green-300/60",
-    shadow: "shadow-[0_2px_16px_0_rgba(54,180,99,0.12)]",
-    iconColor: "text-green-700 group-hover:text-green-900"
+    cardBg: "bg-gradient-to-br from-green-100 to-green-300",
+    iconBg: "bg-white/50 border-2 border-green-100",
+    shadow: "shadow-[0_2px_16px_0_rgba(34,197,94,0.14)]",
+    iconColor: "text-green-600",
+    ring: "ring-2 ring-green-100/80",
   },
   {
     title: "Manutenção",
     value: (stats: DashboardStats) => stats.maintenanceForklifts,
     icon: MdEngineering,
-    colorFrom: "from-orange-200",
-    colorTo: "to-orange-400",
-    iconBg: "bg-orange-50/70 border-orange-200/60",
-    shadow: "shadow-[0_2px_16px_0_rgba(255,180,70,0.10)]",
-    iconColor: "text-orange-700 group-hover:text-orange-900"
+    cardBg: "bg-gradient-to-br from-orange-100 to-orange-300",
+    iconBg: "bg-white/50 border-2 border-orange-100",
+    shadow: "shadow-[0_2px_16px_0_rgba(253,186,116,0.13)]",
+    iconColor: "text-orange-500",
+    ring: "ring-2 ring-orange-100/70",
   },
   {
     title: "Operadores",
     value: (stats: DashboardStats) => stats.totalOperators,
     icon: MdPeopleAlt,
-    colorFrom: "from-slate-100",
-    colorTo: "to-slate-300",
-    iconBg: "bg-slate-50/80 border-slate-200/60",
-    shadow: "shadow-[0_2px_16px_0_rgba(100,125,148,0.12)]",
-    iconColor: "text-slate-700 group-hover:text-slate-900"
+    cardBg: "bg-gradient-to-br from-slate-50 to-slate-200",
+    iconBg: "bg-white/40 border-2 border-slate-100",
+    shadow: "shadow-[0_2px_16px_0_rgba(100,116,139,0.10)]",
+    iconColor: "text-slate-600",
+    ring: "ring-2 ring-slate-100/70",
   },
 ];
 
 const DashboardOverview: React.FC<DashboardOverviewProps> = ({
-  stats = initialStats
+  stats = initialStats,
 }) => {
   return (
-    <section className="w-full max-w-screen-xl mx-auto px-2 md:px-0 mt-4">
+    <section className="w-full max-w-screen-xl mx-auto px-2 md:px-0 mt-6">
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-6">
-        {CARDS.map(card => (
+        {CARDS.map((card, idx) => (
           <div
             key={card.title}
             className={cn(
-              "group relative rounded-2xl p-5 md:p-6 flex flex-col justify-between min-h-[140px] overflow-hidden",
-              "bg-gradient-to-br transition-transform duration-300",
-              card.colorFrom, card.colorTo, card.shadow,
-              "hover:scale-105 hover:shadow-xl"
+              "relative rounded-2xl p-5 md:p-6 flex flex-col min-h-[140px] items-center justify-between transition-shadow hover:shadow-xl duration-300",
+              card.cardBg,
+              card.shadow
             )}
             tabIndex={0}
           >
-            {/* Sutil overlay glass */}
-            <span className="absolute inset-0 bg-white/30 dark:bg-white/10 opacity-70 rounded-2xl pointer-events-none mix-blend-lighten" />
-            {/* SVG pattern de bolinhas */}
-            <svg className="absolute right-2 top-2 w-20 h-20 opacity-15 pointer-events-none z-0" viewBox="0 0 64 64" fill="none">
+            {/* Overlay sutil para efeito glass */}
+            <span className="absolute inset-0 bg-white/10 rounded-2xl pointer-events-none" />
+            {/* Overlay SVG bolinhas, harmonioso */}
+            <svg
+              className="absolute right-3 top-3 w-12 h-12 opacity-15 pointer-events-none z-0"
+              viewBox="0 0 64 64"
+              fill="none"
+            >
               <defs>
-                <pattern id={`dots-${card.title}`} patternUnits="userSpaceOnUse" width="8" height="8">
+                <pattern
+                  id={`dots-${card.title}`}
+                  patternUnits="userSpaceOnUse"
+                  width="8"
+                  height="8"
+                >
                   <circle cx="1" cy="1" r="1" fill="white" />
                 </pattern>
               </defs>
               <rect width="64" height="64" fill={`url(#dots-${card.title})`} />
             </svg>
-            {/* Ícone sofisticado */}
-            <span
-              className={cn(
-                "relative z-10 flex items-center justify-center w-14 h-14 mb-3 rounded-full border shadow-md backdrop-blur-lg ring-2 ring-white/40 group-hover:ring-4 transition",
-                card.iconBg
-              )}
-            >
-              <card.icon className={cn("w-9 h-9 drop-shadow-xl transition-all duration-300", card.iconColor)} />
-            </span>
+            {/* Ícone central destacado com aro duplo */}
+            <div className="relative flex flex-col items-center">
+              <span
+                className={cn(
+                  "relative flex items-center justify-center w-14 h-14 mb-3 rounded-full shadow-md border backdrop-blur-xl transition-all",
+                  card.iconBg,
+                  card.ring
+                )}
+                style={{
+                  boxShadow: idx === 0
+                    ? "0 0 0 8px rgba(102,169,247,0.06), 0 2px 24px 0 rgba(102,169,247,0.12)"
+                    : undefined,
+                  background: idx === 0
+                    ? "rgba(200,220,255,0.30)"
+                    : undefined,
+                }}
+              >
+                {/* Aro circular extra para o exemplo da Frota */}
+                {idx === 0 && (
+                  <span className="absolute inset-0 rounded-full border-2 border-blue-200/50 animate-pulse opacity-60" />
+                )}
+                <card.icon
+                  className={cn(
+                    "z-10 w-8 h-8",
+                    card.iconColor,
+                    idx === 0
+                      ? "drop-shadow-[0_2px_10px_rgba(102,169,247,0.25)]"
+                      : "drop-shadow"
+                  )}
+                  style={{
+                    filter:
+                      idx === 0
+                        ? "drop-shadow(0 2px 10px #66a9f779)"
+                        : undefined,
+                  }}
+                />
+              </span>
+            </div>
             {/* Valor e título */}
-            <span className="z-10 text-3xl font-bold text-slate-900 drop-shadow-sm">
+            <span className="z-10 text-3xl font-black text-slate-900 mt-1" style={idx === 0 ? { color: "#222b3a" } : {}}>
               {card.value(stats)}
             </span>
-            <span className="z-10 text-base font-medium text-slate-700/90">{card.title}</span>
+            <span className="z-10 text-base font-semibold text-slate-700/90 mb-2" style={idx === 0 ? { color: "#222b3a" } : {}}>
+              {card.title}
+            </span>
           </div>
         ))}
       </div>
@@ -115,3 +154,4 @@ const DashboardOverview: React.FC<DashboardOverviewProps> = ({
 };
 
 export default DashboardOverview;
+
