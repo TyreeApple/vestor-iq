@@ -29,10 +29,10 @@ const DashboardOverview: React.FC<DashboardOverviewProps> = ({
   stats = initialStats 
 }) => {
   return (
-    <section className="space-y-6">
-      <div className="slide-enter" style={{ animationDelay: '0.1s' }}>
-        <h2 className="text-2xl font-semibold mb-4">Status da Frota</h2>
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+    <section className="space-y-8 md:space-y-10 px-2 md:px-0">
+      <div className="slide-enter animate-fade-in" style={{ animationDelay: '0.1s' }}>
+        <h2 className="text-2xl md:text-3xl font-semibold mb-4 text-primary">Status da Frota</h2>
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 md:gap-8">
           <StatusCard 
             title="Total de Empilhadeiras" 
             value={stats.totalForklifts} 
@@ -61,9 +61,9 @@ const DashboardOverview: React.FC<DashboardOverviewProps> = ({
         </div>
       </div>
 
-      <div className="slide-enter" style={{ animationDelay: '0.2s' }}>
-        <h2 className="text-2xl font-semibold mb-4">Status dos Operadores</h2>
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+      <div className="slide-enter animate-fade-in" style={{ animationDelay: '0.2s' }}>
+        <h2 className="text-2xl md:text-3xl font-semibold mb-4 text-primary">Status dos Operadores</h2>
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 md:gap-8">
           <StatusCard 
             title="Total de Operadores" 
             value={stats.totalOperators} 
@@ -91,9 +91,9 @@ const DashboardOverview: React.FC<DashboardOverviewProps> = ({
         </div>
       </div>
 
-      <div className="slide-enter" style={{ animationDelay: '0.3s' }}>
-        <h2 className="text-2xl font-semibold mb-4">Operação Atual</h2>
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+      <div className="slide-enter animate-fade-in" style={{ animationDelay: '0.3s' }}>
+        <h2 className="text-2xl md:text-3xl font-semibold mb-4 text-primary">Operação Atual</h2>
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 md:gap-8">
           <StatusCard 
             title="Operações Ativas" 
             value={stats.activeOperations} 

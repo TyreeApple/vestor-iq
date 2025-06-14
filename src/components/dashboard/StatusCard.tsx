@@ -17,7 +17,7 @@ const StatusCard: React.FC<StatusCardProps> = ({
     warning: "bg-status-maintenance/10 text-status-maintenance border-status-maintenance/30",
     danger: "bg-status-warning/10 text-status-warning border-status-warning/30",
     info: "bg-primary/10 text-primary border-primary/30",
-    neutral: "bg-muted text-muted-foreground border-muted-foreground/30"
+    neutral: "bg-muted/70 text-muted-foreground border-muted-foreground/30"
   };
 
   const iconClasses = {
@@ -30,18 +30,23 @@ const StatusCard: React.FC<StatusCardProps> = ({
 
   return (
     <div className={cn(
-      "glass-card glass-card-hover p-4 rounded-xl overflow-hidden relative",
-      status && statusClasses[status]
+      "glass-card glass-card-hover p-4 md:p-6 rounded-xl overflow-hidden relative shadow-lg border border-border transition-all duration-200 hover:scale-[1.03] hover:shadow-glass-hover",
+      status && statusClasses[status],
+      "group"
     )}>
-      <div className="flex items-start justify-between">
+      <div className="flex items-start justify-between gap-3">
         <div>
-          <h3 className="text-sm font-medium mb-1">{title}</h3>
-          <div className="text-2xl font-bold">
+          <h3 className="text-sm md:text-base font-semibold mb-1">{title}</h3>
+          <div className="text-2xl md:text-3xl font-bold tracking-tight">
             <AnimatedCounter value={value} />
           </div>
           
           {change && (
-            <div className="flex items-center mt-2 text-xs">
+            <div className={cn(
+              "flex items-center mt-2 text-xs font-medium",
+              change.trend === 'up' && "text-status-operational",
+              change.trend === 'down' && "text-status-warning"
+            )}>
               {change.trend === 'up' && <TrendingUp className="w-3 h-3 mr-1" />}
               {change.trend === 'down' && <TrendingDown className="w-3 h-3 mr-1" />}
               {change.trend === 'neutral' && <Minus className="w-3 h-3 mr-1" />}
@@ -51,10 +56,10 @@ const StatusCard: React.FC<StatusCardProps> = ({
         </div>
         
         <div className={cn(
-          "p-2 rounded-lg",
+          "p-2 rounded-lg shadow-md group-hover:scale-110 transition-transform",
           status && iconClasses[status]
         )}>
-          <Icon className="w-5 h-5" />
+          <Icon className="w-6 h-6 md:w-8 md:h-8" />
         </div>
       </div>
       
