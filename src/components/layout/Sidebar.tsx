@@ -59,7 +59,7 @@ const Sidebar: React.FC = () => {
   return (
     <div className={cn(
       "fixed left-0 top-0 h-full bg-white dark:bg-card border-r border-slate-200 dark:border-border shadow-xl z-50 flex flex-col transition-all duration-300",
-      sidebarCollapsed ? "w-16" : "w-64"
+      sidebarCollapsed ? "w-20" : "w-64"
     )}>
       {/* Header */}
       <div className="h-16 flex items-center justify-between px-4 border-b border-slate-200 dark:border-border bg-gradient-to-r from-blue-600 to-indigo-600 dark:from-slate-800 dark:to-slate-900">
@@ -99,39 +99,38 @@ const Sidebar: React.FC = () => {
       </div>
 
       {/* Navigation */}
-      <nav className="flex-1 p-2 space-y-1">
+      <nav className="flex-1 p-3 space-y-1 overflow-y-auto">
         {menuItems.map((item) => (
           <NavLink
             key={item.id}
             to={item.path}
             className={({ isActive }) => cn(
-              "flex items-center rounded-lg transition-all duration-200 group relative overflow-hidden",
-              sidebarCollapsed ? "justify-center p-3 mx-1" : "space-x-3 px-3 py-2.5",
+              "flex items-center rounded-lg transition-all duration-200 group relative",
+              sidebarCollapsed ? "justify-center p-3 mx-auto w-14 h-14" : "space-x-3 px-3 py-3",
               isActive
                 ? "bg-blue-50 dark:bg-blue-900/30 text-blue-700 dark:text-blue-300 border border-blue-200 dark:border-blue-800"
                 : "text-slate-600 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-800 hover:text-slate-900 dark:hover:text-slate-100"
             )}
             title={sidebarCollapsed ? item.label : undefined}
           >
-            <div className="flex items-center justify-center flex-shrink-0">
+            <div className="flex items-center justify-center flex-shrink-0 relative">
               <item.icon className="w-5 h-5" />
+              {sidebarCollapsed && item.badge && (
+                <span className="absolute -top-2 -right-2 bg-red-500 dark:bg-red-600 text-white text-xs min-w-[18px] h-[18px] rounded-full flex items-center justify-center px-1 font-medium shadow-sm border-2 border-white dark:border-slate-800">
+                  {item.badge > 99 ? '99+' : item.badge}
+                </span>
+              )}
             </div>
             
             {!sidebarCollapsed && (
               <>
                 <span className="font-medium truncate flex-1">{item.label}</span>
                 {item.badge && (
-                  <span className="bg-red-500 dark:bg-red-600 text-white text-xs px-2 py-0.5 rounded-full flex-shrink-0">
-                    {item.badge}
+                  <span className="bg-red-500 dark:bg-red-600 text-white text-xs px-2.5 py-1 rounded-full flex-shrink-0 min-w-[24px] h-6 flex items-center justify-center font-medium shadow-sm">
+                    {item.badge > 99 ? '99+' : item.badge}
                   </span>
                 )}
               </>
-            )}
-            
-            {sidebarCollapsed && item.badge && (
-              <span className="absolute -top-1 -right-1 bg-red-500 dark:bg-red-600 text-white text-xs w-5 h-5 rounded-full flex items-center justify-center">
-                {item.badge}
-              </span>
             )}
           </NavLink>
         ))}
