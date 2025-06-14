@@ -7,58 +7,98 @@ import { useIsMobile } from '@/hooks/use-mobile';
 import { cn } from '@/lib/utils';
 import { Input } from '@/components/ui/input';
 import { Calendar, Filter, Plus, Search, Truck, User, AlertOctagon } from 'lucide-react';
-import { Maintenance, MaintenanceStatus } from '@/types';
+import { OrdemServico, StatusManutencao, TipoManutencao, PrioridadeOperacao } from '@/types';
 import MaintenanceDialog from '@/components/maintenance/MaintenanceDialog';
 import { useToast } from '@/hooks/use-toast';
 
-// Mock data for maintenance
-const initialMaintenance: Maintenance[] = [
+// Mock data for maintenance - fixed to match Portuguese interface
+const initialMaintenance: OrdemServico[] = [
   {
     id: 'M001',
+    empilhadeiraId: 'G001',
+    empilhadeira: {
+      id: 'G001',
+      modelo: 'Toyota 8FGU25',
+      marca: 'Toyota',
+      tipo: 'Gás' as any,
+      status: 'Operacional' as any,
+      capacidade: 2500,
+      anoFabricacao: 2022,
+      dataAquisicao: '10/05/2022',
+      numeroSerie: 'TOY001',
+      horimetro: 12583,
+      ultimaManutencao: '15/09/2023',
+      proximaManutencao: '15/12/2023',
+      localizacaoAtual: 'Setor A',
+      setor: 'Armazém',
+      custoHora: 45.50,
+      eficiencia: 87.5,
+      disponibilidade: 92.3,
+      qrCode: 'QR001'
+    },
+    tipo: TipoManutencao.CORRETIVA,
+    status: StatusManutencao.ABERTA,
+    prioridade: PrioridadeOperacao.ALTA,
+    problema: 'Vazamento de óleo hidráulico',
+    dataAbertura: '2023-11-15',
+    custos: {
+      pecas: 0,
+      maoObra: 0,
+      terceiros: 0,
+      total: 0
+    },
+    pecasUtilizadas: [],
+    anexos: [],
+    // Legacy properties for compatibility
     forkliftId: 'G001',
     forkliftModel: 'Toyota 8FGU25',
     issue: 'Vazamento de óleo hidráulico',
     reportedBy: 'Carlos Silva',
-    reportedDate: '2023-11-15',
-    status: MaintenanceStatus.WAITING
+    reportedDate: '2023-11-15'
   },
   {
     id: 'M002',
+    empilhadeiraId: 'R003',
+    empilhadeira: {
+      id: 'R003',
+      modelo: 'Crown RR5725',
+      marca: 'Crown',
+      tipo: 'Retrátil' as any,
+      status: 'Em Manutenção' as any,
+      capacidade: 1800,
+      anoFabricacao: 2022,
+      dataAquisicao: '04/03/2022',
+      numeroSerie: 'CRW003',
+      horimetro: 10974,
+      ultimaManutencao: '12/08/2023',
+      proximaManutencao: '12/11/2023',
+      localizacaoAtual: 'Oficina',
+      setor: 'Manutenção',
+      custoHora: 42.30,
+      eficiencia: 85.1,
+      disponibilidade: 88.7,
+      qrCode: 'QR003'
+    },
+    tipo: TipoManutencao.CORRETIVA,
+    status: StatusManutencao.EM_ANDAMENTO,
+    prioridade: PrioridadeOperacao.ALTA,
+    problema: 'Motor de tração com ruído anormal',
+    dataAbertura: '2023-11-10',
+    dataInicio: '2023-11-12',
+    custos: {
+      pecas: 500,
+      maoObra: 200,
+      terceiros: 0,
+      total: 700
+    },
+    pecasUtilizadas: [],
+    anexos: [],
+    // Legacy properties for compatibility
     forkliftId: 'R003',
     forkliftModel: 'Crown RR5725',
     issue: 'Motor de tração com ruído anormal',
     reportedBy: 'João Pereira',
-    reportedDate: '2023-11-10',
-    status: MaintenanceStatus.IN_PROGRESS
-  },
-  {
-    id: 'M003',
-    forkliftId: 'E002',
-    forkliftModel: 'Hyster E50XN',
-    issue: 'Bateria não segura carga completa',
-    reportedBy: 'Maria Oliveira',
-    reportedDate: '2023-11-05',
-    status: MaintenanceStatus.IN_PROGRESS
-  },
-  {
-    id: 'M004',
-    forkliftId: 'G004',
-    forkliftModel: 'Yale GLP050',
-    issue: 'Freios necessitando ajuste',
-    reportedBy: 'Pedro Santos',
-    reportedDate: '2023-10-28',
-    status: MaintenanceStatus.COMPLETED,
-    completedDate: '2023-11-03'
-  },
-  {
-    id: 'M005',
-    forkliftId: 'G001',
-    forkliftModel: 'Toyota 8FGU25',
-    issue: 'Revisão programada 1000h',
-    reportedBy: 'Ana Costa',
-    reportedDate: '2023-10-25',
-    status: MaintenanceStatus.COMPLETED,
-    completedDate: '2023-10-30'
+    reportedDate: '2023-11-10'
   }
 ];
 
@@ -84,19 +124,19 @@ const MaintenancePage = () => {
   const { toast } = useToast();
   const [search, setSearch] = useState('');
   const [statusFilter, setStatusFilter] = useState<string>('all');
-  const [maintenanceItems, setMaintenanceItems] = useState<Maintenance[]>(initialMaintenance);
+  const [maintenanceItems, setMaintenanceItems] = useState<OrdemServico[]>(initialMaintenance);
   
   // Dialog states
   const [addDialogOpen, setAddDialogOpen] = useState(false);
   const [editDialogOpen, setEditDialogOpen] = useState(false);
-  const [selectedMaintenance, setSelectedMaintenance] = useState<Maintenance | null>(null);
+  const [selectedMaintenance, setSelectedMaintenance] = useState<OrdemServico | null>(null);
   
   // Filter maintenance based on search and filters
   const filteredMaintenance = maintenanceItems.filter(maintenance => {
-    // Search filter
-    const matchesSearch = maintenance.forkliftModel.toLowerCase().includes(search.toLowerCase()) || 
-                          maintenance.issue.toLowerCase().includes(search.toLowerCase()) ||
-                          maintenance.reportedBy.toLowerCase().includes(search.toLowerCase());
+    // Search filter - using both Portuguese and legacy properties
+    const matchesSearch = (maintenance.empilhadeira?.modelo || maintenance.forkliftModel || '').toLowerCase().includes(search.toLowerCase()) || 
+                          maintenance.problema.toLowerCase().includes(search.toLowerCase()) ||
+                          (maintenance.reportedBy || '').toLowerCase().includes(search.toLowerCase());
     
     // Status filter
     const matchesStatus = statusFilter === 'all' || maintenance.status === statusFilter;
@@ -115,13 +155,13 @@ const MaintenancePage = () => {
   };
 
   // Get status classes
-  const getStatusClass = (status: MaintenanceStatus) => {
+  const getStatusClass = (status: StatusManutencao) => {
     switch (status) {
-      case MaintenanceStatus.WAITING:
+      case StatusManutencao.ABERTA:
         return 'bg-status-warning/10 text-status-warning';
-      case MaintenanceStatus.IN_PROGRESS:
+      case StatusManutencao.EM_ANDAMENTO:
         return 'bg-status-maintenance/10 text-status-maintenance';
-      case MaintenanceStatus.COMPLETED:
+      case StatusManutencao.CONCLUIDA:
         return 'bg-status-operational/10 text-status-operational';
       default:
         return 'bg-muted text-muted-foreground';
@@ -129,7 +169,7 @@ const MaintenancePage = () => {
   };
 
   // Handle add/edit maintenance
-  const handleSaveMaintenance = (maintenanceData: Maintenance) => {
+  const handleSaveMaintenance = (maintenanceData: OrdemServico) => {
     if (editDialogOpen) {
       // Update existing maintenance
       setMaintenanceItems(prev => 
@@ -142,7 +182,7 @@ const MaintenancePage = () => {
   };
 
   // Handle edit maintenance
-  const handleEditMaintenance = (maintenance: Maintenance) => {
+  const handleEditMaintenance = (maintenance: OrdemServico) => {
     setSelectedMaintenance(maintenance);
     setEditDialogOpen(true);
   };
@@ -159,7 +199,7 @@ const MaintenancePage = () => {
   };
 
   // Translate status
-  const getStatusTranslation = (status: MaintenanceStatus) => {
+  const getStatusTranslation = (status: StatusManutencao) => {
     return status;
   };
 
@@ -171,12 +211,15 @@ const MaintenancePage = () => {
         "flex-1 flex flex-col",
         !isMobile && "ml-64" // Offset for sidebar when not mobile
       )}>
-        <Navbar 
-          title="Manutenção" 
-          subtitle="Gestão de Manutenções"
-        />
+        <Navbar />
         
         <main className="flex-1 px-6 py-6">
+          {/* Header */}
+          <div className="mb-6">
+            <h1 className="text-2xl font-bold">Manutenção</h1>
+            <p className="text-muted-foreground">Gestão de Manutenções</p>
+          </div>
+
           {/* Filter section */}
           <div className="flex flex-col sm:flex-row justify-between gap-4 mb-6">
             <div className="relative flex-1 max-w-md">
@@ -226,9 +269,9 @@ const MaintenancePage = () => {
                 onChange={(e) => setStatusFilter(e.target.value)}
               >
                 <option value="all">Todos</option>
-                <option value={MaintenanceStatus.WAITING}>Aguardando</option>
-                <option value={MaintenanceStatus.IN_PROGRESS}>Em andamento</option>
-                <option value={MaintenanceStatus.COMPLETED}>Concluído</option>
+                <option value={StatusManutencao.ABERTA}>Aberta</option>
+                <option value={StatusManutencao.EM_ANDAMENTO}>Em Andamento</option>
+                <option value={StatusManutencao.CONCLUIDA}>Concluída</option>
               </select>
             </div>
           </div>
@@ -238,14 +281,14 @@ const MaintenancePage = () => {
             <h2 className="text-2xl font-semibold mb-4">Manutenções Pendentes</h2>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
               {filteredMaintenance
-                .filter(m => m.status !== MaintenanceStatus.COMPLETED)
+                .filter(m => m.status !== StatusManutencao.CONCLUIDA)
                 .map((maintenance) => (
                   <div key={maintenance.id} className="bg-card border rounded-lg overflow-hidden shadow">
                     <div className="p-4">
                       <div className="flex justify-between items-start mb-3">
                         <div>
                           <h3 className="font-medium">Manutenção #{maintenance.id}</h3>
-                          <p className="text-sm text-muted-foreground">{maintenance.forkliftModel}</p>
+                          <p className="text-sm text-muted-foreground">{maintenance.empilhadeira?.modelo || maintenance.forkliftModel}</p>
                         </div>
                         <span className={cn(
                           "inline-flex items-center px-2.5 py-0.5 rounded-full text-xs",
@@ -259,21 +302,21 @@ const MaintenancePage = () => {
                         <div className="p-3 bg-muted/30 rounded-md">
                           <div className="flex items-start gap-2">
                             <AlertOctagon className="w-4 h-4 text-status-warning mt-0.5" />
-                            <p className="text-sm">{maintenance.issue}</p>
+                            <p className="text-sm">{maintenance.problema}</p>
                           </div>
                         </div>
                         
                         <div className="flex items-center gap-2">
                           <Truck className="w-4 h-4 text-muted-foreground" />
-                          <span className="text-sm">{maintenance.forkliftId}</span>
+                          <span className="text-sm">{maintenance.empilhadeiraId || maintenance.forkliftId}</span>
                         </div>
                         <div className="flex items-center gap-2">
                           <User className="w-4 h-4 text-muted-foreground" />
-                          <span className="text-sm">Reportado por: {maintenance.reportedBy}</span>
+                          <span className="text-sm">Reportado: {maintenance.reportedBy || 'Sistema'}</span>
                         </div>
                         <div className="flex items-center gap-2">
                           <Calendar className="w-4 h-4 text-muted-foreground" />
-                          <span className="text-sm">Data: {formatDate(maintenance.reportedDate)}</span>
+                          <span className="text-sm">Data: {formatDate(maintenance.dataAbertura || maintenance.reportedDate || '')}</span>
                         </div>
                       </div>
                     </div>
@@ -301,7 +344,7 @@ const MaintenancePage = () => {
                   </div>
                 ))}
               
-              {filteredMaintenance.filter(m => m.status !== MaintenanceStatus.COMPLETED).length === 0 && (
+              {filteredMaintenance.filter(m => m.status !== StatusManutencao.CONCLUIDA).length === 0 && (
                 <div className="col-span-full p-8 text-center bg-card border rounded-lg">
                   <p className="text-muted-foreground">Nenhuma manutenção pendente</p>
                 </div>
@@ -329,18 +372,18 @@ const MaintenancePage = () => {
                   </thead>
                   <tbody className="divide-y divide-border">
                     {filteredMaintenance
-                      .filter(m => m.status === MaintenanceStatus.COMPLETED)
+                      .filter(m => m.status === StatusManutencao.CONCLUIDA)
                       .map((maintenance) => (
                         <tr key={maintenance.id} className="hover:bg-muted/50 transition-colors">
                           <td className="p-4">{maintenance.id}</td>
                           <td className="p-4">
-                            <div>{maintenance.forkliftModel}</div>
-                            <div className="text-xs text-muted-foreground">{maintenance.forkliftId}</div>
+                            <div>{maintenance.empilhadeira?.modelo || maintenance.forkliftModel}</div>
+                            <div className="text-xs text-muted-foreground">{maintenance.empilhadeiraId || maintenance.forkliftId}</div>
                           </td>
-                          <td className="p-4">{maintenance.issue}</td>
-                          <td className="p-4">{maintenance.reportedBy}</td>
-                          <td className="p-4">{formatDate(maintenance.reportedDate)}</td>
-                          <td className="p-4">{maintenance.completedDate ? formatDate(maintenance.completedDate) : '-'}</td>
+                          <td className="p-4">{maintenance.problema}</td>
+                          <td className="p-4">{maintenance.reportedBy || 'Sistema'}</td>
+                          <td className="p-4">{formatDate(maintenance.dataAbertura || maintenance.reportedDate || '')}</td>
+                          <td className="p-4">{maintenance.dataConclusao ? formatDate(maintenance.dataConclusao) : '-'}</td>
                           <td className="p-4">
                             <span className={cn(
                               "inline-flex items-center px-2.5 py-0.5 rounded-full text-xs",
@@ -374,7 +417,7 @@ const MaintenancePage = () => {
                 </table>
               </div>
               
-              {filteredMaintenance.filter(m => m.status === MaintenanceStatus.COMPLETED).length === 0 && (
+              {filteredMaintenance.filter(m => m.status === StatusManutencao.CONCLUIDA).length === 0 && (
                 <div className="p-8 text-center">
                   <p className="text-muted-foreground">Nenhuma manutenção concluída</p>
                 </div>
