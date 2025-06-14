@@ -11,7 +11,7 @@ import {
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { GasSupply } from '@/types';
+import { Abastecimento } from '@/types';
 import { useToast } from '@/hooks/use-toast';
 import { Calendar } from '@/components/ui/calendar';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
@@ -24,8 +24,8 @@ import { CalendarIcon } from 'lucide-react';
 interface GasSupplyDialogProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
-  gasSupply?: GasSupply;
-  onSave: (gasSupply: GasSupply) => void;
+  gasSupply?: Abastecimento;
+  onSave: (gasSupply: Abastecimento) => void;
   availableForklifts: { id: string; model: string }[];
   availableOperators: { id: string; name: string }[];
 }
@@ -41,36 +41,34 @@ const GasSupplyDialog = ({
   const { toast } = useToast();
   const isEditing = !!gasSupply;
   
-  const [formData, setFormData] = useState<Partial<GasSupply>>(
+  const [formData, setFormData] = useState<Partial<Abastecimento>>(
     gasSupply || {
       id: `GS${Math.floor(Math.random() * 10000).toString().padStart(3, '0')}`,
-      date: format(new Date(), 'yyyy-MM-dd'),
-      forkliftId: '',
-      forkliftModel: '',
-      quantity: 0,
-      hourMeterBefore: 0,
-      hourMeterAfter: 0,
-      operator: ''
+      dataAbastecimento: format(new Date(), 'yyyy-MM-dd'),
+      empilhadeiraId: '',
+      quantidadeLitros: 0,
+      horimetroInicial: 0,
+      horimetroFinal: 0,
+      operadorId: ''
     }
   );
 
   // Handle forklift selection
-  const handleForkliftChange = (forkliftId: string) => {
-    const selectedForklift = availableForklifts.find(f => f.id === forkliftId);
+  const handleForkliftChange = (empilhadeiraId: string) => {
+    const selectedForklift = availableForklifts.find(f => f.id === empilhadeiraId);
     setFormData(prev => ({ 
       ...prev, 
-      forkliftId,
-      forkliftModel: selectedForklift?.model || ''
+      empilhadeiraId
     }));
   };
 
   // Handle operator selection
-  const handleOperatorChange = (operatorName: string) => {
-    setFormData(prev => ({ ...prev, operator: operatorName }));
+  const handleOperatorChange = (operatorId: string) => {
+    setFormData(prev => ({ ...prev, operadorId: operatorId }));
   };
 
   // Handle form field changes
-  const handleChange = (field: keyof GasSupply, value: any) => {
+  const handleChange = (field: keyof Abastecimento, value: any) => {
     setFormData(prev => ({ ...prev, [field]: value }));
   };
 
@@ -99,7 +97,7 @@ const GasSupplyDialog = ({
     e.preventDefault();
     
     // Validate form
-    if (!formData.forkliftId || !formData.quantity || !formData.hourMeterBefore || !formData.hourMeterAfter || !formData.operator) {
+    if (!formData.empilhadeiraId || !formData.quantidadeLitros || !formData.horimetroInicial || !formData.horimetroFinal || !formData.operadorId) {
       toast({
         title: "Erro ao salvar",
         description: "Preencha todos os campos obrigatórios",
@@ -108,7 +106,7 @@ const GasSupplyDialog = ({
       return;
     }
     
-    if (formData.hourMeterAfter <= formData.hourMeterBefore) {
+    if (formData.horimetroFinal! <= formData.horimetroInicial!) {
       toast({
         title: "Erro de validação",
         description: "O horímetro final deve ser maior que o inicial",
@@ -118,19 +116,18 @@ const GasSupplyDialog = ({
     }
     
     // Save gas supply
-    onSave(formData as GasSupply);
+    onSave(formData as Abastecimento);
     
     // Reset form and close dialog
     if (!isEditing) {
       setFormData({
         id: `GS${Math.floor(Math.random() * 10000).toString().padStart(3, '0')}`,
-        date: format(new Date(), 'yyyy-MM-dd'),
-        forkliftId: '',
-        forkliftModel: '',
-        quantity: 0,
-        hourMeterBefore: 0,
-        hourMeterAfter: 0,
-        operator: ''
+        dataAbastecimento: format(new Date(), 'yyyy-MM-dd'),
+        empilhadeiraId: '',
+        quantidadeLitros: 0,
+        horimetroInicial: 0,
+        horimetroFinal: 0,
+        operadorId: ''
       });
     }
     
@@ -157,7 +154,7 @@ const GasSupplyDialog = ({
         <form onSubmit={handleSubmit} className="space-y-4 pt-4">
           <div className="grid grid-cols-2 gap-4">
             <div className="space-y-2">
-              <Label htmlFor="date">Data</Label>
+              <Label htmlFor="dataAbastecimento">Data</Label>
               <Popover>
                 <PopoverTrigger asChild>
                   <Button
@@ -165,14 +162,14 @@ const GasSupplyDialog = ({
                     className="w-full justify-start text-left font-normal"
                   >
                     <CalendarIcon className="mr-2 h-4 w-4" />
-                    {formatDateForDisplay(formData.date || '')}
+                    {formatDateForDisplay(formData.dataAbastecimento || '')}
                   </Button>
                 </PopoverTrigger>
                 <PopoverContent className="w-auto p-0" align="start">
                   <Calendar
                     mode="single"
-                    selected={parseDate(formData.date || '')}
-                    onSelect={(date) => handleChange('date', format(date || new Date(), 'yyyy-MM-dd'))}
+                    selected={parseDate(formData.dataAbastecimento || '')}
+                    onSelect={(date) => handleChange('dataAbastecimento', format(date || new Date(), 'yyyy-MM-dd'))}
                     locale={ptBR}
                     className={cn("p-3 pointer-events-auto")}
                   />
@@ -181,9 +178,9 @@ const GasSupplyDialog = ({
             </div>
             
             <div className="space-y-2">
-              <Label htmlFor="forkliftId">Empilhadeira</Label>
+              <Label htmlFor="empilhadeiraId">Empilhadeira</Label>
               <Select 
-                value={formData.forkliftId} 
+                value={formData.empilhadeiraId} 
                 onValueChange={handleForkliftChange}
               >
                 <SelectTrigger>
@@ -200,22 +197,22 @@ const GasSupplyDialog = ({
             </div>
             
             <div className="space-y-2">
-              <Label htmlFor="quantity">Quantidade (L)</Label>
+              <Label htmlFor="quantidadeLitros">Quantidade (L)</Label>
               <Input 
-                id="quantity" 
+                id="quantidadeLitros" 
                 type="number"
                 step="0.1"
                 min="0"
-                value={formData.quantity} 
-                onChange={(e) => handleChange('quantity', parseFloat(e.target.value))}
+                value={formData.quantidadeLitros} 
+                onChange={(e) => handleChange('quantidadeLitros', parseFloat(e.target.value))}
                 placeholder="0.0"
               />
             </div>
             
             <div className="space-y-2">
-              <Label htmlFor="operator">Operador</Label>
+              <Label htmlFor="operadorId">Operador</Label>
               <Select 
-                value={formData.operator} 
+                value={formData.operadorId} 
                 onValueChange={handleOperatorChange}
               >
                 <SelectTrigger>
@@ -223,7 +220,7 @@ const GasSupplyDialog = ({
                 </SelectTrigger>
                 <SelectContent>
                   {availableOperators.map(operator => (
-                    <SelectItem key={operator.id} value={operator.name}>
+                    <SelectItem key={operator.id} value={operator.id}>
                       {operator.name}
                     </SelectItem>
                   ))}
@@ -232,24 +229,24 @@ const GasSupplyDialog = ({
             </div>
             
             <div className="space-y-2">
-              <Label htmlFor="hourMeterBefore">Horímetro Inicial</Label>
+              <Label htmlFor="horimetroInicial">Horímetro Inicial</Label>
               <Input 
-                id="hourMeterBefore" 
+                id="horimetroInicial" 
                 type="number"
                 min="0"
-                value={formData.hourMeterBefore} 
-                onChange={(e) => handleChange('hourMeterBefore', parseInt(e.target.value))}
+                value={formData.horimetroInicial} 
+                onChange={(e) => handleChange('horimetroInicial', parseInt(e.target.value))}
               />
             </div>
             
             <div className="space-y-2">
-              <Label htmlFor="hourMeterAfter">Horímetro Final</Label>
+              <Label htmlFor="horimetroFinal">Horímetro Final</Label>
               <Input 
-                id="hourMeterAfter" 
+                id="horimetroFinal" 
                 type="number"
                 min="0"
-                value={formData.hourMeterAfter} 
-                onChange={(e) => handleChange('hourMeterAfter', parseInt(e.target.value))}
+                value={formData.horimetroFinal} 
+                onChange={(e) => handleChange('horimetroFinal', parseInt(e.target.value))}
               />
             </div>
           </div>

@@ -11,7 +11,7 @@ import {
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Maintenance, MaintenanceStatus } from '@/types';
+import { OrdemServico, StatusManutencao } from '@/types';
 import { useToast } from '@/hooks/use-toast';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Calendar } from '@/components/ui/calendar';
@@ -25,8 +25,8 @@ import { Textarea } from '@/components/ui/textarea';
 interface MaintenanceDialogProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
-  maintenance?: Maintenance;
-  onSave: (maintenance: Maintenance) => void;
+  maintenance?: OrdemServico;
+  onSave: (maintenance: OrdemServico) => void;
   availableForklifts: { id: string; model: string }[];
   availableOperators: { id: string; name: string }[];
 }
@@ -42,50 +42,46 @@ const MaintenanceDialog = ({
   const { toast } = useToast();
   const isEditing = !!maintenance;
   
-  const defaultCompletedDate = maintenance?.completedDate || '';
-  
-  const [formData, setFormData] = useState<Partial<Maintenance>>(
+  const [formData, setFormData] = useState<Partial<OrdemServico>>(
     maintenance || {
       id: `M${Math.floor(Math.random() * 10000).toString().padStart(3, '0')}`,
-      forkliftId: '',
-      forkliftModel: '',
-      issue: '',
-      reportedBy: '',
-      reportedDate: format(new Date(), 'yyyy-MM-dd'),
-      status: MaintenanceStatus.WAITING,
-      completedDate: ''
+      empilhadeiraId: '',
+      problema: '',
+      tecnicoId: '',
+      dataAbertura: format(new Date(), 'yyyy-MM-dd'),
+      status: StatusManutencao.ABERTA,
+      dataConclusao: ''
     }
   );
 
   // Handle forklift selection
-  const handleForkliftChange = (forkliftId: string) => {
-    const selectedForklift = availableForklifts.find(f => f.id === forkliftId);
+  const handleForkliftChange = (empilhadeiraId: string) => {
+    const selectedForklift = availableForklifts.find(f => f.id === empilhadeiraId);
     setFormData(prev => ({ 
       ...prev, 
-      forkliftId,
-      forkliftModel: selectedForklift?.model || ''
+      empilhadeiraId
     }));
   };
 
   // Handle reporter selection
-  const handleReporterChange = (reporter: string) => {
-    setFormData(prev => ({ ...prev, reportedBy: reporter }));
+  const handleReporterChange = (tecnicoId: string) => {
+    setFormData(prev => ({ ...prev, tecnicoId }));
   };
 
   // Handle form field changes
-  const handleChange = (field: keyof Maintenance, value: any) => {
+  const handleChange = (field: keyof OrdemServico, value: any) => {
     setFormData(prev => ({ ...prev, [field]: value }));
     
     // If changing status to completed, set completed date to today
-    if (field === 'status' && value === MaintenanceStatus.COMPLETED) {
+    if (field === 'status' && value === StatusManutencao.CONCLUIDA) {
       setFormData(prev => ({ 
         ...prev, 
-        completedDate: format(new Date(), 'yyyy-MM-dd')
+        dataConclusao: format(new Date(), 'yyyy-MM-dd')
       }));
     }
     // If changing status from completed, clear completed date
-    else if (field === 'status' && value !== MaintenanceStatus.COMPLETED && formData.completedDate) {
-      setFormData(prev => ({ ...prev, completedDate: '' }));
+    else if (field === 'status' && value !== StatusManutencao.CONCLUIDA && formData.dataConclusao) {
+      setFormData(prev => ({ ...prev, dataConclusao: '' }));
     }
   };
 
@@ -116,7 +112,7 @@ const MaintenanceDialog = ({
     e.preventDefault();
     
     // Validate form
-    if (!formData.forkliftId || !formData.issue || !formData.reportedBy || !formData.reportedDate) {
+    if (!formData.empilhadeiraId || !formData.problema || !formData.tecnicoId || !formData.dataAbertura) {
       toast({
         title: "Erro ao salvar",
         description: "Preencha todos os campos obrigatórios",
@@ -126,19 +122,18 @@ const MaintenanceDialog = ({
     }
     
     // Save maintenance
-    onSave(formData as Maintenance);
+    onSave(formData as OrdemServico);
     
     // Reset form and close dialog
     if (!isEditing) {
       setFormData({
         id: `M${Math.floor(Math.random() * 10000).toString().padStart(3, '0')}`,
-        forkliftId: '',
-        forkliftModel: '',
-        issue: '',
-        reportedBy: '',
-        reportedDate: format(new Date(), 'yyyy-MM-dd'),
-        status: MaintenanceStatus.WAITING,
-        completedDate: ''
+        empilhadeiraId: '',
+        problema: '',
+        tecnicoId: '',
+        dataAbertura: format(new Date(), 'yyyy-MM-dd'),
+        status: StatusManutencao.ABERTA,
+        dataConclusao: ''
       });
     }
     
@@ -166,9 +161,9 @@ const MaintenanceDialog = ({
           <div className="space-y-4">
             <div className="grid grid-cols-2 gap-4">
               <div className="space-y-2">
-                <Label htmlFor="forkliftId">Empilhadeira</Label>
+                <Label htmlFor="empilhadeiraId">Empilhadeira</Label>
                 <Select 
-                  value={formData.forkliftId} 
+                  value={formData.empilhadeiraId} 
                   onValueChange={handleForkliftChange}
                 >
                   <SelectTrigger>
@@ -194,20 +189,20 @@ const MaintenanceDialog = ({
                     <SelectValue placeholder="Selecione o status" />
                   </SelectTrigger>
                   <SelectContent>
-                    <SelectItem value={MaintenanceStatus.WAITING}>Aguardando</SelectItem>
-                    <SelectItem value={MaintenanceStatus.IN_PROGRESS}>Em andamento</SelectItem>
-                    <SelectItem value={MaintenanceStatus.COMPLETED}>Concluído</SelectItem>
+                    <SelectItem value={StatusManutencao.ABERTA}>Aberta</SelectItem>
+                    <SelectItem value={StatusManutencao.EM_ANDAMENTO}>Em andamento</SelectItem>
+                    <SelectItem value={StatusManutencao.CONCLUIDA}>Concluída</SelectItem>
                   </SelectContent>
                 </Select>
               </div>
             </div>
             
             <div className="space-y-2">
-              <Label htmlFor="issue">Descrição do Problema</Label>
+              <Label htmlFor="problema">Descrição do Problema</Label>
               <Textarea 
-                id="issue" 
-                value={formData.issue} 
-                onChange={(e) => handleChange('issue', e.target.value)}
+                id="problema" 
+                value={formData.problema} 
+                onChange={(e) => handleChange('problema', e.target.value)}
                 placeholder="Descreva o problema da empilhadeira"
                 rows={3}
               />
@@ -215,9 +210,9 @@ const MaintenanceDialog = ({
             
             <div className="grid grid-cols-2 gap-4">
               <div className="space-y-2">
-                <Label htmlFor="reportedBy">Reportado por</Label>
+                <Label htmlFor="tecnicoId">Reportado por</Label>
                 <Select 
-                  value={formData.reportedBy} 
+                  value={formData.tecnicoId} 
                   onValueChange={handleReporterChange}
                 >
                   <SelectTrigger>
@@ -225,7 +220,7 @@ const MaintenanceDialog = ({
                   </SelectTrigger>
                   <SelectContent>
                     {availableOperators.map(operator => (
-                      <SelectItem key={operator.id} value={operator.name}>
+                      <SelectItem key={operator.id} value={operator.id}>
                         {operator.name}
                       </SelectItem>
                     ))}
@@ -242,14 +237,14 @@ const MaintenanceDialog = ({
                       className="w-full justify-start text-left font-normal"
                     >
                       <CalendarIcon className="mr-2 h-4 w-4" />
-                      {formatDateForDisplay(formData.reportedDate || '')}
+                      {formatDateForDisplay(formData.dataAbertura || '')}
                     </Button>
                   </PopoverTrigger>
                   <PopoverContent className="w-auto p-0" align="start">
                     <Calendar
                       mode="single"
-                      selected={parseDate(formData.reportedDate || '')}
-                      onSelect={(date) => handleChange('reportedDate', format(date || new Date(), 'yyyy-MM-dd'))}
+                      selected={parseDate(formData.dataAbertura || '')}
+                      onSelect={(date) => handleChange('dataAbertura', format(date || new Date(), 'yyyy-MM-dd'))}
                       locale={ptBR}
                       className={cn("p-3 pointer-events-auto")}
                     />
@@ -258,7 +253,7 @@ const MaintenanceDialog = ({
               </div>
             </div>
             
-            {formData.status === MaintenanceStatus.COMPLETED && (
+            {formData.status === StatusManutencao.CONCLUIDA && (
               <div className="space-y-2">
                 <Label>Data de Conclusão</Label>
                 <Popover>
@@ -268,14 +263,14 @@ const MaintenanceDialog = ({
                       className="w-full justify-start text-left font-normal"
                     >
                       <CalendarIcon className="mr-2 h-4 w-4" />
-                      {formatDateForDisplay(formData.completedDate || '')}
+                      {formatDateForDisplay(formData.dataConclusao || '')}
                     </Button>
                   </PopoverTrigger>
                   <PopoverContent className="w-auto p-0" align="start">
                     <Calendar
                       mode="single"
-                      selected={parseDate(formData.completedDate || '')}
-                      onSelect={(date) => handleChange('completedDate', format(date || new Date(), 'yyyy-MM-dd'))}
+                      selected={parseDate(formData.dataConclusao || '')}
+                      onSelect={(date) => handleChange('dataConclusao', format(date || new Date(), 'yyyy-MM-dd'))}
                       locale={ptBR}
                       className={cn("p-3 pointer-events-auto")}
                     />

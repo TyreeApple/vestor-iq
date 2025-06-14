@@ -9,7 +9,7 @@ import {
   DialogFooter,
 } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
-import { Operation } from '@/types';
+import { Operacao, StatusOperacao } from '@/types';
 import { Badge } from "@/components/ui/badge";
 import { Calendar, Clock, Gauge, Info, Map, Settings, Truck, User, Wrench } from 'lucide-react';
 import { cn } from '@/lib/utils';
@@ -17,7 +17,7 @@ import { cn } from '@/lib/utils';
 interface OperationDetailsProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
-  operation: Operation | null;
+  operation: Operacao | null;
   onEdit: () => void;
 }
 
@@ -45,16 +45,16 @@ const OperationDetails = ({ open, onOpenChange, operation, onEdit }: OperationDe
 
   // Calculate operation duration
   const calculateDuration = () => {
-    if (!operation.endTime) {
-      const startTime = new Date(operation.startTime);
+    if (!operation.dataFim) {
+      const startTime = new Date(operation.dataInicio);
       const now = new Date();
       const diff = now.getTime() - startTime.getTime();
       const hours = Math.floor(diff / (1000 * 60 * 60));
       const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
       return `${hours}h ${minutes}m (em andamento)`;
     } else {
-      const startTime = new Date(operation.startTime);
-      const endTime = new Date(operation.endTime);
+      const startTime = new Date(operation.dataInicio);
+      const endTime = new Date(operation.dataFim);
       const diff = endTime.getTime() - startTime.getTime();
       const hours = Math.floor(diff / (1000 * 60 * 60));
       const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
@@ -69,14 +69,14 @@ const OperationDetails = ({ open, onOpenChange, operation, onEdit }: OperationDe
           <DialogTitle className="flex items-center gap-2">
             <span className="text-xl">Operação #{operation.id}</span>
             <Badge 
-              variant={operation.status === 'active' ? 'default' : 'secondary'}
-              className={operation.status === 'active' ? 'bg-green-500 text-white' : ''}
+              variant={operation.status === StatusOperacao.EM_ANDAMENTO ? 'default' : 'secondary'}
+              className={operation.status === StatusOperacao.EM_ANDAMENTO ? 'bg-green-500 text-white' : ''}
             >
-              {operation.status === 'active' ? 'Em Andamento' : 'Concluída'}
+              {operation.status === StatusOperacao.EM_ANDAMENTO ? 'Em Andamento' : 'Concluída'}
             </Badge>
           </DialogTitle>
           <DialogDescription>
-            Iniciada em: {formatDate(operation.startTime)} às {formatTime(operation.startTime)}
+            Iniciada em: {formatDate(operation.dataInicio)} às {formatTime(operation.dataInicio)}
           </DialogDescription>
         </DialogHeader>
         
@@ -93,7 +93,7 @@ const OperationDetails = ({ open, onOpenChange, operation, onEdit }: OperationDe
                   <User className="h-4 w-4 text-muted-foreground" />
                   <span className="text-sm">Operador</span>
                 </div>
-                <span className="text-sm font-medium">{operation.operatorName}</span>
+                <span className="text-sm font-medium">{operation.operador.nome}</span>
               </div>
               
               <div className="flex items-center justify-between border-b pb-2">
@@ -101,7 +101,7 @@ const OperationDetails = ({ open, onOpenChange, operation, onEdit }: OperationDe
                   <Truck className="h-4 w-4 text-muted-foreground" />
                   <span className="text-sm">Empilhadeira</span>
                 </div>
-                <span className="text-sm font-medium">{operation.forkliftModel} ({operation.forkliftId})</span>
+                <span className="text-sm font-medium">{operation.empilhadeira.modelo} ({operation.empilhadeiraId})</span>
               </div>
               
               <div className="flex items-center justify-between border-b pb-2">
@@ -109,7 +109,7 @@ const OperationDetails = ({ open, onOpenChange, operation, onEdit }: OperationDe
                   <Map className="h-4 w-4 text-muted-foreground" />
                   <span className="text-sm">Setor</span>
                 </div>
-                <span className="text-sm font-medium">{operation.sector}</span>
+                <span className="text-sm font-medium">{operation.setor}</span>
               </div>
             </div>
           </div>
@@ -123,13 +123,13 @@ const OperationDetails = ({ open, onOpenChange, operation, onEdit }: OperationDe
             <div className="space-y-3">
               <div className="flex items-center justify-between border-b pb-2">
                 <span className="text-sm">Início</span>
-                <span className="text-sm font-medium">{formatTime(operation.startTime)}</span>
+                <span className="text-sm font-medium">{formatTime(operation.dataInicio)}</span>
               </div>
               
               <div className="flex items-center justify-between border-b pb-2">
                 <span className="text-sm">Término</span>
                 <span className="text-sm font-medium">
-                  {operation.endTime ? formatTime(operation.endTime) : 'Em andamento'}
+                  {operation.dataFim ? formatTime(operation.dataFim) : 'Em andamento'}
                 </span>
               </div>
               
@@ -144,21 +144,14 @@ const OperationDetails = ({ open, onOpenChange, operation, onEdit }: OperationDe
         <div className="mt-4 space-y-4">
           <div className="flex items-center gap-2">
             <Gauge className="h-4 w-4 text-muted-foreground" />
-            <span className="text-sm font-medium">Horímetro</span>
+            <span className="text-sm font-medium">Observações</span>
           </div>
           
-          <div className="grid grid-cols-2 gap-4 p-3 bg-muted/20 rounded-md">
-            <div>
-              <span className="text-sm text-muted-foreground">Inicial</span>
-              <div className="text-lg font-medium">{operation.initialHourMeter}</div>
-            </div>
-            <div>
-              <span className="text-sm text-muted-foreground">Atual/Final</span>
-              <div className="text-lg font-medium">{operation.currentHourMeter || operation.initialHourMeter}</div>
-            </div>
+          <div className="p-3 bg-muted/20 rounded-md">
+            <div className="text-sm">{operation.observacoes || 'Nenhuma observação registrada'}</div>
           </div>
           
-          {operation.gasConsumption && (
+          {operation.consumoGas && (
             <div className="mt-4">
               <div className="flex items-center gap-2 mb-3">
                 <Wrench className="h-4 w-4 text-muted-foreground" />
@@ -168,7 +161,7 @@ const OperationDetails = ({ open, onOpenChange, operation, onEdit }: OperationDe
               <div className="p-3 bg-muted/20 rounded-md">
                 <div className="flex items-center justify-between mb-2">
                   <span className="text-sm">Consumo Total</span>
-                  <span className="text-sm font-medium">{operation.gasConsumption} L</span>
+                  <span className="text-sm font-medium">{operation.consumoGas} L</span>
                 </div>
               </div>
             </div>

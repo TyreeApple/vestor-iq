@@ -8,7 +8,7 @@ import {
   DialogFooter,
 } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
-import { Operation } from '@/types';
+import { Operacao, StatusOperacao } from '@/types';
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
@@ -18,8 +18,8 @@ import { Badge } from "@/components/ui/badge";
 interface OperationDialogProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
-  operation?: Operation;
-  onSave: (operation: Operation) => void;
+  operation?: Operacao;
+  onSave: (operation: Operacao) => void;
   availableOperators: { id: string; name: string }[];
   availableForklifts: { id: string; model: string }[];
 }
@@ -36,17 +36,12 @@ const OperationDialog = ({
   const isEditing = !!operation;
   
   // Form state
-  const [formData, setFormData] = useState<Partial<Operation>>({
-    operatorId: '',
-    operatorName: '',
-    forkliftId: '',
-    forkliftModel: '',
-    sector: '',
-    initialHourMeter: 0,
-    currentHourMeter: 0,
-    gasConsumption: 0,
-    startTime: new Date().toISOString().slice(0, 16),
-    status: 'active'
+  const [formData, setFormData] = useState<Partial<Operacao>>({
+    operadorId: '',
+    empilhadeiraId: '',
+    setor: '',
+    dataInicio: new Date().toISOString().slice(0, 16),
+    status: StatusOperacao.EM_ANDAMENTO
   });
 
   const [errors, setErrors] = useState<Record<string, string>>({});
@@ -56,22 +51,17 @@ const OperationDialog = ({
     if (operation) {
       setFormData({
         ...operation,
-        startTime: new Date(operation.startTime).toISOString().slice(0, 16),
-        endTime: operation.endTime ? new Date(operation.endTime).toISOString().slice(0, 16) : undefined
+        dataInicio: new Date(operation.dataInicio).toISOString().slice(0, 16),
+        dataFim: operation.dataFim ? new Date(operation.dataFim).toISOString().slice(0, 16) : undefined
       });
     } else {
       // Reset form for new operation
       setFormData({
-        operatorId: '',
-        operatorName: '',
-        forkliftId: '',
-        forkliftModel: '',
-        sector: '',
-        initialHourMeter: 0,
-        currentHourMeter: 0,
-        gasConsumption: 0,
-        startTime: new Date().toISOString().slice(0, 16),
-        status: 'active'
+        operadorId: '',
+        empilhadeiraId: '',
+        setor: '',
+        dataInicio: new Date().toISOString().slice(0, 16),
+        status: StatusOperacao.EM_ANDAMENTO
       });
     }
     setErrors({});
@@ -81,29 +71,20 @@ const OperationDialog = ({
   const validateForm = (): boolean => {
     const newErrors: Record<string, string> = {};
 
-    if (!formData.operatorId) {
-      newErrors.operatorId = 'Operador é obrigatório';
+    if (!formData.operadorId) {
+      newErrors.operadorId = 'Operador é obrigatório';
     }
-    if (!formData.forkliftId) {
-      newErrors.forkliftId = 'Empilhadeira é obrigatória';
+    if (!formData.empilhadeiraId) {
+      newErrors.empilhadeiraId = 'Empilhadeira é obrigatória';
     }
-    if (!formData.sector?.trim()) {
-      newErrors.sector = 'Setor é obrigatório';
+    if (!formData.setor?.trim()) {
+      newErrors.setor = 'Setor é obrigatório';
     }
-    if (!formData.startTime) {
-      newErrors.startTime = 'Data/hora de início é obrigatória';
+    if (!formData.dataInicio) {
+      newErrors.dataInicio = 'Data/hora de início é obrigatória';
     }
-    if (formData.initialHourMeter === undefined || formData.initialHourMeter < 0) {
-      newErrors.initialHourMeter = 'Horímetro inicial deve ser maior ou igual a 0';
-    }
-    if (formData.currentHourMeter !== undefined && formData.currentHourMeter < (formData.initialHourMeter || 0)) {
-      newErrors.currentHourMeter = 'Horímetro atual deve ser maior ou igual ao inicial';
-    }
-    if (formData.gasConsumption !== undefined && formData.gasConsumption < 0) {
-      newErrors.gasConsumption = 'Consumo de combustível deve ser maior ou igual a 0';
-    }
-    if (formData.endTime && formData.startTime && new Date(formData.endTime) <= new Date(formData.startTime)) {
-      newErrors.endTime = 'Data/hora de término deve ser posterior ao início';
+    if (formData.dataFim && formData.dataInicio && new Date(formData.dataFim) <= new Date(formData.dataInicio)) {
+      newErrors.dataFim = 'Data/hora de término deve ser posterior ao início';
     }
 
     setErrors(newErrors);
@@ -126,40 +107,32 @@ const OperationDialog = ({
   };
 
   // Handle operator selection
-  const handleOperatorChange = (operatorId: string) => {
-    const selectedOperator = availableOperators.find(op => op.id === operatorId);
-    if (selectedOperator) {
-      setFormData(prev => ({
-        ...prev,
-        operatorId,
-        operatorName: selectedOperator.name
-      }));
-      if (errors.operatorId) {
-        setErrors(prev => ({ ...prev, operatorId: '' }));
-      }
+  const handleOperatorChange = (operadorId: string) => {
+    setFormData(prev => ({
+      ...prev,
+      operadorId
+    }));
+    if (errors.operadorId) {
+      setErrors(prev => ({ ...prev, operadorId: '' }));
     }
   };
 
   // Handle forklift selection
-  const handleForkliftChange = (forkliftId: string) => {
-    const selectedForklift = availableForklifts.find(f => f.id === forkliftId);
-    if (selectedForklift) {
-      setFormData(prev => ({
-        ...prev,
-        forkliftId,
-        forkliftModel: selectedForklift.model
-      }));
-      if (errors.forkliftId) {
-        setErrors(prev => ({ ...prev, forkliftId: '' }));
-      }
+  const handleForkliftChange = (empilhadeiraId: string) => {
+    setFormData(prev => ({
+      ...prev,
+      empilhadeiraId
+    }));
+    if (errors.empilhadeiraId) {
+      setErrors(prev => ({ ...prev, empilhadeiraId: '' }));
     }
   };
 
   // Handle sector change
   const handleSectorChange = (value: string) => {
-    setFormData(prev => ({ ...prev, sector: value }));
-    if (errors.sector) {
-      setErrors(prev => ({ ...prev, sector: '' }));
+    setFormData(prev => ({ ...prev, setor: value }));
+    if (errors.setor) {
+      setErrors(prev => ({ ...prev, setor: '' }));
     }
   };
 
@@ -177,9 +150,9 @@ const OperationDialog = ({
     }
 
     // Generate ID for new operations
-    const operationData: Operation = {
+    const operationData: Operacao = {
       id: operation?.id || `OP${Math.floor(Math.random() * 1000).toString().padStart(3, '0')}`,
-      ...formData as Operation
+      ...formData as Operacao
     };
 
     // Save the operation
@@ -190,7 +163,7 @@ const OperationDialog = ({
   };
 
   // Calculate if the operation can be completed
-  const canComplete = isEditing && operation?.status === 'active';
+  const canComplete = isEditing && operation?.status === StatusOperacao.EM_ANDAMENTO;
 
   // Complete the operation
   const handleComplete = () => {
@@ -199,11 +172,10 @@ const OperationDialog = ({
     }
 
     const now = new Date();
-    const completedOperation: Operation = {
-      ...formData as Operation,
-      status: 'completed',
-      endTime: now.toISOString(),
-      currentHourMeter: formData.currentHourMeter || formData.initialHourMeter
+    const completedOperation: Operacao = {
+      ...formData as Operacao,
+      status: StatusOperacao.CONCLUIDA,
+      dataFim: now.toISOString()
     };
     
     onSave(completedOperation);
@@ -237,10 +209,10 @@ const OperationDialog = ({
             {isEditing ? 'Editar Operação' : 'Nova Operação'}
             {isEditing && (
               <Badge 
-                variant={operation?.status === 'active' ? 'default' : 'secondary'}
-                className={operation?.status === 'active' ? 'bg-green-500 text-white' : ''}
+                variant={operation?.status === StatusOperacao.EM_ANDAMENTO ? 'default' : 'secondary'}
+                className={operation?.status === StatusOperacao.EM_ANDAMENTO ? 'bg-green-500 text-white' : ''}
               >
-                {operation?.status === 'active' ? 'Em Andamento' : 'Concluída'}
+                {operation?.status === StatusOperacao.EM_ANDAMENTO ? 'Em Andamento' : 'Concluída'}
               </Badge>
             )}
           </DialogTitle>
@@ -249,12 +221,12 @@ const OperationDialog = ({
         <form onSubmit={handleSubmit} className="space-y-4 py-4">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div className="space-y-2">
-              <Label htmlFor="operatorId">Operador *</Label>
+              <Label htmlFor="operadorId">Operador *</Label>
               <Select 
-                value={formData.operatorId} 
+                value={formData.operadorId} 
                 onValueChange={handleOperatorChange}
               >
-                <SelectTrigger id="operatorId" className={errors.operatorId ? 'border-red-500' : ''}>
+                <SelectTrigger id="operadorId" className={errors.operadorId ? 'border-red-500' : ''}>
                   <SelectValue placeholder="Selecione um operador" />
                 </SelectTrigger>
                 <SelectContent>
@@ -265,16 +237,16 @@ const OperationDialog = ({
                   ))}
                 </SelectContent>
               </Select>
-              {errors.operatorId && <p className="text-sm text-red-500">{errors.operatorId}</p>}
+              {errors.operadorId && <p className="text-sm text-red-500">{errors.operadorId}</p>}
             </div>
             
             <div className="space-y-2">
-              <Label htmlFor="forkliftId">Empilhadeira *</Label>
+              <Label htmlFor="empilhadeiraId">Empilhadeira *</Label>
               <Select 
-                value={formData.forkliftId}
+                value={formData.empilhadeiraId}
                 onValueChange={handleForkliftChange}
               >
-                <SelectTrigger id="forkliftId" className={errors.forkliftId ? 'border-red-500' : ''}>
+                <SelectTrigger id="empilhadeiraId" className={errors.empilhadeiraId ? 'border-red-500' : ''}>
                   <SelectValue placeholder="Selecione uma empilhadeira" />
                 </SelectTrigger>
                 <SelectContent>
@@ -285,14 +257,14 @@ const OperationDialog = ({
                   ))}
                 </SelectContent>
               </Select>
-              {errors.forkliftId && <p className="text-sm text-red-500">{errors.forkliftId}</p>}
+              {errors.empilhadeiraId && <p className="text-sm text-red-500">{errors.empilhadeiraId}</p>}
             </div>
           </div>
           
           <div className="space-y-2">
-            <Label htmlFor="sector">Setor *</Label>
-            <Select value={formData.sector} onValueChange={handleSectorChange}>
-              <SelectTrigger className={errors.sector ? 'border-red-500' : ''}>
+            <Label htmlFor="setor">Setor *</Label>
+            <Select value={formData.setor} onValueChange={handleSectorChange}>
+              <SelectTrigger className={errors.setor ? 'border-red-500' : ''}>
                 <SelectValue placeholder="Selecione um setor" />
               </SelectTrigger>
               <SelectContent>
@@ -303,87 +275,39 @@ const OperationDialog = ({
                 ))}
               </SelectContent>
             </Select>
-            {errors.sector && <p className="text-sm text-red-500">{errors.sector}</p>}
+            {errors.setor && <p className="text-sm text-red-500">{errors.setor}</p>}
           </div>
           
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div className="space-y-2">
-              <Label htmlFor="initialHourMeter">Horímetro Inicial *</Label>
+              <Label htmlFor="dataInicio">Data/Hora de Início *</Label>
               <Input
-                id="initialHourMeter"
-                name="initialHourMeter"
-                type="number"
-                min="0"
-                value={formData.initialHourMeter}
-                onChange={handleChange}
-                className={errors.initialHourMeter ? 'border-red-500' : ''}
-              />
-              {errors.initialHourMeter && <p className="text-sm text-red-500">{errors.initialHourMeter}</p>}
-            </div>
-            
-            <div className="space-y-2">
-              <Label htmlFor="currentHourMeter">Horímetro Atual</Label>
-              <Input
-                id="currentHourMeter"
-                name="currentHourMeter"
-                type="number"
-                min={formData.initialHourMeter || 0}
-                value={formData.currentHourMeter || formData.initialHourMeter}
-                onChange={handleChange}
-                className={errors.currentHourMeter ? 'border-red-500' : ''}
-              />
-              {errors.currentHourMeter && <p className="text-sm text-red-500">{errors.currentHourMeter}</p>}
-            </div>
-          </div>
-          
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <div className="space-y-2">
-              <Label htmlFor="startTime">Data/Hora de Início *</Label>
-              <Input
-                id="startTime"
-                name="startTime"
+                id="dataInicio"
+                name="dataInicio"
                 type="datetime-local"
-                value={formData.startTime}
+                value={formData.dataInicio}
                 onChange={handleChange}
-                className={errors.startTime ? 'border-red-500' : ''}
+                className={errors.dataInicio ? 'border-red-500' : ''}
               />
-              {errors.startTime && <p className="text-sm text-red-500">{errors.startTime}</p>}
+              {errors.dataInicio && <p className="text-sm text-red-500">{errors.dataInicio}</p>}
             </div>
             
             {isEditing && (
               <div className="space-y-2">
-                <Label htmlFor="endTime">Data/Hora de Término</Label>
+                <Label htmlFor="dataFim">Data/Hora de Término</Label>
                 <Input
-                  id="endTime"
-                  name="endTime"
+                  id="dataFim"
+                  name="dataFim"
                   type="datetime-local"
-                  value={formData.endTime || ''}
+                  value={formData.dataFim || ''}
                   onChange={handleChange}
-                  disabled={formData.status === 'active'}
-                  className={errors.endTime ? 'border-red-500' : ''}
+                  disabled={formData.status === StatusOperacao.EM_ANDAMENTO}
+                  className={errors.dataFim ? 'border-red-500' : ''}
                 />
-                {errors.endTime && <p className="text-sm text-red-500">{errors.endTime}</p>}
+                {errors.dataFim && <p className="text-sm text-red-500">{errors.dataFim}</p>}
               </div>
             )}
           </div>
-          
-          {isEditing && (
-            <div className="space-y-2">
-              <Label htmlFor="gasConsumption">Consumo de Combustível (L)</Label>
-              <Input
-                id="gasConsumption"
-                name="gasConsumption"
-                type="number"
-                step="0.1"
-                min="0"
-                value={formData.gasConsumption || ''}
-                onChange={handleChange}
-                placeholder="Opcional"
-                className={errors.gasConsumption ? 'border-red-500' : ''}
-              />
-              {errors.gasConsumption && <p className="text-sm text-red-500">{errors.gasConsumption}</p>}
-            </div>
-          )}
           
           <DialogFooter className="pt-4">
             {canComplete && (
