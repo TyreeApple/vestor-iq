@@ -14,7 +14,7 @@ import { useToast } from '@/hooks/use-toast';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import PageHeader from '@/components/layout/PageHeader';
-import PremiumSummaryCard from '@/components/dashboard/PremiumSummaryCard';
+import ForkliftStatsCard from '@/components/forklift/ForkliftStatsCard';
 
 // Mock data for the forklifts
 const initialForklifts: Forklift[] = [
@@ -281,42 +281,42 @@ const ForkliftsPage = () => {
         </div>
       </PageHeader>
 
-      {/* Statistics Cards */}
-      <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-        <PremiumSummaryCard
+      {/* Enhanced Statistics Cards */}
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+        <ForkliftStatsCard
           title="Total"
           value={stats.total}
           icon={Truck}
-          colorFrom="from-blue-900"
-          colorTo="to-blue-600"
           info="Empilhadeiras"
+          colorFrom="from-slate-600"
+          colorTo="to-slate-800"
         />
         
-        <PremiumSummaryCard
+        <ForkliftStatsCard
           title="Operacionais"
           value={stats.operational}
           icon={CheckCircle}
-          colorFrom="from-green-900"
-          colorTo="to-green-600"
           info="Ativas"
+          colorFrom="from-emerald-500"
+          colorTo="to-emerald-700"
         />
         
-        <PremiumSummaryCard
+        <ForkliftStatsCard
           title="Em Manutenção"
           value={stats.maintenance}
           icon={Wrench}
-          colorFrom="from-yellow-900"
-          colorTo="to-yellow-600"
           info="Manutenção"
+          colorFrom="from-amber-500"
+          colorTo="to-orange-600"
         />
         
-        <PremiumSummaryCard
+        <ForkliftStatsCard
           title="Paradas"
           value={stats.stopped}
           icon={AlertTriangle}
-          colorFrom="from-red-900"
-          colorTo="to-red-600"
           info="Inativas"
+          colorFrom="from-red-500"
+          colorTo="to-red-700"
         />
       </div>
       
