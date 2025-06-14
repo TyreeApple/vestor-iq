@@ -20,11 +20,11 @@ export default function FleetBarChart() {
     <div className="w-full h-60 flex items-center justify-center">
       <ChartContainer config={{}}>
         <ResponsiveContainer width="100%" height="100%">
-          <BarChart data={data} barRadius={18}>
+          <BarChart data={data}>
             <XAxis dataKey="name" tick={{ fill: "hsl(var(--muted-foreground))", fontSize: 14 }} />
             <YAxis hide />
             <Tooltip />
-            <Bar dataKey="value">
+            <Bar dataKey="value" barRadius={18}>
               {data.map((entry, idx) => (
                 <Cell key={`cell-${idx}`} fill={barColors[idx]} />
               ))}
