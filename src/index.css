@@ -1,3 +1,4 @@
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -50,47 +51,47 @@
   }
 
   .dark {
-    --background: 222 33% 8%;                /* Mais escuro */
+    --background: 222 33% 8%;
     --foreground: 210 40% 98%;
 
-    --card: 224 17% 16%;                     /* Cinza escuro, menos azulado */
+    --card: 224 17% 16%;
     --card-foreground: 210 40% 98%;
 
     --popover: 222 33% 14%;
     --popover-foreground: 210 40% 98%;
 
-    --primary: 219 65% 63%;                  /* Azul moderno */
+    --primary: 219 65% 63%;
     --primary-foreground: 210 40% 98%;
 
-    --secondary: 221 19% 24%;                /* Cinza azulado */
+    --secondary: 221 19% 24%;
     --secondary-foreground: 210 40% 98%;
 
-    --muted: 222 13% 20%;                    /* Cinza ainda mais suave */
+    --muted: 222 13% 20%;
     --muted-foreground: 218 11% 65%;
 
-    --accent: 263 82% 66%;                   /* Roxo vivo */
+    --accent: 263 82% 66%;
     --accent-foreground: 263 94% 95%;
 
-    --destructive: 350 89% 62%;              /* Vermelho moderno */
+    --destructive: 350 89% 62%;
     --destructive-foreground: 210 40% 98%;
 
-    --border: 223 12% 18%;                   /* Linhas bem sutis */
+    --border: 223 12% 18%;
     --input: 226 15% 22%;
     --ring: 219 65% 63%;
 
-    --sidebar-background: 225 19% 12%;       /* Sidebar com outra base de cinza azul */
+    --sidebar-background: 225 19% 12%;
     --sidebar-foreground: 210 40% 98%;
-    --sidebar-primary: 220 75% 37%;          /* Azul sólido */
+    --sidebar-primary: 220 75% 37%;
     --sidebar-primary-foreground: 210 40% 98%;
-    --sidebar-accent: 263 70% 34%;           /* Roxo escuro */
+    --sidebar-accent: 263 70% 34%;
     --sidebar-accent-foreground: 210 40% 98%;
     --sidebar-border: 223 12% 22%;
     --sidebar-ring: 219 65% 63%;
 
-    --status-operational: 142 71% 42%;       /* Verde */
-    --status-maintenance: 41 97% 63%;        /* Laranja */
-    --status-inactive: 0 0% 47%;             /* Cinza escuro */
-    --status-warning: 0 84% 66%;             /* Vermelho */
+    --status-operational: 142 71% 42%;
+    --status-maintenance: 41 97% 63%;
+    --status-inactive: 0 0% 47%;
+    --status-warning: 0 84% 66%;
   }
 }
 
@@ -101,6 +102,7 @@
 
   body {
     @apply bg-background text-foreground font-sans;
+    transition: background-color 0.3s ease, color 0.3s ease;
   }
 
   /* Custom scrollbar */
@@ -124,7 +126,8 @@
 
 @layer components {
   .glass-card {
-    @apply bg-white/80 dark:bg-card/80 backdrop-blur-md border border-white/20 dark:border-white/10 shadow-glass;
+    @apply bg-white/80 dark:bg-card/80 backdrop-blur-md border border-white/20 dark:border-border shadow-glass;
+    transition: background-color 0.3s ease, border-color 0.3s ease;
   }
 
   .glass-card-hover {
@@ -179,4 +182,5 @@
 
 html {
   font-family: 'SF Pro Display', system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+  transition: background-color 0.3s ease;
 }
