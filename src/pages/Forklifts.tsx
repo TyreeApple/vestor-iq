@@ -1,7 +1,4 @@
-
 import React, { useState } from 'react';
-import Navbar from '@/components/layout/Navbar';
-import Sidebar from '@/components/layout/Sidebar';
 import { Forklift, StatusEmpilhadeira, TipoEmpilhadeira } from '@/types';
 import { useIsMobile } from '@/hooks/use-mobile';
 import { cn } from '@/lib/utils';
@@ -16,6 +13,7 @@ import AdvancedFilters from '@/components/common/AdvancedFilters';
 import { useToast } from '@/hooks/use-toast';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
+import PageHeader from '@/components/layout/PageHeader';
 
 // Mock data for the forklifts
 const initialForklifts: Forklift[] = [
@@ -257,221 +255,208 @@ const ForkliftsPage = () => {
   };
 
   return (
-    <div className="flex min-h-screen bg-background">
-      <Sidebar />
-      
-      <div className={cn(
-        "flex-1 flex flex-col",
-        !isMobile && "ml-64"
-      )}>
-        <Navbar />
+    <div className="space-y-6">
+      {/* Page Header */}
+      <PageHeader 
+        title="Gerenciamento de Empilhadeiras"
+        subtitle="Gerencie sua frota de empilhadeiras de forma inteligente"
+      >
+        <div className="flex flex-wrap gap-2">
+          <Button variant="outline" onClick={handleImportData}>
+            <Upload className="w-4 h-4 mr-2" />
+            Importar
+          </Button>
+          <Button variant="outline" onClick={handleExportData}>
+            <Download className="w-4 h-4 mr-2" />
+            Exportar
+          </Button>
+          <Button onClick={() => {
+            setSelectedForklift(null);
+            setAddDialogOpen(true);
+          }}>
+            <Plus className="w-4 h-4 mr-2" />
+            Nova Empilhadeira
+          </Button>
+        </div>
+      </PageHeader>
+
+      {/* Statistics Cards */}
+      <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+        <Card>
+          <CardHeader className="pb-2">
+            <CardTitle className="text-sm font-medium text-muted-foreground">Total</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div className="text-2xl font-bold">{stats.total}</div>
+            <Badge variant="outline" className="mt-1">Empilhadeiras</Badge>
+          </CardContent>
+        </Card>
         
-        <main className="flex-1 p-4 md:p-6 space-y-6">
-          {/* Page Header */}
-          <div className="flex flex-col lg:flex-row justify-between items-start lg:items-center gap-4">
-            <div>
-              <h1 className="text-2xl md:text-3xl font-bold">Gerenciamento de Empilhadeiras</h1>
-              <p className="text-muted-foreground">Gerencie sua frota de empilhadeiras de forma inteligente</p>
-            </div>
-            
-            <div className="flex flex-wrap gap-2">
-              <Button variant="outline" onClick={handleImportData}>
-                <Upload className="w-4 h-4 mr-2" />
-                Importar
+        <Card>
+          <CardHeader className="pb-2">
+            <CardTitle className="text-sm font-medium text-muted-foreground">Operacionais</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div className="text-2xl font-bold text-green-600">{stats.operational}</div>
+            <Badge variant="secondary" className="mt-1 bg-green-100 text-green-800">Ativas</Badge>
+          </CardContent>
+        </Card>
+        
+        <Card>
+          <CardHeader className="pb-2">
+            <CardTitle className="text-sm font-medium text-muted-foreground">Em Manutenção</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div className="text-2xl font-bold text-yellow-600">{stats.maintenance}</div>
+            <Badge variant="secondary" className="mt-1 bg-yellow-100 text-yellow-800">Manutenção</Badge>
+          </CardContent>
+        </Card>
+        
+        <Card>
+          <CardHeader className="pb-2">
+            <CardTitle className="text-sm font-medium text-muted-foreground">Paradas</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div className="text-2xl font-bold text-red-600">{stats.stopped}</div>
+            <Badge variant="secondary" className="mt-1 bg-red-100 text-red-800">Inativas</Badge>
+          </CardContent>
+        </Card>
+      </div>
+      
+      {/* Filters and Search */}
+      <Card>
+        <CardHeader>
+          <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+            <CardTitle className="text-lg">Filtros e Busca</CardTitle>
+            <div className="flex items-center gap-2">
+              <Button
+                variant={viewMode === 'grid' ? 'default' : 'outline'}
+                size="sm"
+                onClick={() => setViewMode('grid')}
+              >
+                <Grid className="w-4 h-4" />
               </Button>
-              <Button variant="outline" onClick={handleExportData}>
-                <Download className="w-4 h-4 mr-2" />
-                Exportar
-              </Button>
-              <Button onClick={() => {
-                setSelectedForklift(null);
-                setAddDialogOpen(true);
-              }}>
-                <Plus className="w-4 h-4 mr-2" />
-                Nova Empilhadeira
+              <Button
+                variant={viewMode === 'list' ? 'default' : 'outline'}
+                size="sm"
+                onClick={() => setViewMode('list')}
+              >
+                <List className="w-4 h-4" />
               </Button>
             </div>
           </div>
+        </CardHeader>
+        <CardContent>
+          <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-4">
+            {/* Search */}
+            <div className="relative">
+              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground" size={18} />
+              <input
+                type="text"
+                placeholder="Buscar por ID ou modelo..."
+                className="pl-10 h-10 w-full rounded-md border border-input bg-background px-3 py-2"
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+              />
+            </div>
+            
+            {/* Status filter */}
+            <select 
+              className="h-10 w-full rounded-md border border-input bg-background px-3 py-2"
+              value={statusFilter}
+              onChange={(e) => setStatusFilter(e.target.value as StatusEmpilhadeira | 'all')}
+            >
+              <option value="all">Todos os Status</option>
+              <option value={StatusEmpilhadeira.OPERACIONAL}>{StatusEmpilhadeira.OPERACIONAL}</option>
+              <option value={StatusEmpilhadeira.EM_MANUTENCAO}>{StatusEmpilhadeira.EM_MANUTENCAO}</option>
+              <option value={StatusEmpilhadeira.PARADA}>{StatusEmpilhadeira.PARADA}</option>
+            </select>
+            
+            {/* Type filter */}
+            <select 
+              className="h-10 w-full rounded-md border border-input bg-background px-3 py-2"
+              value={typeFilter}
+              onChange={(e) => setTypeFilter(e.target.value as TipoEmpilhadeira | 'all')}
+            >
+              <option value="all">Todos os Tipos</option>
+              <option value={TipoEmpilhadeira.GAS}>{TipoEmpilhadeira.GAS}</option>
+              <option value={TipoEmpilhadeira.ELETRICA}>{TipoEmpilhadeira.ELETRICA}</option>
+              <option value={TipoEmpilhadeira.RETRATIL}>{TipoEmpilhadeira.RETRATIL}</option>
+            </select>
 
-          {/* Statistics Cards */}
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-            <Card>
-              <CardHeader className="pb-2">
-                <CardTitle className="text-sm font-medium text-muted-foreground">Total</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <div className="text-2xl font-bold">{stats.total}</div>
-                <Badge variant="outline" className="mt-1">Empilhadeiras</Badge>
-              </CardContent>
-            </Card>
-            
-            <Card>
-              <CardHeader className="pb-2">
-                <CardTitle className="text-sm font-medium text-muted-foreground">Operacionais</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <div className="text-2xl font-bold text-green-600">{stats.operational}</div>
-                <Badge variant="secondary" className="mt-1 bg-green-100 text-green-800">Ativas</Badge>
-              </CardContent>
-            </Card>
-            
-            <Card>
-              <CardHeader className="pb-2">
-                <CardTitle className="text-sm font-medium text-muted-foreground">Em Manutenção</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <div className="text-2xl font-bold text-yellow-600">{stats.maintenance}</div>
-                <Badge variant="secondary" className="mt-1 bg-yellow-100 text-yellow-800">Manutenção</Badge>
-              </CardContent>
-            </Card>
-            
-            <Card>
-              <CardHeader className="pb-2">
-                <CardTitle className="text-sm font-medium text-muted-foreground">Paradas</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <div className="text-2xl font-bold text-red-600">{stats.stopped}</div>
-                <Badge variant="secondary" className="mt-1 bg-red-100 text-red-800">Inativas</Badge>
-              </CardContent>
-            </Card>
+            {/* Advanced filters */}
+            <AdvancedFilters
+              filters={filterOptions}
+              values={advancedFilters}
+              onFiltersChange={setAdvancedFilters}
+              onClearFilters={() => setAdvancedFilters({})}
+            />
           </div>
-          
-          {/* Filters and Search */}
-          <Card>
-            <CardHeader>
-              <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
-                <CardTitle className="text-lg">Filtros e Busca</CardTitle>
-                <div className="flex items-center gap-2">
-                  <Button
-                    variant={viewMode === 'grid' ? 'default' : 'outline'}
-                    size="sm"
-                    onClick={() => setViewMode('grid')}
-                  >
-                    <Grid className="w-4 h-4" />
-                  </Button>
-                  <Button
-                    variant={viewMode === 'list' ? 'default' : 'outline'}
-                    size="sm"
-                    onClick={() => setViewMode('list')}
-                  >
-                    <List className="w-4 h-4" />
-                  </Button>
-                </div>
-              </div>
-            </CardHeader>
-            <CardContent>
-              <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-4">
-                {/* Search */}
-                <div className="relative">
-                  <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground" size={18} />
-                  <input
-                    type="text"
-                    placeholder="Buscar por ID ou modelo..."
-                    className="pl-10 h-10 w-full rounded-md border border-input bg-background px-3 py-2"
-                    value={searchQuery}
-                    onChange={(e) => setSearchQuery(e.target.value)}
-                  />
-                </div>
-                
-                {/* Status filter */}
-                <select 
-                  className="h-10 w-full rounded-md border border-input bg-background px-3 py-2"
-                  value={statusFilter}
-                  onChange={(e) => setStatusFilter(e.target.value as StatusEmpilhadeira | 'all')}
-                >
-                  <option value="all">Todos os Status</option>
-                  <option value={StatusEmpilhadeira.OPERACIONAL}>{StatusEmpilhadeira.OPERACIONAL}</option>
-                  <option value={StatusEmpilhadeira.EM_MANUTENCAO}>{StatusEmpilhadeira.EM_MANUTENCAO}</option>
-                  <option value={StatusEmpilhadeira.PARADA}>{StatusEmpilhadeira.PARADA}</option>
-                </select>
-                
-                {/* Type filter */}
-                <select 
-                  className="h-10 w-full rounded-md border border-input bg-background px-3 py-2"
-                  value={typeFilter}
-                  onChange={(e) => setTypeFilter(e.target.value as TipoEmpilhadeira | 'all')}
-                >
-                  <option value="all">Todos os Tipos</option>
-                  <option value={TipoEmpilhadeira.GAS}>{TipoEmpilhadeira.GAS}</option>
-                  <option value={TipoEmpilhadeira.ELETRICA}>{TipoEmpilhadeira.ELETRICA}</option>
-                  <option value={TipoEmpilhadeira.RETRATIL}>{TipoEmpilhadeira.RETRATIL}</option>
-                </select>
-
-                {/* Advanced filters */}
-                <AdvancedFilters
-                  filters={filterOptions}
-                  values={advancedFilters}
-                  onFiltersChange={setAdvancedFilters}
-                  onClearFilters={() => setAdvancedFilters({})}
+        </CardContent>
+      </Card>
+      
+      {/* Results */}
+      <Card>
+        <CardHeader>
+          <div className="flex justify-between items-center">
+            <CardTitle>
+              Empilhadeiras ({filteredForklifts.length} de {forklifts.length})
+            </CardTitle>
+          </div>
+        </CardHeader>
+        <CardContent>
+          {viewMode === 'grid' ? (
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
+              {filteredForklifts.map((forklift) => (
+                <ForkliftCard
+                  key={forklift.id}
+                  forklift={forklift}
+                  onClick={() => handleForkliftClick(forklift.id)}
                 />
-              </div>
-            </CardContent>
-          </Card>
+              ))}
+            </div>
+          ) : (
+            <ForkliftList 
+              forklifts={filteredForklifts}
+              onForkliftClick={handleForkliftClick}
+              onDeleteForklift={handleDeleteForklift}
+            />
+          )}
           
-          {/* Results */}
-          <Card>
-            <CardHeader>
-              <div className="flex justify-between items-center">
-                <CardTitle>
-                  Empilhadeiras ({filteredForklifts.length} de {forklifts.length})
-                </CardTitle>
-              </div>
-            </CardHeader>
-            <CardContent>
-              {viewMode === 'grid' ? (
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
-                  {filteredForklifts.map((forklift) => (
-                    <ForkliftCard
-                      key={forklift.id}
-                      forklift={forklift}
-                      onClick={() => handleForkliftClick(forklift.id)}
-                    />
-                  ))}
-                </div>
-              ) : (
-                <ForkliftList 
-                  forklifts={filteredForklifts}
-                  onForkliftClick={handleForkliftClick}
-                  onDeleteForklift={handleDeleteForklift}
-                />
-              )}
-              
-              {filteredForklifts.length === 0 && (
-                <div className="text-center py-12 text-muted-foreground">
-                  <div className="text-4xl mb-4">🔍</div>
-                  <h3 className="text-lg font-medium mb-2">Nenhuma empilhadeira encontrada</h3>
-                  <p>Tente ajustar os filtros ou adicionar uma nova empilhadeira.</p>
-                </div>
-              )}
-            </CardContent>
-          </Card>
-          
-          {/* Pagination */}
-          {filteredForklifts.length > 0 && (
-            <div className="flex justify-center">
-              <Pagination>
-                <PaginationContent>
-                  <PaginationItem>
-                    <PaginationPrevious href="#" />
-                  </PaginationItem>
-                  <PaginationItem>
-                    <PaginationLink href="#" isActive>1</PaginationLink>
-                  </PaginationItem>
-                  <PaginationItem>
-                    <PaginationLink href="#">2</PaginationLink>
-                  </PaginationItem>
-                  <PaginationItem>
-                    <PaginationLink href="#">3</PaginationLink>
-                  </PaginationItem>
-                  <PaginationItem>
-                    <PaginationNext href="#" />
-                  </PaginationItem>
-                </PaginationContent>
-              </Pagination>
+          {filteredForklifts.length === 0 && (
+            <div className="text-center py-12 text-muted-foreground">
+              <div className="text-4xl mb-4">🔍</div>
+              <h3 className="text-lg font-medium mb-2">Nenhuma empilhadeira encontrada</h3>
+              <p>Tente ajustar os filtros ou adicionar uma nova empilhadeira.</p>
             </div>
           )}
-        </main>
-      </div>
+        </CardContent>
+      </Card>
+      
+      {/* Pagination */}
+      {filteredForklifts.length > 0 && (
+        <div className="flex justify-center">
+          <Pagination>
+            <PaginationContent>
+              <PaginationItem>
+                <PaginationPrevious href="#" />
+              </PaginationItem>
+              <PaginationItem>
+                <PaginationLink href="#" isActive>1</PaginationLink>
+              </PaginationItem>
+              <PaginationItem>
+                <PaginationLink href="#">2</PaginationLink>
+              </PaginationItem>
+              <PaginationItem>
+                <PaginationLink href="#">3</PaginationLink>
+              </PaginationItem>
+              <PaginationItem>
+                <PaginationNext href="#" />
+              </PaginationItem>
+            </PaginationContent>
+          </Pagination>
+        </div>
+      )}
       
       {/* Add/Edit Forklift Dialog */}
       <ForkliftDialog 
