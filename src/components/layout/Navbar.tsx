@@ -7,10 +7,11 @@ import ThemeToggle from '@/components/common/ThemeToggle';
 import { cn } from '@/lib/utils';
 import { useAppStore } from '@/stores/useAppStore';
 import { StatusOperacao, StatusManutencao } from "@/types";
+import { useNavigate } from "react-router-dom";
 
 const Navbar: React.FC = () => {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
-  const [showConfigAlert, setShowConfigAlert] = useState(false);
+  const navigate = useNavigate();
 
   // Obter dados do Zustand
   const operacoes = useAppStore((state) => state.operacoes);
@@ -130,12 +131,12 @@ const Navbar: React.FC = () => {
         <div className="flex items-center space-x-2">
           {/* Theme Toggle */}
           <ThemeToggle />
-          {/* Settings Button */}
+          {/* Settings Button NOVO */}
           <Button
             variant="ghost"
             size="icon"
             className="hover:bg-accent transition-colors"
-            onClick={() => setShowConfigAlert(true)}
+            onClick={() => navigate('/configuracao')}
             aria-label="Configurações"
           >
             <Settings className="w-5 h-5" />
@@ -161,27 +162,7 @@ const Navbar: React.FC = () => {
       </header>
 
       {/* Configuração Placeholder Alert */}
-      {showConfigAlert && (
-        <div
-          className="fixed z-50 inset-0 flex items-center justify-center bg-black/40"
-          onClick={() => setShowConfigAlert(false)}
-        >
-          <div
-            className="bg-card border border-border rounded-lg p-6 shadow-xl min-w-[320px] max-w-xs flex flex-col items-center gap-4 cursor-auto"
-            onClick={(e) => e.stopPropagation()}
-          >
-            <Settings className="w-8 h-8 text-muted-foreground" />
-            <h2 className="font-bold text-lg text-foreground">Configurações</h2>
-            <p className="text-sm text-muted-foreground text-center">
-              Módulo de configurações em desenvolvimento.<br />
-              Em breve você poderá personalizar opções da sua conta e do sistema.
-            </p>
-            <Button variant="outline" className="mt-2" onClick={() => setShowConfigAlert(false)}>
-              Fechar
-            </Button>
-          </div>
-        </div>
-      )}
+      {/* Remover Configuração Placeholder Alert */}
 
       {/* Mobile Menu Overlay */}
       {isMobileMenuOpen && (
