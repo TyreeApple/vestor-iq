@@ -1,8 +1,9 @@
+
 import React, { useState } from 'react';
 import { Button } from "@/components/ui/button";
 import { useIsMobile } from '@/hooks/use-mobile';
 import { Input } from '@/components/ui/input';
-import { Search, Plus, Users, UserCheck, Clock, Award, TrendingUp, Activity } from 'lucide-react';
+import { Search, Plus, Users, UserCheck, Clock, Award, TrendingUp, Activity, Filter, Grid3X3, List } from 'lucide-react';
 import { Operador, FuncaoOperador, StatusOperador, TipoCertificacao, StatusCertificacao } from '@/types';
 import { useToast } from '@/hooks/use-toast';
 import OperatorDialog from '@/components/operators/OperatorDialog';
@@ -13,6 +14,7 @@ import { useFilters } from '@/hooks/use-filters';
 import PageHeader from '@/components/layout/PageHeader';
 import ModernKpiCard from '@/components/dashboard/ModernKpiCard';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 
 // Mock data for operators
 const initialOperators: Operador[] = [
@@ -199,6 +201,7 @@ const OperatorsPage = () => {
   const isMobile = useIsMobile();
   const { toast } = useToast();
   const [operators, setOperators] = useState<Operador[]>(initialOperators);
+  const [viewMode, setViewMode] = useState<'grid' | 'list'>('grid');
   
   // Dialog states
   const [addDialogOpen, setAddDialogOpen] = useState(false);
@@ -221,28 +224,6 @@ const OperatorsPage = () => {
 
   // Filter configuration for advanced filters
   const filterOptions = [
-    {
-      key: 'status',
-      label: 'Status',
-      type: 'select' as const,
-      options: [
-        { value: StatusOperador.ATIVO, label: 'Ativo' },
-        { value: StatusOperador.INATIVO, label: 'Inativo' },
-        { value: StatusOperador.FERIAS, label: 'Férias' },
-        { value: StatusOperador.AFASTADO, label: 'Afastado' }
-      ]
-    },
-    {
-      key: 'funcao',
-      label: 'Função',
-      type: 'select' as const,
-      options: [
-        { value: FuncaoOperador.OPERADOR, label: 'Operador' },
-        { value: FuncaoOperador.SUPERVISOR, label: 'Supervisor' },
-        { value: FuncaoOperador.COORDENADOR, label: 'Coordenador' },
-        { value: FuncaoOperador.GERENTE, label: 'Gerente' }
-      ]
-    },
     {
       key: 'setor',
       label: 'Setor',
@@ -388,45 +369,98 @@ const OperatorsPage = () => {
         />
       </div>
 
-      {/* Enhanced Search and Filter Section */}
-      <Card className="glass-card">
-        <CardHeader className="pb-4">
-          <CardTitle className="text-lg font-semibold text-foreground flex items-center gap-2">
-            <Search className="w-5 h-5" />
-            Busca e Filtros
-          </CardTitle>
-        </CardHeader>
-        <CardContent>
-          <div className="flex flex-col lg:flex-row gap-4 items-start lg:items-end">
-            <div className="flex-1 space-y-2">
-              <label className="text-sm font-medium text-muted-foreground">Buscar Operador</label>
-              <div className="relative">
-                <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground w-4 h-4" />
-                <Input 
-                  type="text" 
-                  placeholder="Buscar por nome, CPF, email ou setor..." 
-                  className="pl-10 bg-background/50 border-border/50 focus:border-primary/50 focus:ring-primary/20"
-                  value={search}
-                  onChange={(e) => setSearch(e.target.value)}
-                />
-              </div>
-            </div>
-            
-            <div className="flex gap-3">
-              <AdvancedFilters
-                filters={filterOptions}
-                values={filters}
-                onFiltersChange={setFilters}
-                onClearFilters={clearFilters}
-                triggerProps={{
-                  variant: "outline",
-                  className: "border-border/50 text-foreground hover:bg-accent/50 hover:text-accent-foreground shadow-sm"
-                }}
-              />
-            </div>
+      {/* Enhanced Inline Filter Section */}
+      <div className="bg-slate-800/30 backdrop-blur-sm border border-slate-700/50 rounded-xl p-4">
+        <div className="flex flex-col lg:flex-row gap-4 items-start lg:items-center">
+          {/* Search */}
+          <div className="flex-1 relative">
+            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-slate-400 w-4 h-4" />
+            <Input 
+              type="text" 
+              placeholder="Buscar por ID ou modelo..." 
+              className="pl-10 bg-slate-900/50 border-slate-600/50 text-slate-100 placeholder:text-slate-400 focus:border-blue-500/50 focus:ring-blue-500/20"
+              value={search}
+              onChange={(e) => setSearch(e.target.value)}
+            />
           </div>
-        </CardContent>
-      </Card>
+
+          {/* Status Filter */}
+          <div className="w-full lg:w-auto min-w-[160px]">
+            <Select
+              value={filters.status || 'all'}
+              onValueChange={(value) => setFilters({ ...filters, status: value === 'all' ? '' : value })}
+            >
+              <SelectTrigger className="bg-slate-900/50 border-slate-600/50 text-slate-100 hover:bg-slate-800/70 transition-colors">
+                <SelectValue placeholder="Todos os Status" />
+              </SelectTrigger>
+              <SelectContent className="bg-slate-800 border-slate-600">
+                <SelectItem value="all" className="text-slate-100 hover:bg-slate-700 focus:bg-slate-700">Todos os Status</SelectItem>
+                <SelectItem value={StatusOperador.ATIVO} className="text-slate-100 hover:bg-slate-700 focus:bg-slate-700">Ativo</SelectItem>
+                <SelectItem value={StatusOperador.INATIVO} className="text-slate-100 hover:bg-slate-700 focus:bg-slate-700">Inativo</SelectItem>
+                <SelectItem value={StatusOperador.FERIAS} className="text-slate-100 hover:bg-slate-700 focus:bg-slate-700">Férias</SelectItem>
+                <SelectItem value={StatusOperador.AFASTADO} className="text-slate-100 hover:bg-slate-700 focus:bg-slate-700">Afastado</SelectItem>
+              </SelectContent>
+            </Select>
+          </div>
+
+          {/* Function Filter */}
+          <div className="w-full lg:w-auto min-w-[160px]">
+            <Select
+              value={filters.funcao || 'all'}
+              onValueChange={(value) => setFilters({ ...filters, funcao: value === 'all' ? '' : value })}
+            >
+              <SelectTrigger className="bg-slate-900/50 border-slate-600/50 text-slate-100 hover:bg-slate-800/70 transition-colors">
+                <SelectValue placeholder="Todas as Funções" />
+              </SelectTrigger>
+              <SelectContent className="bg-slate-800 border-slate-600">
+                <SelectItem value="all" className="text-slate-100 hover:bg-slate-700 focus:bg-slate-700">Todas as Funções</SelectItem>
+                <SelectItem value={FuncaoOperador.OPERADOR} className="text-slate-100 hover:bg-slate-700 focus:bg-slate-700">Operador</SelectItem>
+                <SelectItem value={FuncaoOperador.SUPERVISOR} className="text-slate-100 hover:bg-slate-700 focus:bg-slate-700">Supervisor</SelectItem>
+                <SelectItem value={FuncaoOperador.COORDENADOR} className="text-slate-100 hover:bg-slate-700 focus:bg-slate-700">Coordenador</SelectItem>
+                <SelectItem value={FuncaoOperador.GERENTE} className="text-slate-100 hover:bg-slate-700 focus:bg-slate-700">Gerente</SelectItem>
+              </SelectContent>
+            </Select>
+          </div>
+
+          {/* Advanced Filters Button */}
+          <AdvancedFilters
+            filters={filterOptions}
+            values={filters}
+            onFiltersChange={setFilters}
+            onClearFilters={clearFilters}
+            triggerProps={{
+              variant: "outline",
+              className: "bg-slate-900/50 border-slate-600/50 text-slate-100 hover:bg-slate-800/70 hover:text-slate-100 transition-colors"
+            }}
+          />
+
+          {/* View Toggle */}
+          <div className="flex gap-1 p-1 bg-slate-900/50 rounded-lg border border-slate-600/50">
+            <Button
+              variant={viewMode === 'grid' ? 'default' : 'ghost'}
+              size="sm"
+              onClick={() => setViewMode('grid')}
+              className={viewMode === 'grid' 
+                ? 'bg-blue-600 hover:bg-blue-700 text-white' 
+                : 'text-slate-300 hover:text-slate-100 hover:bg-slate-700/50'
+              }
+            >
+              <Grid3X3 className="w-4 h-4" />
+            </Button>
+            <Button
+              variant={viewMode === 'list' ? 'default' : 'ghost'}
+              size="sm"
+              onClick={() => setViewMode('list')}
+              className={viewMode === 'list' 
+                ? 'bg-blue-600 hover:bg-blue-700 text-white' 
+                : 'text-slate-300 hover:text-slate-100 hover:bg-slate-700/50'
+              }
+            >
+              <List className="w-4 h-4" />
+            </Button>
+          </div>
+        </div>
+      </div>
 
       {/* Operators Grid */}
       <div className="space-y-6">
