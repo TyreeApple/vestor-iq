@@ -26,12 +26,18 @@ import {
   Edit, 
   Eye, 
   FileText, 
-  Filter, 
   MoreVertical, 
   Search, 
   Trash2, 
   User,
-  Wrench
+  Wrench,
+  Filter,
+  SortAsc,
+  SortDesc,
+  Clock,
+  CheckCircle,
+  AlertTriangle,
+  Play
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { OrdemServico, StatusManutencao, TipoManutencao, PrioridadeOperacao } from '@/types';
@@ -103,13 +109,11 @@ const MaintenanceHistoryTable: React.FC<MaintenanceHistoryTableProps> = ({
           bValue = new Date(b.dataConclusao || '');
           break;
         case 'prioridade':
-          // Create priority order using enum values
-          const priorityOrder: Record<string, number> = {
-            [PrioridadeOperacao.CRITICA]: 4,
-            [PrioridadeOperacao.ALTA]: 3,
-            [PrioridadeOperacao.NORMAL]: 2,
-            [PrioridadeOperacao.BAIXA]: 1
-          };
+          const priorityOrder: Record<string, number> = {};
+          priorityOrder[PrioridadeOperacao.CRITICA] = 4;
+          priorityOrder[PrioridadeOperacao.ALTA] = 3;
+          priorityOrder[PrioridadeOperacao.NORMAL] = 2;
+          priorityOrder[PrioridadeOperacao.BAIXA] = 1;
           aValue = priorityOrder[a.prioridade] || 0;
           bValue = priorityOrder[b.prioridade] || 0;
           break;
@@ -173,6 +177,19 @@ const MaintenanceHistoryTable: React.FC<MaintenanceHistoryTableProps> = ({
     }
   };
 
+  const getStatusIcon = (status: StatusManutencao) => {
+    switch (status) {
+      case StatusManutencao.ABERTA:
+        return <Clock className="w-3 h-3" />;
+      case StatusManutencao.EM_ANDAMENTO:
+        return <Play className="w-3 h-3" />;
+      case StatusManutencao.CONCLUIDA:
+        return <CheckCircle className="w-3 h-3" />;
+      default:
+        return <Clock className="w-3 h-3" />;
+    }
+  };
+
   const getPriorityVariant = (priority: PrioridadeOperacao) => {
     switch (priority) {
       case PrioridadeOperacao.CRITICA:
@@ -199,128 +216,178 @@ const MaintenanceHistoryTable: React.FC<MaintenanceHistoryTableProps> = ({
     }
   };
 
+  const getSortIcon = (field: SortField) => {
+    if (sortField !== field) return <ArrowUpDown className="ml-1 h-3 w-3 opacity-50" />;
+    return sortDirection === 'asc' ? 
+      <SortAsc className="ml-1 h-3 w-3 text-blue-500" /> : 
+      <SortDesc className="ml-1 h-3 w-3 text-blue-500" />;
+  };
+
   return (
     <div className="space-y-6">
-      {/* Search and Filters */}
-      <div className="flex flex-col sm:flex-row gap-4">
-        <div className="relative flex-1">
-          <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground w-4 h-4" />
-          <Input
-            placeholder="Buscar por ID, modelo, problema ou responsável..."
-            value={searchTerm}
-            onChange={(e) => setSearchTerm(e.target.value)}
-            className="pl-10"
-          />
-        </div>
-        
-        <div className="flex gap-2">
-          <select
-            value={columnFilters.status || ''}
-            onChange={(e) => setColumnFilters({ ...columnFilters, status: e.target.value })}
-            className="px-3 py-2 border border-input bg-background rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-ring"
-          >
-            <option value="">Todos os Status</option>
-            <option value="aberta">Aberta</option>
-            <option value="andamento">Em Andamento</option>
-            <option value="concluida">Concluída</option>
-          </select>
+      {/* Enhanced Search and Filters */}
+      <div className="bg-gradient-to-r from-slate-900 to-slate-800 rounded-xl p-6 shadow-lg border border-slate-700">
+        <div className="space-y-4">
+          {/* Search Bar */}
+          <div className="relative">
+            <Search className="absolute left-4 top-1/2 transform -translate-y-1/2 text-slate-400 w-5 h-5" />
+            <Input
+              placeholder="Buscar por ID, modelo, problema ou responsável..."
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+              className="pl-12 h-12 bg-slate-800 border-slate-600 text-white placeholder:text-slate-400 focus:border-blue-500 focus:ring-blue-500 text-lg"
+            />
+          </div>
           
-          <select
-            value={columnFilters.tipo || ''}
-            onChange={(e) => setColumnFilters({ ...columnFilters, tipo: e.target.value })}
-            className="px-3 py-2 border border-input bg-background rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-ring"
-          >
-            <option value="">Todos os Tipos</option>
-            <option value="preventiva">Preventiva</option>
-            <option value="corretiva">Corretiva</option>
-            <option value="preditiva">Preditiva</option>
-          </select>
+          {/* Filter Controls */}
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+            <div className="space-y-2">
+              <label className="text-sm font-medium text-slate-300">Status</label>
+              <select
+                value={columnFilters.status || ''}
+                onChange={(e) => setColumnFilters({ ...columnFilters, status: e.target.value })}
+                className="w-full px-4 py-3 border border-slate-600 bg-slate-800 text-white rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+              >
+                <option value="">Todos os Status</option>
+                <option value="aberta">Aberta</option>
+                <option value="andamento">Em Andamento</option>
+                <option value="concluida">Concluída</option>
+              </select>
+            </div>
+            
+            <div className="space-y-2">
+              <label className="text-sm font-medium text-slate-300">Tipo</label>
+              <select
+                value={columnFilters.tipo || ''}
+                onChange={(e) => setColumnFilters({ ...columnFilters, tipo: e.target.value })}
+                className="w-full px-4 py-3 border border-slate-600 bg-slate-800 text-white rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+              >
+                <option value="">Todos os Tipos</option>
+                <option value="preventiva">Preventiva</option>
+                <option value="corretiva">Corretiva</option>
+                <option value="preditiva">Preditiva</option>
+              </select>
+            </div>
+
+            <div className="space-y-2">
+              <label className="text-sm font-medium text-slate-300">Prioridade</label>
+              <select
+                value={columnFilters.prioridade || ''}
+                onChange={(e) => setColumnFilters({ ...columnFilters, prioridade: e.target.value })}
+                className="w-full px-4 py-3 border border-slate-600 bg-slate-800 text-white rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+              >
+                <option value="">Todas as Prioridades</option>
+                <option value="critica">Crítica</option>
+                <option value="alta">Alta</option>
+                <option value="normal">Normal</option>
+                <option value="baixa">Baixa</option>
+              </select>
+            </div>
+          </div>
         </div>
       </div>
 
-      {/* Table */}
-      <div className="border rounded-lg bg-card shadow-sm overflow-hidden">
+      {/* Enhanced Table */}
+      <div className="bg-gradient-to-br from-slate-900 to-slate-800 rounded-xl overflow-hidden shadow-2xl border border-slate-700">
         <Table>
           <TableHeader>
-            <TableRow className="bg-muted/50">
-              <TableHead className="w-24">
+            <TableRow className="bg-gradient-to-r from-slate-800 to-slate-700 border-slate-600 hover:bg-slate-700/50">
+              <TableHead className="text-slate-200 font-semibold">
                 <Button
                   variant="ghost"
                   size="sm"
                   onClick={() => handleSort('id')}
-                  className="h-auto p-0 font-medium"
+                  className="h-auto p-0 font-semibold text-slate-200 hover:text-white"
                 >
                   ID
-                  <ArrowUpDown className="ml-1 h-3 w-3" />
+                  {getSortIcon('id')}
                 </Button>
               </TableHead>
-              <TableHead>Empilhadeira</TableHead>
-              <TableHead>Tipo</TableHead>
-              <TableHead>Problema</TableHead>
-              <TableHead>Status</TableHead>
-              <TableHead>Prioridade</TableHead>
-              <TableHead>Responsável</TableHead>
-              <TableHead>
+              <TableHead className="text-slate-200 font-semibold">Empilhadeira</TableHead>
+              <TableHead className="text-slate-200 font-semibold">Tipo</TableHead>
+              <TableHead className="text-slate-200 font-semibold">Problema</TableHead>
+              <TableHead className="text-slate-200 font-semibold">Status</TableHead>
+              <TableHead className="text-slate-200 font-semibold">
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  onClick={() => handleSort('prioridade')}
+                  className="h-auto p-0 font-semibold text-slate-200 hover:text-white"
+                >
+                  Prioridade
+                  {getSortIcon('prioridade')}
+                </Button>
+              </TableHead>
+              <TableHead className="text-slate-200 font-semibold">Responsável</TableHead>
+              <TableHead className="text-slate-200 font-semibold">
                 <Button
                   variant="ghost"
                   size="sm"
                   onClick={() => handleSort('dataAbertura')}
-                  className="h-auto p-0 font-medium"
+                  className="h-auto p-0 font-semibold text-slate-200 hover:text-white"
                 >
-                  Data Abertura
-                  <ArrowUpDown className="ml-1 h-3 w-3" />
+                  Abertura
+                  {getSortIcon('dataAbertura')}
                 </Button>
               </TableHead>
-              <TableHead>
+              <TableHead className="text-slate-200 font-semibold">
                 <Button
                   variant="ghost"
                   size="sm"
                   onClick={() => handleSort('dataConclusao')}
-                  className="h-auto p-0 font-medium"
+                  className="h-auto p-0 font-semibold text-slate-200 hover:text-white"
                 >
-                  Data Conclusão
-                  <ArrowUpDown className="ml-1 h-3 w-3" />
+                  Conclusão
+                  {getSortIcon('dataConclusao')}
                 </Button>
               </TableHead>
-              <TableHead>
+              <TableHead className="text-slate-200 font-semibold">
                 <Button
                   variant="ghost"
                   size="sm"
                   onClick={() => handleSort('custos.total')}
-                  className="h-auto p-0 font-medium"
+                  className="h-auto p-0 font-semibold text-slate-200 hover:text-white"
                 >
                   Custo
-                  <ArrowUpDown className="ml-1 h-3 w-3" />
+                  {getSortIcon('custos.total')}
                 </Button>
               </TableHead>
-              <TableHead className="w-20">Ações</TableHead>
+              <TableHead className="text-slate-200 font-semibold w-20">Ações</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
-            {paginatedData.map((maintenance) => (
-              <TableRow key={maintenance.id} className="hover:bg-muted/30 transition-colors">
-                <TableCell className="font-medium">#{maintenance.id}</TableCell>
+            {paginatedData.map((maintenance, index) => (
+              <TableRow 
+                key={maintenance.id} 
+                className={cn(
+                  "transition-all duration-200 border-slate-700/50",
+                  index % 2 === 0 ? "bg-slate-800/30" : "bg-slate-800/50",
+                  "hover:bg-slate-700/50 hover:scale-[1.01] hover:shadow-lg"
+                )}
+              >
+                <TableCell className="font-bold text-blue-400">#{maintenance.id}</TableCell>
                 <TableCell>
-                  <div>
-                    <p className="font-medium">{maintenance.empilhadeira?.modelo || maintenance.forkliftModel}</p>
-                    <p className="text-xs text-muted-foreground">{maintenance.empilhadeiraId || maintenance.forkliftId}</p>
+                  <div className="space-y-1">
+                    <p className="font-semibold text-white">{maintenance.empilhadeira?.modelo || maintenance.forkliftModel}</p>
+                    <p className="text-xs text-slate-400">{maintenance.empilhadeiraId || maintenance.forkliftId}</p>
                   </div>
                 </TableCell>
                 <TableCell>
-                  <div className="flex items-center gap-2">
+                  <div className="flex items-center gap-2 text-slate-300">
                     {getTypeIcon(maintenance.tipo)}
-                    <span className="capitalize text-sm">{maintenance.tipo.toLowerCase()}</span>
+                    <span className="capitalize font-medium">{maintenance.tipo.toLowerCase()}</span>
                   </div>
                 </TableCell>
                 <TableCell>
                   <div className="max-w-xs">
-                    <p className="truncate text-sm" title={maintenance.problema}>
+                    <p className="truncate text-slate-200 font-medium" title={maintenance.problema}>
                       {maintenance.problema}
                     </p>
                   </div>
                 </TableCell>
                 <TableCell>
-                  <Badge variant={getStatusVariant(maintenance.status) as any} size="sm">
+                  <Badge variant={getStatusVariant(maintenance.status) as any} size="sm" className="gap-1">
+                    {getStatusIcon(maintenance.status)}
                     {maintenance.status}
                   </Badge>
                 </TableCell>
@@ -330,27 +397,27 @@ const MaintenanceHistoryTable: React.FC<MaintenanceHistoryTableProps> = ({
                   </Badge>
                 </TableCell>
                 <TableCell>
-                  <div className="flex items-center gap-2">
-                    <User className="w-4 h-4 text-muted-foreground" />
-                    <span className="text-sm">{maintenance.reportedBy || 'Sistema'}</span>
+                  <div className="flex items-center gap-2 text-slate-300">
+                    <User className="w-4 h-4" />
+                    <span className="font-medium">{maintenance.reportedBy || 'Sistema'}</span>
+                  </div>
+                </TableCell>
+                <TableCell>
+                  <div className="flex items-center gap-2 text-slate-300">
+                    <Calendar className="w-4 h-4" />
+                    <span className="font-medium">{formatDate(maintenance.dataAbertura || maintenance.reportedDate || '')}</span>
+                  </div>
+                </TableCell>
+                <TableCell>
+                  <div className="flex items-center gap-2 text-slate-300">
+                    <Calendar className="w-4 h-4" />
+                    <span className="font-medium">{formatDate(maintenance.dataConclusao || '')}</span>
                   </div>
                 </TableCell>
                 <TableCell>
                   <div className="flex items-center gap-2">
-                    <Calendar className="w-4 h-4 text-muted-foreground" />
-                    <span className="text-sm">{formatDate(maintenance.dataAbertura || maintenance.reportedDate || '')}</span>
-                  </div>
-                </TableCell>
-                <TableCell>
-                  <div className="flex items-center gap-2">
-                    <Calendar className="w-4 h-4 text-muted-foreground" />
-                    <span className="text-sm">{formatDate(maintenance.dataConclusao || '')}</span>
-                  </div>
-                </TableCell>
-                <TableCell>
-                  <div className="flex items-center gap-2">
-                    <DollarSign className="w-4 h-4 text-muted-foreground" />
-                    <span className="text-sm font-medium">
+                    <DollarSign className="w-4 h-4 text-green-400" />
+                    <span className="font-bold text-green-400">
                       {maintenance.custos?.total ? 
                         new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(maintenance.custos.total) : 
                         'R$ 0,00'
@@ -361,28 +428,28 @@ const MaintenanceHistoryTable: React.FC<MaintenanceHistoryTableProps> = ({
                 <TableCell>
                   <DropdownMenu>
                     <DropdownMenuTrigger asChild>
-                      <Button variant="ghost" size="icon" className="h-8 w-8">
+                      <Button variant="ghost" size="icon" className="h-8 w-8 text-slate-400 hover:text-white hover:bg-slate-600">
                         <MoreVertical className="w-4 h-4" />
                       </Button>
                     </DropdownMenuTrigger>
-                    <DropdownMenuContent align="end" className="w-48">
+                    <DropdownMenuContent align="end" className="w-48 bg-slate-800 border-slate-700">
                       {onView && (
-                        <DropdownMenuItem onClick={() => onView(maintenance)}>
+                        <DropdownMenuItem onClick={() => onView(maintenance)} className="text-slate-300 hover:text-white hover:bg-slate-700">
                           <Eye className="w-4 h-4 mr-2" />
                           Visualizar
                         </DropdownMenuItem>
                       )}
-                      <DropdownMenuItem onClick={() => onEdit(maintenance)}>
+                      <DropdownMenuItem onClick={() => onEdit(maintenance)} className="text-slate-300 hover:text-white hover:bg-slate-700">
                         <Edit className="w-4 h-4 mr-2" />
                         Editar
                       </DropdownMenuItem>
-                      <DropdownMenuItem>
+                      <DropdownMenuItem className="text-slate-300 hover:text-white hover:bg-slate-700">
                         <FileText className="w-4 h-4 mr-2" />
                         Relatório
                       </DropdownMenuItem>
                       <DropdownMenuItem 
                         onClick={() => onDelete(maintenance.id)}
-                        className="text-red-600 hover:text-red-700 hover:bg-red-50 dark:hover:bg-red-900/20"
+                        className="text-red-400 hover:text-red-300 hover:bg-red-900/20"
                       >
                         <Trash2 className="w-4 h-4 mr-2" />
                         Excluir
@@ -396,10 +463,12 @@ const MaintenanceHistoryTable: React.FC<MaintenanceHistoryTableProps> = ({
         </Table>
 
         {paginatedData.length === 0 && (
-          <div className="p-8 text-center">
-            <Wrench className="w-12 h-12 text-muted-foreground/50 mx-auto mb-4" />
-            <h3 className="text-lg font-medium text-muted-foreground mb-2">Nenhuma manutenção encontrada</h3>
-            <p className="text-sm text-muted-foreground">
+          <div className="p-12 text-center bg-slate-800/50">
+            <div className="w-16 h-16 mx-auto mb-4 bg-slate-700 rounded-full flex items-center justify-center">
+              <Wrench className="w-8 h-8 text-slate-400" />
+            </div>
+            <h3 className="text-xl font-semibold text-slate-300 mb-2">Nenhuma manutenção encontrada</h3>
+            <p className="text-slate-400">
               {searchTerm || Object.values(columnFilters).some(f => f) 
                 ? "Tente ajustar os filtros de busca" 
                 : "Não há registros de manutenção no histórico"
@@ -409,18 +478,20 @@ const MaintenanceHistoryTable: React.FC<MaintenanceHistoryTableProps> = ({
         )}
       </div>
 
-      {/* Pagination */}
+      {/* Enhanced Pagination */}
       {totalPages > 1 && (
-        <PaginationControls
-          currentPage={currentPage}
-          totalPages={totalPages}
-          onPageChange={goToPage}
-          canGoPrevious={canGoPrevious}
-          canGoNext={canGoNext}
-          startIndex={startIndex}
-          endIndex={endIndex}
-          totalItems={filteredAndSortedData.length}
-        />
+        <div className="bg-slate-800/50 rounded-lg p-4 border border-slate-700">
+          <PaginationControls
+            currentPage={currentPage}
+            totalPages={totalPages}
+            onPageChange={goToPage}
+            canGoPrevious={canGoPrevious}
+            canGoNext={canGoNext}
+            startIndex={startIndex}
+            endIndex={endIndex}
+            totalItems={filteredAndSortedData.length}
+          />
+        </div>
       )}
     </div>
   );
