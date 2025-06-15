@@ -1,7 +1,8 @@
+
 import React from "react";
 import { CheckCircle, AlertTriangle, Users, Activity } from "lucide-react";
 import { MetricasDashboard } from "@/types";
-import StandardCard from "@/components/common/StandardCard";
+import PremiumMetricCard from "@/components/common/PremiumMetricCard";
 
 const initialStats: MetricasDashboard = {
   frotaTotal: 15,
@@ -24,69 +25,42 @@ interface DashboardOverviewProps {
   stats?: MetricasDashboard;
 }
 
-interface OverviewCard {
-  title: string;
-  value: (stats: MetricasDashboard) => number;
-  icon: React.ElementType;
-  status: 'success' | 'warning' | 'info' | 'danger';
-}
-
-const CARDS: OverviewCard[] = [
-  {
-    title: "Total Frota",
-    value: (stats: MetricasDashboard) => stats.frotaTotal,
-    icon: Activity,
-    status: "info",
-  },
-  {
-    title: "Operacionais",
-    value: (stats: MetricasDashboard) => stats.empilhadeirasOperacionais,
-    icon: CheckCircle,
-    status: "success",
-  },
-  {
-    title: "Manutenção",
-    value: (stats: MetricasDashboard) => stats.empilhadeirasManutencao,
-    icon: AlertTriangle,
-    status: "warning",
-  },
-  {
-    title: "Operadores",
-    value: (stats: MetricasDashboard) => stats.operadoresAtivos,
-    icon: Users,
-    status: "info",
-  },
-];
-
 const DashboardOverview: React.FC<DashboardOverviewProps> = ({
   stats = initialStats,
 }) => {
   return (
-    <section className="w-full max-w-screen-xl mx-auto px-2 md:px-0 mt-6">
+    <section className="w-full mx-auto px-2 md:px-0 mt-8">
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-6">
-        <StandardCard
+        <PremiumMetricCard
           title="Total Frota"
           value={stats.frotaTotal}
           icon={Activity}
-          variant="info"
+          variant="primary"
+          subtitle="Empilhadeiras registradas"
+          trend={{ value: 8, isPositive: true }}
         />
-        <StandardCard
+        <PremiumMetricCard
           title="Operacionais"
           value={stats.empilhadeirasOperacionais}
           icon={CheckCircle}
           variant="success"
+          subtitle="Equipamentos ativos"
+          trend={{ value: 15, isPositive: true }}
         />
-        <StandardCard
+        <PremiumMetricCard
           title="Manutenção"
           value={stats.empilhadeirasManutencao}
           icon={AlertTriangle}
           variant="warning"
+          subtitle="Necessitam atenção"
         />
-        <StandardCard
+        <PremiumMetricCard
           title="Operadores"
           value={stats.operadoresAtivos}
           icon={Users}
           variant="info"
+          subtitle="Equipe ativa"
+          trend={{ value: 12, isPositive: true }}
         />
       </div>
     </section>
