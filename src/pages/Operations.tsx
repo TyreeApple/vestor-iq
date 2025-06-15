@@ -3,7 +3,7 @@ import { Button } from "@/components/ui/button";
 import { useIsMobile } from '@/hooks/use-mobile';
 import { cn } from '@/lib/utils';
 import { Input } from '@/components/ui/input';
-import { Calendar, Clock, Plus, Search, Truck, User, Filter, MapPin, AlertCircle, Play, CheckCircle2, Fuel, Timer, Gauge } from 'lucide-react';
+import { Calendar, Clock, Plus, Search, Truck, User, Filter, MapPin, AlertCircle, Play, CheckCircle2, Fuel, Timer, Gauge, Activity, TrendingUp } from 'lucide-react';
 import { Operacao, StatusOperacao, TipoOperacao, PrioridadeOperacao } from '@/types';
 import { useToast } from '@/hooks/use-toast';
 import OperationDialog from '@/components/operations/OperationDialog';
@@ -11,6 +11,8 @@ import OperationDetails from '@/components/operations/OperationDetails';
 import AdvancedFilters from '@/components/common/AdvancedFilters';
 import { useFilters } from '@/hooks/use-filters';
 import PageHeader from '@/components/layout/PageHeader';
+import ModernKpiCard from '@/components/dashboard/ModernKpiCard';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 
 // Mock data for operations - using proper Portuguese interface
 const initialOperations: Operacao[] = [
@@ -177,6 +179,28 @@ const OperationsPage = () => {
         { value: 'Recebimento', label: 'Recebimento' },
         { value: 'Produção', label: 'Produção' }
       ]
+    },
+    {
+      key: 'tipo',
+      label: 'Tipo',
+      type: 'select' as const,
+      options: [
+        { value: TipoOperacao.MOVIMENTACAO, label: 'Movimentação' },
+        { value: TipoOperacao.CARGA, label: 'Carga' },
+        { value: TipoOperacao.DESCARGA, label: 'Descarga' },
+        { value: TipoOperacao.ESTOQUE, label: 'Estoque' },
+        { value: TipoOperacao.PICKING, label: 'Picking' }
+      ]
+    },
+    {
+      key: 'prioridade',
+      label: 'Prioridade',
+      type: 'select' as const,
+      options: [
+        { value: PrioridadeOperacao.ALTA, label: 'Alta' },
+        { value: PrioridadeOperacao.NORMAL, label: 'Normal' },
+        { value: PrioridadeOperacao.BAIXA, label: 'Baixa' }
+      ]
     }
   ];
 
@@ -314,11 +338,11 @@ const OperationsPage = () => {
   };
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-8">
       {/* Enhanced Header */}
       <PageHeader
         title="Operações"
-        description="Controle de Operações"
+        description="Controle e monitoramento de operações em tempo real"
       >
         <Button 
           className="gap-2 bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white shadow-lg hover:shadow-xl transition-all duration-200"
@@ -332,77 +356,98 @@ const OperationsPage = () => {
         </Button>
       </PageHeader>
 
-      {/* Enhanced Statistics Cards */}
-      <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
-        <div className="group relative overflow-hidden bg-gradient-to-br from-slate-800/60 to-slate-900/80 backdrop-blur-sm border border-slate-700/50 rounded-xl p-6 shadow-xl hover:shadow-2xl transition-all duration-300 hover:scale-[1.02]">
-          <div className="absolute inset-0 bg-gradient-to-br from-blue-500/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
-          <div className="relative">
-            <h3 className="text-sm font-medium text-slate-400 mb-2">Total de Operações</h3>
-            <p className="text-3xl font-bold text-white">{stats.total}</p>
-          </div>
-        </div>
+      {/* Modern Statistics Cards using ModernKpiCard */}
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+        <ModernKpiCard
+          title="Total de Operações"
+          value={stats.total}
+          icon={Activity}
+          colorFrom="from-slate-600"
+          colorTo="to-slate-800"
+        />
         
-        <div className="group relative overflow-hidden bg-gradient-to-br from-slate-800/60 to-slate-900/80 backdrop-blur-sm border border-slate-700/50 rounded-xl p-6 shadow-xl hover:shadow-2xl transition-all duration-300 hover:scale-[1.02]">
-          <div className="absolute inset-0 bg-gradient-to-br from-green-500/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
-          <div className="relative">
-            <h3 className="text-sm font-medium text-slate-400 mb-2">Em Andamento</h3>
-            <p className="text-3xl font-bold text-green-400">{stats.active}</p>
-          </div>
-        </div>
+        <ModernKpiCard
+          title="Em Andamento"
+          value={stats.active}
+          icon={Play}
+          trend="up"
+          trendValue={12}
+          colorFrom="from-green-500"
+          colorTo="to-emerald-600"
+        />
         
-        <div className="group relative overflow-hidden bg-gradient-to-br from-slate-800/60 to-slate-900/80 backdrop-blur-sm border border-slate-700/50 rounded-xl p-6 shadow-xl hover:shadow-2xl transition-all duration-300 hover:scale-[1.02]">
-          <div className="absolute inset-0 bg-gradient-to-br from-blue-500/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
-          <div className="relative">
-            <h3 className="text-sm font-medium text-slate-400 mb-2">Concluídas</h3>
-            <p className="text-3xl font-bold text-blue-400">{stats.completed}</p>
-          </div>
-        </div>
+        <ModernKpiCard
+          title="Concluídas"
+          value={stats.completed}
+          icon={CheckCircle2}
+          colorFrom="from-blue-500"
+          colorTo="to-cyan-600"
+        />
         
-        <div className="group relative overflow-hidden bg-gradient-to-br from-slate-800/60 to-slate-900/80 backdrop-blur-sm border border-slate-700/50 rounded-xl p-6 shadow-xl hover:shadow-2xl transition-all duration-300 hover:scale-[1.02]">
-          <div className="absolute inset-0 bg-gradient-to-br from-orange-500/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
-          <div className="relative">
-            <h3 className="text-sm font-medium text-slate-400 mb-2">Consumo Total (L)</h3>
-            <p className="text-3xl font-bold text-orange-400">{stats.totalGasConsumption.toFixed(1)}</p>
-          </div>
-        </div>
+        <ModernKpiCard
+          title="Consumo Total (L)"
+          value={stats.totalGasConsumption}
+          icon={Fuel}
+          trend="down"
+          trendValue={8}
+          colorFrom="from-orange-500"
+          colorTo="to-red-600"
+        />
       </div>
 
       {/* Enhanced Search and Filter Section */}
-      <div className="w-full bg-gradient-to-br from-slate-800/60 to-slate-900/80 backdrop-blur-sm border border-slate-700/50 rounded-xl p-6 mb-8 shadow-xl">
-        <div className="flex flex-col lg:flex-row gap-4 items-start lg:items-end">
-          <div className="flex-1 space-y-2">
-            <label className="text-sm font-medium text-slate-200">Buscar Operação</label>
-            <div className="relative">
-              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-slate-400 w-4 h-4" />
-              <Input 
-                type="text" 
-                placeholder="Buscar por ID ou setor..." 
-                className="pl-10 bg-slate-700/50 border-slate-600 text-white placeholder:text-slate-400 focus:ring-blue-500 focus:border-blue-500"
-                value={search}
-                onChange={(e) => setSearch(e.target.value)}
+      <Card className="glass-card">
+        <CardHeader className="pb-4">
+          <CardTitle className="text-lg font-semibold text-foreground flex items-center gap-2">
+            <Search className="w-5 h-5" />
+            Busca e Filtros
+          </CardTitle>
+        </CardHeader>
+        <CardContent>
+          <div className="flex flex-col lg:flex-row gap-4 items-start lg:items-end">
+            <div className="flex-1 space-y-2">
+              <label className="text-sm font-medium text-muted-foreground">Buscar Operação</label>
+              <div className="relative">
+                <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground w-4 h-4" />
+                <Input 
+                  type="text" 
+                  placeholder="Buscar por ID, operador ou setor..." 
+                  className="pl-10 bg-background/50 border-border/50 focus:border-primary/50 focus:ring-primary/20"
+                  value={search}
+                  onChange={(e) => setSearch(e.target.value)}
+                />
+              </div>
+            </div>
+            
+            <div className="flex gap-3">
+              <AdvancedFilters
+                filters={filterOptions}
+                values={filters}
+                onFiltersChange={setFilters}
+                onClearFilters={clearFilters}
+                triggerProps={{
+                  variant: "outline",
+                  className: "border-border/50 text-foreground hover:bg-accent/50 hover:text-accent-foreground shadow-sm"
+                }}
               />
             </div>
           </div>
-          
-          <div className="flex gap-3">
-            <AdvancedFilters
-              filters={filterOptions}
-              values={filters}
-              onFiltersChange={setFilters}
-              onClearFilters={clearFilters}
-              triggerProps={{
-                variant: "outline",
-                className: "border-slate-600 text-slate-200 hover:bg-slate-700/50 hover:text-white"
-              }}
-            />
-          </div>
-        </div>
-      </div>
+        </CardContent>
+      </Card>
       
       {/* Compact Active Operations */}
-      <div className="mb-8">
-        <h2 className="text-2xl font-semibold mb-6 text-white">Operações em Andamento</h2>
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+      <div className="space-y-6">
+        <div className="flex items-center justify-between">
+          <h2 className="text-2xl font-semibold text-foreground flex items-center gap-2">
+            <Activity className="w-6 h-6 text-primary" />
+            Operações em Andamento
+          </h2>
+          <span className="text-sm text-muted-foreground">
+            {filteredOperations.filter(op => op.status === StatusOperacao.EM_ANDAMENTO).length} ativas
+          </span>
+        </div>
+        
+        <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-4">
           {filteredOperations
             .filter(op => op.status === StatusOperacao.EM_ANDAMENTO)
             .map((operation) => {
@@ -411,93 +456,82 @@ const OperationsPage = () => {
               const progress = calculateProgress(operation);
               
               return (
-                <div key={operation.id} className="group relative overflow-hidden bg-gradient-to-br from-slate-800/60 to-slate-900/80 backdrop-blur-sm border border-slate-700/50 rounded-lg shadow-lg hover:shadow-xl transition-all duration-300">
-                  {/* Compact Header */}
-                  <div className="p-4 pb-3">
-                    <div className="flex justify-between items-start mb-3">
+                <Card key={operation.id} className="glass-card-hover group relative overflow-hidden">
+                  {/* Priority indicator */}
+                  <div className={cn("absolute top-0 left-0 w-1 h-full", priorityInfo.bgColor)} />
+                  
+                  <CardHeader className="pb-3">
+                    <div className="flex justify-between items-start">
                       <div className="flex items-center gap-2">
-                        <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></div>
+                        <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse" />
                         <div>
-                          <h3 className="font-semibold text-white text-sm">{operation.operador?.nome}</h3>
-                          <p className="text-xs text-slate-400">#{operation.id}</p>
+                          <h3 className="font-semibold text-foreground text-sm">{operation.operador?.nome}</h3>
+                          <p className="text-xs text-muted-foreground">#{operation.id}</p>
                         </div>
                       </div>
                       
                       <div className="flex flex-col items-end gap-1">
-                        <span className="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-green-500/20 text-green-400">
+                        <span className="inline-flex items-center px-2 py-0.5 rounded-md text-xs font-medium bg-green-500/20 text-green-400 border border-green-500/30">
                           Em Andamento
                         </span>
                         <span className={cn(
-                          "inline-flex items-center px-1.5 py-0.5 rounded text-xs font-medium",
-                          priorityInfo.bgColor, priorityInfo.color
+                          "inline-flex items-center px-1.5 py-0.5 rounded text-xs font-medium border",
+                          priorityInfo.bgColor, priorityInfo.color, priorityInfo.borderColor
                         )}>
                           {operation.prioridade}
                         </span>
                       </div>
                     </div>
-                    
-                    {/* Type and Progress */}
-                    <div className="mb-3">
-                      <span className={cn("text-xs font-medium", typeInfo.color)}>
-                        {typeInfo.label}
-                      </span>
-                      <div className="mt-2">
-                        <div className="flex justify-between items-center mb-1">
-                          <span className="text-xs text-slate-400">Progresso</span>
-                          <span className="text-xs text-slate-300">{Math.round(progress)}%</span>
-                        </div>
-                        <div className="w-full bg-slate-700/50 rounded-full h-1.5">
-                          <div 
-                            className="bg-gradient-to-r from-green-500 to-emerald-500 h-1.5 rounded-full transition-all duration-500"
-                            style={{ width: `${progress}%` }}
-                          />
-                        </div>
-                      </div>
-                    </div>
-                    
-                    {/* Compact Details */}
-                    <div className="grid grid-cols-1 gap-2 text-xs">
-                      <div className="flex items-center justify-between p-2 bg-slate-800/30 rounded">
-                        <div className="flex items-center gap-1">
-                          <Truck className="w-3 h-3 text-slate-400" />
-                          <span className="text-slate-300">{operation.empilhadeira?.modelo}</span>
-                        </div>
-                      </div>
-                      
-                      <div className="flex items-center justify-between p-2 bg-slate-800/30 rounded">
-                        <div className="flex items-center gap-1">
-                          <MapPin className="w-3 h-3 text-slate-400" />
-                          <span className="text-slate-300">{operation.setor}</span>
-                        </div>
-                      </div>
-                      
-                      <div className="grid grid-cols-2 gap-2">
-                        <div className="flex items-center gap-1 p-2 bg-slate-800/30 rounded">
-                          <Clock className="w-3 h-3 text-slate-400" />
-                          <span className="text-slate-300">{formatTime(operation.dataInicio)}</span>
-                        </div>
-                        
-                        {operation.consumoGas && (
-                          <div className="flex items-center gap-1 p-2 bg-slate-800/30 rounded">
-                            <Fuel className="w-3 h-3 text-orange-400" />
-                            <span className="text-slate-300">{operation.consumoGas}L</span>
-                          </div>
-                        )}
-                      </div>
-                    </div>
-                  </div>
+                  </CardHeader>
                   
-                  {/* Compact Actions Footer */}
-                  <div className="border-t border-slate-700/50 px-4 py-3 bg-slate-800/30 flex justify-between items-center">
-                    <div className="flex items-center gap-1">
-                      <div className="w-1.5 h-1.5 bg-green-500 rounded-full animate-pulse"></div>
-                      <span className="text-xs text-slate-400">Ativo</span>
+                  <CardContent className="pt-0 space-y-3">
+                    {/* Type and Progress */}
+                    <div>
+                      <div className="flex justify-between items-center mb-2">
+                        <span className={cn("text-xs font-medium", typeInfo.color)}>
+                          {typeInfo.label}
+                        </span>
+                        <span className="text-xs text-muted-foreground">{Math.round(progress)}%</span>
+                      </div>
+                      <div className="w-full bg-secondary/50 rounded-full h-1.5">
+                        <div 
+                          className="bg-gradient-to-r from-green-500 to-emerald-500 h-1.5 rounded-full transition-all duration-500"
+                          style={{ width: `${progress}%` }}
+                        />
+                      </div>
                     </div>
-                    <div className="flex gap-2">
+                    
+                    {/* Details Grid */}
+                    <div className="grid grid-cols-2 gap-2 text-xs">
+                      <div className="flex items-center gap-1 p-2 bg-accent/30 rounded">
+                        <Truck className="w-3 h-3 text-muted-foreground" />
+                        <span className="text-foreground truncate">{operation.empilhadeira?.modelo}</span>
+                      </div>
+                      
+                      <div className="flex items-center gap-1 p-2 bg-accent/30 rounded">
+                        <MapPin className="w-3 h-3 text-muted-foreground" />
+                        <span className="text-foreground truncate">{operation.setor}</span>
+                      </div>
+                      
+                      <div className="flex items-center gap-1 p-2 bg-accent/30 rounded">
+                        <Clock className="w-3 h-3 text-muted-foreground" />
+                        <span className="text-foreground">{formatTime(operation.dataInicio)}</span>
+                      </div>
+                      
+                      {operation.consumoGas && (
+                        <div className="flex items-center gap-1 p-2 bg-accent/30 rounded">
+                          <Fuel className="w-3 h-3 text-orange-400" />
+                          <span className="text-foreground">{operation.consumoGas}L</span>
+                        </div>
+                      )}
+                    </div>
+                    
+                    {/* Actions */}
+                    <div className="flex justify-end gap-2 pt-2 border-t border-border/50">
                       <Button 
                         variant="ghost" 
                         size="sm"
-                        className="h-7 px-2 text-xs text-slate-300 hover:text-white hover:bg-slate-700/50"
+                        className="h-7 px-3 text-xs hover:bg-accent/50"
                         onClick={() => handleViewDetails(operation)}
                       >
                         Detalhes
@@ -505,49 +539,60 @@ const OperationsPage = () => {
                       <Button 
                         variant="ghost" 
                         size="sm"
-                        className="h-7 px-2 text-xs text-blue-400 hover:text-blue-300 hover:bg-blue-500/10"
+                        className="h-7 px-3 text-xs text-primary hover:text-primary/80 hover:bg-primary/10"
                         onClick={() => handleEdit(operation)}
                       >
                         Editar
                       </Button>
                     </div>
-                  </div>
-                </div>
+                  </CardContent>
+                </Card>
               );
             })}
           
           {filteredOperations.filter(op => op.status === StatusOperacao.EM_ANDAMENTO).length === 0 && (
-            <div className="col-span-full p-8 text-center bg-gradient-to-br from-slate-800/40 to-slate-900/60 backdrop-blur-sm border border-slate-700/30 rounded-xl">
-              <div className="w-12 h-12 mx-auto mb-3 rounded-full bg-slate-700/50 flex items-center justify-center">
-                <Clock className="w-6 h-6 text-slate-400" />
-              </div>
-              <p className="text-slate-400">Nenhuma operação em andamento</p>
-            </div>
+            <Card className="col-span-full glass-card">
+              <CardContent className="p-12 text-center">
+                <div className="w-16 h-16 mx-auto mb-4 rounded-full bg-accent/30 flex items-center justify-center">
+                  <Clock className="w-8 h-8 text-muted-foreground" />
+                </div>
+                <p className="text-muted-foreground text-lg">Nenhuma operação em andamento</p>
+              </CardContent>
+            </Card>
           )}
         </div>
       </div>
       
       {/* Enhanced Completed Operations Table */}
-      <div>
-        <h2 className="text-2xl font-semibold mb-6 text-white">Operações Concluídas</h2>
-        <div className="bg-gradient-to-br from-slate-800/60 to-slate-900/80 backdrop-blur-sm border border-slate-700/50 rounded-xl shadow-xl overflow-hidden">
+      <div className="space-y-6">
+        <div className="flex items-center justify-between">
+          <h2 className="text-2xl font-semibold text-foreground flex items-center gap-2">
+            <CheckCircle2 className="w-6 h-6 text-primary" />
+            Operações Concluídas
+          </h2>
+          <span className="text-sm text-muted-foreground">
+            {filteredOperations.filter(op => op.status === StatusOperacao.CONCLUIDA).length} concluídas
+          </span>
+        </div>
+        
+        <Card className="glass-card overflow-hidden">
           <div className="overflow-x-auto">
             <table className="w-full">
-              <thead className="bg-slate-800/80">
+              <thead className="bg-accent/30">
                 <tr>
-                  <th className="p-4 text-left font-semibold text-slate-200">ID</th>
-                  <th className="p-4 text-left font-semibold text-slate-200">Tipo</th>
-                  <th className="p-4 text-left font-semibold text-slate-200">Operador</th>
-                  <th className="p-4 text-left font-semibold text-slate-200">Empilhadeira</th>
-                  <th className="p-4 text-left font-semibold text-slate-200">Setor</th>
-                  <th className="p-4 text-left font-semibold text-slate-200">Data</th>
-                  <th className="p-4 text-left font-semibold text-slate-200">Duração</th>
-                  <th className="p-4 text-left font-semibold text-slate-200">Prioridade</th>
-                  <th className="p-4 text-left font-semibold text-slate-200">Consumo (L)</th>
-                  <th className="p-4 text-left font-semibold text-slate-200">Ações</th>
+                  <th className="p-4 text-left font-semibold text-foreground">ID</th>
+                  <th className="p-4 text-left font-semibold text-foreground">Tipo</th>
+                  <th className="p-4 text-left font-semibold text-foreground">Operador</th>
+                  <th className="p-4 text-left font-semibold text-foreground">Empilhadeira</th>
+                  <th className="p-4 text-left font-semibold text-foreground">Setor</th>
+                  <th className="p-4 text-left font-semibold text-foreground">Data</th>
+                  <th className="p-4 text-left font-semibold text-foreground">Duração</th>
+                  <th className="p-4 text-left font-semibold text-foreground">Prioridade</th>
+                  <th className="p-4 text-left font-semibold text-foreground">Consumo (L)</th>
+                  <th className="p-4 text-left font-semibold text-foreground">Ações</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-slate-700/50">
+              <tbody className="divide-y divide-border/50">
                 {filteredOperations
                   .filter(op => op.status === StatusOperacao.CONCLUIDA)
                   .map((operation) => {
@@ -555,11 +600,11 @@ const OperationsPage = () => {
                     const typeInfo = getOperationTypeInfo(operation.tipo);
                     
                     return (
-                      <tr key={operation.id} className="hover:bg-slate-700/30 transition-colors">
+                      <tr key={operation.id} className="hover:bg-accent/20 transition-colors">
                         <td className="p-4">
                           <div className="flex items-center gap-2">
                             <CheckCircle2 className="w-4 h-4 text-green-400" />
-                            <span className="text-white font-medium">{operation.id}</span>
+                            <span className="text-foreground font-medium">{operation.id}</span>
                           </div>
                         </td>
                         <td className="p-4">
@@ -567,21 +612,21 @@ const OperationsPage = () => {
                             {typeInfo.label}
                           </span>
                         </td>
-                        <td className="p-4 text-slate-300">{operation.operador?.nome}</td>
+                        <td className="p-4 text-foreground">{operation.operador?.nome}</td>
                         <td className="p-4">
-                          <div className="text-slate-300">{operation.empilhadeira?.modelo}</div>
-                          <div className="text-xs text-slate-500">{operation.empilhadeiraId}</div>
+                          <div className="text-foreground">{operation.empilhadeira?.modelo}</div>
+                          <div className="text-xs text-muted-foreground">{operation.empilhadeiraId}</div>
                         </td>
-                        <td className="p-4 text-slate-300">{operation.setor}</td>
+                        <td className="p-4 text-foreground">{operation.setor}</td>
                         <td className="p-4">
-                          <div className="text-slate-300">{formatDate(operation.dataInicio)}</div>
-                          <div className="text-xs text-slate-500">{formatTime(operation.dataInicio)} - {operation.dataFim ? formatTime(operation.dataFim) : 'N/A'}</div>
+                          <div className="text-foreground">{formatDate(operation.dataInicio)}</div>
+                          <div className="text-xs text-muted-foreground">{formatTime(operation.dataInicio)} - {operation.dataFim ? formatTime(operation.dataFim) : 'N/A'}</div>
                         </td>
-                        <td className="p-4 text-slate-300">{calculateDuration(operation)}</td>
+                        <td className="p-4 text-foreground">{calculateDuration(operation)}</td>
                         <td className="p-4">
                           <span className={cn(
-                            "inline-flex items-center px-2 py-1 rounded-md text-xs font-medium",
-                            priorityInfo.bgColor, priorityInfo.color, priorityInfo.borderColor, "border"
+                            "inline-flex items-center px-2 py-1 rounded-md text-xs font-medium border",
+                            priorityInfo.bgColor, priorityInfo.color, priorityInfo.borderColor
                           )}>
                             <priorityInfo.icon className="w-3 h-3 mr-1" />
                             {operation.prioridade}
@@ -590,7 +635,7 @@ const OperationsPage = () => {
                         <td className="p-4">
                           <div className="flex items-center gap-2">
                             <Fuel className="w-4 h-4 text-orange-400" />
-                            <span className="text-slate-300">{(operation.consumoGas || 0).toFixed(1)}</span>
+                            <span className="text-foreground">{(operation.consumoGas || 0).toFixed(1)}</span>
                           </div>
                         </td>
                         <td className="p-4">
@@ -598,7 +643,7 @@ const OperationsPage = () => {
                             <Button 
                               variant="ghost" 
                               size="sm"
-                              className="text-slate-400 hover:text-white hover:bg-slate-700/50"
+                              className="text-muted-foreground hover:text-foreground hover:bg-accent/50"
                               onClick={() => handleViewDetails(operation)}
                             >
                               Detalhes
@@ -606,7 +651,7 @@ const OperationsPage = () => {
                             <Button 
                               variant="ghost" 
                               size="sm"
-                              className="text-red-400 hover:text-red-300 hover:bg-red-500/10"
+                              className="text-destructive hover:text-destructive/80 hover:bg-destructive/10"
                               onClick={() => handleDeleteOperation(operation.id)}
                             >
                               Excluir
@@ -621,14 +666,14 @@ const OperationsPage = () => {
           </div>
           
           {filteredOperations.filter(op => op.status === StatusOperacao.CONCLUIDA).length === 0 && (
-            <div className="p-12 text-center">
-              <div className="w-16 h-16 mx-auto mb-4 rounded-full bg-slate-700/50 flex items-center justify-center">
-                <Calendar className="w-8 h-8 text-slate-400" />
+            <CardContent className="p-12 text-center">
+              <div className="w-16 h-16 mx-auto mb-4 rounded-full bg-accent/30 flex items-center justify-center">
+                <Calendar className="w-8 h-8 text-muted-foreground" />
               </div>
-              <p className="text-slate-400 text-lg">Nenhuma operação concluída</p>
-            </div>
+              <p className="text-muted-foreground text-lg">Nenhuma operação concluída</p>
+            </CardContent>
           )}
-        </div>
+        </Card>
       </div>
 
       {/* Add Operation Dialog */}
