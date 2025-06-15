@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { cn } from '@/lib/utils';
 import { Forklift, StatusEmpilhadeira } from '@/types';
@@ -105,22 +104,22 @@ const ForkliftCard: React.FC<ForkliftCardProps> = ({ forklift, onClick, onDelete
         </div>
       </div>
 
-      {/* Capacity Section - With badges positioned at the edges */}
+      {/* Capacity Section - With badges positioned at the edges with better spacing */}
       <div className="relative bg-gradient-to-br from-slate-800/40 to-slate-900/80 rounded-2xl p-6 mb-3 border border-slate-700/30">
-        {/* Type Badge - Top Left Corner */}
-        <div className="absolute -top-3 left-4 z-10">
-          <Badge variant="outline" className={cn("border font-semibold text-xs tracking-wider whitespace-nowrap shrink-0 px-4 py-1.5 rounded-full", getTypeBadge(forklift.tipo))}>
+        {/* Type Badge - Top Left Corner with more spacing */}
+        <div className="absolute -top-3 left-2 z-10">
+          <Badge variant="outline" className={cn("border font-semibold text-xs tracking-wider whitespace-nowrap shrink-0 px-3 py-1 rounded-full", getTypeBadge(forklift.tipo))}>
             {forklift.tipo}
           </Badge>
         </div>
 
-        {/* Status Badge - Top Right Corner */}
-        <div className="absolute -top-3 right-4 z-10">
+        {/* Status Badge - Top Right Corner with more spacing */}
+        <div className="absolute -top-3 right-2 z-10">
           {getStatusBadge(forklift.status)}
         </div>
 
-        {/* Capacity Content - Centered */}
-        <div className="text-center pt-2">
+        {/* Capacity Content - Centered with more top padding */}
+        <div className="text-center pt-4">
           <div className="text-slate-400 text-xs font-bold tracking-[2px] uppercase mb-3" style={{ color: '#6b7280' }}>
             CAPACIDADE
           </div>
