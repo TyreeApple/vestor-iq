@@ -6,9 +6,10 @@ interface ForkliftStatsCardProps {
   title: string;
   value: number;
   icon: React.ElementType;
-  info: string;
+  info?: string;
   variant?: 'default' | 'success' | 'warning' | 'danger' | 'info';
   onClick?: () => void;
+  className?: string;
 }
 
 const ForkliftStatsCard: React.FC<ForkliftStatsCardProps> = ({
@@ -17,6 +18,7 @@ const ForkliftStatsCard: React.FC<ForkliftStatsCardProps> = ({
   icon,
   variant = 'info',
   onClick,
+  className,
 }) => {
   return (
     <StandardCard
@@ -25,6 +27,7 @@ const ForkliftStatsCard: React.FC<ForkliftStatsCardProps> = ({
       icon={icon}
       variant={variant}
       onClick={onClick}
+      className={className}
     />
   );
 };
