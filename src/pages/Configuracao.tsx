@@ -24,41 +24,31 @@ const techs = [
 export default function Configuracao() {
   return (
     <div className="w-full max-w-4xl mx-auto space-y-7 py-8 px-2">
-      {/* System Information */}
+      {/* Informações do Sistema */}
       <section className="rounded-xl border border-slate-600/40 bg-card/80 p-6 shadow-md">
         <div className="flex items-center gap-2 mb-4">
           <Cog className="w-5 h-5 opacity-80" />
-          <span className="font-semibold text-lg">Informações do Sistema</span>
+          <span className="font-semibold text-lg">Sobre o Sistema</span>
         </div>
         <div className="space-y-1 pl-1 text-sm">
-          <div>
-            <span className="text-slate-400">Nome do Sistema:</span>
-            <br />
-            <span className="font-semibold text-base text-white">Formatte</span>
-          </div>
-          <div>
-            <span className="text-slate-400">Versão:</span>
-            <br />
-            <span className="text-base">v1.0.3</span>
-          </div>
           <div>
             <span className="text-slate-400">Descrição:</span>
             <br />
             <span>
-              Sistema para gestão de empilhadeiras, operadores, operações e controle de abastecimento e manutenção em tempo real, com interface moderna e responsiva.
+              Plataforma para gestão de empilhadeiras, operadores, operações, abastecimento e manutenção em tempo real, focada em produtividade e usabilidade.
             </span>
           </div>
         </div>
       </section>
 
-      {/* Developer Info */}
+      {/* Desenvolvedor */}
       <section className="rounded-xl border border-slate-600/40 bg-card/80 p-6 shadow-md flex flex-col items-start">
         <div className="flex items-center gap-2 mb-3">
           <Github className="w-5 h-5 opacity-80" />
           <span className="font-semibold text-lg">Desenvolvedor</span>
         </div>
         <span className="mb-4 text-sm pl-1 block">
-          Desenvolvido para entregar agilidade operacional e relatórios gerenciais integrados, focando em design de alto nível de usabilidade.
+          Projeto desenvolvido com foco em agilidade operacional e relatórios gerenciais integrados, priorizando design e experiência de uso.
         </span>
         <Button
           asChild
@@ -78,7 +68,7 @@ export default function Configuracao() {
         </a>
       </section>
 
-      {/* Technologies */}
+      {/* Tecnologias */}
       <section className="rounded-xl border border-slate-600/40 bg-card/80 p-6 shadow-md">
         <div className="flex items-center gap-2 mb-4">
           <span className="font-semibold text-lg">Principais Tecnologias</span>
