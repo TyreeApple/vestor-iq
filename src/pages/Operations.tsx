@@ -4,7 +4,7 @@ import { useIsMobile } from '@/hooks/use-mobile';
 import { cn } from '@/lib/utils';
 import { Input } from '@/components/ui/input';
 import { Calendar, Clock, Plus, Search, Truck, User, Filter, MapPin, AlertCircle, Play, CheckCircle2, Fuel, Timer, Gauge, Activity, TrendingUp } from 'lucide-react';
-import { Operacao, StatusOperacao, TipoOperacao, PrioridadeOperacao } from '@/types';
+import { Operacao, StatusOperacao, TipoOperacao, PrioridadeOperacao, StatusOperador } from '@/types';
 import { useToast } from '@/hooks/use-toast';
 import OperationDialog from '@/components/operations/OperationDialog';
 import OperationDetails from '@/components/operations/OperationDetails';
@@ -54,7 +54,7 @@ const initialOperations: Operacao[] = [
       avaliacoes: [],
       horasTrabalhadas: 2000,
       produtividade: 85,
-      status: 'Ativo'
+      status: StatusOperador.ATIVO
     },
     tipo: TipoOperacao.MOVIMENTACAO,
     status: StatusOperacao.EM_ANDAMENTO,
@@ -103,7 +103,7 @@ const initialOperations: Operacao[] = [
       avaliacoes: [],
       horasTrabalhadas: 1900,
       produtividade: 88,
-      status: 'Ativo'
+      status: StatusOperador.ATIVO
     },
     tipo: TipoOperacao.CARGA,
     status: StatusOperacao.CONCLUIDA,
@@ -148,7 +148,7 @@ const mockOperators = [
     avaliacoes: [],
     horasTrabalhadas: 2000,
     produtividade: 85,
-    status: 'Ativo'
+    status: StatusOperador.ATIVO
   },
   {
     id: 'OP002',
@@ -164,7 +164,7 @@ const mockOperators = [
     avaliacoes: [],
     horasTrabalhadas: 1900,
     produtividade: 88,
-    status: 'Ativo'
+    status: StatusOperador.ATIVO
   },
   {
     id: 'OP003',
@@ -180,7 +180,7 @@ const mockOperators = [
     avaliacoes: [],
     horasTrabalhadas: 1500,
     produtividade: 80,
-    status: 'Ativo'
+    status: StatusOperador.ATIVO
   },
   {
     id: 'OP004',
@@ -196,7 +196,7 @@ const mockOperators = [
     avaliacoes: [],
     horasTrabalhadas: 1800,
     produtividade: 90,
-    status: 'Ativo'
+    status: StatusOperador.ATIVO
   },
   {
     id: 'OP005',
@@ -212,7 +212,7 @@ const mockOperators = [
     avaliacoes: [],
     horasTrabalhadas: 2200,
     produtividade: 95,
-    status: 'Ativo'
+    status: StatusOperador.ATIVO
   }
 ];
 

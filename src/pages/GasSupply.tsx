@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Navbar from '@/components/layout/Navbar';
 import Sidebar from '@/components/layout/Sidebar';
 import { Button } from "@/components/ui/button";
@@ -6,7 +6,7 @@ import { useIsMobile } from '@/hooks/use-mobile';
 import { cn } from '@/lib/utils';
 import { Input } from '@/components/ui/input';
 import { Calendar, Filter, Fuel, Plus, Search, Truck, User } from 'lucide-react';
-import { Abastecimento } from '@/types';
+import { Abastecimento, StatusOperador } from '@/types';
 import GasSupplyDialog from '@/components/gas/GasSupplyDialog';
 import { useToast } from '@/hooks/use-toast';
 
