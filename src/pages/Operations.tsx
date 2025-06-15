@@ -33,10 +33,10 @@ const availableForklifts = [
   { id: 'G006', model: 'Caterpillar DP40' }
 ];
 
-// Tipo estendido para operações enriquecidas
+// Tipo estendido simplificado para operações enriquecidas
 type EnrichedOperacao = Operacao & {
-  operador: { id: string; nome: string };
-  empilhadeira: { id: string; modelo: string };
+  operadorNome: string;
+  empilhadeiraModelo: string;
 };
 
 const OperationsPage = () => {
@@ -71,20 +71,24 @@ const OperationsPage = () => {
     searchFields: ['id', 'setor']
   });
 
-  // FAZENDO O "JOIN" DOS OBJETOS COMPLETOS ANTES DE REPASSAR PARA OS COMPONENTES
+  // Função simplificada para enriquecer dados da operação
   const joinOperationData = (operation: Operacao): EnrichedOperacao => {
+    // Buscar operador
     const operador = operators.find((op) => op.id === operation.operadorId) ||
-      availableOperators.find((op) => op.id === operation.operadorId) ||
-      { id: operation.operadorId, nome: "Operador Não Encontrado" };
+      availableOperators.find((op) => op.id === operation.operadorId);
+    
+    const operadorNome = operador ? (operador.nome || operador.name || "Operador Não Encontrado") : "Operador Não Encontrado";
 
+    // Buscar empilhadeira
     const empilhadeira = forklifts.find((fork) => fork.id === operation.empilhadeiraId) ||
-      availableForklifts.find((fork) => fork.id === operation.empilhadeiraId) ||
-      { id: operation.empilhadeiraId, modelo: "Empilhadeira Não Encontrada" };
+      availableForklifts.find((fork) => fork.id === operation.empilhadeiraId);
+    
+    const empilhadeiraModelo = empilhadeira ? (empilhadeira.modelo || empilhadeira.model || "Empilhadeira Não Encontrada") : "Empilhadeira Não Encontrada";
 
     return {
       ...operation,
-      operador: { id: operador.id, nome: operador.nome || operador.name || "Operador Não Encontrado" },
-      empilhadeira: { id: empilhadeira.id, modelo: empilhadeira.modelo || empilhadeira.model || "Empilhadeira Não Encontrada" },
+      operadorNome,
+      empilhadeiraModelo,
     };
   };
 

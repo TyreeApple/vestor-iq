@@ -12,9 +12,14 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 
+type EnrichedOperacao = Operacao & {
+  operadorNome: string;
+  empilhadeiraModelo: string;
+};
+
 type CompletedOperationsSectionProps = {
-  operations: Operacao[];
-  onDetails: (operation: Operacao) => void;
+  operations: EnrichedOperacao[];
+  onDetails: (operation: EnrichedOperacao) => void;
   onDelete: (id: string) => void;
   formatDate: (date: string) => string;
   formatTime: (date: string) => string;
@@ -60,7 +65,7 @@ const CompletedOperationsSection: React.FC<CompletedOperationsSectionProps> = ({
                     <CheckCircle2 className="w-4 h-4 text-green-400 flex-shrink-0" />
                     <div>
                       <span className="text-foreground font-medium text-sm">#{operation.id}</span>
-                      <div className="text-xs text-muted-foreground">{operation.operador?.nome}</div>
+                      <div className="text-xs text-muted-foreground">{operation.operadorNome}</div>
                     </div>
                   </div>
                   <DropdownMenu>
@@ -90,7 +95,7 @@ const CompletedOperationsSection: React.FC<CompletedOperationsSectionProps> = ({
                   </div>
                   <div>
                     <span className="text-muted-foreground">Empilhadeira:</span>
-                    <div className="text-foreground font-medium truncate">{operation.empilhadeira?.modelo}</div>
+                    <div className="text-foreground font-medium truncate">{operation.empilhadeiraModelo}</div>
                   </div>
                   <div>
                     <span className="text-muted-foreground">Setor:</span>
@@ -160,9 +165,9 @@ const CompletedOperationsSection: React.FC<CompletedOperationsSectionProps> = ({
                       {typeInfo.label}
                     </span>
                   </td>
-                  <td className="p-3 lg:p-4 text-foreground text-sm">{operation.operador?.nome}</td>
+                  <td className="p-3 lg:p-4 text-foreground text-sm">{operation.operadorNome}</td>
                   <td className="p-3 lg:p-4">
-                    <div className="text-foreground text-sm">{operation.empilhadeira?.modelo}</div>
+                    <div className="text-foreground text-sm">{operation.empilhadeiraModelo}</div>
                     <div className="text-xs text-muted-foreground">{operation.empilhadeiraId}</div>
                   </td>
                   <td className="p-3 lg:p-4 text-foreground text-sm">{operation.setor}</td>

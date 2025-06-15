@@ -6,10 +6,15 @@ import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { Activity, Truck, MapPin, Clock, Fuel, CheckCircle2, AlertCircle, Play } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
+type EnrichedOperacao = Operacao & {
+  operadorNome: string;
+  empilhadeiraModelo: string;
+};
+
 type ActiveOperationsSectionProps = {
-  operations: Operacao[];
-  onDetails: (operation: Operacao) => void;
-  onEdit: (operation: Operacao) => void;
+  operations: EnrichedOperacao[];
+  onDetails: (operation: EnrichedOperacao) => void;
+  onEdit: (operation: EnrichedOperacao) => void;
   calculateProgress: (operation: Operacao) => number;
   getPriorityInfo: (prioridade: PrioridadeOperacao) => any;
   getOperationTypeInfo: (tipo: TipoOperacao) => any;
@@ -52,7 +57,7 @@ const ActiveOperationsSection: React.FC<ActiveOperationsSectionProps> = ({
                 <div className="flex items-center gap-2 lg:gap-3 min-w-0">
                   <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse flex-shrink-0" />
                   <div className="min-w-0">
-                    <h3 className="font-semibold text-foreground text-sm lg:text-base truncate">{operation.operador?.nome}</h3>
+                    <h3 className="font-semibold text-foreground text-sm lg:text-base truncate">{operation.operadorNome}</h3>
                     <p className="text-xs lg:text-sm text-muted-foreground">#{operation.id}</p>
                   </div>
                 </div>
@@ -86,7 +91,7 @@ const ActiveOperationsSection: React.FC<ActiveOperationsSectionProps> = ({
               <div className="grid grid-cols-2 gap-2 lg:gap-3 text-xs lg:text-sm">
                 <div className="flex items-center gap-2 p-2 bg-background/50 rounded-md border border-border/30">
                   <Truck className="w-3 h-3 lg:w-4 lg:h-4 text-blue-500 flex-shrink-0" />
-                  <span className="text-foreground truncate">{operation.empilhadeira?.modelo}</span>
+                  <span className="text-foreground truncate">{operation.empilhadeiraModelo}</span>
                 </div>
                 <div className="flex items-center gap-2 p-2 bg-background/50 rounded-md border border-border/30">
                   <MapPin className="w-3 h-3 lg:w-4 lg:h-4 text-orange-500 flex-shrink-0" />
