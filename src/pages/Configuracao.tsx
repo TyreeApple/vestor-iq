@@ -1,6 +1,5 @@
-
 import React from "react";
-import { Settings } from "lucide-react";
+import { Settings, Activity, BarChart3 } from "lucide-react";
 import {
   SiVite,
   SiTypescript,
@@ -9,10 +8,8 @@ import {
   SiShadcnui,
   SiReacthookform,
   SiReactrouter,
-  SiZustand,
   SiZod,
-  SiGithub,
-  SiRecharts
+  SiGithub
 } from "react-icons/si";
 import { FaGithub } from "react-icons/fa";
 import { BsStars } from "react-icons/bs";
@@ -65,7 +62,7 @@ const bibliotecas = [
   },
   {
     nome: "Zustand",
-    icon: <SiZustand className="text-orange-500 w-7 h-7" />,
+    icon: <Activity className="text-orange-500 w-7 h-7" />,
     url: "https://docs.pmnd.rs/zustand"
   },
   {
@@ -85,7 +82,7 @@ const bibliotecas = [
   },
   {
     nome: "Recharts",
-    icon: <SiRecharts className="text-blue-400 w-7 h-7" />,
+    icon: <BarChart3 className="text-blue-400 w-7 h-7" />,
     url: "https://recharts.org/"
   },
   {
