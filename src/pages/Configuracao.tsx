@@ -1,3 +1,4 @@
+
 import React from "react";
 import { Settings } from "lucide-react";
 import {
@@ -100,20 +101,20 @@ const bibliotecas = [
 
 const Configuracao: React.FC = () => {
   return (
-    <section className="min-h-[100vh] flex items-center justify-center bg-gradient-to-br from-[#101826] via-[#0b1120] to-[#181F30] py-12 px-3">
-      <div className="max-w-[105rem] w-full rounded-2xl flex flex-col xl:flex-row gap-16 xl:gap-24 shadow-2xl bg-transparent">
+    <section className="min-h-screen flex items-center justify-center bg-gradient-to-br from-[#111725] via-[#0d1321] to-[#181F30] py-6 px-1">
+      <div className="w-full max-w-5xl mx-auto rounded-xl flex flex-col xl:flex-row gap-7 xl:gap-10 shadow-2xl bg-transparent">
         {/* Card lateral */}
-        <div className="w-full max-w-md xl:w-[355px] flex flex-col">
-          <div className="flex-1 flex flex-col gap-0 !bg-transparent">
-            <div className="relative overflow-hidden rounded-2xl border border-[#222d42] bg-[#111725]/80 shadow-[0_0_0_1.5px_#1d263a,0_3px_36px_0_rgba(36,46,68,0.50)] p-8 flex flex-col items-center min-h-[370px]">
-              <span className="mb-3">
-                <Settings className="w-10 h-10 text-blue-400 drop-shadow-glow" />
+        <div className="w-full max-w-xs xl:w-[280px] flex flex-col">
+          <div className="flex-1 flex flex-col !bg-transparent">
+            <div className="relative overflow-hidden rounded-xl border border-[#20293c] bg-[#101623]/80 shadow-[0_0_0_1px_#131b29,0_1px_10px_0_rgba(36,46,68,0.23)] p-6 flex flex-col items-center min-h-[260px]">
+              <span className="mb-2">
+                <Settings className="w-8 h-8 text-blue-400 drop-shadow-glow" />
               </span>
-              <h3 className="text-2xl font-extrabold text-blue-400 tracking-tight mb-2">
+              <h3 className="text-lg font-bold text-blue-400 tracking-tight mb-1">
                 Sobre o Projeto
               </h3>
-              <p className="text-blue-100/90 font-medium text-base mb-6 text-center leading-relaxed" style={{ textWrap: "pretty" }}>
-                Projeto feito sem fins de implementação real para funcionamento. Foi apenas um projeto para brincar com a IA e testar a real capacidade da IA.
+              <p className="text-blue-100/90 font-medium text-sm mb-3 text-center leading-snug" style={{ textWrap: "pretty" }}>
+                Projeto feito apenas para brincar com IA e testar sua capacidade.
               </p>
               <a
                 href="https://github.com/olucasmf"
@@ -121,32 +122,36 @@ const Configuracao: React.FC = () => {
                 rel="noopener noreferrer"
                 className="
                   mt-auto transition-all duration-200
-                  inline-flex items-center gap-2 rounded-full px-6 py-2
-                  bg-blue-950/70 hover:bg-blue-900/90 border border-blue-700/40
+                  inline-flex items-center gap-2 rounded-full px-4 py-1.5
+                  bg-blue-950/60 hover:bg-blue-900/80 border border-blue-700/30
                   text-blue-200 hover:text-white font-bold shadow
-                  active:scale-95 focus-ring-premium text-base
+                  active:scale-95 focus-ring-premium text-sm
                 "
               >
-                <FaGithub className="w-5 h-5" />
+                <FaGithub className="w-4 h-4" />
                 github.com/olucasmf
               </a>
             </div>
           </div>
         </div>
         {/* Centro: Conteúdo e grids */}
-        <div className="flex-1 flex flex-col gap-14">
-          <header className="mb-2 flex flex-col items-center text-center">
-            <h2 className="text-4xl font-extrabold tracking-tight text-blue-400 gradient-text mb-2 drop-shadow" style={{ fontFamily: "Inter, sans-serif"}}>
+        <div className="flex-1 flex flex-col gap-7">
+          <header className="mb-0 flex flex-col items-center text-center">
+            <h2 className="text-2xl font-bold tracking-tight text-blue-400 gradient-text mb-1 drop-shadow" style={{ fontFamily: "Inter, sans-serif"}}>
               Configurações
             </h2>
-            <p className="text-blue-200/80 max-w-2xl text-lg font-medium mb-1">
-              Gerencie suas preferências da conta e personalizações do sistema neste painel.
+            <p className="text-blue-200/80 max-w-lg text-base font-medium mb-0">
+              Gerencie suas preferências da conta e personalizações do sistema.
             </p>
           </header>
           {/* Tecnologias Utilizadas */}
-          <TechSection title="Tecnologias Utilizadas" items={tecnologias} />
+          <div>
+            <TechSection title="Tecnologias Utilizadas" items={tecnologias} />
+          </div>
           {/* Bibliotecas Utilizadas */}
-          <TechSection title="Bibliotecas Utilizadas" items={bibliotecas} />
+          <div>
+            <TechSection title="Bibliotecas Utilizadas" items={bibliotecas} />
+          </div>
         </div>
       </div>
     </section>
