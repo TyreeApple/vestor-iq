@@ -5,16 +5,15 @@ import {
   SiVite, SiTypescript, SiTailwindcss, SiReact, SiShadcnui, SiReacthookform, 
   SiReactrouter, SiZod, SiGithub 
 } from "react-icons/si";
-import { FaGithub, FaRegSmile, FaReact } from "react-icons/fa";
+import { FaGithub } from "react-icons/fa";
 import { BsStars } from "react-icons/bs";
 import { PiTableDuotone } from "react-icons/pi";
 import { TbBrandRadixUi } from "react-icons/tb";
-import { BarChart3, Activity } from "lucide-react";
+import { BarChart3 } from "lucide-react";
 import { GiBearHead } from "react-icons/gi";
 import AboutProjectCard from "@/components/about/AboutProjectCard";
 import TechSection from "@/components/about/TechSection";
 
-// Definições otimizadas com ícones proeminentes
 const tecnologias = [
   {
     name: "React",
@@ -93,26 +92,26 @@ const bibliotecas = [
 
 const Configuracao: React.FC = () => {
   return (
-    <section className="max-w-6xl mx-auto my-10 px-1 sm:px-6 py-10 bg-card rounded-2xl border border-border shadow-lg flex flex-col gap-10 animate-fade-in">
-      <div className="flex flex-col items-center gap-4 mb-5 sm:mb-8">
+    <section className="max-w-7xl mx-auto my-10 px-1 sm:px-6 py-12 bg-card rounded-3xl border border-border shadow-2xl flex flex-col gap-10 animate-fade-in relative">
+      <div className="flex flex-col items-center gap-4 mb-7">
         <div className="flex items-center gap-3">
-          <Settings className="w-8 h-8 text-primary animate-pulse-glow" />
-          <h2 className="text-3xl md:text-4xl font-extrabold gradient-text tracking-tight drop-shadow-sm">
+          <Settings className="w-9 h-9 text-primary animate-pulse-glow" />
+          <h2 className="text-4xl md:text-5xl font-extrabold gradient-text tracking-tight drop-shadow-2xl">
             Configurações
           </h2>
         </div>
-        <p className="text-muted-foreground max-w-2xl text-base md:text-lg font-medium text-center">
+        <p className="text-muted-foreground max-w-2xl text-lg md:text-xl font-medium text-center">
           Gerencie suas preferências da conta e personalizações do sistema neste painel.
         </p>
       </div>
       {/* Layout principal super responsivo */}
-      <div className="flex flex-col xl:flex-row gap-8 xl:gap-14 animate-fade-in-scale duration-500">
+      <div className="flex flex-col xl:flex-row gap-10 animate-fade-in-scale duration-500">
         {/* SOBRE O PROJETO */}
-        <div className="xl:w-[340px] shrink-0 flex flex-col gap-4 mb-6 xl:mb-0 mx-auto xl:mx-0">
+        <div className="xl:w-[400px] shrink-0 flex flex-col gap-4 mb-10 xl:mb-0 mx-auto xl:mx-0">
           <AboutProjectCard />
         </div>
         {/* TECNOLOGIAS & BIBLIOTECAS */}
-        <div className="flex-1 flex flex-col gap-10">
+        <div className="flex-1 flex flex-col gap-14">
           <TechSection title="Tecnologias Utilizadas" items={tecnologias} />
           <TechSection title="Bibliotecas Utilizadas" items={bibliotecas} />
         </div>
@@ -122,4 +121,3 @@ const Configuracao: React.FC = () => {
 };
 
 export default Configuracao;
-
