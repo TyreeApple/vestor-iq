@@ -242,9 +242,9 @@ const MaintenancePage = () => {
       </div>
 
       {/* Filter section */}
-      <div className="flex flex-col lg:flex-row gap-4">
+      <div className="flex flex-wrap items-center gap-3">
         {/* Search */}
-        <div className="relative flex-1 max-w-md">
+        <div className="relative flex-1 min-w-[200px] max-w-sm">
           <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground w-4 h-4" />
           <Input 
             type="text" 
@@ -257,7 +257,7 @@ const MaintenancePage = () => {
 
         {/* Status Filter */}
         <select 
-          className="px-3 py-2 rounded-md border border-input bg-background text-sm min-w-[150px]"
+          className="px-3 py-2 rounded-md border border-input bg-background text-sm w-[150px] h-10"
           value={filters.status || 'all'}
           onChange={(e) => setFilters({ ...filters, status: e.target.value === 'all' ? '' : e.target.value })}
         >
@@ -269,7 +269,7 @@ const MaintenancePage = () => {
 
         {/* Type Filter */}
         <select 
-          className="px-3 py-2 rounded-md border border-input bg-background text-sm min-w-[150px]"
+          className="px-3 py-2 rounded-md border border-input bg-background text-sm w-[150px] h-10"
           value={filters.tipo || 'all'}
           onChange={(e) => setFilters({ ...filters, tipo: e.target.value === 'all' ? '' : e.target.value })}
         >
