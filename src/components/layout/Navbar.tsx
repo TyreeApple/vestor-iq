@@ -7,6 +7,7 @@ import { Button } from '@/components/ui/button';
 import ThemeToggle from '@/components/common/ThemeToggle';
 import { cn } from '@/lib/utils';
 import { useAppStore } from '@/stores/useAppStore';
+import { StatusOperacao, StatusManutencao } from "@/types";
 
 const Navbar: React.FC = () => {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
@@ -16,8 +17,8 @@ const Navbar: React.FC = () => {
   const ordemServicos = useAppStore((state) => state.ordemServicos);
 
   // Calcular quantidade dinâmica
-  const operacoesAtivas = operacoes.filter(op => op.status === 'EM_ANDAMENTO').length;
-  const manutencoesPendentes = ordemServicos.filter(os => ['ABERTA', 'EM_ANDAMENTO'].includes(os.status)).length;
+  const operacoesAtivas = operacoes.filter(op => op.status === StatusOperacao.EM_ANDAMENTO).length;
+  const manutencoesPendentes = ordemServicos.filter(os => [StatusManutencao.ABERTA, StatusManutencao.EM_ANDAMENTO].includes(os.status)).length;
 
   // Montar o menu com valores dinâmicos
   const menuItems = [

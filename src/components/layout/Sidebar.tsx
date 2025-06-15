@@ -5,6 +5,7 @@ import { BarChart3, Users, Activity, Wrench, Fuel, FileText, ChevronLeft, Chevro
 import { MdForklift } from 'react-icons/md';
 import { useAppStore } from '@/stores/useAppStore';
 import { cn } from '@/lib/utils';
+import { StatusOperacao, StatusManutencao } from "@/types";
 
 const Sidebar: React.FC = () => {
   const { sidebarCollapsed, setSidebarCollapsed } = useAppStore();
@@ -12,8 +13,10 @@ const Sidebar: React.FC = () => {
   const operacoes = useAppStore((state) => state.operacoes);
   const ordemServicos = useAppStore((state) => state.ordemServicos);
 
-  const operacoesAtivas = operacoes.filter(op => op.status === 'EM_ANDAMENTO').length;
-  const manutencoesPendentes = ordemServicos.filter(os => ['ABERTA', 'EM_ANDAMENTO'].includes(os.status)).length;
+  const operacoesAtivas = operacoes.filter(op => op.status === StatusOperacao.EM_ANDAMENTO).length;
+  const manutencoesPendentes = ordemServicos.filter(os => 
+    [StatusManutencao.ABERTA, StatusManutencao.EM_ANDAMENTO].includes(os.status)
+  ).length;
 
   const menuItems = [
     {
