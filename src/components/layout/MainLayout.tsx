@@ -14,8 +14,9 @@ const MainLayout: React.FC = () => {
       <div className="flex-1 flex flex-col">
         <Navbar />
         <main className="flex-1 overflow-auto bg-slate-50 dark:bg-background">
-          <div className="min-h-full flex flex-col">
-            <div className="flex-1 p-6">
+          <div className="flex-1 flex flex-col">
+            {/* Adiciona container global responsivo com margens */}
+            <div className="flex-1 w-full max-w-7xl mx-auto px-2 sm:px-4 py-4">
               <Outlet />
             </div>
             <Footer />
@@ -27,3 +28,4 @@ const MainLayout: React.FC = () => {
 };
 
 export default MainLayout;
+
