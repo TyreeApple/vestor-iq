@@ -6,55 +6,61 @@ import { MdForklift } from 'react-icons/md';
 import { useAppStore } from '@/stores/useAppStore';
 import { cn } from '@/lib/utils';
 
-const menuItems = [
-  {
-    id: 'dashboard',
-    label: 'Dashboard',
-    icon: BarChart3,
-    path: '/'
-  },
-  {
-    id: 'empilhadeiras',
-    label: 'Empilhadeiras',
-    icon: MdForklift,
-    path: '/empilhadeiras'
-  },
-  {
-    id: 'operadores',
-    label: 'Operadores',
-    icon: Users,
-    path: '/operadores'
-  },
-  {
-    id: 'operacoes',
-    label: 'Operações',
-    icon: Activity,
-    path: '/operacoes',
-    badge: 12
-  },
-  {
-    id: 'manutencao',
-    label: 'Manutenção',
-    icon: Wrench,
-    path: '/manutencao',
-    badge: 4
-  },
-  {
-    id: 'abastecimento',
-    label: 'Abastecimento',
-    icon: Fuel,
-    path: '/abastecimento'
-  },
-  {
-    id: 'relatorios',
-    label: 'Relatórios',
-    icon: FileText,
-    path: '/relatorios'
-  }
-];
-
 const Sidebar: React.FC = () => {
   const { sidebarCollapsed, setSidebarCollapsed } = useAppStore();
+  // Obter status global de operações e manutenções
+  const operacoes = useAppStore((state) => state.operacoes);
+  const ordemServicos = useAppStore((state) => state.ordemServicos);
+
+  const operacoesAtivas = operacoes.filter(op => op.status === 'EM_ANDAMENTO').length;
+  const manutencoesPendentes = ordemServicos.filter(os => ['ABERTA', 'EM_ANDAMENTO'].includes(os.status)).length;
+
+  const menuItems = [
+    {
+      id: 'dashboard',
+      label: 'Dashboard',
+      icon: BarChart3,
+      path: '/'
+    },
+    {
+      id: 'empilhadeiras',
+      label: 'Empilhadeiras',
+      icon: MdForklift,
+      path: '/empilhadeiras'
+    },
+    {
+      id: 'operadores',
+      label: 'Operadores',
+      icon: Users,
+      path: '/operadores'
+    },
+    {
+      id: 'operacoes',
+      label: 'Operações',
+      icon: Activity,
+      path: '/operacoes',
+      badge: operacoesAtivas > 0 ? operacoesAtivas : undefined
+    },
+    {
+      id: 'manutencao',
+      label: 'Manutenção',
+      icon: Wrench,
+      path: '/manutencao',
+      badge: manutencoesPendentes > 0 ? manutencoesPendentes : undefined
+    },
+    {
+      id: 'abastecimento',
+      label: 'Abastecimento',
+      icon: Fuel,
+      path: '/abastecimento'
+    },
+    {
+      id: 'relatorios',
+      label: 'Relatórios',
+      icon: FileText,
+      path: '/relatorios'
+    }
+  ];
 
   return (
     <div className={cn(
