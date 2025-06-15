@@ -57,37 +57,29 @@ const PendingMaintenanceCard: React.FC<PendingMaintenanceCardProps> = ({
         return { 
           color: 'bg-red-500', 
           textColor: 'text-red-700', 
-          bgColor: 'bg-red-50 dark:bg-red-900/20',
           label: 'Alta',
-          accentColor: 'border-l-red-500',
-          glowColor: 'shadow-red-500/20'
+          accentColor: 'border-l-red-500'
         };
       case PrioridadeOperacao.ALTA:
         return { 
           color: 'bg-orange-500', 
           textColor: 'text-orange-700', 
-          bgColor: 'bg-orange-50 dark:bg-orange-900/20',
           label: 'Alta',
-          accentColor: 'border-l-orange-500',
-          glowColor: 'shadow-orange-500/20'
+          accentColor: 'border-l-orange-500'
         };
       case PrioridadeOperacao.NORMAL:
         return { 
           color: 'bg-blue-500', 
           textColor: 'text-blue-700', 
-          bgColor: 'bg-blue-50 dark:bg-blue-900/20',
           label: 'Normal',
-          accentColor: 'border-l-blue-500',
-          glowColor: 'shadow-blue-500/20'
+          accentColor: 'border-l-blue-500'
         };
       default:
         return { 
           color: 'bg-gray-500', 
           textColor: 'text-gray-700', 
-          bgColor: 'bg-gray-50 dark:bg-gray-900/20',
           label: 'Baixa',
-          accentColor: 'border-l-gray-500',
-          glowColor: 'shadow-gray-500/20'
+          accentColor: 'border-l-gray-500'
         };
     }
   };
@@ -106,13 +98,32 @@ const PendingMaintenanceCard: React.FC<PendingMaintenanceCardProps> = ({
   const getMaintenanceTypeIcon = (type: TipoManutencao) => {
     switch (type) {
       case TipoManutencao.PREVENTIVA:
-        return <Calendar className="w-4 h-4" />;
+        return <Calendar className="w-3 h-3" />;
       case TipoManutencao.CORRETIVA:
-        return <Wrench className="w-4 h-4" />;
+        return <Wrench className="w-3 h-3" />;
       case TipoManutencao.PREDITIVA:
-        return <AlertTriangle className="w-4 h-4" />;
+        return <AlertTriangle className="w-3 h-3" />;
       default:
-        return <Wrench className="w-4 h-4" />;
+        return <Wrench className="w-3 h-3" />;
+    }
+  };
+
+  const handleEdit = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    onEdit(maintenance);
+  };
+
+  const handleDelete = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    if (confirm("Tem certeza que deseja excluir esta manutenção?")) {
+      onDelete(maintenance.id);
+    }
+  };
+
+  const handleStatusChange = (e: React.MouseEvent, newStatus: StatusManutencao) => {
+    e.stopPropagation();
+    if (onStatusChange) {
+      onStatusChange(maintenance.id, newStatus);
     }
   };
 
@@ -121,40 +132,33 @@ const PendingMaintenanceCard: React.FC<PendingMaintenanceCardProps> = ({
 
   return (
     <Card className={cn(
-      "group relative overflow-hidden transition-all duration-500 hover:scale-[1.02] cursor-pointer",
+      "group relative overflow-hidden transition-all duration-300 hover:scale-[1.02] cursor-pointer",
       "bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900",
-      "border-l-4 shadow-xl hover:shadow-2xl",
-      priorityConfig.accentColor,
-      priorityConfig.glowColor
+      "border-l-4 shadow-lg hover:shadow-xl",
+      priorityConfig.accentColor
     )}>
-      {/* Background Pattern */}
-      <div className="absolute inset-0 bg-gradient-to-br from-transparent via-white/[0.02] to-transparent" />
-      
-      {/* Priority Pulse Effect */}
+      {/* Critical priority indicator */}
       {maintenance.prioridade === PrioridadeOperacao.CRITICA && (
-        <div className="absolute top-3 right-3">
-          <div className="relative">
-            <div className="w-3 h-3 bg-red-500 rounded-full animate-ping" />
-            <div className="absolute inset-0 w-3 h-3 bg-red-500 rounded-full" />
-          </div>
+        <div className="absolute top-2 right-2">
+          <div className="w-2 h-2 bg-red-500 rounded-full animate-ping" />
         </div>
       )}
 
-      <CardHeader className="pb-4 relative">
+      <CardHeader className="pb-3 relative">
         <div className="flex items-start justify-between">
-          <div className="space-y-2">
-            <div className="flex items-center gap-3">
-              <span className="text-2xl font-bold bg-gradient-to-r from-white to-gray-300 bg-clip-text text-transparent">
+          <div className="space-y-1">
+            <div className="flex items-center gap-2">
+              <span className="text-xl font-bold bg-gradient-to-r from-white to-gray-300 bg-clip-text text-transparent">
                 #{maintenance.id}
               </span>
-              <Badge variant={statusConfig.variant} size="sm" className="gap-1">
-                <statusConfig.icon className="w-3 h-3" />
+              <Badge variant={statusConfig.variant} size="sm" className="gap-1 text-xs">
+                <statusConfig.icon className="w-2.5 h-2.5" />
                 {statusConfig.label}
               </Badge>
             </div>
-            <div className="flex items-center gap-2 text-gray-400">
+            <div className="flex items-center gap-1.5 text-gray-400">
               {getMaintenanceTypeIcon(maintenance.tipo)}
-              <span className="text-sm font-medium capitalize">{maintenance.tipo.toLowerCase()}</span>
+              <span className="text-xs font-medium capitalize">{maintenance.tipo.toLowerCase()}</span>
             </div>
           </div>
           
@@ -163,39 +167,49 @@ const PendingMaintenanceCard: React.FC<PendingMaintenanceCardProps> = ({
               <Button 
                 variant="ghost" 
                 size="icon" 
-                className="h-8 w-8 text-gray-400 hover:text-white hover:bg-white/10 opacity-70 group-hover:opacity-100 transition-all"
+                className="h-6 w-6 text-gray-400 hover:text-white hover:bg-white/10"
+                onClick={(e) => e.stopPropagation()}
               >
-                <MoreVertical className="w-4 h-4" />
+                <MoreVertical className="w-3 h-3" />
               </Button>
             </DropdownMenuTrigger>
-            <DropdownMenuContent align="end" className="w-48 bg-slate-800 border-slate-700">
-              <DropdownMenuItem onClick={() => onEdit(maintenance)} className="text-gray-300 hover:text-white hover:bg-slate-700">
-                <Edit className="w-4 h-4 mr-2" />
+            <DropdownMenuContent align="end" className="w-40 bg-slate-800 border-slate-700">
+              <DropdownMenuItem onClick={handleEdit} className="text-gray-300 hover:text-white hover:bg-slate-700">
+                <Edit className="w-3 h-3 mr-2" />
                 Editar
               </DropdownMenuItem>
               {maintenance.status === StatusManutencao.ABERTA && onStatusChange && (
-                <DropdownMenuItem onClick={() => onStatusChange(maintenance.id, StatusManutencao.EM_ANDAMENTO)} className="text-green-400 hover:text-green-300 hover:bg-slate-700">
-                  <Play className="w-4 h-4 mr-2" />
+                <DropdownMenuItem 
+                  onClick={(e) => handleStatusChange(e, StatusManutencao.EM_ANDAMENTO)} 
+                  className="text-green-400 hover:text-green-300 hover:bg-slate-700"
+                >
+                  <Play className="w-3 h-3 mr-2" />
                   Iniciar
                 </DropdownMenuItem>
               )}
               {maintenance.status === StatusManutencao.EM_ANDAMENTO && onStatusChange && (
                 <>
-                  <DropdownMenuItem onClick={() => onStatusChange(maintenance.id, StatusManutencao.ABERTA)} className="text-yellow-400 hover:text-yellow-300 hover:bg-slate-700">
-                    <Pause className="w-4 h-4 mr-2" />
+                  <DropdownMenuItem 
+                    onClick={(e) => handleStatusChange(e, StatusManutencao.ABERTA)} 
+                    className="text-yellow-400 hover:text-yellow-300 hover:bg-slate-700"
+                  >
+                    <Pause className="w-3 h-3 mr-2" />
                     Pausar
                   </DropdownMenuItem>
-                  <DropdownMenuItem onClick={() => onStatusChange(maintenance.id, StatusManutencao.CONCLUIDA)} className="text-green-400 hover:text-green-300 hover:bg-slate-700">
-                    <CheckCircle className="w-4 h-4 mr-2" />
+                  <DropdownMenuItem 
+                    onClick={(e) => handleStatusChange(e, StatusManutencao.CONCLUIDA)} 
+                    className="text-green-400 hover:text-green-300 hover:bg-slate-700"
+                  >
+                    <CheckCircle className="w-3 h-3 mr-2" />
                     Concluir
                   </DropdownMenuItem>
                 </>
               )}
               <DropdownMenuItem 
-                onClick={() => onDelete(maintenance.id)}
+                onClick={handleDelete}
                 className="text-red-400 hover:text-red-300 hover:bg-red-900/20"
               >
-                <Trash2 className="w-4 h-4 mr-2" />
+                <Trash2 className="w-3 h-3 mr-2" />
                 Excluir
               </DropdownMenuItem>
             </DropdownMenuContent>
@@ -204,85 +218,76 @@ const PendingMaintenanceCard: React.FC<PendingMaintenanceCardProps> = ({
 
         {/* Priority Badge */}
         <div className={cn(
-          "inline-flex items-center gap-2 px-3 py-1.5 rounded-full text-xs font-bold backdrop-blur-sm",
-          "bg-gradient-to-r from-white/10 to-white/5 border border-white/20"
+          "inline-flex items-center gap-1.5 px-2 py-1 rounded-full text-xs font-medium backdrop-blur-sm",
+          "bg-gradient-to-r from-white/10 to-white/5 border border-white/20 w-fit"
         )}>
-          <div className={cn("w-2 h-2 rounded-full animate-pulse", priorityConfig.color)} />
-          <span className="text-white">Prioridade {priorityConfig.label}</span>
+          <div className={cn("w-1.5 h-1.5 rounded-full", priorityConfig.color)} />
+          <span className="text-white text-xs">Prioridade {priorityConfig.label}</span>
         </div>
       </CardHeader>
 
-      <CardContent className="space-y-6 relative">
+      <CardContent className="space-y-3 relative">
         {/* Problem Description */}
-        <div className="relative">
-          <div className="absolute -left-6 top-0 w-1 h-full bg-gradient-to-b from-orange-500 to-red-500 rounded-full" />
-          <div className="pl-4">
-            <div className="flex items-start gap-3 p-4 bg-gradient-to-r from-orange-500/10 to-red-500/10 rounded-lg border border-orange-500/20">
-              <AlertTriangle className="w-5 h-5 text-orange-400 mt-0.5 flex-shrink-0" />
-              <p className="text-sm font-medium text-gray-200 leading-relaxed">{maintenance.problema}</p>
-            </div>
+        <div className="p-3 bg-gradient-to-r from-orange-500/10 to-red-500/10 rounded-lg border border-orange-500/20">
+          <div className="flex items-start gap-2">
+            <AlertTriangle className="w-4 h-4 text-orange-400 mt-0.5 flex-shrink-0" />
+            <p className="text-sm text-gray-200 leading-relaxed">{maintenance.problema}</p>
           </div>
         </div>
 
-        {/* Details Grid */}
-        <div className="grid grid-cols-2 gap-4">
-          <div className="space-y-1 p-3 bg-white/5 rounded-lg border border-white/10">
-            <div className="flex items-center gap-2 text-gray-400">
-              <Truck className="w-4 h-4" />
+        {/* Compact Details Grid */}
+        <div className="grid grid-cols-2 gap-2">
+          <div className="p-2 bg-white/5 rounded-lg border border-white/10">
+            <div className="flex items-center gap-1.5 text-gray-400 mb-1">
+              <Truck className="w-3 h-3" />
               <span className="text-xs uppercase tracking-wide">Empilhadeira</span>
             </div>
-            <p className="font-bold text-white">{maintenance.empilhadeiraId || maintenance.forkliftId}</p>
-            <p className="text-xs text-gray-400">{maintenance.empilhadeira?.modelo || maintenance.forkliftModel}</p>
+            <p className="text-sm font-bold text-white">{maintenance.empilhadeiraId || maintenance.forkliftId}</p>
           </div>
           
-          <div className="space-y-1 p-3 bg-white/5 rounded-lg border border-white/10">
-            <div className="flex items-center gap-2 text-gray-400">
-              <User className="w-4 h-4" />
+          <div className="p-2 bg-white/5 rounded-lg border border-white/10">
+            <div className="flex items-center gap-1.5 text-gray-400 mb-1">
+              <User className="w-3 h-3" />
               <span className="text-xs uppercase tracking-wide">Responsável</span>
             </div>
-            <p className="font-bold text-white">{maintenance.reportedBy || 'Sistema'}</p>
-            <p className="text-xs text-gray-400">Reportado por</p>
+            <p className="text-sm font-bold text-white">{maintenance.reportedBy || 'Sistema'}</p>
           </div>
           
-          <div className="space-y-1 p-3 bg-white/5 rounded-lg border border-white/10">
-            <div className="flex items-center gap-2 text-gray-400">
-              <Calendar className="w-4 h-4" />
+          <div className="p-2 bg-white/5 rounded-lg border border-white/10">
+            <div className="flex items-center gap-1.5 text-gray-400 mb-1">
+              <Calendar className="w-3 h-3" />
               <span className="text-xs uppercase tracking-wide">Abertura</span>
             </div>
-            <p className="font-bold text-white">{formatDate(maintenance.dataAbertura || maintenance.reportedDate || '')}</p>
-            <p className="text-xs text-gray-400">Data de criação</p>
+            <p className="text-sm font-bold text-white">{formatDate(maintenance.dataAbertura || maintenance.reportedDate || '')}</p>
           </div>
           
-          <div className="space-y-1 p-3 bg-white/5 rounded-lg border border-white/10">
-            <div className="flex items-center gap-2 text-gray-400">
-              <DollarSign className="w-4 h-4" />
+          <div className="p-2 bg-white/5 rounded-lg border border-white/10">
+            <div className="flex items-center gap-1.5 text-gray-400 mb-1">
+              <DollarSign className="w-3 h-3" />
               <span className="text-xs uppercase tracking-wide">Custo</span>
             </div>
-            <p className="font-bold text-white">
+            <p className="text-sm font-bold text-white">
               {maintenance.custos?.total ? 
                 new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(maintenance.custos.total) : 
                 'R$ 0,00'
               }
             </p>
-            <p className="text-xs text-gray-400">Valor atual</p>
           </div>
         </div>
 
         {/* Progress Bar for In-Progress Items */}
         {maintenance.status === StatusManutencao.EM_ANDAMENTO && (
-          <div className="space-y-3 p-4 bg-gradient-to-r from-blue-500/10 to-purple-500/10 rounded-lg border border-blue-500/20">
+          <div className="space-y-2 p-3 bg-gradient-to-r from-blue-500/10 to-purple-500/10 rounded-lg border border-blue-500/20">
             <div className="flex justify-between items-center">
-              <span className="text-sm font-medium text-gray-300">Progresso estimado</span>
-              <span className="text-sm font-bold text-blue-400">65%</span>
+              <span className="text-xs font-medium text-gray-300">Progresso estimado</span>
+              <span className="text-xs font-bold text-blue-400">65%</span>
             </div>
             <div className="relative">
-              <div className="w-full bg-gray-700 rounded-full h-2">
+              <div className="w-full bg-gray-700 rounded-full h-1.5">
                 <div 
-                  className="bg-gradient-to-r from-blue-500 to-purple-600 h-2 rounded-full transition-all duration-700 ease-out relative overflow-hidden"
+                  className="bg-gradient-to-r from-blue-500 to-purple-600 h-1.5 rounded-full transition-all duration-700 ease-out"
                   style={{ width: '65%' }}
-                >
-                  <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/30 to-transparent animate-pulse" />
-                </div>
+                />
               </div>
             </div>
           </div>
@@ -290,11 +295,11 @@ const PendingMaintenanceCard: React.FC<PendingMaintenanceCardProps> = ({
 
         {/* Action Button */}
         <Button 
-          onClick={() => onEdit(maintenance)}
-          className="w-full bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white font-medium py-3 rounded-lg transition-all duration-300 group"
+          onClick={handleEdit}
+          className="w-full bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white font-medium py-2 rounded-lg transition-all duration-300 group text-sm"
         >
           <span>Ver Detalhes</span>
-          <ArrowRight className="w-4 h-4 ml-2 transition-transform group-hover:translate-x-1" />
+          <ArrowRight className="w-3 h-3 ml-2 transition-transform group-hover:translate-x-1" />
         </Button>
       </CardContent>
     </Card>
