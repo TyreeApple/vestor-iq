@@ -16,7 +16,7 @@ const MainLayout: React.FC = () => {
       }`}>
         <Navbar />
         <main className="flex-1 overflow-auto p-6 bg-background">
-          <div className="max-w-7xl mx-auto">
+          <div className="w-full">
             <Outlet />
           </div>
         </main>

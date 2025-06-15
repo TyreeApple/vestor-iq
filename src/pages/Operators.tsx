@@ -1,3 +1,4 @@
+
 import React, { useState } from 'react';
 import PageHeader from '@/components/layout/PageHeader';
 import { Button } from "@/components/ui/button";
@@ -363,7 +364,7 @@ const OperatorsPage = () => {
   );
 
   return (
-    <div className="space-y-6">
+    <div className="w-full space-y-6">
       <PageHeader
         title="Gestão de Operadores"
         subtitle="Gerencie operadores de empilhadeiras e suas certificações"
@@ -398,9 +399,9 @@ const OperatorsPage = () => {
         </div>
       </PageHeader>
       
-      {/* Enhanced filter options */}
-      <div className="bg-gradient-to-br from-slate-800/60 to-slate-900/80 backdrop-blur-sm border border-slate-700/50 rounded-xl p-6">
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+      {/* Enhanced filter options - using full width */}
+      <div className="w-full bg-gradient-to-br from-slate-800/60 to-slate-900/80 backdrop-blur-sm border border-slate-700/50 rounded-xl p-6">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 xl:grid-cols-6 gap-4">
           <div className="space-y-2">
             <h4 className="text-sm font-medium text-slate-200">Função</h4>
             <Select value={filters.role || 'all'} onValueChange={(value) => setFilters({...filters, role: value === 'all' ? '' : value})}>
@@ -448,127 +449,167 @@ const OperatorsPage = () => {
               </SelectContent>
             </Select>
           </div>
-        </div>
-        
-        {(hasActiveFilters || certStatus !== 'all') && (
-          <div className="mt-4 pt-4 border-t border-slate-700/50">
-            <Button
-              variant="ghost"
-              size="sm"
-              onClick={handleClearAllFilters}
-              className="text-slate-400 hover:text-white hover:bg-slate-700/50"
-            >
-              Limpar todos os filtros
-            </Button>
+
+          <div className="space-y-2">
+            <h4 className="text-sm font-medium text-slate-200">Setor</h4>
+            <Select value={filters.setor || 'all'} onValueChange={(value) => setFilters({...filters, setor: value === 'all' ? '' : value})}>
+              <SelectTrigger className="bg-slate-700/50 border-slate-600/50 text-white">
+                <SelectValue placeholder="Selecione setor" />
+              </SelectTrigger>
+              <SelectContent className="bg-slate-800 border-slate-700">
+                <SelectItem value="all">Todos</SelectItem>
+                <SelectItem value="Armazém">Armazém</SelectItem>
+                <SelectItem value="Produção">Produção</SelectItem>
+                <SelectItem value="Logística">Logística</SelectItem>
+                <SelectItem value="Expedição">Expedição</SelectItem>
+                <SelectItem value="Supervisão">Supervisão</SelectItem>
+              </SelectContent>
+            </Select>
           </div>
-        )}
+
+          <div className="space-y-2">
+            <h4 className="text-sm font-medium text-slate-200">Status</h4>
+            <Select value={filters.status || 'all'} onValueChange={(value) => setFilters({...filters, status: value === 'all' ? '' : value})}>
+              <SelectTrigger className="bg-slate-700/50 border-slate-600/50 text-white">
+                <SelectValue placeholder="Selecione status" />
+              </SelectTrigger>
+              <SelectContent className="bg-slate-800 border-slate-700">
+                <SelectItem value="all">Todos</SelectItem>
+                <SelectItem value="Ativo">Ativo</SelectItem>
+                <SelectItem value="Inativo">Inativo</SelectItem>
+                <SelectItem value="Licença">Licença</SelectItem>
+              </SelectContent>
+            </Select>
+          </div>
+
+          <div className="flex items-end">
+            {(hasActiveFilters || certStatus !== 'all') && (
+              <Button
+                variant="ghost"
+                size="sm"
+                onClick={handleClearAllFilters}
+                className="text-slate-400 hover:text-white hover:bg-slate-700/50 w-full"
+              >
+                Limpar Filtros
+              </Button>
+            )}
+          </div>
+        </div>
       </div>
       
-      {/* Operators table */}
-      <div className="bg-gradient-to-br from-slate-800/60 to-slate-900/80 backdrop-blur-sm border border-slate-700/50 rounded-xl overflow-hidden">
-        <Table>
-          <TableHeader>
-            <TableRow className="border-slate-700/50">
-              <TableHead className="text-slate-200 font-semibold">ID / Nome</TableHead>
-              <TableHead className="text-slate-200 font-semibold">Função</TableHead>
-              <TableHead className="text-slate-200 font-semibold">Contato</TableHead>
-              <TableHead className="text-slate-200 font-semibold">Turno</TableHead>
-              <TableHead className="text-slate-200 font-semibold">ASO</TableHead>
-              <TableHead className="text-slate-200 font-semibold">NR-11</TableHead>
-              <TableHead className="text-slate-200 font-semibold">Admissão</TableHead>
-              <TableHead className="text-slate-200 font-semibold">Ações</TableHead>
-            </TableRow>
-          </TableHeader>
-          <TableBody>
-            {paginatedOperators.map((operator) => (
-              <TableRow 
-                key={operator.id} 
-                className="border-slate-700/30 hover:bg-slate-800/40 transition-colors"
-              >
-                <TableCell>
-                  <div className="space-y-1">
-                    <div className="font-bold text-white text-sm">{operator.id}</div>
-                    <div className="text-slate-400 text-sm">{operator.name || operator.nome}</div>
-                  </div>
-                </TableCell>
-                <TableCell>
-                  <Badge 
-                    variant="outline" 
-                    className={cn("border font-semibold text-xs px-2 py-1 rounded-full", getRoleBadge(operator.role || operator.funcao))}
-                  >
-                    {operator.role || operator.funcao}
-                  </Badge>
-                </TableCell>
-                <TableCell>
-                  <div className="flex items-center gap-2 text-blue-400 text-sm">
-                    <Phone className="w-3 h-3" />
-                    {operator.contact || operator.telefone}
-                  </div>
-                </TableCell>
-                <TableCell>
-                  <span className="text-slate-200 text-sm font-medium">
-                    {operator.shift || operator.turno}
-                  </span>
-                </TableCell>
-                <TableCell>
-                  <div className="space-y-1">
-                    {getStatusBadge(operator.asoStatus || StatusCertificacao.VALIDO)}
-                    <div className="text-xs text-slate-400">
-                      {operator.asoExpirationDate || 'N/A'}
-                    </div>
-                  </div>
-                </TableCell>
-                <TableCell>
-                  <div className="space-y-1">
-                    {getStatusBadge(operator.nrStatus || StatusCertificacao.VALIDO)}
-                    <div className="text-xs text-slate-400">
-                      {operator.nrExpirationDate || 'N/A'}
-                    </div>
-                  </div>
-                </TableCell>
-                <TableCell>
-                  <span className="text-slate-200 text-sm">
-                    {operator.registrationDate || operator.dataAdmissao}
-                  </span>
-                </TableCell>
-                <TableCell>
-                  <div className="flex items-center gap-1">
-                    <Button
-                      variant="ghost"
-                      size="sm"
-                      onClick={() => handleViewDetails(operator)}
-                      className="h-8 w-8 p-0 text-slate-400 hover:text-blue-400 hover:bg-blue-500/20"
-                      title="Ver detalhes"
-                    >
-                      <Eye className="h-3 w-3" />
-                    </Button>
-                    <Button
-                      variant="ghost"
-                      size="sm"
-                      onClick={() => {
-                        setSelectedOperator(operator);
-                        setEditDialogOpen(true);
-                      }}
-                      className="h-8 w-8 p-0 text-slate-400 hover:text-emerald-400 hover:bg-emerald-500/20"
-                      title="Editar"
-                    >
-                      <Edit className="h-3 w-3" />
-                    </Button>
-                    <Button
-                      variant="ghost"
-                      size="sm"
-                      onClick={() => handleDeleteOperator(operator.id)}
-                      className="h-8 w-8 p-0 text-slate-400 hover:text-red-400 hover:bg-red-500/20"
-                      title="Excluir"
-                    >
-                      <Trash2 className="h-3 w-3" />
-                    </Button>
-                  </div>
-                </TableCell>
+      {/* Operators table - using full width */}
+      <div className="w-full bg-gradient-to-br from-slate-800/60 to-slate-900/80 backdrop-blur-sm border border-slate-700/50 rounded-xl overflow-hidden">
+        <div className="overflow-x-auto">
+          <Table>
+            <TableHeader>
+              <TableRow className="border-slate-700/50">
+                <TableHead className="text-slate-200 font-semibold whitespace-nowrap">ID / Nome</TableHead>
+                <TableHead className="text-slate-200 font-semibold whitespace-nowrap">Função</TableHead>
+                <TableHead className="text-slate-200 font-semibold whitespace-nowrap">Contato</TableHead>
+                <TableHead className="text-slate-200 font-semibold whitespace-nowrap">Turno</TableHead>
+                <TableHead className="text-slate-200 font-semibold whitespace-nowrap">Setor</TableHead>
+                <TableHead className="text-slate-200 font-semibold whitespace-nowrap">ASO</TableHead>
+                <TableHead className="text-slate-200 font-semibold whitespace-nowrap">NR-11</TableHead>
+                <TableHead className="text-slate-200 font-semibold whitespace-nowrap">Admissão</TableHead>
+                <TableHead className="text-slate-200 font-semibold whitespace-nowrap">Ações</TableHead>
               </TableRow>
-            ))}
-          </TableBody>
-        </Table>
+            </TableHeader>
+            <TableBody>
+              {paginatedOperators.map((operator) => (
+                <TableRow 
+                  key={operator.id} 
+                  className="border-slate-700/30 hover:bg-slate-800/40 transition-colors"
+                >
+                  <TableCell className="whitespace-nowrap">
+                    <div className="space-y-1">
+                      <div className="font-bold text-white text-sm">{operator.id}</div>
+                      <div className="text-slate-400 text-sm">{operator.name || operator.nome}</div>
+                    </div>
+                  </TableCell>
+                  <TableCell className="whitespace-nowrap">
+                    <Badge 
+                      variant="outline" 
+                      className={cn("border font-semibold text-xs px-2 py-1 rounded-full", getRoleBadge(operator.role || operator.funcao))}
+                    >
+                      {operator.role || operator.funcao}
+                    </Badge>
+                  </TableCell>
+                  <TableCell className="whitespace-nowrap">
+                    <div className="flex items-center gap-2 text-blue-400 text-sm">
+                      <Phone className="w-3 h-3" />
+                      {operator.contact || operator.telefone}
+                    </div>
+                  </TableCell>
+                  <TableCell className="whitespace-nowrap">
+                    <span className="text-slate-200 text-sm font-medium">
+                      {operator.shift || operator.turno}
+                    </span>
+                  </TableCell>
+                  <TableCell className="whitespace-nowrap">
+                    <span className="text-slate-200 text-sm">
+                      {operator.setor}
+                    </span>
+                  </TableCell>
+                  <TableCell className="whitespace-nowrap">
+                    <div className="space-y-1">
+                      {getStatusBadge(operator.asoStatus || StatusCertificacao.VALIDO)}
+                      <div className="text-xs text-slate-400">
+                        {operator.asoExpirationDate || 'N/A'}
+                      </div>
+                    </div>
+                  </TableCell>
+                  <TableCell className="whitespace-nowrap">
+                    <div className="space-y-1">
+                      {getStatusBadge(operator.nrStatus || StatusCertificacao.VALIDO)}
+                      <div className="text-xs text-slate-400">
+                        {operator.nrExpirationDate || 'N/A'}
+                      </div>
+                    </div>
+                  </TableCell>
+                  <TableCell className="whitespace-nowrap">
+                    <span className="text-slate-200 text-sm">
+                      {operator.registrationDate || operator.dataAdmissao}
+                    </span>
+                  </TableCell>
+                  <TableCell className="whitespace-nowrap">
+                    <div className="flex items-center gap-1">
+                      <Button
+                        variant="ghost"
+                        size="sm"
+                        onClick={() => handleViewDetails(operator)}
+                        className="h-8 w-8 p-0 text-slate-400 hover:text-blue-400 hover:bg-blue-500/20"
+                        title="Ver detalhes"
+                      >
+                        <Eye className="h-3 w-3" />
+                      </Button>
+                      <Button
+                        variant="ghost"
+                        size="sm"
+                        onClick={() => {
+                          setSelectedOperator(operator);
+                          setEditDialogOpen(true);
+                        }}
+                        className="h-8 w-8 p-0 text-slate-400 hover:text-emerald-400 hover:bg-emerald-500/20"
+                        title="Editar"
+                      >
+                        <Edit className="h-3 w-3" />
+                      </Button>
+                      <Button
+                        variant="ghost"
+                        size="sm"
+                        onClick={() => handleDeleteOperator(operator.id)}
+                        className="h-8 w-8 p-0 text-slate-400 hover:text-red-400 hover:bg-red-500/20"
+                        title="Excluir"
+                      >
+                        <Trash2 className="h-3 w-3" />
+                      </Button>
+                    </div>
+                  </TableCell>
+                </TableRow>
+              ))}
+            </TableBody>
+          </Table>
+        </div>
         
         {paginatedOperators.length === 0 && (
           <div className="text-center py-12">
