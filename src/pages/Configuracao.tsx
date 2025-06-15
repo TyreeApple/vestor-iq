@@ -1,5 +1,5 @@
 import React from "react";
-import { Github } from "lucide-react";
+import { Github, Cog } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
 // Importando ícones oficiais das tecnologias
