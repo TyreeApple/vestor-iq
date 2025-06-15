@@ -263,21 +263,6 @@ const MaintenanceHistoryTable: React.FC<MaintenanceHistoryTableProps> = ({
       <SortDesc className="ml-1 h-3 w-3 text-blue-500" />;
   };
 
-  // Pagination
-  const {
-    currentPage,
-    totalPages,
-    paginatedData,
-    canGoPrevious,
-    canGoNext,
-    goToPage,
-    startIndex,
-    endIndex
-  } = usePagination({
-    data: filteredAndSortedData,
-    itemsPerPage: 10
-  });
-
   return (
     <div className="space-y-6">
       {/* Standardized Filters */}
