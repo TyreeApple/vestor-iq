@@ -105,19 +105,15 @@ const ForkliftCard: React.FC<ForkliftCardProps> = ({ forklift, onClick, onDelete
         </div>
       </div>
 
-      {/* Badges Section - Aligned vertically above capacity */}
-      <div className="flex flex-col gap-2 mb-3">
+      {/* Badges Section - Aligned horizontally above capacity */}
+      <div className="flex items-center gap-2 mb-3">
         {/* Type Badge */}
-        <div className="flex justify-start">
-          <Badge variant="outline" className={cn("border font-semibold text-xs tracking-wider whitespace-nowrap shrink-0 px-4 py-1.5 rounded-full", getTypeBadge(forklift.tipo))}>
-            {forklift.tipo}
-          </Badge>
-        </div>
+        <Badge variant="outline" className={cn("border font-semibold text-xs tracking-wider whitespace-nowrap shrink-0 px-4 py-1.5 rounded-full", getTypeBadge(forklift.tipo))}>
+          {forklift.tipo}
+        </Badge>
 
         {/* Status Badge */}
-        <div className="flex justify-start">
-          {getStatusBadge(forklift.status)}
-        </div>
+        {getStatusBadge(forklift.status)}
       </div>
 
       {/* Capacity Section - Clean design without floating badges */}
