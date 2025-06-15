@@ -58,18 +58,18 @@ const Sidebar: React.FC = () => {
 
   return (
     <div className={cn(
-      "fixed left-0 top-0 h-full bg-card dark:bg-card border-r border-slate-200 dark:border-border shadow-premium dark:shadow-premium-dark z-50 flex flex-col transition-all duration-300",
+      "fixed left-0 top-0 h-full glass-sidebar z-50 flex flex-col transition-all duration-300",
       sidebarCollapsed ? "w-20" : "w-64"
     )}>
       {/* Header */}
-      <div className="h-16 flex items-center justify-between px-4 border-b border-slate-200 dark:border-border bg-gradient-primary">
+      <div className="h-16 flex items-center justify-between px-4 border-b border-white/20 dark:border-slate-700/50 bg-gradient-primary">
         {!sidebarCollapsed && (
           <div className="flex items-center space-x-3">
-            <div className="p-2 bg-white/20 backdrop-blur-sm rounded-xl border border-white/30">
+            <div className="p-2 bg-white/20 backdrop-blur-sm rounded-xl border border-white/30 interactive-scale">
               <Gauge className="w-6 h-6 text-white" />
             </div>
             <div className="text-white">
-              <h1 className="font-bold text-lg tracking-tight">FleetPro</h1>
+              <h1 className="font-bold text-lg tracking-tight animate-slide-in-right">FleetPro</h1>
               <p className="text-xs text-white/80 font-medium">Gestão de Frotas</p>
             </div>
           </div>
@@ -77,7 +77,7 @@ const Sidebar: React.FC = () => {
         
         {sidebarCollapsed && (
           <div className="flex items-center justify-center w-full">
-            <div className="p-2 bg-white/20 backdrop-blur-sm rounded-xl border border-white/30">
+            <div className="p-2 bg-white/20 backdrop-blur-sm rounded-xl border border-white/30 interactive-scale">
               <Gauge className="w-6 h-6 text-white" />
             </div>
           </div>
@@ -86,7 +86,7 @@ const Sidebar: React.FC = () => {
         <button
           onClick={() => setSidebarCollapsed(!sidebarCollapsed)}
           className={cn(
-            "p-2 rounded-xl hover:bg-white/20 backdrop-blur-sm transition-all duration-200 text-white border border-white/30 hover:border-white/50",
+            "p-2 rounded-xl glass-button text-white border-white/30 hover:border-white/50 interactive-scale focus-ring-premium",
             sidebarCollapsed && "absolute top-4 right-2"
           )}
         >
@@ -99,24 +99,25 @@ const Sidebar: React.FC = () => {
       </div>
 
       {/* Navigation */}
-      <nav className="flex-1 p-4 space-y-2 overflow-y-auto">
-        {menuItems.map((item) => (
+      <nav className="flex-1 p-4 space-y-2 overflow-y-auto stagger-children">
+        {menuItems.map((item, index) => (
           <NavLink
             key={item.id}
             to={item.path}
             className={({ isActive }) => cn(
-              "flex items-center rounded-xl transition-all duration-200 group relative modern-card",
+              "flex items-center rounded-xl transition-all duration-300 group relative glass-card card-hover-effect focus-ring-premium",
               sidebarCollapsed ? "justify-center p-3 mx-auto w-12 h-12" : "space-x-3 px-4 py-3",
               isActive
-                ? "bg-primary/10 dark:bg-primary/20 text-primary border-primary/30 shadow-premium"
-                : "text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 hover:text-slate-900 dark:hover:text-slate-100 border-transparent"
+                ? "bg-primary/15 dark:bg-primary/25 text-primary border-primary/40 shadow-premium"
+                : "text-slate-600 dark:text-slate-300 hover:bg-slate-100/50 dark:hover:bg-slate-800/50 hover:text-slate-900 dark:hover:text-slate-100 border-transparent"
             )}
             title={sidebarCollapsed ? item.label : undefined}
+            style={{ animationDelay: `${index * 0.1}s` }}
           >
             <div className="flex items-center justify-center flex-shrink-0 relative">
-              <item.icon className="w-5 h-5" />
+              <item.icon className="w-5 h-5 transition-transform duration-200 group-hover:scale-110" />
               {sidebarCollapsed && item.badge && (
-                <span className="absolute -top-2 -right-2 bg-error text-white text-xs min-w-[18px] h-[18px] rounded-full flex items-center justify-center px-1 font-semibold shadow-premium border-2 border-card">
+                <span className="absolute -top-2 -right-2 bg-error text-white text-xs min-w-[18px] h-[18px] rounded-full flex items-center justify-center px-1 font-semibold shadow-premium border-2 border-card animate-pulse-glow">
                   {item.badge > 99 ? '99+' : item.badge}
                 </span>
               )}
@@ -124,9 +125,9 @@ const Sidebar: React.FC = () => {
             
             {!sidebarCollapsed && (
               <>
-                <span className="font-semibold truncate flex-1">{item.label}</span>
+                <span className="font-semibold truncate flex-1 transition-all duration-200 group-hover:translate-x-1">{item.label}</span>
                 {item.badge && (
-                  <span className="bg-error text-white text-xs px-2.5 py-1 rounded-full flex-shrink-0 min-w-[24px] h-6 flex items-center justify-center font-semibold shadow-sm">
+                  <span className="bg-error text-white text-xs px-2.5 py-1 rounded-full flex-shrink-0 min-w-[24px] h-6 flex items-center justify-center font-semibold shadow-lg animate-pulse-glow">
                     {item.badge > 99 ? '99+' : item.badge}
                   </span>
                 )}
