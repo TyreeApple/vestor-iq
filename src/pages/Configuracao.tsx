@@ -1,6 +1,7 @@
-
 import React from "react";
-import { Github, Cog } from "lucide-react";
+import { Github } from "lucide-react";
+import { Button } from "@/components/ui/button";
+
 // Importando ícones oficiais das tecnologias
 import { 
   SiReact, 
@@ -10,7 +11,6 @@ import {
   SiLucide, 
   SiRadixui 
 } from "react-icons/si";
-import { Button } from "@/components/ui/button";
 
 const techs = [
   { name: "React", icon: SiReact, iconColor: "#149eca" },
@@ -41,14 +41,18 @@ export default function Configuracao() {
         </div>
       </section>
 
-      {/* Desenvolvedor apenas com botão */}
-      <section className="rounded-xl border border-slate-600/40 bg-card/80 p-6 shadow-md flex flex-col items-start">
+      {/* Botão centralizado */}
+      <section className="rounded-xl border border-slate-600/40 bg-card/80 p-6 shadow-md flex justify-center">
         <Button
           asChild
-          className="mb-2 bg-muted text-foreground font-semibold shadow transition-colors hover:bg-muted/80"
+          className="bg-muted text-foreground font-semibold shadow transition-colors hover:bg-muted/80"
         >
-          <a href="https://github.com/olucasmf" target="_blank" rel="noopener noreferrer">
-            <Github className="w-5 h-5 mr-2" /> Ver repositório no GitHub
+          <a
+            href="https://github.com/olucasmf"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            <Github className="w-5 h-5 mr-2" /> Profile DEV
           </a>
         </Button>
       </section>
