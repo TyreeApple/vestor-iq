@@ -1,14 +1,23 @@
-
 import React, { useState } from 'react';
 import PageHeader from '@/components/layout/PageHeader';
 import { Button } from "@/components/ui/button";
 import { StatusCertificacao, User, FuncaoOperador } from '@/types';
-import { Filter, Search, UserPlus } from 'lucide-react';
+import { Filter, Search, UserPlus, Phone, Trash2, Edit, Eye } from 'lucide-react';
 import { Input } from '@/components/ui/input';
+import { Badge } from '@/components/ui/badge';
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table";
 import OperatorDialog from '@/components/operators/OperatorDialog';
 import OperatorDetails from '@/components/operators/OperatorDetails';
-import OperatorCard from '@/components/operators/OperatorCard';
 import { useToast } from '@/hooks/use-toast';
+import { cn } from '@/lib/utils';
+import PaginationControls from '@/components/common/PaginationControls';
 
 // Mock data for operators
 const initialOperators: User[] = [
@@ -151,6 +160,10 @@ const OperatorsPage = () => {
   const [editDialogOpen, setEditDialogOpen] = useState(false);
   const [detailsDialogOpen, setDetailsDialogOpen] = useState(false);
   const [selectedOperator, setSelectedOperator] = useState<User | null>(null);
+
+  // Pagination
+  const [currentPage, setCurrentPage] = useState(1);
+  const itemsPerPage = 10;
   
   // Filter operators based on search and filters
   const filteredOperators = operators.filter(operator => {
@@ -177,6 +190,49 @@ const OperatorsPage = () => {
     
     return matchesSearch && matchesRole && matchesCertStatus;
   });
+
+  // Get status color classes
+  const getStatusBadge = (status: StatusCertificacao) => {
+    switch (status) {
+      case StatusCertificacao.VALIDO:
+        return (
+          <Badge className="bg-gradient-to-r from-emerald-500 to-emerald-600 text-white border-0 font-semibold text-xs px-2 py-1 rounded-full">
+            ✓ Válido
+          </Badge>
+        );
+      case StatusCertificacao.VENCENDO:
+        return (
+          <Badge className="bg-gradient-to-r from-amber-500 to-orange-600 text-white border-0 font-semibold text-xs px-2 py-1 rounded-full animate-pulse">
+            ⚠ Vencendo
+          </Badge>
+        );
+      case StatusCertificacao.VENCIDO:
+        return (
+          <Badge className="bg-gradient-to-r from-red-500 to-red-600 text-white border-0 font-semibold text-xs px-2 py-1 rounded-full">
+            ✗ Vencido
+          </Badge>
+        );
+      default:
+        return (
+          <Badge className="bg-gradient-to-r from-slate-500 to-slate-600 text-white border-0 font-semibold text-xs px-2 py-1 rounded-full">
+            {status}
+          </Badge>
+        );
+    }
+  };
+
+  // Get role color for badge
+  const getRoleBadge = (role: FuncaoOperador) => {
+    const colors = {
+      [FuncaoOperador.OPERADOR]: 'bg-blue-500/20 text-blue-300 border-blue-400/30',
+      [FuncaoOperador.SUPERVISOR]: 'bg-purple-500/20 text-purple-300 border-purple-400/30',
+      [FuncaoOperador.TECNICO]: 'bg-emerald-500/20 text-emerald-300 border-emerald-400/30',
+      [FuncaoOperador.COORDENADOR]: 'bg-orange-500/20 text-orange-300 border-orange-400/30',
+      [FuncaoOperador.GERENTE]: 'bg-red-500/20 text-red-300 border-red-400/30'
+    };
+    
+    return colors[role] || 'bg-slate-500/20 text-slate-300 border-slate-400/30';
+  };
 
   // Handle add/edit operator
   const handleSaveOperator = (operatorData: User) => {
@@ -221,6 +277,16 @@ const OperatorsPage = () => {
       description: "Esta funcionalidade permitiria filtros mais avançados."
     });
   };
+
+  // Pagination calculations
+  const totalItems = filteredOperators.length;
+  const totalPages = Math.ceil(totalItems / itemsPerPage);
+  const startIndex = (currentPage - 1) * itemsPerPage + 1;
+  const endIndex = Math.min(currentPage * itemsPerPage, totalItems);
+  const paginatedOperators = filteredOperators.slice(
+    (currentPage - 1) * itemsPerPage,
+    currentPage * itemsPerPage
+  );
 
   return (
     <div className="space-y-6">
@@ -289,22 +355,131 @@ const OperatorsPage = () => {
         </div>
       </div>
       
-      {/* Operators grid */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-        {filteredOperators.map((operator) => (
-          <OperatorCard
-            key={operator.id}
-            operator={operator}
-            onClick={() => handleViewDetails(operator)}
-            onDelete={() => handleDeleteOperator(operator.id)}
-          />
-        ))}
+      {/* Operators table */}
+      <div className="bg-gradient-to-br from-slate-800/60 to-slate-900/80 backdrop-blur-sm border border-slate-700/50 rounded-xl overflow-hidden">
+        <Table>
+          <TableHeader>
+            <TableRow className="border-slate-700/50">
+              <TableHead className="text-slate-200 font-semibold">ID / Nome</TableHead>
+              <TableHead className="text-slate-200 font-semibold">Função</TableHead>
+              <TableHead className="text-slate-200 font-semibold">Contato</TableHead>
+              <TableHead className="text-slate-200 font-semibold">Turno</TableHead>
+              <TableHead className="text-slate-200 font-semibold">ASO</TableHead>
+              <TableHead className="text-slate-200 font-semibold">NR-11</TableHead>
+              <TableHead className="text-slate-200 font-semibold">Admissão</TableHead>
+              <TableHead className="text-slate-200 font-semibold">Ações</TableHead>
+            </TableRow>
+          </TableHeader>
+          <TableBody>
+            {paginatedOperators.map((operator) => (
+              <TableRow 
+                key={operator.id} 
+                className="border-slate-700/30 hover:bg-slate-800/40 transition-colors"
+              >
+                <TableCell>
+                  <div className="space-y-1">
+                    <div className="font-bold text-white text-sm">{operator.id}</div>
+                    <div className="text-slate-400 text-sm">{operator.name || operator.nome}</div>
+                  </div>
+                </TableCell>
+                <TableCell>
+                  <Badge 
+                    variant="outline" 
+                    className={cn("border font-semibold text-xs px-2 py-1 rounded-full", getRoleBadge(operator.role || operator.funcao))}
+                  >
+                    {operator.role || operator.funcao}
+                  </Badge>
+                </TableCell>
+                <TableCell>
+                  <div className="flex items-center gap-2 text-blue-400 text-sm">
+                    <Phone className="w-3 h-3" />
+                    {operator.contact || operator.telefone}
+                  </div>
+                </TableCell>
+                <TableCell>
+                  <span className="text-slate-200 text-sm font-medium">
+                    {operator.shift || operator.turno}
+                  </span>
+                </TableCell>
+                <TableCell>
+                  <div className="space-y-1">
+                    {getStatusBadge(operator.asoStatus || StatusCertificacao.VALIDO)}
+                    <div className="text-xs text-slate-400">
+                      {operator.asoExpirationDate || 'N/A'}
+                    </div>
+                  </div>
+                </TableCell>
+                <TableCell>
+                  <div className="space-y-1">
+                    {getStatusBadge(operator.nrStatus || StatusCertificacao.VALIDO)}
+                    <div className="text-xs text-slate-400">
+                      {operator.nrExpirationDate || 'N/A'}
+                    </div>
+                  </div>
+                </TableCell>
+                <TableCell>
+                  <span className="text-slate-200 text-sm">
+                    {operator.registrationDate || operator.dataAdmissao}
+                  </span>
+                </TableCell>
+                <TableCell>
+                  <div className="flex items-center gap-1">
+                    <Button
+                      variant="ghost"
+                      size="sm"
+                      onClick={() => handleViewDetails(operator)}
+                      className="h-8 w-8 p-0 text-slate-400 hover:text-blue-400 hover:bg-blue-500/20"
+                      title="Ver detalhes"
+                    >
+                      <Eye className="h-3 w-3" />
+                    </Button>
+                    <Button
+                      variant="ghost"
+                      size="sm"
+                      onClick={() => {
+                        setSelectedOperator(operator);
+                        setEditDialogOpen(true);
+                      }}
+                      className="h-8 w-8 p-0 text-slate-400 hover:text-emerald-400 hover:bg-emerald-500/20"
+                      title="Editar"
+                    >
+                      <Edit className="h-3 w-3" />
+                    </Button>
+                    <Button
+                      variant="ghost"
+                      size="sm"
+                      onClick={() => handleDeleteOperator(operator.id)}
+                      className="h-8 w-8 p-0 text-slate-400 hover:text-red-400 hover:bg-red-500/20"
+                      title="Excluir"
+                    >
+                      <Trash2 className="h-3 w-3" />
+                    </Button>
+                  </div>
+                </TableCell>
+              </TableRow>
+            ))}
+          </TableBody>
+        </Table>
+        
+        {paginatedOperators.length === 0 && (
+          <div className="text-center py-12">
+            <p className="text-slate-400">Nenhum operador encontrado</p>
+          </div>
+        )}
       </div>
 
-      {filteredOperators.length === 0 && (
-        <div className="text-center py-12">
-          <p className="text-muted-foreground">Nenhum operador encontrado</p>
-        </div>
+      {/* Pagination */}
+      {totalPages > 1 && (
+        <PaginationControls
+          currentPage={currentPage}
+          totalPages={totalPages}
+          onPageChange={setCurrentPage}
+          canGoPrevious={currentPage > 1}
+          canGoNext={currentPage < totalPages}
+          startIndex={startIndex}
+          endIndex={endIndex}
+          totalItems={totalItems}
+        />
       )}
       
       {/* Add/Edit Operator Dialog */}
