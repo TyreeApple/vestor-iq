@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { Button } from "@/components/ui/button";
 import { useIsMobile } from '@/hooks/use-mobile';
@@ -14,6 +13,9 @@ import { useToast } from '@/hooks/use-toast';
 import AdvancedFilters from '@/components/common/AdvancedFilters';
 import { useFilters } from '@/hooks/use-filters';
 import { useAppStore } from '@/stores/useAppStore';
+import MaintenanceHeader from '@/components/maintenance/MaintenanceHeader';
+import MaintenanceFilterBar from '@/components/maintenance/MaintenanceFilterBar';
+import MaintenancePendingSection from '@/components/maintenance/MaintenancePendingSection';
 
 // Mock data for available forklifts and operators
 const availableForklifts = [
@@ -158,172 +160,38 @@ const MaintenancePage = () => {
 
   // Get pending and completed maintenance
   const pendingMaintenance = filteredData.filter(m => m.status !== StatusManutencao.CONCLUIDA);
-  // (a tabela sempre mostra todos do Zustand)
-  // const completedMaintenance = filteredData.filter(m => m.status === StatusManutencao.CONCLUIDA);
 
   return (
     <div className="p-6 space-y-6">
       {/* Header */}
-      <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4">
-        <div>
-          <h1 className="text-3xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
-            Gestão de Manutenção
-          </h1>
-          <p className="text-muted-foreground mt-1">
-            Controle completo das ordens de serviço e manutenções
-          </p>
-        </div>
-        <div className="flex items-center gap-3">
-          <Button
-            variant="outline"
-            onClick={handleExport}
-            className="gap-2"
-          >
-            <Download className="w-4 h-4" />
-            Exportar
-          </Button>
-          <Button
-            onClick={() => setAddDialogOpen(true)}
-            className="gap-2 bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700"
-          >
-            <Plus className="w-4 h-4" />
-            Nova Manutenção
-          </Button>
-        </div>
-      </div>
+      <MaintenanceHeader
+        onExport={handleExport}
+        onOpenAdd={() => setAddDialogOpen(true)}
+      />
 
       {/* KPI Cards */}
       <MaintenanceKpiCards maintenanceData={maintenanceItems} />
 
-      {/* Compact Filter Bar */}
-      <div className="bg-gradient-to-r from-slate-900 to-slate-800 rounded-xl p-4 shadow-lg border border-slate-700">
-        <div className="flex flex-col lg:flex-row gap-4">
-          {/* Search - Full width on mobile, flexible on desktop */}
-          <div className="relative flex-1 min-w-0">
-            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-slate-400 w-4 h-4" />
-            <Input 
-              type="text" 
-              placeholder="Buscar por problema, empilhadeira ou responsável..." 
-              className="pl-10 bg-slate-800 border-slate-600 text-white placeholder:text-slate-400 focus:border-blue-500 focus:ring-blue-500"
-              value={search}
-              onChange={(e) => setSearch(e.target.value)}
-            />
-          </div>
-
-          {/* Filters - Stack on mobile, inline on desktop */}
-          <div className="flex flex-col sm:flex-row gap-3 lg:flex-shrink-0">
-            <div className="grid grid-cols-2 sm:flex gap-3">
-              <select 
-                className="px-3 py-2 rounded-lg border border-slate-600 bg-slate-800 text-white text-sm h-10 focus:border-blue-500 focus:ring-1 focus:ring-blue-500 min-w-[120px]"
-                value={filters.status || 'all'}
-                onChange={(e) => setFilters({ ...filters, status: e.target.value === 'all' ? '' : e.target.value })}
-              >
-                <option value="all">Status</option>
-                <option value={StatusManutencao.ABERTA}>Aberta</option>
-                <option value={StatusManutencao.EM_ANDAMENTO}>Em Andamento</option>
-                <option value={StatusManutencao.CONCLUIDA}>Concluída</option>
-              </select>
-
-              <select 
-                className="px-3 py-2 rounded-lg border border-slate-600 bg-slate-800 text-white text-sm h-10 focus:border-blue-500 focus:ring-1 focus:ring-blue-500 min-w-[120px]"
-                value={filters.tipo || 'all'}
-                onChange={(e) => setFilters({ ...filters, tipo: e.target.value === 'all' ? '' : e.target.value })}
-              >
-                <option value="all">Tipos</option>
-                <option value={TipoManutencao.PREVENTIVA}>Preventiva</option>
-                <option value={TipoManutencao.CORRETIVA}>Corretiva</option>
-                <option value={TipoManutencao.PREDITIVA}>Preditiva</option>
-              </select>
-
-              <select 
-                className="px-3 py-2 rounded-lg border border-slate-600 bg-slate-800 text-white text-sm h-10 focus:border-blue-500 focus:ring-1 focus:ring-blue-500 min-w-[120px]"
-                value={filters.prioridade || 'all'}
-                onChange={(e) => setFilters({ ...filters, prioridade: e.target.value === 'all' ? '' : e.target.value })}
-              >
-                <option value="all">Prioridades</option>
-                <option value={PrioridadeOperacao.CRITICA}>Crítica</option>
-                <option value={PrioridadeOperacao.ALTA}>Alta</option>
-                <option value={PrioridadeOperacao.NORMAL}>Normal</option>
-                <option value={PrioridadeOperacao.BAIXA}>Baixa</option>
-              </select>
-            </div>
-
-            {/* Advanced Filters and View Toggle */}
-            <div className="flex gap-2">
-              <AdvancedFilters
-                filters={filterOptions}
-                values={filters}
-                onFiltersChange={setFilters}
-                onClearFilters={clearFilters}
-                triggerProps={{
-                  className: "bg-slate-700 border-slate-600 text-white hover:bg-slate-600 hover:text-white flex-shrink-0"
-                }}
-              />
-
-              {/* View Toggle */}
-              <div className="flex border border-slate-600 rounded-lg bg-slate-800">
-                <Button
-                  variant={viewMode === 'grid' ? 'default' : 'ghost'}
-                  size="sm"
-                  onClick={() => setViewMode('grid')}
-                  className={cn(
-                    "rounded-r-none px-3",
-                    viewMode === 'grid' 
-                      ? "bg-blue-600 text-white hover:bg-blue-700" 
-                      : "bg-transparent text-slate-300 hover:bg-slate-600 hover:text-white"
-                  )}
-                >
-                  <Grid className="w-4 h-4" />
-                </Button>
-                <Button
-                  variant={viewMode === 'list' ? 'default' : 'ghost'}
-                  size="sm"
-                  onClick={() => setViewMode('list')}
-                  className={cn(
-                    "rounded-l-none px-3",
-                    viewMode === 'list' 
-                      ? "bg-blue-600 text-white hover:bg-blue-700" 
-                      : "bg-transparent text-slate-300 hover:bg-slate-600 hover:text-white"
-                  )}
-                >
-                  <List className="w-4 h-4" />
-                </Button>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
+      {/* Filter Bar */}
+      <MaintenanceFilterBar
+        search={search}
+        setSearch={setSearch}
+        filters={filters}
+        setFilters={setFilters}
+        clearFilters={clearFilters}
+        filterOptions={filterOptions}
+        viewMode={viewMode}
+        setViewMode={setViewMode}
+      />
       
       {/* Pending Maintenance Section */}
-      {pendingMaintenance.length > 0 && (
-        <div>
-          <div className="flex items-center justify-between mb-6">
-            <div>
-              <h2 className="text-2xl font-bold text-foreground">Manutenções Pendentes</h2>
-              <p className="text-muted-foreground">
-                {pendingMaintenance.length} {pendingMaintenance.length === 1 ? 'manutenção aguardando' : 'manutenções aguardando'} atenção
-              </p>
-            </div>
-            <div className="flex items-center gap-2">
-              <div className="w-3 h-3 bg-orange-500 rounded-full animate-pulse" />
-              <span className="text-sm text-muted-foreground">Atualizando em tempo real</span>
-            </div>
-          </div>
-          
-          <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-6">
-            {pendingMaintenance.map((maintenance) => (
-              <PendingMaintenanceCard
-                key={maintenance.id}
-                maintenance={maintenance}
-                onEdit={handleEditMaintenance}
-                onDelete={handleDeleteMaintenance}
-                onStatusChange={handleStatusChange}
-              />
-            ))}
-          </div>
-        </div>
-      )}
-      
+      <MaintenancePendingSection
+        pendingMaintenance={pendingMaintenance}
+        onEdit={handleEditMaintenance}
+        onDelete={handleDeleteMaintenance}
+        onStatusChange={handleStatusChange}
+      />
+    
       {/* Maintenance History */}
       <div>
         <div className="flex items-center justify-between mb-6">
@@ -338,7 +206,6 @@ const MaintenancePage = () => {
             Gerar Relatório
           </Button>
         </div>
-        
         <MaintenanceHistoryTable
           data={maintenanceItems}
           onEdit={handleEditMaintenance}
@@ -354,7 +221,6 @@ const MaintenancePage = () => {
         availableForklifts={availableForklifts}
         availableOperators={availableOperators}
       />
-      
       <MaintenanceDialog 
         open={editDialogOpen} 
         onOpenChange={setEditDialogOpen}
@@ -368,4 +234,3 @@ const MaintenancePage = () => {
 };
 
 export default MaintenancePage;
-
