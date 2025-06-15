@@ -1,20 +1,28 @@
 
 import React from "react";
-import { Github, React as ReactIcon, Typescript, TailwindCss, Vite, LucideReact, RadixUi } from "lucide-react";
+import {
+  Github,
+  Code,
+  Code2,
+  Palette,
+  Zap,
+  Component,
+  Blocks,
+} from "lucide-react";
 import { Button } from "@/components/ui/button";
 
 const techs = [
-  { name: "React", icon: ReactIcon },
-  { name: "TypeScript", icon: Typescript },
-  { name: "Tailwind CSS", icon: TailwindCss },
-  { name: "Vite", icon: Vite },
-  { name: "Lucide React", icon: LucideReact },
-  { name: "Radix UI", icon: RadixUi }
+  { name: "React", icon: Code },
+  { name: "TypeScript", icon: Code2 },
+  { name: "Tailwind CSS", icon: Palette },
+  { name: "Vite", icon: Zap },
+  { name: "Lucide React", icon: Component },
+  { name: "Radix UI", icon: Blocks },
 ];
 
 export default function Configuracao() {
   return (
-    <div className="w-full max-w-4xl mx-auto space-y-6 py-8">
+    <div className="w-full max-w-4xl mx-auto space-y-6 py-8 px-2">
       {/* Informações do Sistema */}
       <section className="rounded-xl border border-slate-600/40 bg-card/80 dark:bg-card/80 p-6 md:p-7 shadow-md">
         <div className="flex items-center gap-2 mb-3">
