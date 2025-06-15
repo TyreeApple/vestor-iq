@@ -4,7 +4,6 @@ import { Outlet } from 'react-router-dom';
 import Navbar from './Navbar';
 import Footer from './Footer';
 import { useRealTimeSync } from '@/hooks/useRealTimeSync';
-import EducationalModal from "@/components/EducationalModal";
 import FloatingMockDataButton from "@/components/FloatingMockDataButton";
 
 const MainLayout: React.FC = () => {
@@ -13,7 +12,6 @@ const MainLayout: React.FC = () => {
 
   return (
     <div className="relative min-h-screen flex flex-col bg-slate-50 dark:bg-background transition-colors duration-300 overflow-x-hidden">
-      <EducationalModal />
       <FloatingMockDataButton />
       <Navbar />
       <main className="flex-grow overflow-y-auto overflow-x-hidden bg-slate-50 dark:bg-background w-full">
@@ -27,3 +25,4 @@ const MainLayout: React.FC = () => {
 };
 
 export default MainLayout;
+
