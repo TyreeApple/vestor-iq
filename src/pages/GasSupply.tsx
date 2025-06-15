@@ -8,6 +8,7 @@ import { useToast } from '@/hooks/use-toast';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Badge } from '@/components/ui/badge';
+import AdvancedFilters from '@/components/common/AdvancedFilters';
 
 // Mock data for gas supplies - fixed to match Portuguese interface
 const initialGasSupplies: Abastecimento[] = [
@@ -148,54 +149,135 @@ const availableOperators = [
 const GasSupplyPage = () => {
   const { toast } = useToast();
   const [search, setSearch] = useState('');
-  const [forkliftFilter, setForkliftFilter] = useState<string>('all');
-  const [operatorFilter, setOperatorFilter] = useState<string>('all');
-  const [dateFromFilter, setDateFromFilter] = useState<string>('');
-  const [dateToFilter, setDateToFilter] = useState<string>('');
-  const [supplierFilter, setSupplierFilter] = useState<string>('all');
-  const [locationFilter, setLocationFilter] = useState<string>('all');
-  const [minQuantityFilter, setMinQuantityFilter] = useState<string>('');
-  const [maxQuantityFilter, setMaxQuantityFilter] = useState<string>('');
-  const [showAdvancedFilters, setShowAdvancedFilters] = useState(false);
   const [gasSupplies, setGasSupplies] = useState<Abastecimento[]>(initialGasSupplies);
+  const [filters, setFilters] = useState<Record<string, any>>({});
 
   // Dialog states
   const [addDialogOpen, setAddDialogOpen] = useState(false);
   const [editDialogOpen, setEditDialogOpen] = useState(false);
   const [selectedGasSupply, setSelectedGasSupply] = useState<Abastecimento | null>(null);
-  
-  // Filter gas supplies based on search and filters
+
+  // Get unique values for filter options
+  const forklifts = [...new Set(gasSupplies.map(supply => supply.empilhadeiraId || supply.forkliftId))];
+  const operators = [...new Set(gasSupplies.map(supply => supply.operador?.nome || supply.operator))];
+  const suppliers = [...new Set(gasSupplies.map(supply => supply.fornecedor).filter(Boolean))];
+  const locations = [...new Set(gasSupplies.map(supply => supply.localAbastecimento).filter(Boolean))];
+
+  // Define filter configuration for AdvancedFilters component
+  const filterOptions = [
+    {
+      key: 'empilhadeiraId',
+      label: 'Empilhadeira',
+      type: 'select' as const,
+      options: forklifts.map(id => ({ value: id, label: id }))
+    },
+    {
+      key: 'operadorNome',
+      label: 'Operador',
+      type: 'select' as const,
+      options: operators.map(name => ({ value: name, label: name }))
+    },
+    {
+      key: 'fornecedor',
+      label: 'Fornecedor',
+      type: 'select' as const,
+      options: suppliers.map(supplier => ({ value: supplier, label: supplier }))
+    },
+    {
+      key: 'localAbastecimento',
+      label: 'Local',
+      type: 'select' as const,
+      options: locations.map(location => ({ value: location, label: location }))
+    },
+    {
+      key: 'dataInicial',
+      label: 'Data Inicial',
+      type: 'date' as const
+    },
+    {
+      key: 'dataFinal',
+      label: 'Data Final',
+      type: 'date' as const
+    },
+    {
+      key: 'quantidadeMinima',
+      label: 'Quantidade Mínima (L)',
+      type: 'number' as const
+    },
+    {
+      key: 'quantidadeMaxima',
+      label: 'Quantidade Máxima (L)',
+      type: 'number' as const
+    },
+    {
+      key: 'custoMinimo',
+      label: 'Custo Mínimo (R$)',
+      type: 'number' as const
+    },
+    {
+      key: 'custoMaximo',
+      label: 'Custo Máximo (R$)',
+      type: 'number' as const
+    }
+  ];
+
+  // Filter gas supplies based on search and advanced filters
   const filteredGasSupplies = gasSupplies.filter(supply => {
-    // Search filter - using both Portuguese and legacy properties
-    const matchesSearch = (supply.empilhadeira?.modelo || supply.forkliftModel || '').toLowerCase().includes(search.toLowerCase()) || 
-                          (supply.operador?.nome || supply.operator || '').toLowerCase().includes(search.toLowerCase()) ||
-                          supply.id.toLowerCase().includes(search.toLowerCase());
+    // Search filter
+    const matchesSearch = search === '' || 
+      (supply.empilhadeira?.modelo || supply.forkliftModel || '').toLowerCase().includes(search.toLowerCase()) || 
+      (supply.operador?.nome || supply.operator || '').toLowerCase().includes(search.toLowerCase()) ||
+      supply.id.toLowerCase().includes(search.toLowerCase()) ||
+      (supply.fornecedor || '').toLowerCase().includes(search.toLowerCase()) ||
+      (supply.dataAbastecimento || supply.date || '').toLowerCase().includes(search.toLowerCase());
     
-    // Forklift filter
-    const matchesForklift = forkliftFilter === 'all' || supply.empilhadeiraId === forkliftFilter || supply.forkliftId === forkliftFilter;
-    
-    // Operator filter
-    const matchesOperator = operatorFilter === 'all' || supply.operadorId === operatorFilter || supply.operador?.nome === operatorFilter;
-    
-    // Date range filter
-    const supplyDate = supply.dataAbastecimento || supply.date || '';
-    const matchesDateFrom = !dateFromFilter || supplyDate >= dateFromFilter;
-    const matchesDateTo = !dateToFilter || supplyDate <= dateToFilter;
-    
-    // Supplier filter
-    const matchesSupplier = supplierFilter === 'all' || supply.fornecedor === supplierFilter;
-    
-    // Location filter
-    const matchesLocation = locationFilter === 'all' || supply.localAbastecimento === locationFilter;
-    
-    // Quantity range filter
-    const quantity = supply.quantidadeLitros || supply.quantity || 0;
-    const matchesMinQuantity = !minQuantityFilter || quantity >= parseFloat(minQuantityFilter);
-    const matchesMaxQuantity = !maxQuantityFilter || quantity <= parseFloat(maxQuantityFilter);
-    
-    return matchesSearch && matchesForklift && matchesOperator && matchesDateFrom && 
-           matchesDateTo && matchesSupplier && matchesLocation && matchesMinQuantity && matchesMaxQuantity;
+    // Advanced filters
+    const matchesFilters = Object.entries(filters).every(([key, value]) => {
+      if (!value || value === '' || value === 'all') return true;
+      
+      switch (key) {
+        case 'empilhadeiraId':
+          return supply.empilhadeiraId === value || supply.forkliftId === value;
+        case 'operadorNome':
+          return supply.operador?.nome === value || supply.operator === value;
+        case 'fornecedor':
+          return supply.fornecedor === value;
+        case 'localAbastecimento':
+          return supply.localAbastecimento === value;
+        case 'dataInicial':
+          const supplyDate = supply.dataAbastecimento || supply.date || '';
+          return supplyDate >= value;
+        case 'dataFinal':
+          const supplyDate2 = supply.dataAbastecimento || supply.date || '';
+          return supplyDate2 <= value;
+        case 'quantidadeMinima':
+          const quantity = supply.quantidadeLitros || supply.quantity || 0;
+          return quantity >= parseFloat(value);
+        case 'quantidadeMaxima':
+          const quantity2 = supply.quantidadeLitros || supply.quantity || 0;
+          return quantity2 <= parseFloat(value);
+        case 'custoMinimo':
+          return (supply.custoTotal || 0) >= parseFloat(value);
+        case 'custoMaximo':
+          return (supply.custoTotal || 0) <= parseFloat(value);
+        default:
+          return true;
+      }
+    });
+
+    return matchesSearch && matchesFilters;
   });
+
+  // Clear all filters
+  const clearAllFilters = () => {
+    setSearch('');
+    setFilters({});
+  };
+
+  // Count active filters
+  const activeFiltersCount = Object.keys(filters).filter(key => 
+    filters[key] && filters[key] !== '' && filters[key] !== 'all'
+  ).length + (search ? 1 : 0);
 
   // Format date
   const formatDate = (dateString: string) => {
@@ -203,23 +285,13 @@ const GasSupplyPage = () => {
     return `${dateParts[2]}/${dateParts[1]}/${dateParts[0]}`;
   };
   
-  // Get unique values for filters
-  const forklifts = [...new Set(gasSupplies.map(supply => supply.empilhadeiraId || supply.forkliftId))];
-  const operators = [...new Set(gasSupplies.map(supply => supply.operador?.nome || supply.operator))];
-  const suppliers = [...new Set(gasSupplies.map(supply => supply.fornecedor).filter(Boolean))];
-  const locations = [...new Set(gasSupplies.map(supply => supply.localAbastecimento).filter(Boolean))];
-
-  // Calculate total consumption and average
+  // Calculate KPIs
   const totalConsumption = filteredGasSupplies.reduce((sum, supply) => sum + (supply.quantidadeLitros || supply.quantity || 0), 0);
-  const averageConsumption = filteredGasSupplies.length > 0 
-    ? totalConsumption / filteredGasSupplies.length 
-    : 0;
   const totalCost = filteredGasSupplies.reduce((sum, supply) => sum + (supply.custoTotal || 0), 0);
   const averageEfficiency = filteredGasSupplies.length > 0
     ? filteredGasSupplies.reduce((sum, supply) => sum + (supply.eficiencia || 0), 0) / filteredGasSupplies.length
     : 0;
 
-  // Calculate efficiency (liters per hour)
   const calculateEfficiency = (supply: Abastecimento) => {
     const initialHour = supply.horimetroInicial || supply.hourMeterBefore || 0;
     const finalHour = supply.horimetroFinal || supply.hourMeterAfter || 0;
@@ -252,32 +324,6 @@ const GasSupplyPage = () => {
     }
   };
 
-  // Clear all filters
-  const clearAllFilters = () => {
-    setSearch('');
-    setForkliftFilter('all');
-    setOperatorFilter('all');
-    setDateFromFilter('');
-    setDateToFilter('');
-    setSupplierFilter('all');
-    setLocationFilter('all');
-    setMinQuantityFilter('');
-    setMaxQuantityFilter('');
-  };
-
-  // Count active filters
-  const activeFiltersCount = [
-    search,
-    forkliftFilter !== 'all' ? forkliftFilter : '',
-    operatorFilter !== 'all' ? operatorFilter : '',
-    dateFromFilter,
-    dateToFilter,
-    supplierFilter !== 'all' ? supplierFilter : '',
-    locationFilter !== 'all' ? locationFilter : '',
-    minQuantityFilter,
-    maxQuantityFilter
-  ].filter(Boolean).length;
-
   return (
     <div className="p-6 space-y-8 bg-gradient-to-br from-slate-50 to-slate-100 dark:from-slate-900 dark:to-slate-800 min-h-screen">
       {/* Header Section */}
@@ -292,19 +338,6 @@ const GasSupplyPage = () => {
         </div>
         
         <div className="flex items-center gap-3">
-          <Button 
-            variant="outline" 
-            className="gap-2 hover:bg-slate-100 dark:hover:bg-slate-800 transition-all duration-200 shadow-md"
-            onClick={() => setShowAdvancedFilters(!showAdvancedFilters)}
-          >
-            <SlidersHorizontal className="w-4 h-4" />
-            Filtros Avançados
-            {activeFiltersCount > 0 && (
-              <Badge variant="secondary" className="ml-1 bg-blue-500 text-white">
-                {activeFiltersCount}
-              </Badge>
-            )}
-          </Button>
           <Button 
             className="gap-2 bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105"
             onClick={() => {
@@ -389,11 +422,11 @@ const GasSupplyPage = () => {
         </Card>
       </div>
 
-      {/* Sophisticated Filters */}
+      {/* Advanced Search and Filters */}
       <Card className="shadow-xl border-0 bg-white/90 dark:bg-slate-800/90 backdrop-blur-lg">
         <CardContent className="p-8">
-          {/* Main Search Bar */}
           <div className="flex flex-col lg:flex-row gap-6 items-start">
+            {/* Main Search Bar */}
             <div className="relative flex-1 max-w-2xl">
               <Search className="absolute left-4 top-1/2 transform -translate-y-1/2 text-muted-foreground w-5 h-5" />
               <Input 
@@ -415,191 +448,43 @@ const GasSupplyPage = () => {
               )}
             </div>
             
-            {/* Quick Actions */}
+            {/* Advanced Filters and Quick Actions */}
             <div className="flex items-center gap-3">
+              <AdvancedFilters
+                filters={filterOptions}
+                values={filters}
+                onFiltersChange={setFilters}
+                onClearFilters={() => setFilters({})}
+                triggerProps={{
+                  className: "gap-2 hover:bg-slate-100 dark:hover:bg-slate-800 transition-all duration-200 shadow-md border-2 border-slate-200 dark:border-slate-700"
+                }}
+              />
+              
               {activeFiltersCount > 0 && (
                 <Button
                   variant="outline"
                   size="sm"
-                  className="gap-2 text-red-600 border-red-200 hover:bg-red-50 dark:hover:bg-red-900/20"
+                  className="gap-2 text-red-600 border-red-200 hover:bg-red-50 dark:hover:bg-red-900/20 shadow-md"
                   onClick={clearAllFilters}
                 >
                   <X className="w-4 h-4" />
-                  Limpar ({activeFiltersCount})
+                  Limpar Todos ({activeFiltersCount})
                 </Button>
               )}
             </div>
           </div>
 
-          {/* Advanced Filters - Collapsible */}
-          {showAdvancedFilters && (
-            <div className="mt-8 pt-6 border-t border-slate-200 dark:border-slate-700">
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-                {/* Empilhadeira Filter */}
-                <div className="space-y-2">
-                  <label className="text-sm font-semibold text-slate-700 dark:text-slate-300 flex items-center gap-2">
-                    <Truck className="w-4 h-4 text-blue-500" />
-                    Empilhadeira
-                  </label>
-                  <Select value={forkliftFilter} onValueChange={setForkliftFilter}>
-                    <SelectTrigger className="bg-white dark:bg-slate-900 border-slate-300 dark:border-slate-600 rounded-lg">
-                      <SelectValue placeholder="Todas" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="all">Todas as empilhadeiras</SelectItem>
-                      {forklifts.map((forkliftId) => (
-                        <SelectItem key={forkliftId} value={forkliftId}>
-                          {forkliftId}
-                        </SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
-                </div>
-
-                {/* Operator Filter */}
-                <div className="space-y-2">
-                  <label className="text-sm font-semibold text-slate-700 dark:text-slate-300 flex items-center gap-2">
-                    <User className="w-4 h-4 text-green-500" />
-                    Operador
-                  </label>
-                  <Select value={operatorFilter} onValueChange={setOperatorFilter}>
-                    <SelectTrigger className="bg-white dark:bg-slate-900 border-slate-300 dark:border-slate-600 rounded-lg">
-                      <SelectValue placeholder="Todos" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="all">Todos os operadores</SelectItem>
-                      {operators.map((operator) => (
-                        <SelectItem key={operator} value={operator}>
-                          {operator}
-                        </SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
-                </div>
-
-                {/* Date From Filter */}
-                <div className="space-y-2">
-                  <label className="text-sm font-semibold text-slate-700 dark:text-slate-300 flex items-center gap-2">
-                    <Calendar className="w-4 h-4 text-purple-500" />
-                    Data Inicial
-                  </label>
-                  <Input 
-                    type="date" 
-                    value={dateFromFilter}
-                    onChange={(e) => setDateFromFilter(e.target.value)}
-                    className="bg-white dark:bg-slate-900 border-slate-300 dark:border-slate-600 rounded-lg"
-                  />
-                </div>
-
-                {/* Date To Filter */}
-                <div className="space-y-2">
-                  <label className="text-sm font-semibold text-slate-700 dark:text-slate-300 flex items-center gap-2">
-                    <Calendar className="w-4 h-4 text-purple-500" />
-                    Data Final
-                  </label>
-                  <Input 
-                    type="date" 
-                    value={dateToFilter}
-                    onChange={(e) => setDateToFilter(e.target.value)}
-                    className="bg-white dark:bg-slate-900 border-slate-300 dark:border-slate-600 rounded-lg"
-                  />
-                </div>
-
-                {/* Supplier Filter */}
-                <div className="space-y-2">
-                  <label className="text-sm font-semibold text-slate-700 dark:text-slate-300 flex items-center gap-2">
-                    <Fuel className="w-4 h-4 text-orange-500" />
-                    Fornecedor
-                  </label>
-                  <Select value={supplierFilter} onValueChange={setSupplierFilter}>
-                    <SelectTrigger className="bg-white dark:bg-slate-900 border-slate-300 dark:border-slate-600 rounded-lg">
-                      <SelectValue placeholder="Todos" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="all">Todos os fornecedores</SelectItem>
-                      {suppliers.map((supplier) => (
-                        <SelectItem key={supplier} value={supplier}>
-                          {supplier}
-                        </SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
-                </div>
-
-                {/* Location Filter */}
-                <div className="space-y-2">
-                  <label className="text-sm font-semibold text-slate-700 dark:text-slate-300 flex items-center gap-2">
-                    <MapPin className="w-4 h-4 text-red-500" />
-                    Local
-                  </label>
-                  <Select value={locationFilter} onValueChange={setLocationFilter}>
-                    <SelectTrigger className="bg-white dark:bg-slate-900 border-slate-300 dark:border-slate-600 rounded-lg">
-                      <SelectValue placeholder="Todos" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="all">Todos os locais</SelectItem>
-                      {locations.map((location) => (
-                        <SelectItem key={location} value={location}>
-                          {location}
-                        </SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
-                </div>
-
-                {/* Min Quantity Filter */}
-                <div className="space-y-2">
-                  <label className="text-sm font-semibold text-slate-700 dark:text-slate-300 flex items-center gap-2">
-                    <Droplets className="w-4 h-4 text-cyan-500" />
-                    Qtd. Mínima (L)
-                  </label>
-                  <Input 
-                    type="number"
-                    placeholder="0"
-                    value={minQuantityFilter}
-                    onChange={(e) => setMinQuantityFilter(e.target.value)}
-                    className="bg-white dark:bg-slate-900 border-slate-300 dark:border-slate-600 rounded-lg"
-                  />
-                </div>
-
-                {/* Max Quantity Filter */}
-                <div className="space-y-2">
-                  <label className="text-sm font-semibold text-slate-700 dark:text-slate-300 flex items-center gap-2">
-                    <Droplets className="w-4 h-4 text-cyan-500" />
-                    Qtd. Máxima (L)
-                  </label>
-                  <Input 
-                    type="number"
-                    placeholder="100"
-                    value={maxQuantityFilter}
-                    onChange={(e) => setMaxQuantityFilter(e.target.value)}
-                    className="bg-white dark:bg-slate-900 border-slate-300 dark:border-slate-600 rounded-lg"
-                  />
+          {/* Filter Summary */}
+          {activeFiltersCount > 0 && (
+            <div className="mt-6 p-4 bg-blue-50 dark:bg-blue-900/20 rounded-lg border border-blue-200 dark:border-blue-800">
+              <div className="flex items-center justify-between">
+                <div className="flex items-center gap-2">
+                  <Filter className="w-4 h-4 text-blue-600" />
+                  <span className="text-sm font-medium text-blue-900 dark:text-blue-100">
+                    {activeFiltersCount} filtro{activeFiltersCount > 1 ? 's' : ''} ativo{activeFiltersCount > 1 ? 's' : ''} • {filteredGasSupplies.length} resultado{filteredGasSupplies.length !== 1 ? 's' : ''} encontrado{filteredGasSupplies.length !== 1 ? 's' : ''}
+                  </span>
                 </div>
               </div>
-
-              {/* Filter Summary */}
-              {activeFiltersCount > 0 && (
-                <div className="mt-6 p-4 bg-blue-50 dark:bg-blue-900/20 rounded-lg border border-blue-200 dark:border-blue-800">
-                  <div className="flex items-center justify-between">
-                    <div className="flex items-center gap-2">
-                      <Filter className="w-4 h-4 text-blue-600" />
-                      <span className="text-sm font-medium text-blue-900 dark:text-blue-100">
-                        {activeFiltersCount} filtro{activeFiltersCount > 1 ? 's' : ''} ativo{activeFiltersCount > 1 ? 's' : ''} • {filteredGasSupplies.length} resultado{filteredGasSupplies.length !== 1 ? 's' : ''} encontrado{filteredGasSupplies.length !== 1 ? 's' : ''}
-                      </span>
-                    </div>
-                    <Button
-                      variant="ghost"
-                      size="sm"
-                      onClick={() => setShowAdvancedFilters(false)}
-                      className="text-blue-600 hover:text-blue-800 hover:bg-blue-100 dark:hover:bg-blue-800/20"
-                    >
-                      <ChevronDown className="w-4 h-4 rotate-180" />
-                      Ocultar
-                    </Button>
-                  </div>
-                </div>
-              )}
             </div>
           )}
         </CardContent>
