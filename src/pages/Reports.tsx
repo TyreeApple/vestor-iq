@@ -1,18 +1,12 @@
 import React, { useState } from 'react';
-import Sidebar from '@/components/layout/Sidebar';
-import { useIsMobile } from '@/hooks/use-mobile';
-import { cn } from '@/lib/utils';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
-import { ChevronDown, Download, FileBarChart, Search, Calendar as CalendarIcon, TrendingUp, Users, Wrench, Fuel, BarChart3, Sparkles, Activity, Zap, Target, Clock, ArrowUpRight, Filter, Eye, Share2 } from 'lucide-react';
-import { Input } from '@/components/ui/input';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { Badge } from '@/components/ui/badge';
-import PremiumSummaryCard from '@/components/dashboard/PremiumSummaryCard';
 import ModernKpiCard from '@/components/dashboard/ModernKpiCard';
+import ReportsHeader from '@/components/reports/ReportsHeader';
+import ReportsFilters from '@/components/reports/ReportsFilters';
+import ReportCategorySection from '@/components/reports/ReportCategorySection';
+import ReportsEmptyState from '@/components/reports/ReportsEmptyState';
+import { FileBarChart, Download, Calendar as CalendarIcon, Clock, TrendingUp, Users, Wrench, Fuel, BarChart3, Sparkles, Activity, Zap, Target } from 'lucide-react';
 
 const ReportsPage = () => {
-  const isMobile = useIsMobile();
   const [search, setSearch] = useState('');
   const [selectedPeriod, setSelectedPeriod] = useState('');
   const [selectedForklift, setSelectedForklift] = useState('');
@@ -176,36 +170,28 @@ const ReportsPage = () => {
       value: 1247, 
       icon: FileBarChart,
       trend: 'up',
-      trendValue: 12,
-      colorFrom: 'from-blue-600',
-      colorTo: 'to-purple-600'
+      trendValue: 12
     },
     { 
       title: 'Downloads Hoje', 
       value: 89, 
       icon: Download,
       trend: 'up',
-      trendValue: 5,
-      colorFrom: 'from-green-500',
-      colorTo: 'to-emerald-600'
+      trendValue: 5
     },
     { 
       title: 'Relatórios Agendados', 
       value: 23, 
       icon: CalendarIcon,
       trend: null,
-      trendValue: 0,
-      colorFrom: 'from-orange-500',
-      colorTo: 'to-red-600'
+      trendValue: 0
     },
     { 
       title: 'Última Atualização', 
       value: '2min', 
       icon: Clock,
       trend: null,
-      trendValue: 0,
-      colorFrom: 'from-purple-500',
-      colorTo: 'to-pink-600'
+      trendValue: 0
     }
   ];
 
@@ -221,51 +207,17 @@ const ReportsPage = () => {
     return true;
   });
 
-  const getPriorityColor = (priority: string) => {
-    switch (priority) {
-      case 'high': return 'bg-red-500';
-      case 'medium': return 'bg-yellow-500';
-      case 'low': return 'bg-green-500';
-      default: return 'bg-gray-500';
-    }
+  const handleClearFilters = () => {
+    setSearch('');
+    setSelectedCategory('');
+    setSelectedPeriod('');
+    setSelectedForklift('');
+    setSelectedOperator('');
   };
 
   return (
     <div className="space-y-8 p-6 bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-50 dark:from-slate-900 dark:via-slate-800 dark:to-slate-900 min-h-screen">
-      {/* Hero Header */}
-      <div className="relative overflow-hidden">
-        <div className="absolute inset-0 bg-gradient-to-r from-blue-600/10 via-purple-600/10 to-indigo-600/10 rounded-3xl" />
-        <div className="relative bg-white/70 dark:bg-slate-800/70 backdrop-blur-xl rounded-3xl p-8 border border-white/20 shadow-2xl">
-          <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-6">
-            <div className="space-y-2">
-              <div className="flex items-center gap-3">
-                <div className="p-3 bg-gradient-to-br from-blue-500 to-purple-600 rounded-2xl shadow-lg">
-                  <FileBarChart className="w-8 h-8 text-white" />
-                </div>
-                <div>
-                  <h1 className="text-4xl font-black bg-gradient-to-r from-blue-600 via-purple-600 to-indigo-600 bg-clip-text text-transparent">
-                    Relatórios do Sistema
-                  </h1>
-                  <p className="text-lg text-muted-foreground font-medium">
-                    Análises inteligentes e insights da sua operação
-                  </p>
-                </div>
-              </div>
-            </div>
-            
-            <div className="flex gap-3">
-              <Button variant="outline" className="gap-2 bg-white/50 backdrop-blur-sm border-white/20 hover:bg-white/70 transition-all duration-300 shadow-lg">
-                <CalendarIcon className="w-4 h-4" />
-                Agendar Relatório
-              </Button>
-              <Button className="gap-2 bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white shadow-xl hover:shadow-2xl transition-all duration-300 transform hover:scale-105">
-                <Download className="w-4 h-4" />
-                Exportar Selecionados
-              </Button>
-            </div>
-          </div>
-        </div>
-      </div>
+      <ReportsHeader />
 
       {/* Premium Stats Grid */}
       <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-6">
@@ -281,195 +233,27 @@ const ReportsPage = () => {
         ))}
       </div>
 
-      {/* Advanced Search and Filters */}
-      <Card className="overflow-hidden bg-white/70 dark:bg-slate-800/70 backdrop-blur-xl border-white/20 shadow-2xl">
-        <CardContent className="p-6">
-          <div className="flex flex-col lg:flex-row gap-4">
-            <div className="relative flex-1">
-              <Search className="absolute left-4 top-1/2 transform -translate-y-1/2 text-muted-foreground w-5 h-5" />
-              <Input
-                placeholder="Buscar relatórios inteligentes..."
-                value={search}
-                onChange={(e) => setSearch(e.target.value)}
-                className="pl-12 h-12 bg-white/50 border-white/20 backdrop-blur-sm focus:bg-white/70 transition-all duration-300"
-              />
-            </div>
-            
-            <div className="flex flex-wrap gap-3">
-              <Select value={selectedCategory} onValueChange={setSelectedCategory}>
-                <SelectTrigger className="w-40 h-12 bg-white/50 border-white/20 backdrop-blur-sm">
-                  <Filter className="w-4 h-4 mr-2" />
-                  <SelectValue placeholder="Categoria" />
-                </SelectTrigger>
-                <SelectContent className="bg-white/95 backdrop-blur-xl border-white/20">
-                  <SelectItem value="all">Todas</SelectItem>
-                  <SelectItem value="operacoes">Operações</SelectItem>
-                  <SelectItem value="manutencao">Manutenção</SelectItem>
-                  <SelectItem value="abastecimento">Abastecimento</SelectItem>
-                  <SelectItem value="operadores">Operadores</SelectItem>
-                </SelectContent>
-              </Select>
-
-              <Select value={selectedPeriod} onValueChange={setSelectedPeriod}>
-                <SelectTrigger className="w-36 h-12 bg-white/50 border-white/20 backdrop-blur-sm">
-                  <CalendarIcon className="w-4 h-4 mr-2" />
-                  <SelectValue placeholder="Período" />
-                </SelectTrigger>
-                <SelectContent className="bg-white/95 backdrop-blur-xl border-white/20">
-                  <SelectItem value="all">Todos</SelectItem>
-                  <SelectItem value="hoje">Hoje</SelectItem>
-                  <SelectItem value="semana">Esta Semana</SelectItem>
-                  <SelectItem value="mes">Este Mês</SelectItem>
-                  <SelectItem value="trimestre">Trimestre</SelectItem>
-                  <SelectItem value="ano">Este Ano</SelectItem>
-                </SelectContent>
-              </Select>
-
-              <Select value={selectedForklift} onValueChange={setSelectedForklift}>
-                <SelectTrigger className="w-40 h-12 bg-white/50 border-white/20 backdrop-blur-sm">
-                  <SelectValue placeholder="Empilhadeira" />
-                </SelectTrigger>
-                <SelectContent className="bg-white/95 backdrop-blur-xl border-white/20">
-                  <SelectItem value="all">Todas</SelectItem>
-                  <SelectItem value="emp-001">EMP-001</SelectItem>
-                  <SelectItem value="emp-002">EMP-002</SelectItem>
-                  <SelectItem value="emp-003">EMP-003</SelectItem>
-                  <SelectItem value="emp-004">EMP-004</SelectItem>
-                  <SelectItem value="emp-005">EMP-005</SelectItem>
-                </SelectContent>
-              </Select>
-            </div>
-          </div>
-        </CardContent>
-      </Card>
+      <ReportsFilters
+        search={search}
+        setSearch={setSearch}
+        selectedCategory={selectedCategory}
+        setSelectedCategory={setSelectedCategory}
+        selectedPeriod={selectedPeriod}
+        setSelectedPeriod={setSelectedPeriod}
+        selectedForklift={selectedForklift}
+        setSelectedForklift={setSelectedForklift}
+      />
 
       {/* Ultra-Premium Report Categories */}
       <div className="space-y-8">
         {filteredCategories.map((category) => (
-          <div key={category.id} className="space-y-6">
-            {/* Category Header */}
-            <div className={cn(
-              "relative overflow-hidden rounded-3xl p-8",
-              category.bgPattern
-            )}>
-              <div className="absolute inset-0 bg-gradient-to-r opacity-10" style={{
-                background: `linear-gradient(135deg, ${category.gradient.split(' ')[1]}, ${category.gradient.split(' ')[3]})`
-              }} />
-              
-              <div className="relative flex items-center gap-6">
-                <div className={cn(
-                  "p-4 rounded-2xl shadow-2xl",
-                  category.iconBg
-                )}>
-                  <category.icon className="w-10 h-10 text-white" />
-                </div>
-                <div>
-                  <h2 className="text-3xl font-black text-foreground mb-2">{category.title}</h2>
-                  <p className="text-lg text-muted-foreground font-medium">
-                    {category.reports.length} relatórios premium disponíveis
-                  </p>
-                </div>
-              </div>
-            </div>
-
-            {/* Reports Grid */}
-            <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-6">
-              {category.reports.map((report, index) => (
-                <Card key={index} className="group relative overflow-hidden bg-white/70 dark:bg-slate-800/70 backdrop-blur-xl border-white/20 shadow-2xl hover:shadow-3xl transition-all duration-500 hover:scale-105 cursor-pointer">
-                  {/* Priority Indicator */}
-                  <div className={cn(
-                    "absolute top-4 right-4 w-3 h-3 rounded-full animate-pulse",
-                    getPriorityColor(report.priority)
-                  )} />
-                  
-                  {/* Gradient Overlay */}
-                  <div className="absolute inset-0 bg-gradient-to-br from-transparent via-transparent to-blue-500/5 opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
-                  
-                  <CardContent className="p-6 relative z-10">
-                    <div className="flex items-start justify-between mb-4">
-                      <div className="p-3 bg-gradient-to-br from-blue-500/10 to-purple-500/10 rounded-xl group-hover:from-blue-500/20 group-hover:to-purple-500/20 transition-all duration-300">
-                        <report.icon className="w-6 h-6 text-blue-600 dark:text-blue-400" />
-                      </div>
-                      <div className="flex items-center gap-1 text-xs text-muted-foreground">
-                        <Clock className="w-3 h-3" />
-                        {report.lastUpdate}
-                      </div>
-                    </div>
-                    
-                    <div className="space-y-3">
-                      <div>
-                        <h4 className="font-bold text-lg text-foreground group-hover:text-blue-600 transition-colors duration-300">
-                          {report.name}
-                        </h4>
-                        <p className="text-sm text-muted-foreground leading-relaxed mt-1">
-                          {report.description}
-                        </p>
-                      </div>
-                      
-                      <div className="flex items-center justify-between pt-3 border-t border-white/10">
-                        <div className="flex items-center gap-3">
-                          <Badge variant="secondary" className="text-xs font-semibold bg-white/50 backdrop-blur-sm">
-                            {report.type}
-                          </Badge>
-                          <div className="flex items-center gap-1 text-xs font-medium text-green-600">
-                            <TrendingUp className="w-3 h-3" />
-                            {report.trend}
-                          </div>
-                        </div>
-                        
-                        <div className="flex gap-2">
-                          <Button variant="ghost" size="sm" className="h-8 px-3 text-xs bg-white/50 hover:bg-white/70 backdrop-blur-sm">
-                            <Eye className="w-3 h-3 mr-1" />
-                            Ver
-                          </Button>
-                          <Button variant="ghost" size="sm" className="h-8 px-3 text-xs bg-white/50 hover:bg-white/70 backdrop-blur-sm">
-                            <Download className="w-3 h-3" />
-                          </Button>
-                          <Button variant="ghost" size="sm" className="h-8 px-3 text-xs bg-white/50 hover:bg-white/70 backdrop-blur-sm">
-                            <Share2 className="w-3 h-3" />
-                          </Button>
-                        </div>
-                      </div>
-                    </div>
-                  </CardContent>
-                </Card>
-              ))}
-            </div>
-          </div>
+          <ReportCategorySection key={category.id} category={category} />
         ))}
       </div>
 
       {/* Empty State */}
       {filteredCategories.length === 0 && (
-        <Card className="p-16 text-center bg-white/70 dark:bg-slate-800/70 backdrop-blur-xl border-white/20 shadow-2xl">
-          <div className="space-y-6">
-            <div className="w-24 h-24 bg-gradient-to-br from-blue-500/10 to-purple-500/10 rounded-full flex items-center justify-center mx-auto">
-              <FileBarChart className="w-12 h-12 text-blue-500" />
-            </div>
-            <div>
-              <h3 className="text-2xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
-                Nenhum relatório encontrado
-              </h3>
-              <p className="text-muted-foreground mt-2 text-lg">
-                Tente ajustar os filtros ou termo de busca para encontrar relatórios.
-              </p>
-            </div>
-            <Button 
-              variant="outline" 
-              onClick={() => {
-                setSearch('');
-                setSelectedCategory('');
-                setSelectedPeriod('');
-                setSelectedForklift('');
-                setSelectedOperator('');
-              }}
-              className="bg-white/50 backdrop-blur-sm border-white/20 hover:bg-white/70 transition-all duration-300"
-            >
-              <Sparkles className="w-4 h-4 mr-2" />
-              Limpar Filtros
-            </Button>
-          </div>
-        </Card>
+        <ReportsEmptyState onClearFilters={handleClearFilters} />
       )}
     </div>
   );

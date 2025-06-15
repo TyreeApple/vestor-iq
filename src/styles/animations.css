@@ -1,0 +1,28 @@
+
+/* === ANIMATIONS === */
+@keyframes shimmer {
+  0% {
+    background-position: -200px 0;
+  }
+  100% {
+    background-position: calc(200px + 100%) 0;
+  }
+}
+
+.shimmer {
+  @apply relative overflow-hidden;
+}
+
+.shimmer::before {
+  @apply absolute inset-0 bg-gradient-to-r from-transparent via-white/10 to-transparent;
+  content: '';
+  animation: shimmer 2s infinite;
+}
+
+.interactive-scale {
+  @apply transition-all duration-300 hover:scale-105 active:scale-95;
+}
+
+.focus-ring-premium {
+  @apply focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-background;
+}
