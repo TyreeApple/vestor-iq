@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { useIsMobile } from '@/hooks/use-mobile';
 import { cn } from '@/lib/utils';
@@ -77,13 +76,29 @@ const OperationsPage = () => {
     const operador = operators.find((op) => op.id === operation.operadorId) ||
       availableOperators.find((op) => op.id === operation.operadorId);
     
-    const operadorNome = operador ? (operador.nome || operador.name || "Operador Não Encontrado") : "Operador Não Encontrado";
+    let operadorNome = "Operador Não Encontrado";
+    if (operador) {
+      // Handle both 'nome' and 'name' properties
+      if ('nome' in operador) {
+        operadorNome = operador.nome;
+      } else if ('name' in operador) {
+        operadorNome = operador.name;
+      }
+    }
 
     // Buscar empilhadeira
     const empilhadeira = forklifts.find((fork) => fork.id === operation.empilhadeiraId) ||
       availableForklifts.find((fork) => fork.id === operation.empilhadeiraId);
     
-    const empilhadeiraModelo = empilhadeira ? (empilhadeira.modelo || empilhadeira.model || "Empilhadeira Não Encontrada") : "Empilhadeira Não Encontrada";
+    let empilhadeiraModelo = "Empilhadeira Não Encontrada";
+    if (empilhadeira) {
+      // Handle both 'modelo' and 'model' properties
+      if ('modelo' in empilhadeira) {
+        empilhadeiraModelo = empilhadeira.modelo;
+      } else if ('model' in empilhadeira) {
+        empilhadeiraModelo = empilhadeira.model;
+      }
+    }
 
     return {
       ...operation,
