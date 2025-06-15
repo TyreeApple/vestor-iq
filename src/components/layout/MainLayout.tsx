@@ -19,9 +19,7 @@ const MainLayout: React.FC = () => {
         <main className="flex-1 overflow-auto bg-slate-50 dark:bg-background">
           <div className="min-h-full flex flex-col">
             <div className="flex-1 p-6">
-              <div className="w-full px-[15px]">
-                <Outlet />
-              </div>
+              <Outlet />
             </div>
             <Footer />
           </div>
