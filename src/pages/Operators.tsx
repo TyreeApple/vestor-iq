@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { Button } from "@/components/ui/button";
 import { useIsMobile } from '@/hooks/use-mobile';
@@ -15,6 +14,7 @@ import PageHeader from '@/components/layout/PageHeader';
 import ModernKpiCard from '@/components/dashboard/ModernKpiCard';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { cn } from '@/lib/utils';
 
 // Mock data for operators
 const initialOperators: Operador[] = [
@@ -369,95 +369,91 @@ const OperatorsPage = () => {
         />
       </div>
 
-      {/* Enhanced Inline Filter Section */}
-      <div className="bg-slate-800/30 backdrop-blur-sm border border-slate-700/50 rounded-xl p-4">
-        <div className="flex flex-col lg:flex-row gap-4 items-start lg:items-center">
+      {/* Ultra Compact Inline Filter Section */}
+      <div className="bg-slate-800/30 backdrop-blur-sm border border-slate-700/50 rounded-xl p-2">
+        <div className="space-y-1.5">
           {/* Search */}
-          <div className="flex-1 relative">
-            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-slate-400 w-4 h-4" />
+          <div className="relative">
+            <Search className="absolute left-2 top-1/2 transform -translate-y-1/2 text-slate-400 w-3 h-3" />
             <Input 
               type="text" 
-              placeholder="Buscar por ID ou modelo..." 
-              className="pl-10 bg-slate-900/50 border-slate-600/50 text-slate-100 placeholder:text-slate-400 focus:border-blue-500/50 focus:ring-blue-500/20"
+              placeholder="Buscar por nome, CPF, email ou setor..." 
+              className="pl-7 h-7 bg-slate-900/50 border-slate-600/50 text-slate-100 placeholder:text-slate-400 focus:border-blue-500/50 focus:ring-blue-500/20 text-xs"
               value={search}
               onChange={(e) => setSearch(e.target.value)}
             />
           </div>
 
-          {/* Status Filter */}
-          <div className="w-full lg:w-auto min-w-[160px]">
-            <Select
+          {/* Compact Filters Row */}
+          <div className="flex gap-1.5">
+            {/* Status Filter */}
+            <select
+              className="px-2 py-1 rounded border border-slate-600/50 bg-slate-900/50 text-slate-100 text-xs h-6 focus:border-blue-500/50 focus:ring-1 focus:ring-blue-500/20 flex-1 min-w-0"
               value={filters.status || 'all'}
-              onValueChange={(value) => setFilters({ ...filters, status: value === 'all' ? '' : value })}
+              onChange={(e) => setFilters({ ...filters, status: e.target.value === 'all' ? '' : e.target.value })}
             >
-              <SelectTrigger className="bg-slate-900/50 border-slate-600/50 text-slate-100 hover:bg-slate-800/70 transition-colors">
-                <SelectValue placeholder="Todos os Status" />
-              </SelectTrigger>
-              <SelectContent className="bg-slate-800 border-slate-600">
-                <SelectItem value="all" className="text-slate-100 hover:bg-slate-700 focus:bg-slate-700">Todos os Status</SelectItem>
-                <SelectItem value={StatusOperador.ATIVO} className="text-slate-100 hover:bg-slate-700 focus:bg-slate-700">Ativo</SelectItem>
-                <SelectItem value={StatusOperador.INATIVO} className="text-slate-100 hover:bg-slate-700 focus:bg-slate-700">Inativo</SelectItem>
-                <SelectItem value={StatusOperador.FERIAS} className="text-slate-100 hover:bg-slate-700 focus:bg-slate-700">Férias</SelectItem>
-                <SelectItem value={StatusOperador.AFASTADO} className="text-slate-100 hover:bg-slate-700 focus:bg-slate-700">Afastado</SelectItem>
-              </SelectContent>
-            </Select>
-          </div>
+              <option value="all">Status</option>
+              <option value={StatusOperador.ATIVO}>Ativo</option>
+              <option value={StatusOperador.INATIVO}>Inativo</option>
+              <option value={StatusOperador.FERIAS}>Férias</option>
+              <option value={StatusOperador.AFASTADO}>Afastado</option>
+            </select>
 
-          {/* Function Filter */}
-          <div className="w-full lg:w-auto min-w-[160px]">
-            <Select
+            {/* Function Filter */}
+            <select
+              className="px-2 py-1 rounded border border-slate-600/50 bg-slate-900/50 text-slate-100 text-xs h-6 focus:border-blue-500/50 focus:ring-1 focus:ring-blue-500/20 flex-1 min-w-0"
               value={filters.funcao || 'all'}
-              onValueChange={(value) => setFilters({ ...filters, funcao: value === 'all' ? '' : value })}
+              onChange={(e) => setFilters({ ...filters, funcao: e.target.value === 'all' ? '' : e.target.value })}
             >
-              <SelectTrigger className="bg-slate-900/50 border-slate-600/50 text-slate-100 hover:bg-slate-800/70 transition-colors">
-                <SelectValue placeholder="Todas as Funções" />
-              </SelectTrigger>
-              <SelectContent className="bg-slate-800 border-slate-600">
-                <SelectItem value="all" className="text-slate-100 hover:bg-slate-700 focus:bg-slate-700">Todas as Funções</SelectItem>
-                <SelectItem value={FuncaoOperador.OPERADOR} className="text-slate-100 hover:bg-slate-700 focus:bg-slate-700">Operador</SelectItem>
-                <SelectItem value={FuncaoOperador.SUPERVISOR} className="text-slate-100 hover:bg-slate-700 focus:bg-slate-700">Supervisor</SelectItem>
-                <SelectItem value={FuncaoOperador.COORDENADOR} className="text-slate-100 hover:bg-slate-700 focus:bg-slate-700">Coordenador</SelectItem>
-                <SelectItem value={FuncaoOperador.GERENTE} className="text-slate-100 hover:bg-slate-700 focus:bg-slate-700">Gerente</SelectItem>
-              </SelectContent>
-            </Select>
-          </div>
+              <option value="all">Funções</option>
+              <option value={FuncaoOperador.OPERADOR}>Operador</option>
+              <option value={FuncaoOperador.SUPERVISOR}>Supervisor</option>
+              <option value={FuncaoOperador.COORDENADOR}>Coordenador</option>
+              <option value={FuncaoOperador.GERENTE}>Gerente</option>
+            </select>
 
-          {/* Advanced Filters Button */}
-          <AdvancedFilters
-            filters={filterOptions}
-            values={filters}
-            onFiltersChange={setFilters}
-            onClearFilters={clearFilters}
-            triggerProps={{
-              variant: "outline",
-              className: "bg-slate-900/50 border-slate-600/50 text-slate-100 hover:bg-slate-800/70 hover:text-slate-100 transition-colors"
-            }}
-          />
+            {/* Advanced Filters Button */}
+            <AdvancedFilters
+              filters={filterOptions}
+              values={filters}
+              onFiltersChange={setFilters}
+              onClearFilters={clearFilters}
+              triggerProps={{
+                size: "sm",
+                variant: "outline",
+                className: "bg-slate-900/50 border-slate-600/50 text-slate-100 hover:bg-slate-800/70 hover:text-slate-100 h-6 px-2 text-xs"
+              }}
+            />
 
-          {/* View Toggle */}
-          <div className="flex gap-1 p-1 bg-slate-900/50 rounded-lg border border-slate-600/50">
-            <Button
-              variant={viewMode === 'grid' ? 'default' : 'ghost'}
-              size="sm"
-              onClick={() => setViewMode('grid')}
-              className={viewMode === 'grid' 
-                ? 'bg-blue-600 hover:bg-blue-700 text-white' 
-                : 'text-slate-300 hover:text-slate-100 hover:bg-slate-700/50'
-              }
-            >
-              <Grid3X3 className="w-4 h-4" />
-            </Button>
-            <Button
-              variant={viewMode === 'list' ? 'default' : 'ghost'}
-              size="sm"
-              onClick={() => setViewMode('list')}
-              className={viewMode === 'list' 
-                ? 'bg-blue-600 hover:bg-blue-700 text-white' 
-                : 'text-slate-300 hover:text-slate-100 hover:bg-slate-700/50'
-              }
-            >
-              <List className="w-4 h-4" />
-            </Button>
+            {/* View Toggle */}
+            <div className="flex border border-slate-600/50 rounded bg-slate-900/50">
+              <Button
+                variant={viewMode === 'grid' ? 'default' : 'ghost'}
+                size="sm"
+                onClick={() => setViewMode('grid')}
+                className={cn(
+                  "rounded-r-none px-2 h-6 text-xs",
+                  viewMode === 'grid' 
+                    ? 'bg-blue-600 hover:bg-blue-700 text-white' 
+                    : 'text-slate-300 hover:text-slate-100 hover:bg-slate-700/50'
+                )}
+              >
+                <Grid3X3 className="w-3 h-3" />
+              </Button>
+              <Button
+                variant={viewMode === 'list' ? 'default' : 'ghost'}
+                size="sm"
+                onClick={() => setViewMode('list')}
+                className={cn(
+                  "rounded-l-none px-2 h-6 text-xs",
+                  viewMode === 'list' 
+                    ? 'bg-blue-600 hover:bg-blue-700 text-white' 
+                    : 'text-slate-300 hover:text-slate-100 hover:bg-slate-700/50'
+                )}
+              >
+                <List className="w-3 h-3" />
+              </Button>
+            </div>
           </div>
         </div>
       </div>
