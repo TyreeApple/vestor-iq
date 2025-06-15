@@ -21,17 +21,16 @@ const queryClient = new QueryClient({
     queries: {
       staleTime: 5 * 60 * 1000, // 5 minutes
       gcTime: 10 * 60 * 1000, // 10 minutes
-      retry: 1, // Reduzir tentativas para carregamento mais rápido
     },
   },
 });
 
-// Loading component mais simples e rápido
+// Loading component otimizado
 const LoadingSpinner = () => (
-  <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-blue-50 to-indigo-100">
+  <div className="min-h-screen flex items-center justify-center bg-slate-50 dark:bg-background">
     <div className="flex flex-col items-center space-y-4">
       <div className="w-8 h-8 border-4 border-blue-500 border-t-transparent rounded-full animate-spin"></div>
-      <p className="text-slate-700 font-medium">Carregando Dashboard...</p>
+      <p className="text-slate-600 dark:text-slate-400">Carregando sistema...</p>
     </div>
   </div>
 );
