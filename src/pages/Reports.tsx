@@ -8,13 +8,20 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Calendar } from '@/components/ui/calendar';
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@/components/ui/collapsible';
 import { Button } from '@/components/ui/button';
-import { ChevronDown, Download, FileBarChart, Filter } from 'lucide-react';
+import { ChevronDown, Download, FileBarChart, Filter, Search } from 'lucide-react';
 import { Checkbox } from '@/components/ui/checkbox';
+import { Input } from '@/components/ui/input';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 
 const ReportsPage = () => {
   const isMobile = useIsMobile();
   const [date, setDate] = useState<Date | undefined>(new Date());
   const [isFiltersOpen, setIsFiltersOpen] = useState(true);
+  const [search, setSearch] = useState('');
+  const [selectedPeriod, setSelectedPeriod] = useState('');
+  const [selectedForklift, setSelectedForklift] = useState('');
+  const [selectedOperator, setSelectedOperator] = useState('');
+  const [selectedReportType, setSelectedReportType] = useState('');
 
   return (
     <div className="flex min-h-screen bg-background transition-colors duration-300">
@@ -39,6 +46,72 @@ const ReportsPage = () => {
                 <Download className="w-4 h-4" />
                 <span className="hidden sm:inline">Exportar</span>
               </Button>
+            </div>
+          </div>
+
+          {/* Search and Quick Filters */}
+          <div className="flex flex-col lg:flex-row gap-4 mb-6">
+            <div className="relative flex-1">
+              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground w-4 h-4" />
+              <Input
+                placeholder="Buscar relatórios..."
+                value={search}
+                onChange={(e) => setSearch(e.target.value)}
+                className="pl-10"
+              />
+            </div>
+            
+            <div className="flex flex-wrap gap-2">
+              <Select value={selectedPeriod} onValueChange={setSelectedPeriod}>
+                <SelectTrigger className="w-32">
+                  <SelectValue placeholder="Período" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="hoje">Hoje</SelectItem>
+                  <SelectItem value="semana">Esta Semana</SelectItem>
+                  <SelectItem value="mes">Este Mês</SelectItem>
+                  <SelectItem value="trimestre">Trimestre</SelectItem>
+                  <SelectItem value="ano">Este Ano</SelectItem>
+                </SelectContent>
+              </Select>
+
+              <Select value={selectedForklift} onValueChange={setSelectedForklift}>
+                <SelectTrigger className="w-40">
+                  <SelectValue placeholder="Empilhadeira" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="emp-001">EMP-001</SelectItem>
+                  <SelectItem value="emp-002">EMP-002</SelectItem>
+                  <SelectItem value="emp-003">EMP-003</SelectItem>
+                  <SelectItem value="emp-004">EMP-004</SelectItem>
+                  <SelectItem value="emp-005">EMP-005</SelectItem>
+                </SelectContent>
+              </Select>
+
+              <Select value={selectedOperator} onValueChange={setSelectedOperator}>
+                <SelectTrigger className="w-32">
+                  <SelectValue placeholder="Operador" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="joao-silva">João Silva</SelectItem>
+                  <SelectItem value="maria-santos">Maria Santos</SelectItem>
+                  <SelectItem value="pedro-oliveira">Pedro Oliveira</SelectItem>
+                  <SelectItem value="ana-costa">Ana Costa</SelectItem>
+                  <SelectItem value="carlos-souza">Carlos Souza</SelectItem>
+                </SelectContent>
+              </Select>
+
+              <Select value={selectedReportType} onValueChange={setSelectedReportType}>
+                <SelectTrigger className="w-36">
+                  <SelectValue placeholder="Tipo" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="operacoes">Operações</SelectItem>
+                  <SelectItem value="manutencoes">Manutenções</SelectItem>
+                  <SelectItem value="abastecimento">Abastecimento</SelectItem>
+                  <SelectItem value="operadores">Operadores</SelectItem>
+                </SelectContent>
+              </Select>
             </div>
           </div>
           
