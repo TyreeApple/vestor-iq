@@ -1,4 +1,5 @@
 
+
 import React from 'react';
 import { cn } from '@/lib/utils';
 import { Forklift, StatusEmpilhadeira } from '@/types';
@@ -95,7 +96,7 @@ const ForkliftCard: React.FC<ForkliftCardProps> = ({ forklift, onClick, onDelete
             <h3 className="text-base font-bold text-white mb-0.5 tracking-wide truncate">
               {forklift.id}
             </h3>
-            <p className="text-slate-400 font-medium tracking-wide text-sm truncate" style={{ color: '#94a3b8' }}>
+            <p className="text-slate-400 font-medium tracking-wide text-sm truncate mb-[5px]" style={{ color: '#94a3b8' }}>
               {forklift.modelo}
             </p>
           </div>
@@ -165,3 +166,4 @@ const ForkliftCard: React.FC<ForkliftCardProps> = ({ forklift, onClick, onDelete
 };
 
 export default ForkliftCard;
+
