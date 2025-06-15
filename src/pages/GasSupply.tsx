@@ -308,9 +308,14 @@ const GasSupplyPage = () => {
   };
   
   // Calculate KPIs
-  const totalConsumption = filteredGasSupplies.reduce((sum, supply) => sum + (supply.quantidadeLitros || supply.quantity || 0), 0);
-  const totalCost = filteredGasSupplies.reduce((sum, supply) => sum + (supply.custoTotal || 0), 0);
-  const averageEfficiency = filteredGasSupplies.length > 0
+  const hasRealData = filteredGasSupplies.length > 0;
+  const totalConsumption = hasRealData
+    ? filteredGasSupplies.reduce((sum, supply) => sum + (supply.quantidadeLitros || supply.quantity || 0), 0)
+    : 0;
+  const totalCost = hasRealData
+    ? filteredGasSupplies.reduce((sum, supply) => sum + (supply.custoTotal || 0), 0)
+    : 0;
+  const averageEfficiency = hasRealData
     ? filteredGasSupplies.reduce((sum, supply) => sum + (supply.eficiencia || 0), 0) / filteredGasSupplies.length
     : 0;
 
@@ -377,28 +382,28 @@ const GasSupplyPage = () => {
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
         <StandardCard
           title="Total de Abastecimentos"
-          value={filteredGasSupplies.length}
+          value={hasRealData ? filteredGasSupplies.length : 0}
           icon={Truck}
           variant="info"
         />
         
         <StandardCard
           title="Consumo Total"
-          value={`${totalConsumption.toFixed(1)}L`}
+          value={hasRealData ? `${totalConsumption.toFixed(1)}L` : "0L"}
           icon={Fuel}
           variant="success"
         />
         
         <StandardCard
           title="Custo Total"
-          value={`R$ ${totalCost.toFixed(0)}`}
+          value={hasRealData ? `R$ ${totalCost.toFixed(0)}` : "R$ 0"}
           icon={Gauge}
           variant="warning"
         />
         
         <StandardCard
           title="Eficiência Média"
-          value={averageEfficiency.toFixed(2)}
+          value={hasRealData ? averageEfficiency.toFixed(2) : "N/A"}
           icon={Droplets}
           variant="default"
         />
@@ -526,114 +531,114 @@ const GasSupplyPage = () => {
             Registros de Abastecimento
           </h2>
           <div className="text-sm text-muted-foreground bg-slate-100 dark:bg-slate-800 px-3 py-1 rounded-full">
-            {filteredGasSupplies.length} registros encontrados
+            {hasRealData ? filteredGasSupplies.length : 0} registros encontrados
           </div>
         </div>
         
-        <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-6">
-          {filteredGasSupplies.map((supply) => (
-            <Card key={supply.id} className="group hover:shadow-xl transition-all duration-300 transform hover:scale-[1.02] bg-gradient-to-br from-white to-slate-50 dark:from-slate-800 dark:to-slate-900 border-0 shadow-lg">
-              <CardHeader className="pb-3">
-                <div className="flex items-center justify-between">
-                  <div className="flex items-center gap-3">
-                    <div className="w-12 h-12 bg-gradient-to-br from-blue-500 to-purple-600 rounded-xl flex items-center justify-center text-white font-bold text-lg shadow-lg">
-                      {supply.id.slice(-2)}
+        {hasRealData ? (
+          <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-6">
+            {filteredGasSupplies.map((supply) => (
+              <Card key={supply.id} className="group hover:shadow-xl transition-all duration-300 transform hover:scale-[1.02] bg-gradient-to-br from-white to-slate-50 dark:from-slate-800 dark:to-slate-900 border-0 shadow-lg">
+                <CardHeader className="pb-3">
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-center gap-3">
+                      <div className="w-12 h-12 bg-gradient-to-br from-blue-500 to-purple-600 rounded-xl flex items-center justify-center text-white font-bold text-lg shadow-lg">
+                        {supply.id.slice(-2)}
+                      </div>
+                      <div>
+                        <CardTitle className="text-lg font-bold text-slate-800 dark:text-slate-200">
+                          {supply.id}
+                        </CardTitle>
+                        <p className="text-sm text-muted-foreground">
+                          {formatDate(supply.dataAbastecimento || supply.date || '')}
+                        </p>
+                      </div>
                     </div>
-                    <div>
-                      <CardTitle className="text-lg font-bold text-slate-800 dark:text-slate-200">
-                        {supply.id}
-                      </CardTitle>
-                      <p className="text-sm text-muted-foreground">
-                        {formatDate(supply.dataAbastecimento || supply.date || '')}
-                      </p>
+                    <div className="flex gap-1">
+                      <Button 
+                        variant="ghost" 
+                        size="sm"
+                        className="opacity-0 group-hover:opacity-100 transition-opacity duration-200 hover:bg-blue-50 dark:hover:bg-blue-900/20"
+                        onClick={() => {
+                          setSelectedGasSupply(supply);
+                          setEditDialogOpen(true);
+                        }}
+                      >
+                        <Edit className="w-4 h-4 text-blue-600" />
+                      </Button>
+                      <Button 
+                        variant="ghost" 
+                        size="sm"
+                        className="opacity-0 group-hover:opacity-100 transition-opacity duration-200 hover:bg-red-50 dark:hover:bg-red-900/20"
+                        onClick={() => handleDeleteGasSupply(supply.id)}
+                      >
+                        <Trash2 className="w-4 h-4 text-red-500" />
+                      </Button>
                     </div>
                   </div>
-                  <div className="flex gap-1">
-                    <Button 
-                      variant="ghost" 
-                      size="sm"
-                      className="opacity-0 group-hover:opacity-100 transition-opacity duration-200 hover:bg-blue-50 dark:hover:bg-blue-900/20"
-                      onClick={() => {
-                        setSelectedGasSupply(supply);
-                        setEditDialogOpen(true);
-                      }}
-                    >
-                      <Edit className="w-4 h-4 text-blue-600" />
-                    </Button>
-                    <Button 
-                      variant="ghost" 
-                      size="sm"
-                      className="opacity-0 group-hover:opacity-100 transition-opacity duration-200 hover:bg-red-50 dark:hover:bg-red-900/20"
-                      onClick={() => handleDeleteGasSupply(supply.id)}
-                    >
-                      <Trash2 className="w-4 h-4 text-red-500" />
-                    </Button>
-                  </div>
-                </div>
-              </CardHeader>
-              
-              <CardContent className="space-y-4">
-                <div className="space-y-3">
-                  <div className="flex items-center gap-3 p-3 bg-slate-100 dark:bg-slate-800 rounded-lg">
-                    <Truck className="w-5 h-5 text-blue-600" />
-                    <div>
-                      <p className="font-semibold text-slate-800 dark:text-slate-200">
-                        {supply.empilhadeira?.modelo || supply.forkliftModel}
-                      </p>
-                      <p className="text-xs text-muted-foreground">
-                        ID: {supply.empilhadeiraId || supply.forkliftId}
-                      </p>
+                </CardHeader>
+                
+                <CardContent className="space-y-4">
+                  <div className="space-y-3">
+                    <div className="flex items-center gap-3 p-3 bg-slate-100 dark:bg-slate-800 rounded-lg">
+                      <Truck className="w-5 h-5 text-blue-600" />
+                      <div>
+                        <p className="font-semibold text-slate-800 dark:text-slate-200">
+                          {supply.empilhadeira?.modelo || supply.forkliftModel}
+                        </p>
+                        <p className="text-xs text-muted-foreground">
+                          ID: {supply.empilhadeiraId || supply.forkliftId}
+                        </p>
+                      </div>
+                    </div>
+                    
+                    <div className="flex items-center gap-3 p-3 bg-slate-100 dark:bg-slate-800 rounded-lg">
+                      <User className="w-5 h-5 text-green-600" />
+                      <div>
+                        <p className="font-semibold text-slate-800 dark:text-slate-200">
+                          {supply.operador?.nome || supply.operator}
+                        </p>
+                        <p className="text-xs text-muted-foreground">Operador</p>
+                      </div>
                     </div>
                   </div>
                   
-                  <div className="flex items-center gap-3 p-3 bg-slate-100 dark:bg-slate-800 rounded-lg">
-                    <User className="w-5 h-5 text-green-600" />
-                    <div>
-                      <p className="font-semibold text-slate-800 dark:text-slate-200">
-                        {supply.operador?.nome || supply.operator}
+                  <div className="grid grid-cols-2 gap-4">
+                    <div className="text-center p-3 bg-gradient-to-br from-blue-50 to-blue-100 dark:from-blue-900/20 dark:to-blue-800/20 rounded-lg">
+                      <Fuel className="w-5 h-5 mx-auto mb-1 text-blue-600" />
+                      <p className="text-2xl font-bold text-blue-700 dark:text-blue-400">
+                        {(supply.quantidadeLitros || supply.quantity || 0).toFixed(1)}
                       </p>
-                      <p className="text-xs text-muted-foreground">Operador</p>
+                      <p className="text-xs text-muted-foreground">Litros</p>
+                    </div>
+                    
+                    <div className="text-center p-3 bg-gradient-to-br from-green-50 to-green-100 dark:from-green-900/20 dark:to-green-800/20 rounded-lg">
+                      <Gauge className="w-5 h-5 mx-auto mb-1 text-green-600" />
+                      <p className="text-2xl font-bold text-green-700 dark:text-green-400">
+                        {calculateEfficiency(supply).toFixed(2)}
+                      </p>
+                      <p className="text-xs text-muted-foreground">L/h</p>
                     </div>
                   </div>
-                </div>
-                
-                <div className="grid grid-cols-2 gap-4">
-                  <div className="text-center p-3 bg-gradient-to-br from-blue-50 to-blue-100 dark:from-blue-900/20 dark:to-blue-800/20 rounded-lg">
-                    <Fuel className="w-5 h-5 mx-auto mb-1 text-blue-600" />
-                    <p className="text-2xl font-bold text-blue-700 dark:text-blue-400">
-                      {(supply.quantidadeLitros || supply.quantity || 0).toFixed(1)}
-                    </p>
-                    <p className="text-xs text-muted-foreground">Litros</p>
-                  </div>
                   
-                  <div className="text-center p-3 bg-gradient-to-br from-green-50 to-green-100 dark:from-green-900/20 dark:to-green-800/20 rounded-lg">
-                    <Gauge className="w-5 h-5 mx-auto mb-1 text-green-600" />
-                    <p className="text-2xl font-bold text-green-700 dark:text-green-400">
-                      {calculateEfficiency(supply).toFixed(2)}
-                    </p>
-                    <p className="text-xs text-muted-foreground">L/h</p>
+                  <div className="flex items-center justify-between pt-2 border-t border-slate-200 dark:border-slate-700">
+                    <div className="flex items-center gap-2">
+                      <Clock className="w-4 h-4 text-muted-foreground" />
+                      <span className="text-sm text-muted-foreground">
+                        {supply.horimetroInicial || supply.hourMeterBefore} → {supply.horimetroFinal || supply.hourMeterAfter}h
+                      </span>
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <span className="text-sm font-semibold text-slate-800 dark:text-slate-200">
+                        R$ {supply.custoTotal?.toFixed(2) || '0.00'}
+                      </span>
+                    </div>
                   </div>
-                </div>
-                
-                <div className="flex items-center justify-between pt-2 border-t border-slate-200 dark:border-slate-700">
-                  <div className="flex items-center gap-2">
-                    <Clock className="w-4 h-4 text-muted-foreground" />
-                    <span className="text-sm text-muted-foreground">
-                      {supply.horimetroInicial || supply.hourMeterBefore} → {supply.horimetroFinal || supply.hourMeterAfter}h
-                    </span>
-                  </div>
-                  <div className="flex items-center gap-2">
-                    <span className="text-sm font-semibold text-slate-800 dark:text-slate-200">
-                      R$ {supply.custoTotal?.toFixed(2) || '0.00'}
-                    </span>
-                  </div>
-                </div>
-              </CardContent>
-            </Card>
-          ))}
-        </div>
-        
-        {filteredGasSupplies.length === 0 && (
+                </CardContent>
+              </Card>
+            ))}
+          </div>
+        ) : (
           <Card className="p-12 text-center border-2 border-dashed border-slate-300 dark:border-slate-600 bg-slate-50 dark:bg-slate-800">
             <div className="space-y-4">
               <div className="w-16 h-16 mx-auto bg-slate-200 dark:bg-slate-700 rounded-full flex items-center justify-center">
@@ -662,7 +667,7 @@ const GasSupplyPage = () => {
         )}
       </div>
 
-      {/* Add/Edit Gas Supply Dialog */}
+      {/* Add/Edit Gas Supply Dialogs */}
       <GasSupplyDialog 
         open={addDialogOpen} 
         onOpenChange={setAddDialogOpen}
