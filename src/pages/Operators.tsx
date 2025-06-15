@@ -1,3 +1,4 @@
+
 import React, { useState } from 'react';
 import { Button } from "@/components/ui/button";
 import { useIsMobile } from '@/hooks/use-mobile';
@@ -14,201 +15,30 @@ import PageHeader from '@/components/layout/PageHeader';
 import ModernKpiCard from '@/components/dashboard/ModernKpiCard';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { useAppStore } from '@/stores/useAppStore';
 
-// Mock data for operators
-const initialOperators: Operador[] = [
-  {
-    id: 'OP001',
-    nome: 'Carlos Silva',
-    cpf: '123.456.789-00',
-    email: 'carlos@example.com',
-    telefone: '(11) 99999-9999',
-    funcao: FuncaoOperador.OPERADOR,
-    dataAdmissao: '01/01/2020',
-    turno: 'Matutino',
-    setor: 'Armazém',
-    certificacoes: [
-      {
-        id: 'C001',
-        tipo: TipoCertificacao.NR11,
-        numero: 'NR11-001',
-        dataEmissao: '01/01/2023',
-        dataVencimento: '01/01/2024',
-        orgaoEmissor: 'SENAI',
-        status: StatusCertificacao.VALIDO
-      },
-      {
-        id: 'C002',
-        tipo: TipoCertificacao.ASO,
-        numero: 'ASO-001',
-        dataEmissao: '01/06/2023',
-        dataVencimento: '01/06/2024',
-        orgaoEmissor: 'Clínica Ocupacional',
-        status: StatusCertificacao.VALIDO
-      }
-    ],
-    avaliacoes: [
-      { id: 'A001', data: '15/10/2023', nota: 8.5, avaliador: 'João Manager', comentarios: 'Excelente desempenho', pontosMelhoria: [] },
-      { id: 'A002', data: '15/09/2023', nota: 9.0, avaliador: 'João Manager', comentarios: 'Muito bom', pontosMelhoria: [] }
-    ],
-    horasTrabalhadas: 2000,
-    produtividade: 85,
-    status: StatusOperador.ATIVO
-  },
-  {
-    id: 'OP002',
-    nome: 'Maria Oliveira',
-    cpf: '987.654.321-00',
-    email: 'maria@example.com',
-    telefone: '(11) 88888-8888',
-    funcao: FuncaoOperador.SUPERVISOR,
-    dataAdmissao: '15/02/2021',
-    turno: 'Vespertino',
-    setor: 'Produção',
-    certificacoes: [
-      {
-        id: 'C003',
-        tipo: TipoCertificacao.NR11,
-        numero: 'NR11-002',
-        dataEmissao: '01/01/2023',
-        dataVencimento: '01/01/2024',
-        orgaoEmissor: 'SENAI',
-        status: StatusCertificacao.VALIDO
-      },
-      {
-        id: 'C004',
-        tipo: TipoCertificacao.ASO,
-        numero: 'ASO-002',
-        dataEmissao: '01/06/2023',
-        dataVencimento: '01/06/2024',
-        orgaoEmissor: 'Clínica Ocupacional',
-        status: StatusCertificacao.VALIDO
-      },
-      {
-        id: 'C005',
-        tipo: TipoCertificacao.TREINAMENTO,
-        numero: 'SUPER-001',
-        dataEmissao: '01/03/2023',
-        dataVencimento: '01/03/2025',
-        orgaoEmissor: 'Empresa',
-        status: StatusCertificacao.VALIDO
-      }
-    ],
-    avaliacoes: [
-      { id: 'A003', data: '10/10/2023', nota: 9.5, avaliador: 'Diretor RH', comentarios: 'Liderança excepcional', pontosMelhoria: [] }
-    ],
-    horasTrabalhadas: 1900,
-    produtividade: 92,
-    status: StatusOperador.ATIVO
-  },
-  {
-    id: 'OP003',
-    nome: 'João Pereira',
-    cpf: '456.789.123-00',
-    email: 'joao@example.com',
-    telefone: '(11) 77777-7777',
-    funcao: FuncaoOperador.OPERADOR,
-    dataAdmissao: '10/06/2022',
-    turno: 'Noturno',
-    setor: 'Expedição',
-    certificacoes: [
-      {
-        id: 'C006',
-        tipo: TipoCertificacao.NR11,
-        numero: 'NR11-003',
-        dataEmissao: '01/01/2023',
-        dataVencimento: '01/01/2024',
-        orgaoEmissor: 'SENAI',
-        status: StatusCertificacao.VALIDO
-      }
-    ],
-    avaliacoes: [
-      { id: 'A004', data: '20/10/2023', nota: 7.8, avaliador: 'Maria Supervisor', comentarios: 'Bom desempenho', pontosMelhoria: ['Agilidade'] }
-    ],
-    horasTrabalhadas: 1200,
-    produtividade: 78,
-    status: StatusOperador.ATIVO
-  },
-  {
-    id: 'OP004',
-    nome: 'Ana Costa',
-    cpf: '321.654.987-00',
-    email: 'ana@example.com',
-    telefone: '(11) 66666-6666',
-    funcao: FuncaoOperador.OPERADOR,
-    dataAdmissao: '05/09/2021',
-    turno: 'Matutino',
-    setor: 'Recebimento',
-    certificacoes: [
-      {
-        id: 'C007',
-        tipo: TipoCertificacao.NR11,
-        numero: 'NR11-004',
-        dataEmissao: '01/01/2023',
-        dataVencimento: '01/01/2024',
-        orgaoEmissor: 'SENAI',
-        status: StatusCertificacao.VALIDO
-      },
-      {
-        id: 'C008',
-        tipo: TipoCertificacao.ASO,
-        numero: 'ASO-004',
-        dataEmissao: '01/06/2023',
-        dataVencimento: '01/06/2024',
-        orgaoEmissor: 'Clínica Ocupacional',
-        status: StatusCertificacao.VALIDO
-      }
-    ],
-    avaliacoes: [
-      { id: 'A005', data: '25/10/2023', nota: 8.2, avaliador: 'Carlos Supervisor', comentarios: 'Muito dedicada', pontosMelhoria: [] }
-    ],
-    horasTrabalhadas: 1800,
-    produtividade: 88,
-    status: StatusOperador.INATIVO
-  },
-  {
-    id: 'OP005',
-    nome: 'Pedro Santos',
-    cpf: '159.753.486-00',
-    email: 'pedro@example.com',
-    telefone: '(11) 55555-5555',
-    funcao: FuncaoOperador.OPERADOR,
-    dataAdmissao: '20/03/2023',
-    turno: 'Vespertino',
-    setor: 'Armazém',
-    certificacoes: [
-      {
-        id: 'C009',
-        tipo: TipoCertificacao.NR11,
-        numero: 'NR11-005',
-        dataEmissao: '01/01/2023',
-        dataVencimento: '01/01/2024',
-        orgaoEmissor: 'SENAI',
-        status: StatusCertificacao.VALIDO
-      }
-    ],
-    avaliacoes: [
-      { id: 'A006', data: '30/10/2023', nota: 7.5, avaliador: 'Ana Supervisor', comentarios: 'Em desenvolvimento', pontosMelhoria: ['Velocidade', 'Organização'] }
-    ],
-    horasTrabalhadas: 800,
-    produtividade: 75,
-    status: StatusOperador.ATIVO
-  }
-];
+// ATUALIZAÇÃO: Removido o array local de operadores e suas manipulações.
+// Todos os dados e modificações são feitos pelo Zustand (useAppStore).
 
 const OperatorsPage = () => {
   const isMobile = useIsMobile();
   const { toast } = useToast();
-  const [operators, setOperators] = useState<Operador[]>(initialOperators);
+
+  // Consome operadores diretamente do Zustand
+  const operadores = useAppStore((state) => state.operadores);
+  const addOperador = useAppStore((state) => state.addOperador);
+  const updateOperador = useAppStore((state) => state.updateOperador);
+  const deleteOperador = useAppStore((state) => state.deleteOperador);
+
   const [viewMode, setViewMode] = useState<'grid' | 'list'>('grid');
-  
+
   // Dialog states
   const [addDialogOpen, setAddDialogOpen] = useState(false);
   const [editDialogOpen, setEditDialogOpen] = useState(false);
   const [detailsDialogOpen, setDetailsDialogOpen] = useState(false);
   const [selectedOperator, setSelectedOperator] = useState<Operador | null>(null);
 
-  // Use filters hook
+  // Use filters hook, referenciar diretamente operadores do Zustand
   const {
     search,
     setSearch,
@@ -217,11 +47,10 @@ const OperatorsPage = () => {
     filteredData: filteredOperators,
     clearFilters
   } = useFilters({
-    data: operators,
+    data: operadores,
     searchFields: ['nome', 'cpf', 'email', 'setor']
   });
 
-  // Filter configuration for advanced filters
   const filterOptions = [
     {
       key: 'setor',
@@ -252,49 +81,43 @@ const OperatorsPage = () => {
     }
   ];
 
-  // Handle save operator
+  // NOVOS HANDLERS ATUALIZADOS PARA ESTADO GLOBAL
   const handleSaveOperator = (operatorData: Operador) => {
-    const isNewOperator = !operators.some(op => op.id === operatorData.id);
-    
-    if (isNewOperator) {
-      setOperators(prev => [operatorData, ...prev]);
-      toast({
-        title: "Operador criado",
-        description: "O operador foi criado com sucesso."
-      });
-    } else {
-      setOperators(prev => 
-        prev.map(op => op.id === operatorData.id ? operatorData : op)
-      );
+    const operadorExistente = operadores.some(op => op.id === operatorData.id);
+
+    if (operadorExistente) {
+      updateOperador(operatorData.id, operatorData);
       toast({
         title: "Operador atualizado",
         description: "O operador foi atualizado com sucesso."
       });
+    } else {
+      addOperador(operatorData);
+      toast({
+        title: "Operador criado",
+        description: "O operador foi criado com sucesso."
+      });
     }
   };
 
-  // Open details dialog
   const handleViewDetails = (operator: Operador) => {
     setSelectedOperator(operator);
     setDetailsDialogOpen(true);
   };
 
-  // Open edit dialog from details
   const handleEditFromDetails = () => {
     setDetailsDialogOpen(false);
     setEditDialogOpen(true);
   };
 
-  // Open edit dialog directly
   const handleEdit = (operator: Operador) => {
     setSelectedOperator(operator);
     setEditDialogOpen(true);
   };
 
-  // Delete operator
   const handleDeleteOperator = (id: string) => {
     if (confirm("Tem certeza que deseja excluir este operador?")) {
-      setOperators(prev => prev.filter(op => op.id !== id));
+      deleteOperador(id);
       toast({
         title: "Operador excluído",
         description: "O operador foi excluído com sucesso."
@@ -302,12 +125,12 @@ const OperatorsPage = () => {
     }
   };
 
-  // Get statistics
+  // Estatísticas baseadas no Zustand
   const stats = {
-    total: operators.length,
-    active: operators.filter(op => op.status === StatusOperador.ATIVO).length,
-    avgProductivity: operators.length > 0 ? Math.round(operators.reduce((sum, op) => sum + op.produtividade, 0) / operators.length) : 0,
-    totalHours: operators.reduce((sum, op) => sum + op.horasTrabalhadas, 0)
+    total: operadores.length,
+    active: operadores.filter(op => op.status === StatusOperador.ATIVO).length,
+    avgProductivity: operadores.length > 0 ? Math.round(operadores.reduce((sum, op) => sum + op.produtividade, 0) / operadores.length) : 0,
+    totalHours: operadores.reduce((sum, op) => sum + op.horasTrabalhadas, 0)
   };
 
   return (
@@ -528,3 +351,4 @@ const OperatorsPage = () => {
 };
 
 export default OperatorsPage;
+
