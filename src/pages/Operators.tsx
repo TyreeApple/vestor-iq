@@ -2,9 +2,16 @@ import React, { useState } from 'react';
 import PageHeader from '@/components/layout/PageHeader';
 import { Button } from "@/components/ui/button";
 import { StatusCertificacao, User, FuncaoOperador } from '@/types';
-import { Filter, Search, UserPlus, Phone, Trash2, Edit, Eye } from 'lucide-react';
+import { Search, UserPlus, Phone, Trash2, Edit, Eye } from 'lucide-react';
 import { Input } from '@/components/ui/input';
 import { Badge } from '@/components/ui/badge';
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import {
   Table,
   TableBody,
@@ -15,9 +22,11 @@ import {
 } from "@/components/ui/table";
 import OperatorDialog from '@/components/operators/OperatorDialog';
 import OperatorDetails from '@/components/operators/OperatorDetails';
+import AdvancedFilters from '@/components/common/AdvancedFilters';
 import { useToast } from '@/hooks/use-toast';
 import { cn } from '@/lib/utils';
 import PaginationControls from '@/components/common/PaginationControls';
+import { useFilters } from '@/hooks/use-filters';
 
 // Mock data for operators
 const initialOperators: User[] = [
@@ -150,9 +159,6 @@ const initialOperators: User[] = [
 
 const OperatorsPage = () => {
   const { toast } = useToast();
-  const [search, setSearch] = useState('');
-  const [role, setRole] = useState<string>('all');
-  const [certStatus, setCertStatus] = useState<string>('all');
   const [operators, setOperators] = useState<User[]>(initialOperators);
   
   // Dialog states
@@ -164,31 +170,93 @@ const OperatorsPage = () => {
   // Pagination
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 10;
-  
-  // Filter operators based on search and filters
-  const filteredOperators = operators.filter(operator => {
-    // Search filter
-    const matchesSearch = (operator.name || operator.nome || '').toLowerCase().includes(search.toLowerCase()) || 
-                          operator.id.toLowerCase().includes(search.toLowerCase());
+
+  // Filter configuration
+  const filterOptions = [
+    {
+      key: 'role',
+      label: 'Função',
+      type: 'select' as const,
+      options: [
+        { value: 'OPERADOR', label: 'Operador' },
+        { value: 'SUPERVISOR', label: 'Supervisor' },
+        { value: 'TECNICO', label: 'Técnico' },
+        { value: 'COORDENADOR', label: 'Coordenador' },
+        { value: 'GERENTE', label: 'Gerente' }
+      ]
+    },
+    {
+      key: 'shift',
+      label: 'Turno',
+      type: 'select' as const,
+      options: [
+        { value: 'Manhã', label: 'Manhã' },
+        { value: 'Tarde', label: 'Tarde' },
+        { value: 'Noite', label: 'Noite' },
+        { value: 'Integral', label: 'Integral' }
+      ]
+    },
+    {
+      key: 'setor',
+      label: 'Setor',
+      type: 'select' as const,
+      options: [
+        { value: 'Armazém', label: 'Armazém' },
+        { value: 'Produção', label: 'Produção' },
+        { value: 'Logística', label: 'Logística' },
+        { value: 'Expedição', label: 'Expedição' },
+        { value: 'Supervisão', label: 'Supervisão' }
+      ]
+    },
+    {
+      key: 'status',
+      label: 'Status',
+      type: 'select' as const,
+      options: [
+        { value: 'Ativo', label: 'Ativo' },
+        { value: 'Inativo', label: 'Inativo' },
+        { value: 'Licença', label: 'Licença' }
+      ]
+    }
+  ];
+
+  // Use filters hook
+  const {
+    search,
+    setSearch,
+    filters,
+    setFilters,
+    filteredData: baseFilteredData,
+    clearFilters,
+    hasActiveFilters
+  } = useFilters({
+    data: operators,
+    searchFields: ['name', 'nome', 'id', 'cpf', 'email']
+  });
+
+  // Additional certification status filter
+  const [certStatus, setCertStatus] = useState<string>('all');
+
+  // Apply certification status filter
+  const filteredOperators = baseFilteredData.filter(operator => {
+    if (certStatus === 'all') return true;
     
-    // Role filter
-    const matchesRole = role === 'all' || 
-                       (role === 'operator' && (operator.role === FuncaoOperador.OPERADOR || operator.funcao === FuncaoOperador.OPERADOR)) ||
-                       (role === 'supervisor' && (operator.role === FuncaoOperador.SUPERVISOR || operator.funcao === FuncaoOperador.SUPERVISOR));
+    if (certStatus === 'regular') {
+      return operator.asoStatus === StatusCertificacao.VALIDO && 
+             operator.nrStatus === StatusCertificacao.VALIDO;
+    }
     
-    // Certificate status filter
-    const matchesCertStatus = certStatus === 'all' || 
-                             (certStatus === 'regular' && 
-                              operator.asoStatus === StatusCertificacao.VALIDO && 
-                              operator.nrStatus === StatusCertificacao.VALIDO) ||
-                             (certStatus === 'warning' && 
-                              (operator.asoStatus === StatusCertificacao.VENCENDO || 
-                               operator.nrStatus === StatusCertificacao.VENCENDO)) ||
-                             (certStatus === 'expired' && 
-                              (operator.asoStatus === StatusCertificacao.VENCIDO || 
-                               operator.nrStatus === StatusCertificacao.VENCIDO));
+    if (certStatus === 'warning') {
+      return operator.asoStatus === StatusCertificacao.VENCENDO || 
+             operator.nrStatus === StatusCertificacao.VENCENDO;
+    }
     
-    return matchesSearch && matchesRole && matchesCertStatus;
+    if (certStatus === 'expired') {
+      return operator.asoStatus === StatusCertificacao.VENCIDO || 
+             operator.nrStatus === StatusCertificacao.VENCIDO;
+    }
+    
+    return true;
   });
 
   // Get status color classes
@@ -278,6 +346,12 @@ const OperatorsPage = () => {
     });
   };
 
+  // Handle clear all filters
+  const handleClearAllFilters = () => {
+    clearFilters();
+    setCertStatus('all');
+  };
+
   // Pagination calculations
   const totalItems = filteredOperators.length;
   const totalPages = Math.ceil(totalItems / itemsPerPage);
@@ -300,21 +374,19 @@ const OperatorsPage = () => {
             <Input 
               type="text" 
               placeholder="Buscar operador..." 
-              className="pl-10"
+              className="pl-10 bg-slate-800/60 border-slate-700/50 text-white placeholder:text-slate-400"
               value={search}
               onChange={(e) => setSearch(e.target.value)}
             />
           </div>
+          <AdvancedFilters
+            filters={filterOptions}
+            values={filters}
+            onFiltersChange={setFilters}
+            onClearFilters={handleClearAllFilters}
+          />
           <Button 
-            variant="outline" 
-            className="flex items-center gap-2"
-            onClick={handleFilterToggle}
-          >
-            <Filter className="w-4 h-4" />
-            Filtrar
-          </Button>
-          <Button 
-            className="gap-2"
+            className="gap-2 bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800"
             onClick={() => {
               setSelectedOperator(null);
               setAddDialogOpen(true);
@@ -326,33 +398,70 @@ const OperatorsPage = () => {
         </div>
       </PageHeader>
       
-      {/* Filter options */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-        <div className="space-y-2">
-          <h4 className="text-sm font-medium">Função</h4>
-          <select 
-            className="w-full p-2 rounded-md border border-input bg-background"
-            value={role}
-            onChange={(e) => setRole(e.target.value)}
-          >
-            <option value="all">Todos</option>
-            <option value="operator">Operadores</option>
-            <option value="supervisor">Supervisores</option>
-          </select>
+      {/* Enhanced filter options */}
+      <div className="bg-gradient-to-br from-slate-800/60 to-slate-900/80 backdrop-blur-sm border border-slate-700/50 rounded-xl p-6">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+          <div className="space-y-2">
+            <h4 className="text-sm font-medium text-slate-200">Função</h4>
+            <Select value={filters.role || 'all'} onValueChange={(value) => setFilters({...filters, role: value === 'all' ? '' : value})}>
+              <SelectTrigger className="bg-slate-700/50 border-slate-600/50 text-white">
+                <SelectValue placeholder="Selecione função" />
+              </SelectTrigger>
+              <SelectContent className="bg-slate-800 border-slate-700">
+                <SelectItem value="all">Todos</SelectItem>
+                <SelectItem value="OPERADOR">Operador</SelectItem>
+                <SelectItem value="SUPERVISOR">Supervisor</SelectItem>
+                <SelectItem value="TECNICO">Técnico</SelectItem>
+                <SelectItem value="COORDENADOR">Coordenador</SelectItem>
+                <SelectItem value="GERENTE">Gerente</SelectItem>
+              </SelectContent>
+            </Select>
+          </div>
+          
+          <div className="space-y-2">
+            <h4 className="text-sm font-medium text-slate-200">Status de Certificação</h4>
+            <Select value={certStatus} onValueChange={setCertStatus}>
+              <SelectTrigger className="bg-slate-700/50 border-slate-600/50 text-white">
+                <SelectValue placeholder="Status certificação" />
+              </SelectTrigger>
+              <SelectContent className="bg-slate-800 border-slate-700">
+                <SelectItem value="all">Todos</SelectItem>
+                <SelectItem value="regular">Regular</SelectItem>
+                <SelectItem value="warning">Próximo do Vencimento</SelectItem>
+                <SelectItem value="expired">Vencido</SelectItem>
+              </SelectContent>
+            </Select>
+          </div>
+          
+          <div className="space-y-2">
+            <h4 className="text-sm font-medium text-slate-200">Turno</h4>
+            <Select value={filters.shift || 'all'} onValueChange={(value) => setFilters({...filters, shift: value === 'all' ? '' : value})}>
+              <SelectTrigger className="bg-slate-700/50 border-slate-600/50 text-white">
+                <SelectValue placeholder="Selecione turno" />
+              </SelectTrigger>
+              <SelectContent className="bg-slate-800 border-slate-700">
+                <SelectItem value="all">Todos</SelectItem>
+                <SelectItem value="Manhã">Manhã</SelectItem>
+                <SelectItem value="Tarde">Tarde</SelectItem>
+                <SelectItem value="Noite">Noite</SelectItem>
+                <SelectItem value="Integral">Integral</SelectItem>
+              </SelectContent>
+            </Select>
+          </div>
         </div>
-        <div className="space-y-2">
-          <h4 className="text-sm font-medium">Status de Certificação</h4>
-          <select 
-            className="w-full p-2 rounded-md border border-input bg-background"
-            value={certStatus}
-            onChange={(e) => setCertStatus(e.target.value)}
-          >
-            <option value="all">Todos</option>
-            <option value="regular">Regular</option>
-            <option value="warning">Próximo do Vencimento</option>
-            <option value="expired">Vencido</option>
-          </select>
-        </div>
+        
+        {(hasActiveFilters || certStatus !== 'all') && (
+          <div className="mt-4 pt-4 border-t border-slate-700/50">
+            <Button
+              variant="ghost"
+              size="sm"
+              onClick={handleClearAllFilters}
+              className="text-slate-400 hover:text-white hover:bg-slate-700/50"
+            >
+              Limpar todos os filtros
+            </Button>
+          </div>
+        )}
       </div>
       
       {/* Operators table */}
