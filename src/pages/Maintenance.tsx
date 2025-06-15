@@ -233,15 +233,15 @@ const MaintenancePage = () => {
   };
 
   return (
-    <div className="p-6 space-y-6">
+    <div className="p-6">
       {/* Header */}
-      <div>
+      <div className="mb-6">
         <h1 className="text-2xl font-bold">Manutenção</h1>
         <p className="text-muted-foreground">Gestão de Manutenções</p>
       </div>
 
-      {/* Dark Filter Bar - Matching the image exactly */}
-      <div className="bg-slate-800 rounded-lg p-4">
+      {/* Filter Bar */}
+      <div className="bg-slate-800 rounded-lg p-4 mb-6">
         <div className="flex flex-wrap items-center gap-3">
           {/* Search */}
           <div className="relative flex-1 min-w-[250px] max-w-sm">
