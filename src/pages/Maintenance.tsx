@@ -1,10 +1,9 @@
-
 import React, { useState } from 'react';
 import { Button } from "@/components/ui/button";
 import { useIsMobile } from '@/hooks/use-mobile';
 import { cn } from '@/lib/utils';
 import { Input } from '@/components/ui/input';
-import { Calendar, Plus, Search, Truck, User, AlertOctagon, Grid, List } from 'lucide-react';
+import { Calendar, Plus, Search, Truck, User, AlertOctagon, Grid, List, Filter } from 'lucide-react';
 import { OrdemServico, StatusManutencao, TipoManutencao, PrioridadeOperacao } from '@/types';
 import MaintenanceDialog from '@/components/maintenance/MaintenanceDialog';
 import { useToast } from '@/hooks/use-toast';
@@ -241,83 +240,91 @@ const MaintenancePage = () => {
         <p className="text-muted-foreground">Gestão de Manutenções</p>
       </div>
 
-      {/* Filter section */}
-      <div className="flex flex-wrap items-center gap-3">
-        {/* Search */}
-        <div className="relative flex-1 min-w-[200px] max-w-sm">
-          <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground w-4 h-4" />
-          <Input 
-            type="text" 
-            placeholder="Buscar por ID ou modelo..." 
-            className="pl-10"
-            value={search}
-            onChange={(e) => setSearch(e.target.value)}
-          />
-        </div>
+      {/* Dark Filter Bar - Matching the image exactly */}
+      <div className="bg-slate-800 rounded-lg p-4">
+        <div className="flex flex-wrap items-center gap-3">
+          {/* Search */}
+          <div className="relative flex-1 min-w-[250px] max-w-sm">
+            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-slate-400 w-4 h-4" />
+            <Input 
+              type="text" 
+              placeholder="Buscar por ID ou modelo..." 
+              className="pl-10 bg-slate-700 border-slate-600 text-white placeholder:text-slate-400 focus:border-blue-500 focus:ring-blue-500"
+              value={search}
+              onChange={(e) => setSearch(e.target.value)}
+            />
+          </div>
 
-        {/* Status Filter */}
-        <select 
-          className="px-3 py-2 rounded-md border border-input bg-background text-sm w-[150px] h-10"
-          value={filters.status || 'all'}
-          onChange={(e) => setFilters({ ...filters, status: e.target.value === 'all' ? '' : e.target.value })}
-        >
-          <option value="all">Todos os Status</option>
-          <option value={StatusManutencao.ABERTA}>Aberta</option>
-          <option value={StatusManutencao.EM_ANDAMENTO}>Em Andamento</option>
-          <option value={StatusManutencao.CONCLUIDA}>Concluída</option>
-        </select>
+          {/* Status Filter */}
+          <div className="min-w-[150px]">
+            <select 
+              className="w-full px-3 py-2 rounded-md border border-slate-600 bg-slate-700 text-white text-sm h-10 focus:border-blue-500 focus:ring-1 focus:ring-blue-500"
+              value={filters.status || 'all'}
+              onChange={(e) => setFilters({ ...filters, status: e.target.value === 'all' ? '' : e.target.value })}
+            >
+              <option value="all">Todos os Status</option>
+              <option value={StatusManutencao.ABERTA}>Aberta</option>
+              <option value={StatusManutencao.EM_ANDAMENTO}>Em Andamento</option>
+              <option value={StatusManutencao.CONCLUIDA}>Concluída</option>
+            </select>
+          </div>
 
-        {/* Type Filter */}
-        <select 
-          className="px-3 py-2 rounded-md border border-input bg-background text-sm w-[150px] h-10"
-          value={filters.tipo || 'all'}
-          onChange={(e) => setFilters({ ...filters, tipo: e.target.value === 'all' ? '' : e.target.value })}
-        >
-          <option value="all">Todos os Tipos</option>
-          <option value={TipoManutencao.PREVENTIVA}>Preventiva</option>
-          <option value={TipoManutencao.CORRETIVA}>Corretiva</option>
-          <option value={TipoManutencao.PREDITIVA}>Preditiva</option>
-        </select>
+          {/* Type Filter */}
+          <div className="min-w-[150px]">
+            <select 
+              className="w-full px-3 py-2 rounded-md border border-slate-600 bg-slate-700 text-white text-sm h-10 focus:border-blue-500 focus:ring-1 focus:ring-blue-500"
+              value={filters.tipo || 'all'}
+              onChange={(e) => setFilters({ ...filters, tipo: e.target.value === 'all' ? '' : e.target.value })}
+            >
+              <option value="all">Todos os Tipos</option>
+              <option value={TipoManutencao.PREVENTIVA}>Preventiva</option>
+              <option value={TipoManutencao.CORRETIVA}>Corretiva</option>
+              <option value={TipoManutencao.PREDITIVA}>Preditiva</option>
+            </select>
+          </div>
 
-        {/* Advanced Filters */}
-        <AdvancedFilters 
-          filters={filterOptions}
-          values={filters}
-          onFiltersChange={setFilters}
-          onClearFilters={clearFilters}
-        />
-
-        {/* View Toggle */}
-        <div className="flex border rounded-md">
-          <Button
-            variant={viewMode === 'grid' ? 'default' : 'ghost'}
-            size="sm"
-            onClick={() => setViewMode('grid')}
-            className="rounded-r-none"
+          {/* Advanced Filters */}
+          <Button 
+            variant="outline" 
+            className="gap-2 bg-slate-700 border-slate-600 text-white hover:bg-slate-600 hover:text-white"
+            onClick={() => {
+              // You can expand this to open a more detailed filter dialog
+            }}
           >
-            <Grid className="w-4 h-4" />
+            <Filter className="w-4 h-4" />
+            Filtros Avançados
           </Button>
-          <Button
-            variant={viewMode === 'list' ? 'default' : 'ghost'}
-            size="sm"
-            onClick={() => setViewMode('list')}
-            className="rounded-l-none"
-          >
-            <List className="w-4 h-4" />
-          </Button>
-        </div>
 
-        {/* Add Button */}
-        <Button 
-          className="gap-2 whitespace-nowrap"
-          onClick={() => {
-            setSelectedMaintenance(null);
-            setAddDialogOpen(true);
-          }}
-        >
-          <Plus className="w-4 h-4" />
-          Nova Manutenção
-        </Button>
+          {/* View Toggle */}
+          <div className="flex border border-slate-600 rounded-md bg-slate-700">
+            <Button
+              variant={viewMode === 'grid' ? 'default' : 'ghost'}
+              size="sm"
+              onClick={() => setViewMode('grid')}
+              className={cn(
+                "rounded-r-none",
+                viewMode === 'grid' 
+                  ? "bg-blue-600 text-white hover:bg-blue-700" 
+                  : "bg-transparent text-slate-300 hover:bg-slate-600 hover:text-white"
+              )}
+            >
+              <Grid className="w-4 h-4" />
+            </Button>
+            <Button
+              variant={viewMode === 'list' ? 'default' : 'ghost'}
+              size="sm"
+              onClick={() => setViewMode('list')}
+              className={cn(
+                "rounded-l-none",
+                viewMode === 'list' 
+                  ? "bg-blue-600 text-white hover:bg-blue-700" 
+                  : "bg-transparent text-slate-300 hover:bg-slate-600 hover:text-white"
+              )}
+            >
+              <List className="w-4 h-4" />
+            </Button>
+          </div>
+        </div>
       </div>
       
       {/* Maintenance Cards - Waiting & In Progress */}
