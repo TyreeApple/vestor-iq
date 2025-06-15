@@ -4,7 +4,7 @@ import { NavLink } from 'react-router-dom';
 import { Search, User, Menu, X, BarChart3, Users, Activity, Wrench, Fuel, FileText, Gauge, Settings } from 'lucide-react';
 import { MdForklift } from 'react-icons/md';
 import { Button } from '@/components/ui/button';
-// Removido: import ThemeToggle from '@/components/common/ThemeToggle';
+// Removido: import ThemeToggle from '@/components/common/ThemeToggle'; // <-- Remove this comment
 import { cn } from '@/lib/utils';
 import { useAppStore } from '@/stores/useAppStore';
 import { StatusOperacao, StatusManutencao } from "@/types";
