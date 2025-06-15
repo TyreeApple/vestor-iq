@@ -41,11 +41,8 @@ const TechIconCard: React.FC<TechIconCardProps> = ({
       "flex flex-col items-center justify-center bg-background rounded-2xl px-4 py-6 md:py-5 gap-3 border border-border w-full h-full",
       "transition-all duration-300 min-w-[118px] sm:min-w-0"
     )}>
-      <div className={cn(
-        "w-16 h-16 flex items-center justify-center rounded-full shadow-inner border-2 border-border mb-1",
-        gradient ? gradientDefault : bg,
-        "bg-opacity-80 backdrop-blur"
-      )}>
+      {/* Ícone sem box/círculo */}
+      <div className="mb-1 flex items-center justify-center">
         <Icon size={38} className="drop-shadow-glow text-[2.2rem] transition-colors duration-500 group-hover:text-primary" />
       </div>
       <span className="font-bold text-foreground text-[1rem] tracking-tight text-center w-full truncate group-hover:text-primary transition-colors duration-150">
@@ -59,4 +56,3 @@ const TechIconCard: React.FC<TechIconCardProps> = ({
 );
 
 export default TechIconCard;
-
