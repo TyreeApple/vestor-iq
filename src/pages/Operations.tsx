@@ -288,8 +288,10 @@ const OperationsPage = () => {
         return { label: 'Carga', color: 'text-green-400' };
       case TipoOperacao.DESCARGA:
         return { label: 'Descarga', color: 'text-orange-400' };
-      case TipoOperacao.MANUTENCAO:
-        return { label: 'Manutenção', color: 'text-red-400' };
+      case TipoOperacao.ESTOQUE:
+        return { label: 'Estoque', color: 'text-purple-400' };
+      case TipoOperacao.PICKING:
+        return { label: 'Picking', color: 'text-yellow-400' };
       default:
         return { label: 'Outro', color: 'text-gray-400' };
     }
