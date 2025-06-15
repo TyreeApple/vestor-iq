@@ -1,4 +1,3 @@
-
 import { create } from 'zustand';
 import { devtools, persist } from 'zustand/middleware';
 import { 
@@ -529,6 +528,80 @@ export const useAppStore = create<AppState>()(
             false,
             'generateAlerts'
           ),
+        // ---------- MOCK DATA PARA DEMONSTRAÇÃO ----------
+        addMockData: () => {
+          // Empilhadeiras mock
+          const empilhadeiras = [
+            {
+              id: "E-001",
+              nome: "Hyster 2.5T",
+              status: 0,
+              operadorAtual: "O-001",
+              eficiencia: 87,
+              disponibilidade: 98,
+            },
+            {
+              id: "E-002",
+              nome: "Toyota 3T",
+              status: 2,
+              eficiencia: 75,
+              disponibilidade: 73,
+            },
+          ];
+          // Operadores mock
+          const operadores = [
+            { id: "O-001", nome: "Ana Silva", status: 1 },
+            { id: "O-002", nome: "Carlos Dias", status: 1 },
+          ];
+          // Operações mock
+          const operacoes = [
+            {
+              id: "OP-101",
+              empilhadeiraId: "E-001",
+              operadorId: "O-001",
+              inicioPrevisto: new Date().toISOString(),
+              dataInicio: new Date().toISOString(),
+              status: 1,
+              produtividade: 90,
+            },
+          ];
+          // Ordem de Serviço mock
+          const ordemServicos = [
+            {
+              id: "OS-001",
+              empilhadeiraId: "E-002",
+              prioridade: 2,
+              status: 1,
+              problema: "Vazamento de óleo",
+              dataAbertura: new Date().toISOString(),
+            },
+          ];
+          // Abastecimentos mock
+          const abastecimentos = [
+            {
+              id: "AB-001",
+              empilhadeiraId: "E-001",
+              usuario: "O-001",
+              data: new Date().toISOString(),
+              quantidadeLitros: 25,
+              custoTotal: 160,
+            },
+          ];
+          set(
+            {
+              empilhadeiras,
+              operadores,
+              operacoes,
+              ordemServicos,
+              abastecimentos,
+            },
+            false,
+            "addMockData"
+          );
+          get().recalculateMetrics();
+          get().generateAlerts();
+          get().triggerUpdate();
+        },
       }),
       {
         name: 'fleet-management-storage',

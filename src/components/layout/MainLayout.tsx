@@ -1,9 +1,9 @@
-
 import React from 'react';
 import { Outlet } from 'react-router-dom';
 import Navbar from './Navbar';
 import Footer from './Footer';
 import { useRealTimeSync } from '@/hooks/useRealTimeSync';
+import EducationalModal from "@/components/EducationalModal";
 
 const MainLayout: React.FC = () => {
   // Ativa sincronização em tempo real para toda a aplicação
@@ -11,6 +11,7 @@ const MainLayout: React.FC = () => {
 
   return (
     <div className="flex h-screen bg-slate-50 dark:bg-background transition-colors duration-300">
+      <EducationalModal />
       <div className="flex-1 flex flex-col">
         <Navbar />
         <main className="flex-1 overflow-auto bg-slate-50 dark:bg-background">
@@ -28,4 +29,3 @@ const MainLayout: React.FC = () => {
 };
 
 export default MainLayout;
-
