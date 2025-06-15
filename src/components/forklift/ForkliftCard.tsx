@@ -18,25 +18,25 @@ const ForkliftCard: React.FC<ForkliftCardProps> = ({ forklift, onClick, onDelete
     switch (status) {
       case StatusEmpilhadeira.OPERACIONAL:
         return (
-          <Badge className="bg-gradient-to-r from-emerald-500 to-emerald-600 hover:from-emerald-600 hover:to-emerald-700 text-white border-0 font-semibold tracking-wide shadow-lg shadow-emerald-500/25 text-xs px-3 py-1.5 whitespace-nowrap shrink-0">
+          <Badge className="bg-gradient-to-r from-emerald-500 to-emerald-600 hover:from-emerald-600 hover:to-emerald-700 text-white border-0 font-semibold tracking-wide shadow-lg shadow-emerald-500/25 text-xs px-3 py-1.5 whitespace-nowrap shrink-0 rounded-full">
             ✓ OK
           </Badge>
         );
       case StatusEmpilhadeira.EM_MANUTENCAO:
         return (
-          <Badge className="bg-gradient-to-r from-amber-500 to-orange-600 hover:from-amber-600 hover:to-orange-700 text-white border-0 font-semibold tracking-wide shadow-lg shadow-amber-500/25 animate-pulse text-xs px-3 py-1.5 whitespace-nowrap shrink-0">
+          <Badge className="bg-gradient-to-r from-amber-500 to-orange-600 hover:from-amber-600 hover:to-orange-700 text-white border-0 font-semibold tracking-wide shadow-lg shadow-amber-500/25 animate-pulse text-xs px-3 py-1.5 whitespace-nowrap shrink-0 rounded-full">
             🔧 Manutenção
           </Badge>
         );
       case StatusEmpilhadeira.PARADA:
         return (
-          <Badge className="bg-gradient-to-r from-red-500 to-red-600 hover:from-red-600 hover:to-red-700 text-white border-0 font-semibold tracking-wide shadow-lg shadow-red-500/25 text-xs px-3 py-1.5 whitespace-nowrap shrink-0">
+          <Badge className="bg-gradient-to-r from-red-500 to-red-600 hover:from-red-600 hover:to-red-700 text-white border-0 font-semibold tracking-wide shadow-lg shadow-red-500/25 text-xs px-3 py-1.5 whitespace-nowrap shrink-0 rounded-full">
             ⚠ Parada
           </Badge>
         );
       default:
         return (
-          <Badge className="bg-gradient-to-r from-slate-500 to-slate-600 text-white border-0 font-semibold tracking-wide text-xs px-3 py-1.5 whitespace-nowrap shrink-0">
+          <Badge className="bg-gradient-to-r from-slate-500 to-slate-600 text-white border-0 font-semibold tracking-wide text-xs px-3 py-1.5 whitespace-nowrap shrink-0 rounded-full">
             {status}
           </Badge>
         );
@@ -105,22 +105,25 @@ const ForkliftCard: React.FC<ForkliftCardProps> = ({ forklift, onClick, onDelete
         </div>
       </div>
 
-      {/* Capacity Section with Floating Badges - Following the image design */}
-      <div className="relative bg-gradient-to-br from-slate-800/40 to-slate-900/80 rounded-2xl p-6 mb-3 border border-slate-700/30">
-        {/* Type Badge - Positioned top-left */}
-        <div className="absolute -top-3 left-4 z-10">
+      {/* Badges Section - Aligned vertically above capacity */}
+      <div className="flex flex-col gap-2 mb-3">
+        {/* Type Badge */}
+        <div className="flex justify-start">
           <Badge variant="outline" className={cn("border font-semibold text-xs tracking-wider whitespace-nowrap shrink-0 px-4 py-1.5 rounded-full", getTypeBadge(forklift.tipo))}>
             {forklift.tipo}
           </Badge>
         </div>
 
-        {/* Status Badge - Positioned top-right */}
-        <div className="absolute -top-3 right-4 z-10">
+        {/* Status Badge */}
+        <div className="flex justify-start">
           {getStatusBadge(forklift.status)}
         </div>
+      </div>
 
-        {/* Capacity Content - Centered with top padding */}
-        <div className="text-center pt-2">
+      {/* Capacity Section - Clean design without floating badges */}
+      <div className="bg-gradient-to-br from-slate-800/40 to-slate-900/80 rounded-2xl p-6 mb-3 border border-slate-700/30">
+        {/* Capacity Content - Centered */}
+        <div className="text-center">
           <div className="text-slate-400 text-xs font-bold tracking-[2px] uppercase mb-3" style={{ color: '#6b7280' }}>
             CAPACIDADE
           </div>
