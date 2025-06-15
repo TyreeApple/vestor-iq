@@ -1,8 +1,7 @@
-
 import React from "react";
 import { CheckCircle, AlertTriangle, Users, Activity } from "lucide-react";
 import { MetricasDashboard } from "@/types";
-import { Card, CardContent } from "@/components/ui/card";
+import StandardCard from "@/components/common/StandardCard";
 
 const initialStats: MetricasDashboard = {
   frotaTotal: 15,
@@ -62,53 +61,33 @@ const CARDS: OverviewCard[] = [
 const DashboardOverview: React.FC<DashboardOverviewProps> = ({
   stats = initialStats,
 }) => {
-  const statusConfig = {
-    success: {
-      iconBg: 'bg-green-500',
-      iconColor: 'text-white'
-    },
-    warning: {
-      iconBg: 'bg-orange-500',
-      iconColor: 'text-white'
-    },
-    danger: {
-      iconBg: 'bg-red-500',
-      iconColor: 'text-white'
-    },
-    info: {
-      iconBg: 'bg-blue-500',
-      iconColor: 'text-white'
-    }
-  };
-
   return (
     <section className="w-full max-w-screen-xl mx-auto px-2 md:px-0 mt-6">
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-6">
-        {CARDS.map((card) => {
-          const config = statusConfig[card.status];
-          const Icon = card.icon;
-          
-          return (
-            <Card key={card.title} className="p-6">
-              <CardContent className="p-0">
-                <div className="flex flex-col items-center text-center space-y-4">
-                  <div className={`p-3 rounded-lg ${config.iconBg}`}>
-                    <Icon className={`w-6 h-6 ${config.iconColor}`} />
-                  </div>
-                  
-                  <div className="space-y-1">
-                    <p className="text-2xl font-bold text-foreground">
-                      {card.value(stats)}
-                    </p>
-                    <h3 className="text-sm font-medium text-muted-foreground">
-                      {card.title}
-                    </h3>
-                  </div>
-                </div>
-              </CardContent>
-            </Card>
-          );
-        })}
+        <StandardCard
+          title="Total Frota"
+          value={stats.frotaTotal}
+          icon={Activity}
+          variant="info"
+        />
+        <StandardCard
+          title="Operacionais"
+          value={stats.empilhadeirasOperacionais}
+          icon={CheckCircle}
+          variant="success"
+        />
+        <StandardCard
+          title="Manutenção"
+          value={stats.empilhadeirasManutencao}
+          icon={AlertTriangle}
+          variant="warning"
+        />
+        <StandardCard
+          title="Operadores"
+          value={stats.operadoresAtivos}
+          icon={Users}
+          variant="info"
+        />
       </div>
     </section>
   );
