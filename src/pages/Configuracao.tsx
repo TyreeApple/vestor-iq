@@ -11,148 +11,139 @@ import { PiTableDuotone } from "react-icons/pi";
 import { TbBrandRadixUi } from "react-icons/tb";
 import { BarChart3 } from "lucide-react";
 import { GiBearHead } from "react-icons/gi";
-import AboutProjectCard from "@/components/about/AboutProjectCard";
-import TechSection from "@/components/about/TechSection";
 
-// Definições dos ícones com fundos exclusivos
+// Dados dos cards conforme mockup
 const tecnologias = [
-  {
-    name: "React",
-    icon: SiReact,
-    url: "https://react.dev/",
-    bg: "bg-[#0a1728]"
-  },
-  {
-    name: "TypeScript",
-    icon: SiTypescript,
-    url: "https://www.typescriptlang.org/",
-    bg: "bg-[#0a1728]"
-  },
-  {
-    name: "Vite",
-    icon: SiVite,
-    url: "https://vitejs.dev/",
-    bg: "bg-[#0a1728]"
-  },
-  {
-    name: "Tailwind CSS",
-    icon: SiTailwindcss,
-    url: "https://tailwindcss.com/",
-    bg: "bg-[#0a1728]"
-  },
-  {
-    name: "shadcn/ui",
-    icon: SiShadcnui,
-    url: "https://ui.shadcn.com/",
-    bg: "bg-[#0a1728]"
-  },
+  { name: "React", icon: SiReact, url: "https://react.dev/" },
+  { name: "TypeScript", icon: SiTypescript, url: "https://www.typescriptlang.org/" },
+  { name: "Vite", icon: SiVite, url: "https://vitejs.dev/" },
+  { name: "Tailwind CSS", icon: SiTailwindcss, url: "https://tailwindcss.com/" },
+  { name: "shadcn/ui", icon: SiShadcnui, url: "https://ui.shadcn.com/" },
 ];
 
 const bibliotecas = [
-  {
-    name: "React-Hook Form",
-    icon: SiReacthookform,
-    url: "https://react-hook-form.com/",
-    bg: "bg-[#101b2f]"
-  },
-  {
-    name: "React Router",
-    icon: SiReactrouter,
-    url: "https://reactrouter.com/",
-    bg: "bg-[#101b2f]"
-  },
-  {
-    name: "Zustand",
-    icon: GiBearHead,
-    url: "https://docs.pmnd.rs/zustand",
-    bg: "bg-[#101b2f]"
-  },
-  {
-    name: "Zod",
-    icon: SiZod,
-    url: "https://zod.dev/",
-    bg: "bg-[#101b2f]"
-  },
-  {
-    name: "Tanstack (ícones)",
-    icon: PiTableDuotone,
-    url: "https://tanstack.com/query",
-    bg: "bg-[#101b2f]"
-  },
-  {
-    name: "Recharts",
-    icon: BarChart3,
-    url: "https://recharts.org/",
-    bg: "bg-[#101b2f]"
-  },
-  {
-    name: "Radix UI",
-    icon: TbBrandRadixUi,
-    url: "https://www.radix-ui.com/",
-    bg: "bg-[#101b2f]"
-  },
-  {
-    name: "Lucide",
-    icon: SiLucide,
-    url: "https://lucide.dev/",
-    bg: "bg-[#101b2f]"
-  },
+  { name: "React-Hook Form", icon: SiReacthookform, url: "https://react-hook-form.com/" },
+  { name: "React Router", icon: SiReactrouter, url: "https://reactrouter.com/" },
+  { name: "Zustand", icon: GiBearHead, url: "https://docs.pmnd.rs/zustand" },
+  { name: "Zod", icon: SiZod, url: "https://zod.dev/" },
+  { name: "Tanstack (ícones)", icon: PiTableDuotone, url: "https://tanstack.com/query" },
+  { name: "Recharts", icon: BarChart3, url: "https://recharts.org/" },
+  { name: "Radix UI", icon: TbBrandRadixUi, url: "https://www.radix-ui.com/" },
+  { name: "Lucide", icon: SiLucide, url: "https://lucide.dev/" },
 ];
+
+const cardClass =
+  "relative rounded-xl border border-[#22304B] bg-[#131d33c7] flex flex-col items-center justify-center py-4 px-1 min-w-[102px] h-[108px] sm:h-[112px] md:h-[118px] mx-auto shadow-lg transition hover:scale-[1.04] hover:shadow-blue-900 focus:ring-[2px] focus:ring-blue-400/70 outline-none";
+
+const iconClass = "mb-2";
+const nameClass = "text-sm sm:text-base font-semibold text-blue-100";
+
+const gridClass =
+  "grid grid-cols-2 xs:grid-cols-3 sm:grid-cols-4 md:grid-cols-5 gap-3 sm:gap-4";
+
+const tituloClass = "text-xl md:text-2xl font-extrabold gradient-text drop-shadow mb-2";
+const sectionClass = "mb-1";
 
 const Configuracao: React.FC = () => {
   return (
-    <section className="min-h-screen flex items-center justify-center bg-gradient-to-br from-[#111725] via-[#0d1321] to-[#181F30] py-6 px-1">
-      <div className="w-full max-w-5xl mx-auto rounded-xl flex flex-col xl:flex-row gap-7 xl:gap-10 shadow-2xl bg-transparent">
-        {/* Card lateral */}
-        <div className="w-full max-w-xs xl:w-[280px] flex flex-col">
-          <div className="flex-1 flex flex-col !bg-transparent">
-            <div className="relative overflow-hidden rounded-xl border border-[#20293c] bg-[#101623]/80 shadow-[0_0_0_1px_#131b29,0_1px_10px_0_rgba(36,46,68,0.23)] p-6 flex flex-col items-center min-h-[260px]">
-              <span className="mb-2">
-                <Settings className="w-8 h-8 text-blue-400 drop-shadow-glow" />
-              </span>
-              <h3 className="text-lg font-bold text-blue-400 tracking-tight mb-1">
-                Sobre o Projeto
-              </h3>
-              <p className="text-blue-100/90 font-medium text-sm mb-3 text-center leading-snug" style={{ textWrap: "pretty" }}>
-                Projeto feito apenas para brincar com IA e testar sua capacidade.
-              </p>
-              <a
-                href="https://github.com/olucasmf"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="
-                  mt-auto transition-all duration-200
-                  inline-flex items-center gap-2 rounded-full px-4 py-1.5
-                  bg-blue-950/60 hover:bg-blue-900/80 border border-blue-700/30
-                  text-blue-200 hover:text-white font-bold shadow
-                  active:scale-95 focus-ring-premium text-sm
-                "
-              >
-                <FaGithub className="w-4 h-4" />
-                github.com/olucasmf
-              </a>
-            </div>
+    <section className="w-full min-h-screen bg-gradient-to-br from-[#161E2E] via-[#101729] to-[#171F31] flex items-start justify-center px-1 py-4">
+      <div
+        className="w-full max-w-[1080px] mx-auto rounded-lg flex flex-col md:flex-row gap-4 md:gap-7 bg-transparent"
+      >
+        {/* Sidebar curta lateral */}
+        <aside className="min-w-[234px] max-w-[265px] w-full flex flex-col">
+          <div className="rounded-xl border border-[#293956] bg-[#101624] shadow-md py-5 px-5 flex flex-col items-center min-h-[170px]">
+            <span>
+              <Settings className="w-7 h-7 text-blue-400 mb-1" />
+            </span>
+            <h3 className="text-base font-extrabold text-blue-200 tracking-tight mb-1 text-center">
+              Sobre o Projeto
+            </h3>
+            <p className="text-blue-100/80 text-xs text-center font-medium leading-normal mb-2">
+              Projeto feito apenas para brincar com IA e testar sua capacidade.
+            </p>
+            <a
+              href="https://github.com/olucasmf"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="mt-auto transition-all duration-150 flex items-center gap-1 rounded-full px-3 py-1 bg-[#18213B] hover:bg-blue-900 border border-blue-700/30 text-blue-200 hover:text-white font-bold shadow text-xs"
+            >
+              <FaGithub className="w-4 h-4" />
+              github.com/olucasmf
+            </a>
           </div>
-        </div>
-        {/* Centro: Conteúdo e grids */}
-        <div className="flex-1 flex flex-col gap-7">
-          <header className="mb-0 flex flex-col items-center text-center">
-            <h2 className="text-2xl font-bold tracking-tight text-blue-400 gradient-text mb-1 drop-shadow" style={{ fontFamily: "Inter, sans-serif"}}>
+        </aside>
+
+        <main className="flex-1 flex flex-col max-w-full overflow-x-auto">
+          <header className="mb-3 flex flex-col items-center text-center md:text-left md:items-start">
+            <h2 className="text-2xl md:text-3xl font-extrabold mb-0 gradient-text" style={{ lineHeight: 1 }}>
               Configurações
             </h2>
-            <p className="text-blue-200/80 max-w-lg text-base font-medium mb-0">
+            <p className="text-blue-100/80 text-sm md:text-base mb-1 font-medium max-w-[570px]">
               Gerencie suas preferências da conta e personalizações do sistema.
             </p>
           </header>
+
           {/* Tecnologias Utilizadas */}
-          <div>
-            <TechSection title="Tecnologias Utilizadas" items={tecnologias} />
-          </div>
+          <section className={sectionClass}>
+            <h3
+              className={tituloClass + " text-[#6f44e9] drop-shadow"}
+              style={{ color: "#7c3aed", textShadow: "0 2px 10px #181e33" }}
+            >
+              Tecnologias Utilizadas
+            </h3>
+            <div className={gridClass}>
+              {tecnologias.map((item) => (
+                <a
+                  key={item.name}
+                  href={item.url}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className={cardClass + " group"}
+                  tabIndex={0}
+                  aria-label={item.name}
+                >
+                  <item.icon
+                    size={36}
+                    className={iconClass + " text-blue-400 group-hover:text-blue-500"}
+                  />
+                  <span className={nameClass}>{item.name}</span>
+                </a>
+              ))}
+            </div>
+          </section>
+
           {/* Bibliotecas Utilizadas */}
-          <div>
-            <TechSection title="Bibliotecas Utilizadas" items={bibliotecas} />
-          </div>
-        </div>
+          <section className={sectionClass + " mt-5"}>
+            <h3
+              className={tituloClass + " text-[#6f44e9] drop-shadow"}
+              style={{ color: "#7c3aed", textShadow: "0 2px 10px #181e33" }}
+            >
+              Bibliotecas Utilizadas
+            </h3>
+            <div
+              className="grid grid-cols-2 xs:grid-cols-3 sm:grid-cols-4 md:grid-cols-4 lg:grid-cols-5 gap-3 sm:gap-4"
+            >
+              {bibliotecas.map((item) => (
+                <a
+                  key={item.name}
+                  href={item.url}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className={cardClass + " group"}
+                  tabIndex={0}
+                  aria-label={item.name}
+                >
+                  <item.icon
+                    size={32}
+                    className={iconClass + " text-blue-400 group-hover:text-blue-500"}
+                  />
+                  <span className={nameClass + " text-xs sm:text-base"}>{item.name}</span>
+                </a>
+              ))}
+            </div>
+          </section>
+        </main>
       </div>
     </section>
   );
