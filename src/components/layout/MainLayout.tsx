@@ -3,7 +3,6 @@ import React from 'react';
 import { Outlet } from 'react-router-dom';
 import Sidebar from './Sidebar';
 import Navbar from './Navbar';
-import Footer from './Footer';
 import { useAppStore } from '@/stores/useAppStore';
 
 const MainLayout: React.FC = () => {
@@ -17,13 +16,12 @@ const MainLayout: React.FC = () => {
       }`}>
         <Navbar />
         <main className="flex-1 overflow-auto bg-slate-50 dark:bg-background">
-          <div className="min-h-full flex flex-col">
-            <div className="flex-1 p-6">
+          <div className="min-h-full">
+            <div className="p-6">
               <div className="w-full px-[15px]">
                 <Outlet />
               </div>
             </div>
-            <Footer />
           </div>
         </main>
       </div>
