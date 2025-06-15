@@ -430,10 +430,12 @@ const ForkliftsPage = () => {
 
   return (
     <div className="space-y-6">
-      {/* Page Header */}
+      {/* Page Header Padronizado */}
       <PageHeader 
         title="Gerenciamento de Empilhadeiras"
         subtitle="Gerencie sua frota de empilhadeiras de forma inteligente"
+        description="Controle completo da sua frota com monitoramento em tempo real"
+        icon={Truck}
       >
         <div className="flex flex-wrap gap-2">
           <Button variant="outline" size="sm" onClick={handleImportData}>

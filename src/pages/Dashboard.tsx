@@ -1,11 +1,13 @@
+
 import React from 'react';
 import MetricsGrid from '@/components/dashboard/MetricsGrid';
+import PageHeader from '@/components/layout/PageHeader';
 import { useAppStore } from '@/stores/useAppStore';
 import { useReports } from '@/hooks/useReports';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
-import { AlertTriangle, Clock, TrendingUp, Users, Wrench, Gauge, ArrowRight, Activity } from 'lucide-react';
+import { AlertTriangle, Clock, TrendingUp, Users, Wrench, Gauge, ArrowRight, Activity, Monitor } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 
 const Dashboard: React.FC = () => {
@@ -70,14 +72,13 @@ const Dashboard: React.FC = () => {
 
   return (
     <div className="space-y-6">
-      {/* Header */}
-      <div className="flex items-center justify-between">
-        <div>
-          <h1 className="text-3xl font-bold text-slate-900 dark:text-white">Dashboard de Controle</h1>
-          <p className="text-slate-600 dark:text-slate-400 mt-1">
-            Visão geral da operação em tempo real • {empilhadeiras.length} empilhadeiras • {operadores.length} operadores
-          </p>
-        </div>
+      {/* Header Padronizado */}
+      <PageHeader 
+        title="Dashboard de Controle"
+        subtitle="Visão geral da operação em tempo real"
+        description={`Monitore ${empilhadeiras.length} empilhadeiras e ${operadores.length} operadores ativos`}
+        icon={Monitor}
+      >
         <div className="flex items-center space-x-2">
           <Badge variant="outline" className="bg-green-50 dark:bg-green-900/20 text-green-700 dark:text-green-400 border-green-200 dark:border-green-800">
             💾 Dados Locais
@@ -87,7 +88,7 @@ const Dashboard: React.FC = () => {
             Sync: {new Date(lastUpdate).toLocaleTimeString()}
           </div>
         </div>
-      </div>
+      </PageHeader>
 
       {/* Metrics Grid */}
       <MetricsGrid />
