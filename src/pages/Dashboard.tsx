@@ -1,5 +1,4 @@
-
-import React, { useEffect } from 'react';
+import React from 'react';
 import MetricsGrid from '@/components/dashboard/MetricsGrid';
 import { useAppStore } from '@/stores/useAppStore';
 import { useReports } from '@/hooks/useReports';
@@ -17,17 +16,10 @@ const Dashboard: React.FC = () => {
     ordemServicos, 
     empilhadeiras, 
     operadores,
-    recalculateMetrics, 
-    generateAlerts 
+    lastUpdate
   } = useAppStore();
   
   const { resumoGeral } = useReports();
-
-  // Recalcular métricas ao carregar
-  useEffect(() => {
-    recalculateMetrics();
-    generateAlerts();
-  }, [recalculateMetrics, generateAlerts]);
 
   // Operações mais recentes
   const operacoesRecentes = operacoes
@@ -49,7 +41,7 @@ const Dashboard: React.FC = () => {
 
   // Empilhadeiras que precisam de atenção
   const empilhadeirasAtencao = empilhadeiras
-    .filter(emp => emp.eficiencia < 85 || emp.disponibilidade < 90)
+    .filter(emp => (emp.eficiencia || 0) < 85 || (emp.disponibilidade || 0) < 90)
     .slice(0, 3);
 
   const getStatusBadgeVariant = (status: string) => {
@@ -83,16 +75,16 @@ const Dashboard: React.FC = () => {
         <div>
           <h1 className="text-3xl font-bold text-slate-900 dark:text-white">Dashboard de Controle</h1>
           <p className="text-slate-600 dark:text-slate-400 mt-1">
-            Visão geral da operação em tempo real • {resumoGeral.totalEmpilhadeiras} empilhadeiras • {operadores.length} operadores ativos
+            Visão geral da operação em tempo real • {empilhadeiras.length} empilhadeiras • {operadores.length} operadores
           </p>
         </div>
         <div className="flex items-center space-x-2">
           <Badge variant="outline" className="bg-green-50 dark:bg-green-900/20 text-green-700 dark:text-green-400 border-green-200 dark:border-green-800">
-            Sistema Online
+            💾 Dados Locais
           </Badge>
           <div className="flex items-center text-sm text-slate-500 dark:text-slate-400">
             <Clock className="w-4 h-4 mr-1" />
-            Atualizado agora
+            Sync: {new Date(lastUpdate).toLocaleTimeString()}
           </div>
         </div>
       </div>
@@ -123,7 +115,8 @@ const Dashboard: React.FC = () => {
               {operacoesRecentes.length === 0 ? (
                 <div className="text-center py-8 text-slate-500 dark:text-slate-400">
                   <Activity className="w-8 h-8 mx-auto mb-2 text-slate-300 dark:text-slate-600" />
-                  <p>Nenhuma operação recente</p>
+                  <p>Nenhuma operação cadastrada</p>
+                  <p className="text-xs mt-1">Adicione operações para começar</p>
                 </div>
               ) : (
                 operacoesRecentes.map((operacao) => (
@@ -137,7 +130,7 @@ const Dashboard: React.FC = () => {
                         </Badge>
                       </div>
                       <p className="text-sm text-slate-600 dark:text-slate-400 mt-1">
-                        {operacao.empilhadeiraId} • {operacao.operador.nome} • {operacao.setor}
+                        {operacao.empilhadeiraId} • {operacao.operador?.nome || 'Operador não informado'} • {operacao.setor}
                       </p>
                       <p className="text-xs text-slate-500 dark:text-slate-500 mt-1">
                         {operacao.tipo} • {formatDate(operacao.dataInicio)}
@@ -168,6 +161,7 @@ const Dashboard: React.FC = () => {
                 <div className="text-center py-8 text-slate-500 dark:text-slate-400">
                   <AlertTriangle className="w-8 h-8 mx-auto mb-2 text-slate-300 dark:text-slate-600" />
                   <p>Nenhum alerta crítico</p>
+                  <p className="text-xs mt-1">Sistema funcionando normalmente</p>
                 </div>
               ) : (
                 alertasCriticos.map((alerta) => (
@@ -218,6 +212,7 @@ const Dashboard: React.FC = () => {
                 <div className="text-center py-8 text-slate-500 dark:text-slate-400">
                   <Wrench className="w-8 h-8 mx-auto mb-2 text-slate-300 dark:text-slate-600" />
                   <p>Nenhuma manutenção urgente</p>
+                  <p className="text-xs mt-1">Adicione ordens de serviço</p>
                 </div>
               ) : (
                 manutencoesUrgentes.map((ordem) => (
@@ -266,7 +261,8 @@ const Dashboard: React.FC = () => {
               {empilhadeirasAtencao.length === 0 ? (
                 <div className="text-center py-8 text-slate-500 dark:text-slate-400">
                   <Gauge className="w-8 h-8 mx-auto mb-2 text-slate-300 dark:text-slate-600" />
-                  <p>Todas empilhadeiras funcionando bem</p>
+                  <p>Nenhuma empilhadeira cadastrada</p>
+                  <p className="text-xs mt-1">Adicione empilhadeiras para monitorar</p>
                 </div>
               ) : (
                 empilhadeirasAtencao.map((emp) => (
@@ -283,8 +279,8 @@ const Dashboard: React.FC = () => {
                         {emp.modelo} • {emp.setor}
                       </p>
                       <div className="flex gap-4 text-xs text-amber-600 dark:text-amber-500 mt-1">
-                        <span>Eficiência: {emp.eficiencia}%</span>
-                        <span>Disponibilidade: {emp.disponibilidade}%</span>
+                        <span>Eficiência: {emp.eficiencia || 0}%</span>
+                        <span>Disponibilidade: {emp.disponibilidade || 0}%</span>
                       </div>
                     </div>
                     <ArrowRight className="w-4 h-4 text-amber-400" />
