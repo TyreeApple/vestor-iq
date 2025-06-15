@@ -1,3 +1,4 @@
+
 import React from "react";
 import { Search, User, Menu, X, Settings } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -8,15 +9,28 @@ type Props = {
   setIsMobileMenuOpen: (open: boolean) => void;
 };
 
-const NavbarActions: React.FC<Props> = ({ isMobileMenuOpen, setIsMobileMenuOpen }) => {
+const NavbarActions: React.FC<Props> = ({
+  isMobileMenuOpen,
+  setIsMobileMenuOpen,
+}) => {
   const navigate = useNavigate();
 
   return (
-    <div className="flex items-center space-x-2">
+    <div
+      className="
+        flex flex-1 justify-end 
+        items-center 
+        gap-4
+        min-w-0
+        max-w-xs
+        md:gap-6
+        "
+      style={{ minWidth: 0 }}
+    >
       <Button
         variant="ghost"
         size="icon"
-        className="hover:bg-accent transition-colors"
+        className="hover:bg-accent transition-colors shrink-0"
         aria-label="Buscar"
       >
         <Search className="w-5 h-5" />
@@ -24,20 +38,24 @@ const NavbarActions: React.FC<Props> = ({ isMobileMenuOpen, setIsMobileMenuOpen 
       <Button
         variant="ghost"
         size="icon"
-        className="hover:bg-accent transition-colors"
-        onClick={() => navigate('/configuracao')}
+        className="hover:bg-accent transition-colors shrink-0"
+        onClick={() => navigate("/configuracao")}
         aria-label="Configurações"
       >
         <Settings className="w-5 h-5" />
       </Button>
-      <Button variant="ghost" size="icon" className="hover:bg-accent transition-colors">
+      <Button
+        variant="ghost"
+        size="icon"
+        className="hover:bg-accent transition-colors shrink-0"
+      >
         <User className="w-5 h-5" />
       </Button>
       {/* Mobile menu button */}
       <Button
         variant="ghost"
         size="icon"
-        className="lg:hidden"
+        className="lg:hidden shrink-0"
         onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
       >
         {isMobileMenuOpen ? (
@@ -51,3 +69,4 @@ const NavbarActions: React.FC<Props> = ({ isMobileMenuOpen, setIsMobileMenuOpen 
 };
 
 export default NavbarActions;
+
