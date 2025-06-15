@@ -1,9 +1,8 @@
-
 import React from "react";
 import { Settings } from "lucide-react";
 import {
   SiVite, SiTypescript, SiTailwindcss, SiReact,
-  SiShadcnui, SiReacthookform, SiReactrouter, SiZustand, SiZod,
+  SiShadcnui, SiReacthookform, SiReactrouter, SiZod,
   SiGithub, SiLucide
 } from "react-icons/si";
 import { FaGithub } from "react-icons/fa";
@@ -63,7 +62,7 @@ const bibliotecas = [
   },
   {
     name: "Zustand",
-    icon: SiZustand,
+    icon: GiBearHead,
     url: "https://docs.pmnd.rs/zustand",
     bg: "bg-[#101b2f]"
   },
