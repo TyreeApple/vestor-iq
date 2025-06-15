@@ -8,11 +8,11 @@ import {
   CheckCircle,
   Clock,
   DollarSign,
-  Gauge
+  Gauge,
+  Users
 } from 'lucide-react';
-import { MdForklift } from 'react-icons/md';
 import { useAppStore } from '@/stores/useAppStore';
-import { cn } from '@/lib/utils';
+import { Card, CardContent } from '@/components/ui/card';
 
 interface MetricCardProps {
   title: string;
@@ -23,7 +23,7 @@ interface MetricCardProps {
     isPositive: boolean;
   };
   format?: 'number' | 'currency' | 'percentage' | 'time';
-  color: 'blue' | 'green' | 'orange' | 'red' | 'purple' | 'indigo';
+  status: 'success' | 'warning' | 'danger' | 'info';
 }
 
 const MetricCard: React.FC<MetricCardProps> = ({
@@ -32,7 +32,7 @@ const MetricCard: React.FC<MetricCardProps> = ({
   icon: Icon,
   trend,
   format = 'number',
-  color
+  status
 }) => {
   const formatValue = (val: number | string) => {
     if (typeof val === 'string') return val;
@@ -52,59 +52,59 @@ const MetricCard: React.FC<MetricCardProps> = ({
     }
   };
 
-  const colorClasses = {
-    blue: 'from-blue-500 to-blue-600 shadow-blue-500/25 dark:from-blue-600 dark:to-blue-700 dark:shadow-blue-500/20',
-    green: 'from-green-500 to-green-600 shadow-green-500/25 dark:from-green-600 dark:to-green-700 dark:shadow-green-500/20',
-    orange: 'from-orange-500 to-orange-600 shadow-orange-500/25 dark:from-orange-600 dark:to-orange-700 dark:shadow-orange-500/20',
-    red: 'from-red-500 to-red-600 shadow-red-500/25 dark:from-red-600 dark:to-red-700 dark:shadow-red-500/20',
-    purple: 'from-purple-500 to-purple-600 shadow-purple-500/25 dark:from-purple-600 dark:to-purple-700 dark:shadow-purple-500/20',
-    indigo: 'from-indigo-500 to-indigo-600 shadow-indigo-500/25 dark:from-indigo-600 dark:to-indigo-700 dark:shadow-indigo-500/20',
+  const statusConfig = {
+    success: {
+      iconBg: 'bg-green-500',
+      iconColor: 'text-white'
+    },
+    warning: {
+      iconBg: 'bg-orange-500',
+      iconColor: 'text-white'
+    },
+    danger: {
+      iconBg: 'bg-red-500',
+      iconColor: 'text-white'
+    },
+    info: {
+      iconBg: 'bg-blue-500',
+      iconColor: 'text-white'
+    }
   };
 
+  const config = statusConfig[status];
+
   return (
-    <div className="relative overflow-hidden">
-      <div className="bg-white dark:bg-card rounded-2xl p-6 shadow-lg border border-slate-100 dark:border-border hover:shadow-xl dark:hover:shadow-2xl transition-all duration-300 hover:-translate-y-1">
-        {/* Background gradient overlay */}
-        <div className={cn(
-          "absolute top-0 right-0 w-24 h-24 bg-gradient-to-br opacity-10 dark:opacity-20 rounded-full transform translate-x-8 -translate-y-8",
-          colorClasses[color]
-        )} />
-        
-        <div className="relative">
-          <div className="flex items-start justify-between mb-4">
-            <div className={cn(
-              "p-3 rounded-xl bg-gradient-to-br shadow-lg",
-              colorClasses[color]
-            )}>
-              <Icon className="w-6 h-6 text-white" />
-            </div>
-            
-            {trend && (
-              <div className={cn(
-                "flex items-center space-x-1 px-2 py-1 rounded-full text-xs font-medium",
-                trend.isPositive 
-                  ? "bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-400" 
-                  : "bg-red-100 dark:bg-red-900/30 text-red-700 dark:text-red-400"
-              )}>
-                {trend.isPositive ? (
-                  <TrendingUp className="w-3 h-3" />
-                ) : (
-                  <TrendingDown className="w-3 h-3" />
-                )}
-                <span>{Math.abs(trend.value)}%</span>
-              </div>
-            )}
+    <Card className="p-6">
+      <CardContent className="p-0">
+        <div className="flex items-start justify-between mb-4">
+          <div className={`p-3 rounded-lg ${config.iconBg}`}>
+            <Icon className={`w-5 h-5 ${config.iconColor}`} />
           </div>
           
-          <div className="space-y-1">
-            <h3 className="text-sm font-medium text-slate-600 dark:text-slate-400">{title}</h3>
-            <p className="text-2xl font-bold text-slate-900 dark:text-white">
-              {formatValue(value)}
-            </p>
-          </div>
+          {trend && (
+            <div className={`flex items-center space-x-1 px-2 py-1 rounded-full text-xs font-medium ${
+              trend.isPositive 
+                ? "bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-400" 
+                : "bg-red-100 text-red-700 dark:bg-red-900/30 dark:text-red-400"
+            }`}>
+              {trend.isPositive ? (
+                <TrendingUp className="w-3 h-3" />
+              ) : (
+                <TrendingDown className="w-3 h-3" />
+              )}
+              <span>{Math.abs(trend.value)}%</span>
+            </div>
+          )}
         </div>
-      </div>
-    </div>
+        
+        <div className="space-y-1">
+          <p className="text-2xl font-bold text-foreground">
+            {formatValue(value)}
+          </p>
+          <h3 className="text-sm font-medium text-muted-foreground">{title}</h3>
+        </div>
+      </CardContent>
+    </Card>
   );
 };
 
@@ -115,36 +115,36 @@ const MetricsGrid: React.FC = () => {
     {
       title: 'Frota Total',
       value: metricas.frotaTotal,
-      icon: MdForklift,
-      color: 'blue' as const,
+      icon: Activity,
+      status: 'info' as const,
       trend: { value: 8.2, isPositive: true }
     },
     {
       title: 'Operacionais',
       value: metricas.empilhadeirasOperacionais,
       icon: CheckCircle,
-      color: 'green' as const,
+      status: 'success' as const,
       trend: { value: 12.5, isPositive: true }
     },
     {
       title: 'Em Manutenção',
       value: metricas.empilhadeirasManutencao,
       icon: AlertTriangle,
-      color: 'orange' as const,
+      status: 'warning' as const,
       trend: { value: 5.1, isPositive: false }
     },
     {
       title: 'Operadores Ativos',
       value: metricas.operadoresAtivos,
-      icon: Activity,
-      color: 'purple' as const,
+      icon: Users,
+      status: 'info' as const,
       trend: { value: 3.8, isPositive: true }
     },
     {
       title: 'Eficiência Geral',
       value: metricas.eficienciaGeral,
       icon: Gauge,
-      color: 'indigo' as const,
+      status: 'info' as const,
       format: 'percentage' as const,
       trend: { value: 2.3, isPositive: true }
     },
@@ -152,7 +152,7 @@ const MetricsGrid: React.FC = () => {
       title: 'Custo Operacional',
       value: metricas.custoOperacionalDia,
       icon: DollarSign,
-      color: 'red' as const,
+      status: 'danger' as const,
       format: 'currency' as const,
       trend: { value: 1.7, isPositive: false }
     },
@@ -160,7 +160,7 @@ const MetricsGrid: React.FC = () => {
       title: 'Tempo Médio/Operação',
       value: metricas.tempoMedioOperacao,
       icon: Clock,
-      color: 'orange' as const,
+      status: 'warning' as const,
       format: 'time' as const,
       trend: { value: 4.2, isPositive: false }
     },
@@ -168,7 +168,7 @@ const MetricsGrid: React.FC = () => {
       title: 'Operações Ativas',
       value: metricas.operacoesAtivas,
       icon: Activity,
-      color: 'green' as const,
+      status: 'success' as const,
       trend: { value: 15.8, isPositive: true }
     },
   ];
