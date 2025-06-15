@@ -214,14 +214,12 @@ const OperationsPage = () => {
     const isNewOperation = !operations.some(op => op.id === operationData.id);
     
     if (isNewOperation) {
-      // Add new operation
       setOperations(prev => [operationData, ...prev]);
       toast({
         title: "Operação criada",
         description: "A operação foi criada com sucesso."
       });
     } else {
-      // Update existing operation
       setOperations(prev => 
         prev.map(op => op.id === operationData.id ? operationData : op)
       );
@@ -241,6 +239,12 @@ const OperationsPage = () => {
   // Open edit dialog from details
   const handleEditFromDetails = () => {
     setDetailsDialogOpen(false);
+    setEditDialogOpen(true);
+  };
+
+  // Open edit dialog directly
+  const handleEdit = (operation: Operacao) => {
+    setSelectedOperation(operation);
     setEditDialogOpen(true);
   };
 
@@ -395,10 +399,10 @@ const OperationsPage = () => {
         </div>
       </div>
       
-      {/* Enhanced Active Operations */}
+      {/* Compact Active Operations */}
       <div className="mb-8">
         <h2 className="text-2xl font-semibold mb-6 text-white">Operações em Andamento</h2>
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
           {filteredOperations
             .filter(op => op.status === StatusOperacao.EM_ANDAMENTO)
             .map((operation) => {
@@ -407,120 +411,93 @@ const OperationsPage = () => {
               const progress = calculateProgress(operation);
               
               return (
-                <div key={operation.id} className="group relative overflow-hidden bg-gradient-to-br from-slate-800/60 to-slate-900/80 backdrop-blur-sm border border-slate-700/50 rounded-xl shadow-xl hover:shadow-2xl transition-all duration-300 hover:scale-[1.02]">
-                  <div className="absolute inset-0 bg-gradient-to-br from-green-500/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
-                  
-                  {/* Header with Status and Priority */}
-                  <div className="relative p-6 pb-4">
-                    <div className="flex justify-between items-start mb-4">
-                      <div className="flex items-center gap-3">
-                        <div className="relative">
-                          <div className="w-3 h-3 bg-green-500 rounded-full animate-pulse"></div>
-                          <div className="absolute inset-0 w-3 h-3 bg-green-500 rounded-full animate-ping opacity-75"></div>
-                        </div>
+                <div key={operation.id} className="group relative overflow-hidden bg-gradient-to-br from-slate-800/60 to-slate-900/80 backdrop-blur-sm border border-slate-700/50 rounded-lg shadow-lg hover:shadow-xl transition-all duration-300">
+                  {/* Compact Header */}
+                  <div className="p-4 pb-3">
+                    <div className="flex justify-between items-start mb-3">
+                      <div className="flex items-center gap-2">
+                        <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></div>
                         <div>
-                          <h3 className="font-semibold text-white text-lg">{operation.operador?.nome}</h3>
-                          <p className="text-sm text-slate-400">ID: {operation.id}</p>
+                          <h3 className="font-semibold text-white text-sm">{operation.operador?.nome}</h3>
+                          <p className="text-xs text-slate-400">#{operation.id}</p>
                         </div>
                       </div>
                       
-                      <div className="flex flex-col items-end gap-2">
-                        <span className="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-green-500/20 text-green-400 border border-green-500/30">
-                          <Play className="w-3 h-3 mr-1" />
+                      <div className="flex flex-col items-end gap-1">
+                        <span className="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-green-500/20 text-green-400">
                           Em Andamento
                         </span>
-                        
                         <span className={cn(
-                          "inline-flex items-center px-2 py-1 rounded-md text-xs font-medium",
-                          priorityInfo.bgColor, priorityInfo.color, priorityInfo.borderColor, "border"
+                          "inline-flex items-center px-1.5 py-0.5 rounded text-xs font-medium",
+                          priorityInfo.bgColor, priorityInfo.color
                         )}>
-                          <priorityInfo.icon className="w-3 h-3 mr-1" />
                           {operation.prioridade}
                         </span>
                       </div>
                     </div>
                     
-                    {/* Operation Type */}
-                    <div className="mb-4">
-                      <span className={cn("text-sm font-medium", typeInfo.color)}>
+                    {/* Type and Progress */}
+                    <div className="mb-3">
+                      <span className={cn("text-xs font-medium", typeInfo.color)}>
                         {typeInfo.label}
                       </span>
-                    </div>
-                    
-                    {/* Progress Bar */}
-                    <div className="mb-4">
-                      <div className="flex justify-between items-center mb-2">
-                        <span className="text-xs text-slate-400">Progresso Estimado</span>
-                        <span className="text-xs text-slate-300">{Math.round(progress)}%</span>
-                      </div>
-                      <div className="w-full bg-slate-700/50 rounded-full h-2">
-                        <div 
-                          className="bg-gradient-to-r from-green-500 to-emerald-500 h-2 rounded-full transition-all duration-500 ease-out"
-                          style={{ width: `${progress}%` }}
-                        />
+                      <div className="mt-2">
+                        <div className="flex justify-between items-center mb-1">
+                          <span className="text-xs text-slate-400">Progresso</span>
+                          <span className="text-xs text-slate-300">{Math.round(progress)}%</span>
+                        </div>
+                        <div className="w-full bg-slate-700/50 rounded-full h-1.5">
+                          <div 
+                            className="bg-gradient-to-r from-green-500 to-emerald-500 h-1.5 rounded-full transition-all duration-500"
+                            style={{ width: `${progress}%` }}
+                          />
+                        </div>
                       </div>
                     </div>
                     
-                    {/* Details Grid */}
-                    <div className="grid grid-cols-1 gap-3">
-                      <div className="flex items-center gap-2 p-2 bg-slate-800/30 rounded-lg">
-                        <Truck className="w-4 h-4 text-slate-400" />
-                        <div className="flex-1">
-                          <span className="text-sm text-slate-300">{operation.empilhadeira?.modelo}</span>
-                          <p className="text-xs text-slate-500">{operation.empilhadeiraId}</p>
+                    {/* Compact Details */}
+                    <div className="grid grid-cols-1 gap-2 text-xs">
+                      <div className="flex items-center justify-between p-2 bg-slate-800/30 rounded">
+                        <div className="flex items-center gap-1">
+                          <Truck className="w-3 h-3 text-slate-400" />
+                          <span className="text-slate-300">{operation.empilhadeira?.modelo}</span>
                         </div>
                       </div>
                       
-                      <div className="flex items-center gap-2 p-2 bg-slate-800/30 rounded-lg">
-                        <MapPin className="w-4 h-4 text-slate-400" />
-                        <div className="flex-1">
-                          <span className="text-sm text-slate-300">{operation.setor}</span>
-                          <p className="text-xs text-slate-500">{operation.localizacao}</p>
+                      <div className="flex items-center justify-between p-2 bg-slate-800/30 rounded">
+                        <div className="flex items-center gap-1">
+                          <MapPin className="w-3 h-3 text-slate-400" />
+                          <span className="text-slate-300">{operation.setor}</span>
                         </div>
                       </div>
                       
                       <div className="grid grid-cols-2 gap-2">
-                        <div className="flex items-center gap-2 p-2 bg-slate-800/30 rounded-lg">
-                          <Calendar className="w-4 h-4 text-slate-400" />
-                          <div>
-                            <span className="text-xs text-slate-300">{formatDate(operation.dataInicio)}</span>
-                            <p className="text-xs text-slate-500">{formatTime(operation.dataInicio)}</p>
-                          </div>
+                        <div className="flex items-center gap-1 p-2 bg-slate-800/30 rounded">
+                          <Clock className="w-3 h-3 text-slate-400" />
+                          <span className="text-slate-300">{formatTime(operation.dataInicio)}</span>
                         </div>
                         
-                        <div className="flex items-center gap-2 p-2 bg-slate-800/30 rounded-lg">
-                          <Timer className="w-4 h-4 text-slate-400" />
-                          <div>
-                            <span className="text-xs text-slate-300">{calculateDuration(operation)}</span>
-                            <p className="text-xs text-slate-500">Duração</p>
+                        {operation.consumoGas && (
+                          <div className="flex items-center gap-1 p-2 bg-slate-800/30 rounded">
+                            <Fuel className="w-3 h-3 text-orange-400" />
+                            <span className="text-slate-300">{operation.consumoGas}L</span>
                           </div>
-                        </div>
+                        )}
                       </div>
-                      
-                      {operation.consumoGas && (
-                        <div className="flex items-center gap-2 p-2 bg-slate-800/30 rounded-lg">
-                          <Fuel className="w-4 h-4 text-slate-400" />
-                          <div className="flex-1">
-                            <span className="text-sm text-slate-300">{operation.consumoGas}L</span>
-                            <p className="text-xs text-slate-500">Consumo de combustível</p>
-                          </div>
-                          <Gauge className="w-4 h-4 text-orange-400" />
-                        </div>
-                      )}
                     </div>
                   </div>
                   
-                  {/* Actions Footer */}
-                  <div className="border-t border-slate-700/50 px-6 py-4 bg-slate-800/30 flex justify-between items-center">
-                    <div className="flex items-center gap-2">
-                      <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></div>
+                  {/* Compact Actions Footer */}
+                  <div className="border-t border-slate-700/50 px-4 py-3 bg-slate-800/30 flex justify-between items-center">
+                    <div className="flex items-center gap-1">
+                      <div className="w-1.5 h-1.5 bg-green-500 rounded-full animate-pulse"></div>
                       <span className="text-xs text-slate-400">Ativo</span>
                     </div>
                     <div className="flex gap-2">
                       <Button 
                         variant="ghost" 
                         size="sm"
-                        className="text-slate-300 hover:text-white hover:bg-slate-700/50"
+                        className="h-7 px-2 text-xs text-slate-300 hover:text-white hover:bg-slate-700/50"
                         onClick={() => handleViewDetails(operation)}
                       >
                         Detalhes
@@ -528,11 +505,8 @@ const OperationsPage = () => {
                       <Button 
                         variant="ghost" 
                         size="sm"
-                        className="text-blue-400 hover:text-blue-300 hover:bg-blue-500/10"
-                        onClick={() => {
-                          setSelectedOperation(operation);
-                          setEditDialogOpen(true);
-                        }}
+                        className="h-7 px-2 text-xs text-blue-400 hover:text-blue-300 hover:bg-blue-500/10"
+                        onClick={() => handleEdit(operation)}
                       >
                         Editar
                       </Button>
@@ -543,11 +517,11 @@ const OperationsPage = () => {
             })}
           
           {filteredOperations.filter(op => op.status === StatusOperacao.EM_ANDAMENTO).length === 0 && (
-            <div className="col-span-full p-12 text-center bg-gradient-to-br from-slate-800/40 to-slate-900/60 backdrop-blur-sm border border-slate-700/30 rounded-xl">
-              <div className="w-16 h-16 mx-auto mb-4 rounded-full bg-slate-700/50 flex items-center justify-center">
-                <Clock className="w-8 h-8 text-slate-400" />
+            <div className="col-span-full p-8 text-center bg-gradient-to-br from-slate-800/40 to-slate-900/60 backdrop-blur-sm border border-slate-700/30 rounded-xl">
+              <div className="w-12 h-12 mx-auto mb-3 rounded-full bg-slate-700/50 flex items-center justify-center">
+                <Clock className="w-6 h-6 text-slate-400" />
               </div>
-              <p className="text-slate-400 text-lg">Nenhuma operação em andamento</p>
+              <p className="text-slate-400">Nenhuma operação em andamento</p>
             </div>
           )}
         </div>
