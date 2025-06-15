@@ -1,5 +1,4 @@
 import React from "react";
-import { SiLucide } from "react-icons/si";
 import { Settings } from "lucide-react";
 import { 
   SiVite, SiTypescript, SiTailwindcss, SiReact, SiShadcnui, SiReacthookform, 
