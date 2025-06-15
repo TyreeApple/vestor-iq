@@ -1,3 +1,4 @@
+
 import React, { useState } from 'react';
 import { useIsMobile } from '@/hooks/use-mobile';
 import { cn } from '@/lib/utils';
@@ -38,6 +39,9 @@ const OperationsPage = () => {
 
   // Zustand store usage
   const operations = useAppStore((state) => state.operacoes);
+  const operators = useAppStore((state) => state.operadores);
+  const forklifts = useAppStore((state) => state.empilhadeiras);
+
   const addOperacao = useAppStore((state) => state.addOperacao);
   const updateOperacao = useAppStore((state) => state.updateOperacao);
   const deleteOperacao = useAppStore((state) => state.deleteOperacao);
@@ -61,19 +65,31 @@ const OperationsPage = () => {
     searchFields: ['id', 'setor']
   });
 
-  // Filter configuration for advanced filters
-  const filterOptions = [
-    {
-      key: 'prioridade',
-      label: 'Prioridade',
-      type: 'select' as const,
-      options: [
-        { value: PrioridadeOperacao.ALTA, label: 'Alta' },
-        { value: PrioridadeOperacao.NORMAL, label: 'Normal' },
-        { value: PrioridadeOperacao.BAIXA, label: 'Baixa' }
-      ]
-    }
-  ];
+  // FAZENDO O "JOIN" DOS OBJETOS COMPLETOS ANTES DE REPASSAR PARA OS COMPONENTES
+  const joinOperationData = (operation: Operacao) => {
+    const operador =
+      operators.find((op) => op.id === operation.operadorId) ||
+      availableOperators.find((op) => op.id === operation.operadorId) ||
+      { id: operation.operadorId, nome: "Outro" };
+    const empilhadeira =
+      forklifts.find((fork) => fork.id === operation.empilhadeiraId) ||
+      availableForklifts.find((fork) => fork.id === operation.empilhadeiraId) ||
+      { id: operation.empilhadeiraId, modelo: "Outro" };
+    return {
+      ...operation,
+      operador,
+      empilhadeira,
+    };
+  };
+
+  // FILTRANDO E ENRIQUECENDO OPERAÇÕES
+  const enrichedActiveOperations = filteredOperations
+    .filter(op => op.status === StatusOperacao.EM_ANDAMENTO)
+    .map(joinOperationData);
+
+  const enrichedCompletedOperations = filteredOperations
+    .filter(op => op.status === StatusOperacao.CONCLUIDA)
+    .map(joinOperationData);
 
   // Format date
   const formatDate = (dateString: string) => {
@@ -123,7 +139,7 @@ const OperationsPage = () => {
 
   // Open details dialog
   const handleViewDetails = (operation: Operacao) => {
-    setSelectedOperation(operation);
+    setSelectedOperation(joinOperationData(operation));
     setDetailsDialogOpen(true);
   };
 
@@ -135,7 +151,7 @@ const OperationsPage = () => {
 
   // Open edit dialog directly
   const handleEdit = (operation: Operacao) => {
-    setSelectedOperation(operation);
+    setSelectedOperation(joinOperationData(operation));
     setEditDialogOpen(true);
   };
 
@@ -196,8 +212,22 @@ const OperationsPage = () => {
   const [viewMode, setViewMode] = useState<"grid" | "list">("grid");
 
   // Split filtered operations
-  const activeOps = filteredOperations.filter(op => op.status === StatusOperacao.EM_ANDAMENTO);
-  const completedOps = filteredOperations.filter(op => op.status === StatusOperacao.CONCLUIDA);
+  // const activeOps = filteredOperations.filter(op => op.status === StatusOperacao.EM_ANDAMENTO);
+  // const completedOps = filteredOperations.filter(op => op.status === StatusOperacao.CONCLUIDA);
+
+  // Filter configuration for advanced filters
+  const filterOptions = [
+    {
+      key: 'prioridade',
+      label: 'Prioridade',
+      type: 'select' as const,
+      options: [
+        { value: PrioridadeOperacao.ALTA, label: 'Alta' },
+        { value: PrioridadeOperacao.NORMAL, label: 'Normal' },
+        { value: PrioridadeOperacao.BAIXA, label: 'Baixa' }
+      ]
+    }
+  ];
 
   return (
     <div className="space-y-8">
@@ -224,7 +254,7 @@ const OperationsPage = () => {
 
       {/* Active Operations Section */}
       <ActiveOperationsSection
-        operations={activeOps}
+        operations={enrichedActiveOperations}
         onDetails={handleViewDetails}
         onEdit={handleEdit}
         calculateProgress={calculateProgress}
@@ -235,7 +265,7 @@ const OperationsPage = () => {
 
       {/* Completed Operations Section */}
       <CompletedOperationsSection
-        operations={completedOps}
+        operations={enrichedCompletedOperations}
         onDetails={handleViewDetails}
         onDelete={handleDeleteOperation}
         formatDate={formatDate}
