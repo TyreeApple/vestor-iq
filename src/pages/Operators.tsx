@@ -399,104 +399,102 @@ const OperatorsPage = () => {
         </div>
       </PageHeader>
       
-      {/* Enhanced filter options - centered and compact */}
+      {/* Enhanced filter options - using full width */}
       <div className="w-full bg-gradient-to-br from-slate-800/60 to-slate-900/80 backdrop-blur-sm border border-slate-700/50 rounded-xl p-6">
-        <div className="flex justify-center">
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-4 max-w-6xl">
-            <div className="space-y-2">
-              <h4 className="text-sm font-medium text-slate-200">Função</h4>
-              <Select value={filters.role || 'all'} onValueChange={(value) => setFilters({...filters, role: value === 'all' ? '' : value})}>
-                <SelectTrigger className="bg-slate-700/50 border-slate-600/50 text-white">
-                  <SelectValue placeholder="Selecione função" />
-                </SelectTrigger>
-                <SelectContent className="bg-slate-800 border-slate-700">
-                  <SelectItem value="all">Todos</SelectItem>
-                  <SelectItem value="OPERADOR">Operador</SelectItem>
-                  <SelectItem value="SUPERVISOR">Supervisor</SelectItem>
-                  <SelectItem value="TECNICO">Técnico</SelectItem>
-                  <SelectItem value="COORDENADOR">Coordenador</SelectItem>
-                  <SelectItem value="GERENTE">Gerente</SelectItem>
-                </SelectContent>
-              </Select>
-            </div>
-            
-            <div className="space-y-2">
-              <h4 className="text-sm font-medium text-slate-200">Status de Certificação</h4>
-              <Select value={certStatus} onValueChange={setCertStatus}>
-                <SelectTrigger className="bg-slate-700/50 border-slate-600/50 text-white">
-                  <SelectValue placeholder="Status certificação" />
-                </SelectTrigger>
-                <SelectContent className="bg-slate-800 border-slate-700">
-                  <SelectItem value="all">Todos</SelectItem>
-                  <SelectItem value="regular">Regular</SelectItem>
-                  <SelectItem value="warning">Próximo do Vencimento</SelectItem>
-                  <SelectItem value="expired">Vencido</SelectItem>
-                </SelectContent>
-              </Select>
-            </div>
-            
-            <div className="space-y-2">
-              <h4 className="text-sm font-medium text-slate-200">Turno</h4>
-              <Select value={filters.shift || 'all'} onValueChange={(value) => setFilters({...filters, shift: value === 'all' ? '' : value})}>
-                <SelectTrigger className="bg-slate-700/50 border-slate-600/50 text-white">
-                  <SelectValue placeholder="Selecione turno" />
-                </SelectTrigger>
-                <SelectContent className="bg-slate-800 border-slate-700">
-                  <SelectItem value="all">Todos</SelectItem>
-                  <SelectItem value="Manhã">Manhã</SelectItem>
-                  <SelectItem value="Tarde">Tarde</SelectItem>
-                  <SelectItem value="Noite">Noite</SelectItem>
-                  <SelectItem value="Integral">Integral</SelectItem>
-                </SelectContent>
-              </Select>
-            </div>
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 xl:grid-cols-6 gap-4">
+          <div className="space-y-2">
+            <h4 className="text-sm font-medium text-slate-200">Função</h4>
+            <Select value={filters.role || 'all'} onValueChange={(value) => setFilters({...filters, role: value === 'all' ? '' : value})}>
+              <SelectTrigger className="bg-slate-700/50 border-slate-600/50 text-white">
+                <SelectValue placeholder="Selecione função" />
+              </SelectTrigger>
+              <SelectContent className="bg-slate-800 border-slate-700">
+                <SelectItem value="all">Todos</SelectItem>
+                <SelectItem value="OPERADOR">Operador</SelectItem>
+                <SelectItem value="SUPERVISOR">Supervisor</SelectItem>
+                <SelectItem value="TECNICO">Técnico</SelectItem>
+                <SelectItem value="COORDENADOR">Coordenador</SelectItem>
+                <SelectItem value="GERENTE">Gerente</SelectItem>
+              </SelectContent>
+            </Select>
+          </div>
+          
+          <div className="space-y-2">
+            <h4 className="text-sm font-medium text-slate-200">Status de Certificação</h4>
+            <Select value={certStatus} onValueChange={setCertStatus}>
+              <SelectTrigger className="bg-slate-700/50 border-slate-600/50 text-white">
+                <SelectValue placeholder="Status certificação" />
+              </SelectTrigger>
+              <SelectContent className="bg-slate-800 border-slate-700">
+                <SelectItem value="all">Todos</SelectItem>
+                <SelectItem value="regular">Regular</SelectItem>
+                <SelectItem value="warning">Próximo do Vencimento</SelectItem>
+                <SelectItem value="expired">Vencido</SelectItem>
+              </SelectContent>
+            </Select>
+          </div>
+          
+          <div className="space-y-2">
+            <h4 className="text-sm font-medium text-slate-200">Turno</h4>
+            <Select value={filters.shift || 'all'} onValueChange={(value) => setFilters({...filters, shift: value === 'all' ? '' : value})}>
+              <SelectTrigger className="bg-slate-700/50 border-slate-600/50 text-white">
+                <SelectValue placeholder="Selecione turno" />
+              </SelectTrigger>
+              <SelectContent className="bg-slate-800 border-slate-700">
+                <SelectItem value="all">Todos</SelectItem>
+                <SelectItem value="Manhã">Manhã</SelectItem>
+                <SelectItem value="Tarde">Tarde</SelectItem>
+                <SelectItem value="Noite">Noite</SelectItem>
+                <SelectItem value="Integral">Integral</SelectItem>
+              </SelectContent>
+            </Select>
+          </div>
 
-            <div className="space-y-2">
-              <h4 className="text-sm font-medium text-slate-200">Setor</h4>
-              <Select value={filters.setor || 'all'} onValueChange={(value) => setFilters({...filters, setor: value === 'all' ? '' : value})}>
-                <SelectTrigger className="bg-slate-700/50 border-slate-600/50 text-white">
-                  <SelectValue placeholder="Selecione setor" />
-                </SelectTrigger>
-                <SelectContent className="bg-slate-800 border-slate-700">
-                  <SelectItem value="all">Todos</SelectItem>
-                  <SelectItem value="Armazém">Armazém</SelectItem>
-                  <SelectItem value="Produção">Produção</SelectItem>
-                  <SelectItem value="Logística">Logística</SelectItem>
-                  <SelectItem value="Expedição">Expedição</SelectItem>
-                  <SelectItem value="Supervisão">Supervisão</SelectItem>
-                </SelectContent>
-              </Select>
-            </div>
+          <div className="space-y-2">
+            <h4 className="text-sm font-medium text-slate-200">Setor</h4>
+            <Select value={filters.setor || 'all'} onValueChange={(value) => setFilters({...filters, setor: value === 'all' ? '' : value})}>
+              <SelectTrigger className="bg-slate-700/50 border-slate-600/50 text-white">
+                <SelectValue placeholder="Selecione setor" />
+              </SelectTrigger>
+              <SelectContent className="bg-slate-800 border-slate-700">
+                <SelectItem value="all">Todos</SelectItem>
+                <SelectItem value="Armazém">Armazém</SelectItem>
+                <SelectItem value="Produção">Produção</SelectItem>
+                <SelectItem value="Logística">Logística</SelectItem>
+                <SelectItem value="Expedição">Expedição</SelectItem>
+                <SelectItem value="Supervisão">Supervisão</SelectItem>
+              </SelectContent>
+            </Select>
+          </div>
 
-            <div className="space-y-2">
-              <h4 className="text-sm font-medium text-slate-200">Status</h4>
-              <Select value={filters.status || 'all'} onValueChange={(value) => setFilters({...filters, status: value === 'all' ? '' : value})}>
-                <SelectTrigger className="bg-slate-700/50 border-slate-600/50 text-white">
-                  <SelectValue placeholder="Selecione status" />
-                </SelectTrigger>
-                <SelectContent className="bg-slate-800 border-slate-700">
-                  <SelectItem value="all">Todos</SelectItem>
-                  <SelectItem value="Ativo">Ativo</SelectItem>
-                  <SelectItem value="Inativo">Inativo</SelectItem>
-                  <SelectItem value="Licença">Licença</SelectItem>
-                </SelectContent>
-              </Select>
-            </div>
+          <div className="space-y-2">
+            <h4 className="text-sm font-medium text-slate-200">Status</h4>
+            <Select value={filters.status || 'all'} onValueChange={(value) => setFilters({...filters, status: value === 'all' ? '' : value})}>
+              <SelectTrigger className="bg-slate-700/50 border-slate-600/50 text-white">
+                <SelectValue placeholder="Selecione status" />
+              </SelectTrigger>
+              <SelectContent className="bg-slate-800 border-slate-700">
+                <SelectItem value="all">Todos</SelectItem>
+                <SelectItem value="Ativo">Ativo</SelectItem>
+                <SelectItem value="Inativo">Inativo</SelectItem>
+                <SelectItem value="Licença">Licença</SelectItem>
+              </SelectContent>
+            </Select>
+          </div>
+
+          <div className="flex items-end">
+            {(hasActiveFilters || certStatus !== 'all') && (
+              <Button
+                variant="ghost"
+                size="sm"
+                onClick={handleClearAllFilters}
+                className="text-slate-400 hover:text-white hover:bg-slate-700/50 w-full"
+              >
+                Limpar Filtros
+              </Button>
+            )}
           </div>
         </div>
-        
-        {(hasActiveFilters || certStatus !== 'all') && (
-          <div className="flex justify-center mt-4">
-            <Button
-              variant="ghost"
-              size="sm"
-              onClick={handleClearAllFilters}
-              className="text-slate-400 hover:text-white hover:bg-slate-700/50"
-            >
-              Limpar Filtros
-            </Button>
-          </div>
-        )}
       </div>
       
       {/* Operators table - using full width */}
