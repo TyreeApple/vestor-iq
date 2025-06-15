@@ -9,9 +9,9 @@ import {
   TableRow 
 } from "@/components/ui/table";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
 import Badge from "@/components/common/Badge";
 import PaginationControls from "@/components/common/PaginationControls";
+import StandardFilters, { FilterOption } from "@/components/common/StandardFilters";
 import { usePagination } from "@/hooks/usePagination";
 import {
   DropdownMenu,
@@ -27,16 +27,13 @@ import {
   Eye, 
   FileText, 
   MoreVertical, 
-  Search, 
   Trash2, 
   User,
   Wrench,
-  Filter,
   SortAsc,
   SortDesc,
   Clock,
   CheckCircle,
-  AlertTriangle,
   Play
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
@@ -61,7 +58,41 @@ const MaintenanceHistoryTable: React.FC<MaintenanceHistoryTableProps> = ({
   const [sortField, setSortField] = useState<SortField>('dataAbertura');
   const [sortDirection, setSortDirection] = useState<SortDirection>('desc');
   const [searchTerm, setSearchTerm] = useState('');
-  const [columnFilters, setColumnFilters] = useState<Record<string, string>>({});
+  const [filterValues, setFilterValues] = useState<Record<string, string>>({});
+
+  const filters: FilterOption[] = [
+    {
+      key: 'status',
+      label: 'Status',
+      type: 'select',
+      options: [
+        { value: 'aberta', label: 'Aberta' },
+        { value: 'andamento', label: 'Em Andamento' },
+        { value: 'concluida', label: 'Concluída' }
+      ]
+    },
+    {
+      key: 'tipo',
+      label: 'Tipo',
+      type: 'select',
+      options: [
+        { value: 'preventiva', label: 'Preventiva' },
+        { value: 'corretiva', label: 'Corretiva' },
+        { value: 'preditiva', label: 'Preditiva' }
+      ]
+    },
+    {
+      key: 'prioridade',
+      label: 'Prioridade',
+      type: 'select',
+      options: [
+        { value: 'critica', label: 'Crítica' },
+        { value: 'alta', label: 'Alta' },
+        { value: 'normal', label: 'Normal' },
+        { value: 'baixa', label: 'Baixa' }
+      ]
+    }
+  ];
 
   // Filter and sort data
   const filteredAndSortedData = React.useMemo(() => {
@@ -72,22 +103,22 @@ const MaintenanceHistoryTable: React.FC<MaintenanceHistoryTableProps> = ({
         item.problema.toLowerCase().includes(searchTerm.toLowerCase()) ||
         (item.reportedBy || '').toLowerCase().includes(searchTerm.toLowerCase());
 
-      const columnMatch = Object.entries(columnFilters).every(([column, filter]) => {
-        if (!filter) return true;
+      const filterMatch = Object.entries(filterValues).every(([key, value]) => {
+        if (!value) return true;
         
-        switch (column) {
+        switch (key) {
           case 'status':
-            return item.status.toLowerCase().includes(filter.toLowerCase());
+            return item.status.toLowerCase().includes(value.toLowerCase());
           case 'tipo':
-            return item.tipo.toLowerCase().includes(filter.toLowerCase());
+            return item.tipo.toLowerCase().includes(value.toLowerCase());
           case 'prioridade':
-            return item.prioridade.toLowerCase().includes(filter.toLowerCase());
+            return item.prioridade.toLowerCase().includes(value.toLowerCase());
           default:
             return true;
         }
       });
 
-      return searchMatch && columnMatch;
+      return searchMatch && filterMatch;
     });
 
     // Sort data
@@ -128,7 +159,7 @@ const MaintenanceHistoryTable: React.FC<MaintenanceHistoryTableProps> = ({
     });
 
     return filtered;
-  }, [data, searchTerm, columnFilters, sortField, sortDirection]);
+  }, [data, searchTerm, filterValues, sortField, sortDirection]);
 
   // Pagination
   const {
@@ -152,6 +183,15 @@ const MaintenanceHistoryTable: React.FC<MaintenanceHistoryTableProps> = ({
       setSortField(field);
       setSortDirection('asc');
     }
+  };
+
+  const handleFilterChange = (key: string, value: string) => {
+    setFilterValues(prev => ({ ...prev, [key]: value }));
+  };
+
+  const handleClearFilters = () => {
+    setSearchTerm('');
+    setFilterValues({});
   };
 
   const formatDate = (dateString: string) => {
@@ -225,134 +265,83 @@ const MaintenanceHistoryTable: React.FC<MaintenanceHistoryTableProps> = ({
 
   return (
     <div className="space-y-6">
-      {/* Enhanced Search and Filters */}
-      <div className="bg-gradient-to-r from-slate-900 to-slate-800 rounded-xl p-6 shadow-lg border border-slate-700">
-        <div className="space-y-4">
-          {/* Search Bar */}
-          <div className="relative">
-            <Search className="absolute left-4 top-1/2 transform -translate-y-1/2 text-slate-400 w-5 h-5" />
-            <Input
-              placeholder="Buscar por ID, modelo, problema ou responsável..."
-              value={searchTerm}
-              onChange={(e) => setSearchTerm(e.target.value)}
-              className="pl-12 h-12 bg-slate-800 border-slate-600 text-white placeholder:text-slate-400 focus:border-blue-500 focus:ring-blue-500 text-lg"
-            />
-          </div>
-          
-          {/* Filter Controls */}
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-            <div className="space-y-2">
-              <label className="text-sm font-medium text-slate-300">Status</label>
-              <select
-                value={columnFilters.status || ''}
-                onChange={(e) => setColumnFilters({ ...columnFilters, status: e.target.value })}
-                className="w-full px-4 py-3 border border-slate-600 bg-slate-800 text-white rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
-              >
-                <option value="">Todos os Status</option>
-                <option value="aberta">Aberta</option>
-                <option value="andamento">Em Andamento</option>
-                <option value="concluida">Concluída</option>
-              </select>
-            </div>
-            
-            <div className="space-y-2">
-              <label className="text-sm font-medium text-slate-300">Tipo</label>
-              <select
-                value={columnFilters.tipo || ''}
-                onChange={(e) => setColumnFilters({ ...columnFilters, tipo: e.target.value })}
-                className="w-full px-4 py-3 border border-slate-600 bg-slate-800 text-white rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
-              >
-                <option value="">Todos os Tipos</option>
-                <option value="preventiva">Preventiva</option>
-                <option value="corretiva">Corretiva</option>
-                <option value="preditiva">Preditiva</option>
-              </select>
-            </div>
-
-            <div className="space-y-2">
-              <label className="text-sm font-medium text-slate-300">Prioridade</label>
-              <select
-                value={columnFilters.prioridade || ''}
-                onChange={(e) => setColumnFilters({ ...columnFilters, prioridade: e.target.value })}
-                className="w-full px-4 py-3 border border-slate-600 bg-slate-800 text-white rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
-              >
-                <option value="">Todas as Prioridades</option>
-                <option value="critica">Crítica</option>
-                <option value="alta">Alta</option>
-                <option value="normal">Normal</option>
-                <option value="baixa">Baixa</option>
-              </select>
-            </div>
-          </div>
-        </div>
-      </div>
+      {/* Standardized Filters */}
+      <StandardFilters
+        searchValue={searchTerm}
+        onSearchChange={setSearchTerm}
+        searchPlaceholder="Buscar por ID, modelo, problema ou responsável..."
+        filters={filters}
+        filterValues={filterValues}
+        onFilterChange={handleFilterChange}
+        onClearFilters={handleClearFilters}
+      />
 
       {/* Enhanced Table */}
-      <div className="bg-gradient-to-br from-slate-900 to-slate-800 rounded-xl overflow-hidden shadow-2xl border border-slate-700">
+      <div className="glass-card rounded-xl overflow-hidden shadow-lg border border-slate-200/60 dark:border-slate-700/60">
         <Table>
           <TableHeader>
-            <TableRow className="bg-gradient-to-r from-slate-800 to-slate-700 border-slate-600 hover:bg-slate-700/50">
-              <TableHead className="text-slate-200 font-semibold">
+            <TableRow className="bg-slate-100/50 dark:bg-slate-800/50 border-slate-200/60 dark:border-slate-700/60 hover:bg-slate-100/70 dark:hover:bg-slate-800/70">
+              <TableHead className="text-slate-700 dark:text-slate-300 font-semibold">
                 <Button
                   variant="ghost"
                   size="sm"
                   onClick={() => handleSort('id')}
-                  className="h-auto p-0 font-semibold text-slate-200 hover:text-white"
+                  className="h-auto p-0 font-semibold text-slate-700 dark:text-slate-300 hover:text-slate-900 dark:hover:text-slate-100"
                 >
                   ID
                   {getSortIcon('id')}
                 </Button>
               </TableHead>
-              <TableHead className="text-slate-200 font-semibold">Empilhadeira</TableHead>
-              <TableHead className="text-slate-200 font-semibold">Tipo</TableHead>
-              <TableHead className="text-slate-200 font-semibold">Problema</TableHead>
-              <TableHead className="text-slate-200 font-semibold">Status</TableHead>
-              <TableHead className="text-slate-200 font-semibold">
+              <TableHead className="text-slate-700 dark:text-slate-300 font-semibold">Empilhadeira</TableHead>
+              <TableHead className="text-slate-700 dark:text-slate-300 font-semibold">Tipo</TableHead>
+              <TableHead className="text-slate-700 dark:text-slate-300 font-semibold">Problema</TableHead>
+              <TableHead className="text-slate-700 dark:text-slate-300 font-semibold">Status</TableHead>
+              <TableHead className="text-slate-700 dark:text-slate-300 font-semibold">
                 <Button
                   variant="ghost"
                   size="sm"
                   onClick={() => handleSort('prioridade')}
-                  className="h-auto p-0 font-semibold text-slate-200 hover:text-white"
+                  className="h-auto p-0 font-semibold text-slate-700 dark:text-slate-300 hover:text-slate-900 dark:hover:text-slate-100"
                 >
                   Prioridade
                   {getSortIcon('prioridade')}
                 </Button>
               </TableHead>
-              <TableHead className="text-slate-200 font-semibold">Responsável</TableHead>
-              <TableHead className="text-slate-200 font-semibold">
+              <TableHead className="text-slate-700 dark:text-slate-300 font-semibold">Responsável</TableHead>
+              <TableHead className="text-slate-700 dark:text-slate-300 font-semibold">
                 <Button
                   variant="ghost"
                   size="sm"
                   onClick={() => handleSort('dataAbertura')}
-                  className="h-auto p-0 font-semibold text-slate-200 hover:text-white"
+                  className="h-auto p-0 font-semibold text-slate-700 dark:text-slate-300 hover:text-slate-900 dark:hover:text-slate-100"
                 >
                   Abertura
                   {getSortIcon('dataAbertura')}
                 </Button>
               </TableHead>
-              <TableHead className="text-slate-200 font-semibold">
+              <TableHead className="text-slate-700 dark:text-slate-300 font-semibold">
                 <Button
                   variant="ghost"
                   size="sm"
                   onClick={() => handleSort('dataConclusao')}
-                  className="h-auto p-0 font-semibold text-slate-200 hover:text-white"
+                  className="h-auto p-0 font-semibold text-slate-700 dark:text-slate-300 hover:text-slate-900 dark:hover:text-slate-100"
                 >
                   Conclusão
                   {getSortIcon('dataConclusao')}
                 </Button>
               </TableHead>
-              <TableHead className="text-slate-200 font-semibold">
+              <TableHead className="text-slate-700 dark:text-slate-300 font-semibold">
                 <Button
                   variant="ghost"
                   size="sm"
                   onClick={() => handleSort('custos.total')}
-                  className="h-auto p-0 font-semibold text-slate-200 hover:text-white"
+                  className="h-auto p-0 font-semibold text-slate-700 dark:text-slate-300 hover:text-slate-900 dark:hover:text-slate-100"
                 >
                   Custo
                   {getSortIcon('custos.total')}
                 </Button>
               </TableHead>
-              <TableHead className="text-slate-200 font-semibold w-20">Ações</TableHead>
+              <TableHead className="text-slate-700 dark:text-slate-300 font-semibold w-20">Ações</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
@@ -360,27 +349,27 @@ const MaintenanceHistoryTable: React.FC<MaintenanceHistoryTableProps> = ({
               <TableRow 
                 key={maintenance.id} 
                 className={cn(
-                  "transition-all duration-200 border-slate-700/50",
-                  index % 2 === 0 ? "bg-slate-800/30" : "bg-slate-800/50",
-                  "hover:bg-slate-700/50 hover:scale-[1.01] hover:shadow-lg"
+                  "transition-all duration-200 border-slate-200/60 dark:border-slate-700/60",
+                  index % 2 === 0 ? "bg-white/50 dark:bg-slate-800/30" : "bg-slate-50/50 dark:bg-slate-800/50",
+                  "hover:bg-slate-100/50 dark:hover:bg-slate-700/50 hover:scale-[1.01] hover:shadow-sm"
                 )}
               >
-                <TableCell className="font-bold text-blue-400">#{maintenance.id}</TableCell>
+                <TableCell className="font-bold text-blue-600 dark:text-blue-400">#{maintenance.id}</TableCell>
                 <TableCell>
                   <div className="space-y-1">
-                    <p className="font-semibold text-white">{maintenance.empilhadeira?.modelo || maintenance.forkliftModel}</p>
-                    <p className="text-xs text-slate-400">{maintenance.empilhadeiraId || maintenance.forkliftId}</p>
+                    <p className="font-semibold text-slate-900 dark:text-slate-100">{maintenance.empilhadeira?.modelo || maintenance.forkliftModel}</p>
+                    <p className="text-xs text-slate-600 dark:text-slate-400">{maintenance.empilhadeiraId || maintenance.forkliftId}</p>
                   </div>
                 </TableCell>
                 <TableCell>
-                  <div className="flex items-center gap-2 text-slate-300">
+                  <div className="flex items-center gap-2 text-slate-700 dark:text-slate-300">
                     {getTypeIcon(maintenance.tipo)}
                     <span className="capitalize font-medium">{maintenance.tipo.toLowerCase()}</span>
                   </div>
                 </TableCell>
                 <TableCell>
                   <div className="max-w-xs">
-                    <p className="truncate text-slate-200 font-medium" title={maintenance.problema}>
+                    <p className="truncate text-slate-900 dark:text-slate-100 font-medium" title={maintenance.problema}>
                       {maintenance.problema}
                     </p>
                   </div>
@@ -397,27 +386,27 @@ const MaintenanceHistoryTable: React.FC<MaintenanceHistoryTableProps> = ({
                   </Badge>
                 </TableCell>
                 <TableCell>
-                  <div className="flex items-center gap-2 text-slate-300">
+                  <div className="flex items-center gap-2 text-slate-700 dark:text-slate-300">
                     <User className="w-4 h-4" />
                     <span className="font-medium">{maintenance.reportedBy || 'Sistema'}</span>
                   </div>
                 </TableCell>
                 <TableCell>
-                  <div className="flex items-center gap-2 text-slate-300">
+                  <div className="flex items-center gap-2 text-slate-700 dark:text-slate-300">
                     <Calendar className="w-4 h-4" />
                     <span className="font-medium">{formatDate(maintenance.dataAbertura || maintenance.reportedDate || '')}</span>
                   </div>
                 </TableCell>
                 <TableCell>
-                  <div className="flex items-center gap-2 text-slate-300">
+                  <div className="flex items-center gap-2 text-slate-700 dark:text-slate-300">
                     <Calendar className="w-4 h-4" />
                     <span className="font-medium">{formatDate(maintenance.dataConclusao || '')}</span>
                   </div>
                 </TableCell>
                 <TableCell>
                   <div className="flex items-center gap-2">
-                    <DollarSign className="w-4 h-4 text-green-400" />
-                    <span className="font-bold text-green-400">
+                    <DollarSign className="w-4 h-4 text-green-600 dark:text-green-400" />
+                    <span className="font-bold text-green-600 dark:text-green-400">
                       {maintenance.custos?.total ? 
                         new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(maintenance.custos.total) : 
                         'R$ 0,00'
@@ -428,28 +417,28 @@ const MaintenanceHistoryTable: React.FC<MaintenanceHistoryTableProps> = ({
                 <TableCell>
                   <DropdownMenu>
                     <DropdownMenuTrigger asChild>
-                      <Button variant="ghost" size="icon" className="h-8 w-8 text-slate-400 hover:text-white hover:bg-slate-600">
+                      <Button variant="ghost" size="icon" className="h-8 w-8 text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-100 hover:bg-slate-100 dark:hover:bg-slate-700">
                         <MoreVertical className="w-4 h-4" />
                       </Button>
                     </DropdownMenuTrigger>
-                    <DropdownMenuContent align="end" className="w-48 bg-slate-800 border-slate-700">
+                    <DropdownMenuContent align="end" className="w-48 bg-white/95 dark:bg-slate-800/95 backdrop-blur-xl border-slate-200/60 dark:border-slate-700/60">
                       {onView && (
-                        <DropdownMenuItem onClick={() => onView(maintenance)} className="text-slate-300 hover:text-white hover:bg-slate-700">
+                        <DropdownMenuItem onClick={() => onView(maintenance)} className="text-slate-700 dark:text-slate-300 hover:text-slate-900 dark:hover:text-slate-100 hover:bg-slate-100/50 dark:hover:bg-slate-700/50">
                           <Eye className="w-4 h-4 mr-2" />
                           Visualizar
                         </DropdownMenuItem>
                       )}
-                      <DropdownMenuItem onClick={() => onEdit(maintenance)} className="text-slate-300 hover:text-white hover:bg-slate-700">
+                      <DropdownMenuItem onClick={() => onEdit(maintenance)} className="text-slate-700 dark:text-slate-300 hover:text-slate-900 dark:hover:text-slate-100 hover:bg-slate-100/50 dark:hover:bg-slate-700/50">
                         <Edit className="w-4 h-4 mr-2" />
                         Editar
                       </DropdownMenuItem>
-                      <DropdownMenuItem className="text-slate-300 hover:text-white hover:bg-slate-700">
+                      <DropdownMenuItem className="text-slate-700 dark:text-slate-300 hover:text-slate-900 dark:hover:text-slate-100 hover:bg-slate-100/50 dark:hover:bg-slate-700/50">
                         <FileText className="w-4 h-4 mr-2" />
                         Relatório
                       </DropdownMenuItem>
                       <DropdownMenuItem 
                         onClick={() => onDelete(maintenance.id)}
-                        className="text-red-400 hover:text-red-300 hover:bg-red-900/20"
+                        className="text-red-600 dark:text-red-400 hover:text-red-700 dark:hover:text-red-300 hover:bg-red-50 dark:hover:bg-red-900/20"
                       >
                         <Trash2 className="w-4 h-4 mr-2" />
                         Excluir
@@ -463,13 +452,13 @@ const MaintenanceHistoryTable: React.FC<MaintenanceHistoryTableProps> = ({
         </Table>
 
         {paginatedData.length === 0 && (
-          <div className="p-12 text-center bg-slate-800/50">
-            <div className="w-16 h-16 mx-auto mb-4 bg-slate-700 rounded-full flex items-center justify-center">
-              <Wrench className="w-8 h-8 text-slate-400" />
+          <div className="p-12 text-center bg-slate-50/50 dark:bg-slate-800/50">
+            <div className="w-16 h-16 mx-auto mb-4 bg-slate-200/50 dark:bg-slate-700/50 rounded-full flex items-center justify-center">
+              <Wrench className="w-8 h-8 text-slate-500 dark:text-slate-400" />
             </div>
-            <h3 className="text-xl font-semibold text-slate-300 mb-2">Nenhuma manutenção encontrada</h3>
-            <p className="text-slate-400">
-              {searchTerm || Object.values(columnFilters).some(f => f) 
+            <h3 className="text-xl font-semibold text-slate-700 dark:text-slate-300 mb-2">Nenhuma manutenção encontrada</h3>
+            <p className="text-slate-600 dark:text-slate-400">
+              {searchTerm || Object.values(filterValues).some(f => f) 
                 ? "Tente ajustar os filtros de busca" 
                 : "Não há registros de manutenção no histórico"
               }
@@ -480,7 +469,7 @@ const MaintenanceHistoryTable: React.FC<MaintenanceHistoryTableProps> = ({
 
       {/* Enhanced Pagination */}
       {totalPages > 1 && (
-        <div className="bg-slate-800/50 rounded-lg p-4 border border-slate-700">
+        <div className="glass-card rounded-lg p-4 border border-slate-200/60 dark:border-slate-700/60">
           <PaginationControls
             currentPage={currentPage}
             totalPages={totalPages}

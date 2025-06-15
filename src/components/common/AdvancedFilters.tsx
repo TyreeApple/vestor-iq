@@ -56,10 +56,10 @@ const AdvancedFilters = ({
             value={values[filter.key] || 'all'}
             onValueChange={(value) => handleFilterChange(filter.key, value === 'all' ? '' : value)}
           >
-            <SelectTrigger className="h-10">
+            <SelectTrigger className="h-10 bg-slate-50/50 dark:bg-slate-800/50 border-slate-300/60 dark:border-slate-600/60 text-slate-900 dark:text-slate-100 focus:border-blue-500 focus:ring-blue-500/20">
               <SelectValue placeholder={`Selecione ${filter.label.toLowerCase()}`} />
             </SelectTrigger>
-            <SelectContent>
+            <SelectContent className="bg-white/95 dark:bg-slate-800/95 backdrop-blur-xl border-slate-200/60 dark:border-slate-700/60">
               <SelectItem value="all">Todos</SelectItem>
               {filter.options?.map(option => (
                 <SelectItem key={option.value} value={option.value}>
@@ -75,7 +75,7 @@ const AdvancedFilters = ({
             type="date"
             value={values[filter.key] || ''}
             onChange={(e) => handleFilterChange(filter.key, e.target.value)}
-            className="h-10"
+            className="h-10 bg-slate-50/50 dark:bg-slate-800/50 border-slate-300/60 dark:border-slate-600/60 text-slate-900 dark:text-slate-100 focus:border-blue-500 focus:ring-blue-500/20"
           />
         );
       case 'number':
@@ -85,7 +85,7 @@ const AdvancedFilters = ({
             value={values[filter.key] || ''}
             onChange={(e) => handleFilterChange(filter.key, e.target.value)}
             placeholder={`Digite ${filter.label.toLowerCase()}`}
-            className="h-10"
+            className="h-10 bg-slate-50/50 dark:bg-slate-800/50 border-slate-300/60 dark:border-slate-600/60 text-slate-900 dark:text-slate-100 placeholder:text-slate-500 dark:placeholder:text-slate-400 focus:border-blue-500 focus:ring-blue-500/20"
           />
         );
       case 'text':
@@ -95,7 +95,7 @@ const AdvancedFilters = ({
             value={values[filter.key] || ''}
             onChange={(e) => handleFilterChange(filter.key, e.target.value)}
             placeholder={`Digite ${filter.label.toLowerCase()}`}
-            className="h-10"
+            className="h-10 bg-slate-50/50 dark:bg-slate-800/50 border-slate-300/60 dark:border-slate-600/60 text-slate-900 dark:text-slate-100 placeholder:text-slate-500 dark:placeholder:text-slate-400 focus:border-blue-500 focus:ring-blue-500/20"
           />
         );
       default:
@@ -108,7 +108,7 @@ const AdvancedFilters = ({
       <PopoverTrigger asChild>
         <Button 
           variant="outline" 
-          className="flex items-center gap-2 h-10"
+          className="flex items-center gap-2 h-10 bg-slate-50/50 dark:bg-slate-800/50 border-slate-300/60 dark:border-slate-600/60 text-slate-700 dark:text-slate-300 hover:bg-slate-100/50 dark:hover:bg-slate-700/50 hover:text-slate-900 dark:hover:text-slate-100"
           {...triggerProps}
         >
           <Filter className="w-4 h-4" />
@@ -120,17 +120,17 @@ const AdvancedFilters = ({
           )}
         </Button>
       </PopoverTrigger>
-      <PopoverContent className="w-80 p-0" align="start">
-        <Card className="border-0 shadow-none">
+      <PopoverContent className="w-80 p-0 bg-white/95 dark:bg-slate-800/95 backdrop-blur-xl border-slate-200/60 dark:border-slate-700/60" align="start">
+        <Card className="border-0 shadow-none bg-transparent">
           <CardHeader className="pb-4">
             <div className="flex items-center justify-between">
-              <CardTitle className="text-base">Filtros</CardTitle>
+              <CardTitle className="text-base text-slate-900 dark:text-slate-100">Filtros</CardTitle>
               {activeFiltersCount > 0 && (
                 <Button
                   variant="ghost"
                   size="sm"
                   onClick={onClearFilters}
-                  className="text-muted-foreground hover:text-foreground h-8 px-2"
+                  className="text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-100 h-8 px-2"
                 >
                   Limpar
                 </Button>
@@ -142,13 +142,13 @@ const AdvancedFilters = ({
             {filters.map((filter) => (
               <div key={filter.key} className="space-y-2">
                 <div className="flex items-center justify-between">
-                  <Label className="text-sm font-medium">{filter.label}</Label>
+                  <Label className="text-sm font-medium text-slate-700 dark:text-slate-300">{filter.label}</Label>
                   {values[filter.key] && values[filter.key] !== 'all' && (
                     <Button
                       variant="ghost"
                       size="sm"
                       onClick={() => handleClearFilter(filter.key)}
-                      className="h-6 w-6 p-0 text-muted-foreground hover:text-foreground"
+                      className="h-6 w-6 p-0 text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-100"
                     >
                       <X className="w-3 h-3" />
                     </Button>
@@ -158,8 +158,11 @@ const AdvancedFilters = ({
               </div>
             ))}
             
-            <div className="flex justify-end pt-4 border-t">
-              <Button onClick={() => setOpen(false)} className="h-10">
+            <div className="flex justify-end pt-4 border-t border-slate-200/60 dark:border-slate-700/60">
+              <Button 
+                onClick={() => setOpen(false)} 
+                className="h-10 bg-blue-600 hover:bg-blue-700 text-white"
+              >
                 Aplicar
               </Button>
             </div>
