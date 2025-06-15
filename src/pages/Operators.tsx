@@ -399,9 +399,9 @@ const OperatorsPage = () => {
         </div>
       </PageHeader>
       
-      {/* Enhanced filter options - using full width */}
+      {/* Enhanced filter options - compact layout */}
       <div className="w-full bg-gradient-to-br from-slate-800/60 to-slate-900/80 backdrop-blur-sm border border-slate-700/50 rounded-xl p-6">
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 xl:grid-cols-6 gap-4">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4">
           <div className="space-y-2">
             <h4 className="text-sm font-medium text-slate-200">Função</h4>
             <Select value={filters.role || 'all'} onValueChange={(value) => setFilters({...filters, role: value === 'all' ? '' : value})}>
@@ -481,20 +481,20 @@ const OperatorsPage = () => {
               </SelectContent>
             </Select>
           </div>
-
-          <div className="flex items-end">
-            {(hasActiveFilters || certStatus !== 'all') && (
-              <Button
-                variant="ghost"
-                size="sm"
-                onClick={handleClearAllFilters}
-                className="text-slate-400 hover:text-white hover:bg-slate-700/50 w-full"
-              >
-                Limpar Filtros
-              </Button>
-            )}
-          </div>
         </div>
+
+        {(hasActiveFilters || certStatus !== 'all') && (
+          <div className="flex justify-center mt-4">
+            <Button
+              variant="ghost"
+              size="sm"
+              onClick={handleClearAllFilters}
+              className="text-slate-400 hover:text-white hover:bg-slate-700/50"
+            >
+              Limpar Filtros
+            </Button>
+          </div>
+        )}
       </div>
       
       {/* Operators table - using full width */}
