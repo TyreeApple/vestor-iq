@@ -1,3 +1,4 @@
+
 import React from "react";
 import { Settings, Activity, BarChart3 } from "lucide-react";
 import {
@@ -95,55 +96,60 @@ const bibliotecas = [
 
 const Configuracao: React.FC = () => {
   return (
-    <section className="max-w-5xl mx-auto mt-10 p-6 bg-card rounded-lg border border-border shadow">
-      <div className="flex items-center gap-3 mb-4">
+    <section className="max-w-5xl mx-auto mt-10 p-4 sm:p-6 bg-card rounded-lg border border-border shadow">
+      <div className="flex items-center gap-3 mb-1 sm:mb-4">
         <Settings className="w-7 h-7 text-primary" />
-        <h2 className="text-2xl font-bold text-foreground">Configurações</h2>
+        <h2 className="text-2xl font-bold text-foreground">
+          Configurações
+        </h2>
       </div>
-      <p className="text-muted-foreground mb-2">
+      <p className="text-muted-foreground mb-6 sm:mb-12 text-sm sm:text-base">
         Gerencie suas preferências da conta e personalizações do sistema neste painel.
       </p>
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+
+      {/* Layout principal responsivo */}
+      <div className="flex flex-col md:flex-row gap-8">
         {/* SOBRE O PROJETO */}
-        <div className="md:col-span-1 flex flex-col gap-4">
+        <div className="md:w-1/3 flex flex-col gap-4">
           <AboutProjectCard />
         </div>
-        {/* TECNOLOGIAS E BIBLIOTECAS */}
-        <div className="md:col-span-2 flex flex-col gap-7">
-          <div>
-            <h3 className="text-lg font-semibold text-foreground mb-4 flex items-center gap-2">
+
+        {/* TECNOLOGIAS & BIBLIOTECAS */}
+        <div className="md:w-2/3 flex flex-col gap-8">
+          <div className="flex flex-col gap-1">
+            <h3 className="text-lg font-semibold text-foreground mb-3 flex items-center gap-2">
               Tecnologias Utilizadas
             </h3>
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-4">
+            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
               {tecnologias.map((tec) => (
                 <a
                   key={tec.nome}
                   href={tec.url}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="flex items-center gap-4 p-4 border border-border rounded-lg bg-background hover:bg-accent transition-all shadow"
+                  className="flex items-center gap-3 p-4 border border-border rounded-lg bg-background hover:bg-accent transition-all shadow card-hover-effect"
                 >
                   <span>{tec.icon}</span>
-                  <span className="font-medium text-foreground">{tec.nome}</span>
+                  <span className="font-medium text-foreground truncate">{tec.nome}</span>
                 </a>
               ))}
             </div>
           </div>
-          <div>
-            <h3 className="text-lg font-semibold text-foreground mb-4 flex items-center gap-2">
+          <div className="flex flex-col gap-1">
+            <h3 className="text-lg font-semibold text-foreground mb-3 flex items-center gap-2">
               Bibliotecas Utilizadas
             </h3>
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
               {bibliotecas.map((lib) => (
                 <a
                   key={lib.nome}
                   href={lib.url}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="flex items-center gap-4 p-4 border border-border rounded-lg bg-background hover:bg-accent transition-all shadow"
+                  className="flex items-center gap-3 p-4 border border-border rounded-lg bg-background hover:bg-accent transition-all shadow card-hover-effect"
                 >
                   <span>{lib.icon}</span>
-                  <span className="font-medium text-foreground">{lib.nome}</span>
+                  <span className="font-medium text-foreground truncate">{lib.nome}</span>
                 </a>
               ))}
             </div>
