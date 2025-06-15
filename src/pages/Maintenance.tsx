@@ -9,6 +9,7 @@ import MaintenanceDialog from '@/components/maintenance/MaintenanceDialog';
 import MaintenanceKpiCards from '@/components/maintenance/MaintenanceKpiCards';
 import PendingMaintenanceCard from '@/components/maintenance/PendingMaintenanceCard';
 import MaintenanceHistoryTable from '@/components/maintenance/MaintenanceHistoryTable';
+import MaintenanceHistorySection from '@/components/maintenance/MaintenanceHistorySection';
 import { useToast } from '@/hooks/use-toast';
 import AdvancedFilters from '@/components/common/AdvancedFilters';
 import { useFilters } from '@/hooks/use-filters';
@@ -158,6 +159,14 @@ const MaintenancePage = () => {
     });
   };
 
+  // Handle report (histórico)
+  const handleGenerateReport = () => {
+    toast({
+      title: "Relatório gerado",
+      description: "O relatório completo de manutenções foi gerado."
+    });
+  };
+
   // Get pending and completed maintenance
   const pendingMaintenance = filteredData.filter(m => m.status !== StatusManutencao.CONCLUIDA);
 
@@ -191,27 +200,14 @@ const MaintenancePage = () => {
         onDelete={handleDeleteMaintenance}
         onStatusChange={handleStatusChange}
       />
-    
-      {/* Maintenance History */}
-      <div>
-        <div className="flex items-center justify-between mb-6">
-          <div>
-            <h2 className="text-2xl font-bold text-foreground">Histórico Completo</h2>
-            <p className="text-muted-foreground">
-              Todas as manutenções registradas no sistema
-            </p>
-          </div>
-          <Button variant="outline" className="gap-2">
-            <FileText className="w-4 h-4" />
-            Gerar Relatório
-          </Button>
-        </div>
-        <MaintenanceHistoryTable
-          data={maintenanceItems}
-          onEdit={handleEditMaintenance}
-          onDelete={handleDeleteMaintenance}
-        />
-      </div>
+
+      {/* Maintenance History Section */}
+      <MaintenanceHistorySection
+        data={maintenanceItems}
+        onEdit={handleEditMaintenance}
+        onDelete={handleDeleteMaintenance}
+        onReport={handleGenerateReport}
+      />
       
       {/* Add/Edit Maintenance Dialog */}
       <MaintenanceDialog 
