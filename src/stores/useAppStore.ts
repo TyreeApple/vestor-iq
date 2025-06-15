@@ -73,6 +73,7 @@ interface AppState {
   recalculateMetrics: () => void;
   generateAlerts: () => void;
   triggerUpdate: () => void;
+  addMockData: () => void;
 }
 
 // Métricas iniciais vazias
@@ -530,63 +531,148 @@ export const useAppStore = create<AppState>()(
           ),
         // ---------- MOCK DATA PARA DEMONSTRAÇÃO ----------
         addMockData: () => {
-          // Empilhadeiras mock
+          // Empilhadeiras mock (atendendo interface completa)
           const empilhadeiras = [
             {
               id: "E-001",
-              nome: "Hyster 2.5T",
+              modelo: "Hyster H2.5FT",
+              marca: "Hyster",
+              tipo: 0,
               status: 0,
+              capacidade: 2500,
+              anoFabricacao: 2019,
+              dataAquisicao: "2019-06-10",
+              numeroSerie: "HYSH2.5-0001",
+              horimetro: 3700,
+              ultimaManutencao: "2024-05-10",
+              proximaManutencao: "2024-11-10",
+              localizacaoAtual: "Armazém 1",
+              setor: "Logística",
               operadorAtual: "O-001",
+              custoHora: 120,
               eficiencia: 87,
               disponibilidade: 98,
+              qrCode: "QRE001",
+              observacoes: "Empilhadeira principal do setor.",
             },
             {
               id: "E-002",
-              nome: "Toyota 3T",
+              modelo: "Toyota 8FGCU25",
+              marca: "Toyota",
+              tipo: 0,
               status: 2,
-              eficiencia: 75,
-              disponibilidade: 73,
-            },
+              capacidade: 2500,
+              anoFabricacao: 2021,
+              dataAquisicao: "2021-01-15",
+              numeroSerie: "TYT8FG-0002",
+              horimetro: 1200,
+              ultimaManutencao: "2024-05-21",
+              proximaManutencao: "2024-12-21",
+              localizacaoAtual: "Armazém 2",
+              setor: "Produção",
+              eficiencia: 76,
+              disponibilidade: 77,
+              custoHora: 110,
+              qrCode: "QRE002",
+              observacoes: "Aguardando manutenção corretiva.",
+            }
           ];
+
           // Operadores mock
           const operadores = [
-            { id: "O-001", nome: "Ana Silva", status: 1 },
-            { id: "O-002", nome: "Carlos Dias", status: 1 },
+            {
+              id: "O-001",
+              nome: "Ana Silva",
+              cpf: "123.456.789-00",
+              email: "ana.silva@email.com",
+              telefone: "11999999999",
+              funcao: 0,
+              dataAdmissao: "2022-02-17",
+              turno: "Manhã",
+              setor: "Logística",
+              certificacoes: [],
+              avaliacoes: [],
+              horasTrabalhadas: 1800,
+              produtividade: 97,
+              status: 0,
+            },
+            {
+              id: "O-002",
+              nome: "Carlos Dias",
+              cpf: "987.654.321-00",
+              email: "carlos.dias@email.com",
+              telefone: "11988888888",
+              funcao: 0,
+              dataAdmissao: "2021-11-02",
+              turno: "Noite",
+              setor: "Produção",
+              certificacoes: [],
+              avaliacoes: [],
+              horasTrabalhadas: 2100,
+              produtividade: 92,
+              status: 0,
+            }
           ];
+
           // Operações mock
           const operacoes = [
             {
               id: "OP-101",
               empilhadeiraId: "E-001",
+              empilhadeira: empilhadeiras[0],
               operadorId: "O-001",
-              inicioPrevisto: new Date().toISOString(),
-              dataInicio: new Date().toISOString(),
+              operador: operadores[0],
+              tipo: 2, // Movimentação
               status: 1,
+              prioridade: 1,
+              setor: "Logística",
+              localizacao: "Doca 3",
+              dataInicio: new Date().toISOString(),
+              duracaoEstimada: 40,
               produtividade: 90,
             },
           ];
+
           // Ordem de Serviço mock
           const ordemServicos = [
             {
               id: "OS-001",
               empilhadeiraId: "E-002",
-              prioridade: 2,
-              status: 1,
+              empilhadeira: empilhadeiras[1],
+              tipo: 1, // Corretiva
+              status: 1, // Em Andamento
+              prioridade: 3, // Crítica
               problema: "Vazamento de óleo",
               dataAbertura: new Date().toISOString(),
+              custos: {
+                pecas: 200,
+                maoObra: 400,
+                terceiros: 0,
+                total: 600
+              },
+              pecasUtilizadas: [],
+              anexos: [],
             },
           ];
-          // Abastecimentos mock
+
+          // Abastecimento mock
           const abastecimentos = [
             {
               id: "AB-001",
               empilhadeiraId: "E-001",
-              usuario: "O-001",
-              data: new Date().toISOString(),
+              empilhadeira: empilhadeiras[0],
+              operadorId: "O-001",
+              operador: operadores[0],
+              dataAbastecimento: new Date().toISOString(),
+              horimetroInicial: 3700,
               quantidadeLitros: 25,
               custoTotal: 160,
-            },
+              precoLitro: 6.40,
+              fornecedor: "Posto Shell",
+              localAbastecimento: "Base Logística",
+            }
           ];
+
           set(
             {
               empilhadeiras,
