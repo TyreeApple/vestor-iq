@@ -158,7 +158,9 @@ const PendingMaintenanceCard: React.FC<PendingMaintenanceCardProps> = ({
             </div>
             <div className="flex items-center gap-1.5 text-gray-400">
               {getMaintenanceTypeIcon(maintenance.tipo)}
-              <span className="text-xs font-medium capitalize">{maintenance.tipo.toLowerCase()}</span>
+              <span className="text-xs font-medium capitalize">
+                {maintenance.tipo ? maintenance.tipo.toLowerCase() : 'N/A'}
+              </span>
             </div>
           </div>
           
@@ -231,7 +233,7 @@ const PendingMaintenanceCard: React.FC<PendingMaintenanceCardProps> = ({
         <div className="p-3 bg-gradient-to-r from-orange-500/10 to-red-500/10 rounded-lg border border-orange-500/20">
           <div className="flex items-start gap-2">
             <AlertTriangle className="w-4 h-4 text-orange-400 mt-0.5 flex-shrink-0" />
-            <p className="text-sm text-gray-200 leading-relaxed">{maintenance.problema}</p>
+            <p className="text-sm text-gray-200 leading-relaxed">{maintenance.problema || 'Sem descrição'}</p>
           </div>
         </div>
 
@@ -242,7 +244,7 @@ const PendingMaintenanceCard: React.FC<PendingMaintenanceCardProps> = ({
               <Truck className="w-3 h-3" />
               <span className="text-xs uppercase tracking-wide">Empilhadeira</span>
             </div>
-            <p className="text-sm font-bold text-white">{maintenance.empilhadeiraId || maintenance.forkliftId}</p>
+            <p className="text-sm font-bold text-white">{maintenance.empilhadeiraId || maintenance.forkliftId || 'N/A'}</p>
           </div>
           
           <div className="p-2 bg-white/5 rounded-lg border border-white/10">
@@ -258,7 +260,9 @@ const PendingMaintenanceCard: React.FC<PendingMaintenanceCardProps> = ({
               <Calendar className="w-3 h-3" />
               <span className="text-xs uppercase tracking-wide">Abertura</span>
             </div>
-            <p className="text-sm font-bold text-white">{formatDate(maintenance.dataAbertura || maintenance.reportedDate || '')}</p>
+            <p className="text-sm font-bold text-white">
+              {formatDate(maintenance.dataAbertura || maintenance.reportedDate || '')}
+            </p>
           </div>
           
           <div className="p-2 bg-white/5 rounded-lg border border-white/10">
