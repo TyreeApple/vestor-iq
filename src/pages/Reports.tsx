@@ -74,7 +74,7 @@ const ReportsPage = () => {
   ];
 
   const filteredCategories = reportCategories.filter(category => {
-    if (selectedCategory && category.id !== selectedCategory) return false;
+    if (selectedCategory && selectedCategory !== 'all' && category.id !== selectedCategory) return false;
     if (search) {
       return category.title.toLowerCase().includes(search.toLowerCase()) ||
              category.reports.some(report => 
@@ -159,7 +159,7 @@ const ReportsPage = () => {
                     <SelectValue placeholder="Categoria" />
                   </SelectTrigger>
                   <SelectContent>
-                    <SelectItem value="">Todas</SelectItem>
+                    <SelectItem value="all">Todas</SelectItem>
                     <SelectItem value="operacoes">Operações</SelectItem>
                     <SelectItem value="manutencao">Manutenção</SelectItem>
                     <SelectItem value="abastecimento">Abastecimento</SelectItem>
@@ -185,7 +185,7 @@ const ReportsPage = () => {
                     <SelectValue placeholder="Empilhadeira" />
                   </SelectTrigger>
                   <SelectContent>
-                    <SelectItem value="">Todas</SelectItem>
+                    <SelectItem value="all">Todas</SelectItem>
                     <SelectItem value="emp-001">EMP-001</SelectItem>
                     <SelectItem value="emp-002">EMP-002</SelectItem>
                     <SelectItem value="emp-003">EMP-003</SelectItem>
@@ -199,7 +199,7 @@ const ReportsPage = () => {
                     <SelectValue placeholder="Operador" />
                   </SelectTrigger>
                   <SelectContent>
-                    <SelectItem value="">Todos</SelectItem>
+                    <SelectItem value="all">Todos</SelectItem>
                     <SelectItem value="joao-silva">João Silva</SelectItem>
                     <SelectItem value="maria-santos">Maria Santos</SelectItem>
                     <SelectItem value="pedro-oliveira">Pedro Oliveira</SelectItem>
