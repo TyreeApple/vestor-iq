@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { 
@@ -13,7 +12,7 @@ import {
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import AnimatedCounter from '@/components/common/AnimatedCounter';
-import { OrdemServico, StatusManutencao } from '@/types';
+import { OrdemServico, StatusManutencao, PrioridadeOperacao } from '@/types';
 
 interface MaintenanceKpiCardsProps {
   maintenanceData: OrdemServico[];
@@ -32,7 +31,7 @@ const MaintenanceKpiCards: React.FC<MaintenanceKpiCardsProps> = ({ maintenanceDa
   const completionRate = totalMaintenance > 0 ? (completedMaintenance / totalMaintenance) * 100 : 0;
   
   const urgentMaintenance = maintenanceData.filter(m => 
-    m.prioridade === 'CRITICA' || m.prioridade === 'ALTA'
+    m.prioridade === PrioridadeOperacao.CRITICA || m.prioridade === PrioridadeOperacao.ALTA
   ).length;
 
   const kpis = [

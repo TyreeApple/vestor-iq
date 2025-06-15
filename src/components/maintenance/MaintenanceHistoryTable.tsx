@@ -103,9 +103,15 @@ const MaintenanceHistoryTable: React.FC<MaintenanceHistoryTableProps> = ({
           bValue = new Date(b.dataConclusao || '');
           break;
         case 'prioridade':
-          const priorityOrder = { 'CRITICA': 4, 'ALTA': 3, 'NORMAL': 2, 'BAIXA': 1 };
-          aValue = priorityOrder[a.prioridade as keyof typeof priorityOrder] || 0;
-          bValue = priorityOrder[b.prioridade as keyof typeof priorityOrder] || 0;
+          // Create priority order using enum values
+          const priorityOrder: Record<string, number> = {
+            [PrioridadeOperacao.CRITICA]: 4,
+            [PrioridadeOperacao.ALTA]: 3,
+            [PrioridadeOperacao.NORMAL]: 2,
+            [PrioridadeOperacao.BAIXA]: 1
+          };
+          aValue = priorityOrder[a.prioridade] || 0;
+          bValue = priorityOrder[b.prioridade] || 0;
           break;
         default:
           aValue = (a as any)[sortField] || '';
