@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { NavLink } from 'react-router-dom';
 import { Search, User, Menu, X, BarChart3, Users, Activity, Wrench, Fuel, FileText, Gauge, Settings } from 'lucide-react';
@@ -74,14 +73,13 @@ const Navbar: React.FC = () => {
 
   return (
     <>
-      <header className="h-16 bg-card dark:bg-card border-b border-slate-200 dark:border-border flex items-center justify-between px-6 shadow-premium dark:shadow-premium-dark relative z-50 w-full">
-        <div className="flex items-center space-x-4 flex-shrink-0">
+      <header className="h-16 bg-card dark:bg-card border-b border-slate-200 dark:border-border flex items-center justify-between px-6 shadow-premium dark:shadow-premium-dark relative z-50">
+        <div className="flex items-center space-x-4">
           <LogoOnly />
         </div>
-        <div className="flex flex-1 min-w-0 items-center">
-          <NavbarMenu isMobileMenuOpen={isMobileMenuOpen} setIsMobileMenuOpen={setIsMobileMenuOpen} />
-        </div>
-        {/* Actions ocupa o fim do container, alinhando corretamente */}
+
+        <NavbarMenu isMobileMenuOpen={isMobileMenuOpen} setIsMobileMenuOpen={setIsMobileMenuOpen} />
+
         <NavbarActions isMobileMenuOpen={isMobileMenuOpen} setIsMobileMenuOpen={setIsMobileMenuOpen} />
       </header>
     </>
@@ -89,4 +87,3 @@ const Navbar: React.FC = () => {
 };
 
 export default Navbar;
-
