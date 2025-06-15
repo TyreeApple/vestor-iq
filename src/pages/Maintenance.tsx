@@ -156,7 +156,7 @@ const MaintenancePage = () => {
       type: 'select' as const,
       options: [
         { value: PrioridadeOperacao.BAIXA, label: 'Baixa' },
-        { value: PrioridadeOperacao.MEDIA, label: 'Média' },
+        { value: PrioridadeOperacao.NORMAL, label: 'Normal' },
         { value: PrioridadeOperacao.ALTA, label: 'Alta' },
         { value: PrioridadeOperacao.CRITICA, label: 'Crítica' }
       ]
