@@ -18,10 +18,7 @@ import {
   Pause,
   CheckCircle,
   ArrowRight,
-  Timer,
-  MapPin,
-  TrendingUp,
-  Zap
+  Timer
 } from 'lucide-react';
 import {
   DropdownMenu,
@@ -47,18 +44,11 @@ const PendingMaintenanceCard: React.FC<PendingMaintenanceCardProps> = ({
 }) => {
   const formatDate = (dateString: string) => {
     try {
-      const date = new Date(dateString);
-      return date.toLocaleDateString('pt-BR');
+      const dateParts = dateString.split('-');
+      return `${dateParts[2]}/${dateParts[1]}/${dateParts[0]}`;
     } catch (e) {
       return dateString;
     }
-  };
-
-  const formatCurrency = (value: number) => {
-    return new Intl.NumberFormat('pt-BR', {
-      style: 'currency',
-      currency: 'BRL'
-    }).format(value);
   };
 
   const getPriorityConfig = (priority: PrioridadeOperacao) => {
@@ -67,37 +57,29 @@ const PendingMaintenanceCard: React.FC<PendingMaintenanceCardProps> = ({
         return { 
           color: 'bg-red-500', 
           textColor: 'text-red-700', 
-          label: 'Crítica',
-          accentColor: 'border-l-red-500',
-          bgGradient: 'from-red-500/10 to-red-600/10',
-          pulseColor: 'bg-red-500'
+          label: 'Alta',
+          accentColor: 'border-l-red-500'
         };
       case PrioridadeOperacao.ALTA:
         return { 
           color: 'bg-orange-500', 
           textColor: 'text-orange-700', 
           label: 'Alta',
-          accentColor: 'border-l-orange-500',
-          bgGradient: 'from-orange-500/10 to-orange-600/10',
-          pulseColor: 'bg-orange-500'
+          accentColor: 'border-l-orange-500'
         };
       case PrioridadeOperacao.NORMAL:
         return { 
           color: 'bg-blue-500', 
           textColor: 'text-blue-700', 
           label: 'Normal',
-          accentColor: 'border-l-blue-500',
-          bgGradient: 'from-blue-500/10 to-blue-600/10',
-          pulseColor: 'bg-blue-500'
+          accentColor: 'border-l-blue-500'
         };
       default:
         return { 
           color: 'bg-gray-500', 
           textColor: 'text-gray-700', 
           label: 'Baixa',
-          accentColor: 'border-l-gray-500',
-          bgGradient: 'from-gray-500/10 to-gray-600/10',
-          pulseColor: 'bg-gray-500'
+          accentColor: 'border-l-gray-500'
         };
     }
   };
@@ -120,7 +102,7 @@ const PendingMaintenanceCard: React.FC<PendingMaintenanceCardProps> = ({
       case TipoManutencao.CORRETIVA:
         return <Wrench className="w-3 h-3" />;
       case TipoManutencao.PREDITIVA:
-        return <TrendingUp className="w-3 h-3" />;
+        return <AlertTriangle className="w-3 h-3" />;
       default:
         return <Wrench className="w-3 h-3" />;
     }
@@ -148,11 +130,6 @@ const PendingMaintenanceCard: React.FC<PendingMaintenanceCardProps> = ({
   const priorityConfig = getPriorityConfig(maintenance.prioridade);
   const statusConfig = getStatusConfig(maintenance.status);
 
-  // Calculate days until due date
-  const daysUntilDue = Math.ceil((new Date(maintenance.dataAbertura || maintenance.reportedDate || '').getTime() - new Date().getTime()) / (1000 * 3600 * 24));
-  const isOverdue = daysUntilDue < 0;
-  const isUrgent = daysUntilDue <= 2;
-
   return (
     <Card className={cn(
       "group relative overflow-hidden transition-all duration-300 hover:scale-[1.02] cursor-pointer",
@@ -160,28 +137,16 @@ const PendingMaintenanceCard: React.FC<PendingMaintenanceCardProps> = ({
       "border-l-4 shadow-lg hover:shadow-xl",
       priorityConfig.accentColor
     )}>
-      {/* Enhanced background pattern */}
-      <div className="absolute inset-0 opacity-5">
-        <div className="absolute top-0 right-0 w-32 h-32 bg-white rounded-full blur-3xl animate-pulse" />
-        <div className="absolute bottom-0 left-0 w-24 h-24 bg-white rounded-full blur-2xl animate-pulse" style={{ animationDelay: '1s' }} />
-      </div>
-
-      {/* Critical priority animated indicator */}
+      {/* Critical priority indicator */}
       {maintenance.prioridade === PrioridadeOperacao.CRITICA && (
-        <div className="absolute top-2 right-2 flex items-center space-x-1">
+        <div className="absolute top-2 right-2">
           <div className="w-2 h-2 bg-red-500 rounded-full animate-ping" />
-          <Zap className="w-3 h-3 text-red-400 animate-pulse" />
         </div>
-      )}
-
-      {/* Overdue indicator */}
-      {isOverdue && (
-        <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-red-500 to-red-600 animate-pulse" />
       )}
 
       <CardHeader className="pb-3 relative">
         <div className="flex items-start justify-between">
-          <div className="space-y-2">
+          <div className="space-y-1">
             <div className="flex items-center gap-2">
               <span className="text-xl font-bold bg-gradient-to-r from-white to-gray-300 bg-clip-text text-transparent">
                 #{maintenance.id}
@@ -191,20 +156,9 @@ const PendingMaintenanceCard: React.FC<PendingMaintenanceCardProps> = ({
                 {statusConfig.label}
               </Badge>
             </div>
-            
-            <div className="flex items-center gap-2 text-gray-400">
+            <div className="flex items-center gap-1.5 text-gray-400">
               {getMaintenanceTypeIcon(maintenance.tipo)}
               <span className="text-xs font-medium capitalize">{maintenance.tipo.toLowerCase()}</span>
-              {isUrgent && !isOverdue && (
-                <div className="px-2 py-0.5 bg-yellow-500/20 text-yellow-400 text-xs rounded-full border border-yellow-500/30">
-                  Urgente
-                </div>
-              )}
-              {isOverdue && (
-                <div className="px-2 py-0.5 bg-red-500/20 text-red-400 text-xs rounded-full border border-red-500/30 animate-pulse">
-                  Atrasado
-                </div>
-              )}
             </div>
           </div>
           
@@ -262,103 +216,92 @@ const PendingMaintenanceCard: React.FC<PendingMaintenanceCardProps> = ({
           </DropdownMenu>
         </div>
 
-        {/* Enhanced Priority Badge */}
+        {/* Priority Badge */}
         <div className={cn(
-          "inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-medium backdrop-blur-sm",
-          "bg-gradient-to-r border border-white/20 w-fit shadow-lg",
-          priorityConfig.bgGradient
+          "inline-flex items-center gap-1.5 px-2 py-1 rounded-full text-xs font-medium backdrop-blur-sm",
+          "bg-gradient-to-r from-white/10 to-white/5 border border-white/20 w-fit"
         )}>
-          <div className={cn("w-2 h-2 rounded-full animate-pulse", priorityConfig.pulseColor)} />
+          <div className={cn("w-1.5 h-1.5 rounded-full", priorityConfig.color)} />
           <span className="text-white text-xs">Prioridade {priorityConfig.label}</span>
         </div>
       </CardHeader>
 
-      <CardContent className="space-y-4 relative">
-        {/* Enhanced Problem Description */}
-        <div className="p-3 bg-gradient-to-r from-orange-500/10 to-red-500/10 rounded-lg border border-orange-500/20 backdrop-blur-sm">
+      <CardContent className="space-y-3 relative">
+        {/* Problem Description */}
+        <div className="p-3 bg-gradient-to-r from-orange-500/10 to-red-500/10 rounded-lg border border-orange-500/20">
           <div className="flex items-start gap-2">
             <AlertTriangle className="w-4 h-4 text-orange-400 mt-0.5 flex-shrink-0" />
             <p className="text-sm text-gray-200 leading-relaxed">{maintenance.problema}</p>
           </div>
         </div>
 
-        {/* Enhanced Details Grid */}
-        <div className="grid grid-cols-2 gap-3">
-          <div className="p-3 bg-white/5 rounded-lg border border-white/10 backdrop-blur-sm hover:bg-white/10 transition-colors">
+        {/* Compact Details Grid */}
+        <div className="grid grid-cols-2 gap-2">
+          <div className="p-2 bg-white/5 rounded-lg border border-white/10">
             <div className="flex items-center gap-1.5 text-gray-400 mb-1">
               <Truck className="w-3 h-3" />
-              <span className="text-xs uppercase tracking-wide font-medium">Equipamento</span>
+              <span className="text-xs uppercase tracking-wide">Empilhadeira</span>
             </div>
-            <p className="text-sm font-bold text-white truncate">{maintenance.empilhadeiraId || maintenance.forkliftId}</p>
-            <p className="text-xs text-gray-400">{maintenance.forkliftModel || maintenance.empilhadeira?.modelo}</p>
+            <p className="text-sm font-bold text-white">{maintenance.empilhadeiraId || maintenance.forkliftId}</p>
           </div>
           
-          <div className="p-3 bg-white/5 rounded-lg border border-white/10 backdrop-blur-sm hover:bg-white/10 transition-colors">
+          <div className="p-2 bg-white/5 rounded-lg border border-white/10">
             <div className="flex items-center gap-1.5 text-gray-400 mb-1">
               <User className="w-3 h-3" />
-              <span className="text-xs uppercase tracking-wide font-medium">Responsável</span>
+              <span className="text-xs uppercase tracking-wide">Responsável</span>
             </div>
             <p className="text-sm font-bold text-white">{maintenance.reportedBy || 'Sistema'}</p>
           </div>
           
-          <div className="p-3 bg-white/5 rounded-lg border border-white/10 backdrop-blur-sm hover:bg-white/10 transition-colors">
+          <div className="p-2 bg-white/5 rounded-lg border border-white/10">
             <div className="flex items-center gap-1.5 text-gray-400 mb-1">
               <Calendar className="w-3 h-3" />
-              <span className="text-xs uppercase tracking-wide font-medium">Abertura</span>
+              <span className="text-xs uppercase tracking-wide">Abertura</span>
             </div>
             <p className="text-sm font-bold text-white">{formatDate(maintenance.dataAbertura || maintenance.reportedDate || '')}</p>
-            {isOverdue && (
-              <p className="text-xs text-red-400">{Math.abs(daysUntilDue)} dias atrasado</p>
-            )}
           </div>
           
-          <div className="p-3 bg-white/5 rounded-lg border border-white/10 backdrop-blur-sm hover:bg-white/10 transition-colors">
+          <div className="p-2 bg-white/5 rounded-lg border border-white/10">
             <div className="flex items-center gap-1.5 text-gray-400 mb-1">
               <DollarSign className="w-3 h-3" />
-              <span className="text-xs uppercase tracking-wide font-medium">Custo</span>
+              <span className="text-xs uppercase tracking-wide">Custo</span>
             </div>
             <p className="text-sm font-bold text-white">
-              {maintenance.custos?.total ? formatCurrency(maintenance.custos.total) : 'R$ 0,00'}
+              {maintenance.custos?.total ? 
+                new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(maintenance.custos.total) : 
+                'R$ 0,00'
+              }
             </p>
           </div>
         </div>
 
-        {/* Enhanced Progress Bar for In-Progress Items */}
+        {/* Progress Bar for In-Progress Items */}
         {maintenance.status === StatusManutencao.EM_ANDAMENTO && (
-          <div className="space-y-3 p-4 bg-gradient-to-r from-blue-500/10 to-purple-500/10 rounded-lg border border-blue-500/20 backdrop-blur-sm">
+          <div className="space-y-2 p-3 bg-gradient-to-r from-blue-500/10 to-purple-500/10 rounded-lg border border-blue-500/20">
             <div className="flex justify-between items-center">
               <span className="text-xs font-medium text-gray-300">Progresso estimado</span>
               <span className="text-xs font-bold text-blue-400">65%</span>
             </div>
             <div className="relative">
-              <div className="w-full bg-gray-700 rounded-full h-2">
+              <div className="w-full bg-gray-700 rounded-full h-1.5">
                 <div 
-                  className="bg-gradient-to-r from-blue-500 to-purple-600 h-2 rounded-full transition-all duration-700 ease-out relative overflow-hidden"
+                  className="bg-gradient-to-r from-blue-500 to-purple-600 h-1.5 rounded-full transition-all duration-700 ease-out"
                   style={{ width: '65%' }}
-                >
-                  <div className="absolute inset-0 bg-white/20 animate-pulse" />
-                </div>
+                />
               </div>
-            </div>
-            <div className="flex items-center gap-2 text-xs text-blue-300">
-              <Timer className="w-3 h-3" />
-              <span>Tempo estimado restante: 2-3 horas</span>
             </div>
           </div>
         )}
 
-        {/* Enhanced Action Button */}
+        {/* Action Button */}
         <Button 
           onClick={handleEdit}
-          className="w-full bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white font-medium py-3 rounded-lg transition-all duration-300 group text-sm shadow-lg hover:shadow-xl"
+          className="w-full bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white font-medium py-2 rounded-lg transition-all duration-300 group text-sm"
         >
-          <span>Ver Detalhes Completos</span>
+          <span>Ver Detalhes</span>
           <ArrowRight className="w-3 h-3 ml-2 transition-transform group-hover:translate-x-1" />
         </Button>
       </CardContent>
-
-      {/* Hover effect overlay */}
-      <div className="absolute inset-0 bg-white/2 opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none" />
     </Card>
   );
 };
