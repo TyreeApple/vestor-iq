@@ -18,25 +18,25 @@ const ForkliftCard: React.FC<ForkliftCardProps> = ({ forklift, onClick, onDelete
     switch (status) {
       case StatusEmpilhadeira.OPERACIONAL:
         return (
-          <Badge className="bg-gradient-to-r from-emerald-500 to-emerald-600 hover:from-emerald-600 hover:to-emerald-700 text-white border-0 font-semibold tracking-wide shadow-lg shadow-emerald-500/25 text-xs px-2 py-1 whitespace-nowrap shrink-0">
+          <Badge className="bg-gradient-to-r from-emerald-500 to-emerald-600 hover:from-emerald-600 hover:to-emerald-700 text-white border-0 font-semibold tracking-wide shadow-lg shadow-emerald-500/25 text-xs px-3 py-1.5 whitespace-nowrap shrink-0">
             ✓ OK
           </Badge>
         );
       case StatusEmpilhadeira.EM_MANUTENCAO:
         return (
-          <Badge className="bg-gradient-to-r from-amber-500 to-orange-600 hover:from-amber-600 hover:to-orange-700 text-white border-0 font-semibold tracking-wide shadow-lg shadow-amber-500/25 animate-pulse text-xs px-2 py-1 whitespace-nowrap shrink-0">
+          <Badge className="bg-gradient-to-r from-amber-500 to-orange-600 hover:from-amber-600 hover:to-orange-700 text-white border-0 font-semibold tracking-wide shadow-lg shadow-amber-500/25 animate-pulse text-xs px-3 py-1.5 whitespace-nowrap shrink-0">
             🔧 Manutenção
           </Badge>
         );
       case StatusEmpilhadeira.PARADA:
         return (
-          <Badge className="bg-gradient-to-r from-red-500 to-red-600 hover:from-red-600 hover:to-red-700 text-white border-0 font-semibold tracking-wide shadow-lg shadow-red-500/25 text-xs px-2 py-1 whitespace-nowrap shrink-0">
+          <Badge className="bg-gradient-to-r from-red-500 to-red-600 hover:from-red-600 hover:to-red-700 text-white border-0 font-semibold tracking-wide shadow-lg shadow-red-500/25 text-xs px-3 py-1.5 whitespace-nowrap shrink-0">
             ⚠ Parada
           </Badge>
         );
       default:
         return (
-          <Badge className="bg-gradient-to-r from-slate-500 to-slate-600 text-white border-0 font-semibold tracking-wide text-xs px-2 py-1 whitespace-nowrap shrink-0">
+          <Badge className="bg-gradient-to-r from-slate-500 to-slate-600 text-white border-0 font-semibold tracking-wide text-xs px-3 py-1.5 whitespace-nowrap shrink-0">
             {status}
           </Badge>
         );
@@ -105,27 +105,28 @@ const ForkliftCard: React.FC<ForkliftCardProps> = ({ forklift, onClick, onDelete
         </div>
       </div>
 
-      {/* Type Badge */}
-      <div className="mb-2">
-        <Badge variant="outline" className={cn("border font-semibold text-xs tracking-wider whitespace-nowrap shrink-0", getTypeBadge(forklift.tipo))}>
-          {forklift.tipo}
-        </Badge>
-      </div>
+      {/* Capacity Section with Floating Badges - Following the image design */}
+      <div className="relative bg-gradient-to-br from-slate-800/40 to-slate-900/80 rounded-2xl p-6 mb-3 border border-slate-700/30">
+        {/* Type Badge - Positioned top-left */}
+        <div className="absolute -top-3 left-4 z-10">
+          <Badge variant="outline" className={cn("border font-semibold text-xs tracking-wider whitespace-nowrap shrink-0 px-4 py-1.5 rounded-full", getTypeBadge(forklift.tipo))}>
+            {forklift.tipo}
+          </Badge>
+        </div>
 
-      {/* Status Badge - positioned right after type badge like in the image */}
-      <div className="mb-3">
-        {getStatusBadge(forklift.status)}
-      </div>
+        {/* Status Badge - Positioned top-right */}
+        <div className="absolute -top-3 right-4 z-10">
+          {getStatusBadge(forklift.status)}
+        </div>
 
-      {/* Capacity - Simplified section */}
-      <div className="bg-slate-800/40 rounded-lg p-2.5 mb-3 border border-slate-700/30">
-        <div className="text-center">
-          <div className="text-slate-400 text-xs font-medium tracking-wider uppercase mb-0.5" style={{ color: '#64748b', letterSpacing: '0.5px' }}>
+        {/* Capacity Content - Centered with top padding */}
+        <div className="text-center pt-2">
+          <div className="text-slate-400 text-xs font-bold tracking-[2px] uppercase mb-3" style={{ color: '#6b7280' }}>
             CAPACIDADE
           </div>
-          <div className="text-lg font-extrabold tracking-tight" style={{ color: '#3b82f6' }}>
+          <div className="text-4xl font-black tracking-tight" style={{ color: '#3b82f6' }}>
             {forklift.capacidade.toLocaleString()}
-            <span className="text-sm font-semibold text-slate-300 ml-1">kg</span>
+            <span className="text-lg font-semibold text-slate-300 ml-2">kg</span>
           </div>
         </div>
       </div>
