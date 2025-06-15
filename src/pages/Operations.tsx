@@ -317,7 +317,7 @@ const OperationsPage = () => {
       case TipoOperacao.DESCARGA:
         return { label: 'Descarga', color: 'text-orange-400' };
       case TipoOperacao.ESTOQUE:
-        return { label: 'Estoque', color: 'text-purple-400' };
+        return { label: 'Estoque', color: 'text-cyan-400' };
       case TipoOperacao.PICKING:
         return { label: 'Picking', color: 'text-yellow-400' };
       default:
@@ -462,20 +462,20 @@ const OperationsPage = () => {
                   
                   <CardHeader className="pb-3">
                     <div className="flex justify-between items-start">
-                      <div className="flex items-center gap-2">
+                      <div className="flex items-center gap-3">
                         <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse" />
                         <div>
-                          <h3 className="font-semibold text-foreground text-sm">{operation.operador?.nome}</h3>
-                          <p className="text-xs text-muted-foreground">#{operation.id}</p>
+                          <h3 className="font-semibold text-foreground text-base">{operation.operador?.nome}</h3>
+                          <p className="text-sm text-muted-foreground">#{operation.id}</p>
                         </div>
                       </div>
                       
-                      <div className="flex flex-col items-end gap-1">
-                        <span className="inline-flex items-center px-2 py-0.5 rounded-md text-xs font-medium bg-green-500/20 text-green-400 border border-green-500/30">
+                      <div className="flex flex-col items-end gap-2">
+                        <span className="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-green-500/20 text-green-400 border border-green-500/30">
                           Em Andamento
                         </span>
                         <span className={cn(
-                          "inline-flex items-center px-1.5 py-0.5 rounded text-xs font-medium border",
+                          "inline-flex items-center px-2 py-1 rounded-full text-xs font-medium border",
                           priorityInfo.bgColor, priorityInfo.color, priorityInfo.borderColor
                         )}>
                           {operation.prioridade}
@@ -484,54 +484,54 @@ const OperationsPage = () => {
                     </div>
                   </CardHeader>
                   
-                  <CardContent className="pt-0 space-y-3">
+                  <CardContent className="pt-0 space-y-4">
                     {/* Type and Progress */}
                     <div>
                       <div className="flex justify-between items-center mb-2">
-                        <span className={cn("text-xs font-medium", typeInfo.color)}>
+                        <span className={cn("text-sm font-medium", typeInfo.color)}>
                           {typeInfo.label}
                         </span>
-                        <span className="text-xs text-muted-foreground">{Math.round(progress)}%</span>
+                        <span className="text-sm text-muted-foreground">{Math.round(progress)}%</span>
                       </div>
-                      <div className="w-full bg-secondary/50 rounded-full h-1.5">
+                      <div className="w-full bg-secondary/50 rounded-full h-2">
                         <div 
-                          className="bg-gradient-to-r from-green-500 to-emerald-500 h-1.5 rounded-full transition-all duration-500"
+                          className="bg-gradient-to-r from-green-500 to-emerald-500 h-2 rounded-full transition-all duration-500"
                           style={{ width: `${progress}%` }}
                         />
                       </div>
                     </div>
                     
                     {/* Details Grid */}
-                    <div className="grid grid-cols-2 gap-2 text-xs">
-                      <div className="flex items-center gap-1 p-2 bg-accent/30 rounded">
-                        <Truck className="w-3 h-3 text-muted-foreground" />
+                    <div className="grid grid-cols-2 gap-3 text-sm">
+                      <div className="flex items-center gap-2 p-2 bg-background/50 rounded-md border border-border/30">
+                        <Truck className="w-4 h-4 text-blue-500" />
                         <span className="text-foreground truncate">{operation.empilhadeira?.modelo}</span>
                       </div>
                       
-                      <div className="flex items-center gap-1 p-2 bg-accent/30 rounded">
-                        <MapPin className="w-3 h-3 text-muted-foreground" />
+                      <div className="flex items-center gap-2 p-2 bg-background/50 rounded-md border border-border/30">
+                        <MapPin className="w-4 h-4 text-orange-500" />
                         <span className="text-foreground truncate">{operation.setor}</span>
                       </div>
                       
-                      <div className="flex items-center gap-1 p-2 bg-accent/30 rounded">
-                        <Clock className="w-3 h-3 text-muted-foreground" />
+                      <div className="flex items-center gap-2 p-2 bg-background/50 rounded-md border border-border/30">
+                        <Clock className="w-4 h-4 text-cyan-500" />
                         <span className="text-foreground">{formatTime(operation.dataInicio)}</span>
                       </div>
                       
                       {operation.consumoGas && (
-                        <div className="flex items-center gap-1 p-2 bg-accent/30 rounded">
-                          <Fuel className="w-3 h-3 text-orange-400" />
+                        <div className="flex items-center gap-2 p-2 bg-background/50 rounded-md border border-border/30">
+                          <Fuel className="w-4 h-4 text-red-500" />
                           <span className="text-foreground">{operation.consumoGas}L</span>
                         </div>
                       )}
                     </div>
                     
                     {/* Actions */}
-                    <div className="flex justify-end gap-2 pt-2 border-t border-border/50">
+                    <div className="flex justify-end gap-2 pt-3 border-t border-border/30">
                       <Button 
                         variant="ghost" 
                         size="sm"
-                        className="h-7 px-3 text-xs hover:bg-accent/50"
+                        className="h-8 px-3 text-xs hover:bg-accent/50"
                         onClick={() => handleViewDetails(operation)}
                       >
                         Detalhes
@@ -539,7 +539,7 @@ const OperationsPage = () => {
                       <Button 
                         variant="ghost" 
                         size="sm"
-                        className="h-7 px-3 text-xs text-primary hover:text-primary/80 hover:bg-primary/10"
+                        className="h-8 px-3 text-xs text-primary hover:text-primary/80 hover:bg-primary/10"
                         onClick={() => handleEdit(operation)}
                       >
                         Editar
@@ -578,7 +578,7 @@ const OperationsPage = () => {
         <Card className="glass-card overflow-hidden">
           <div className="overflow-x-auto">
             <table className="w-full">
-              <thead className="bg-accent/30">
+              <thead className="bg-secondary/50">
                 <tr>
                   <th className="p-4 text-left font-semibold text-foreground">ID</th>
                   <th className="p-4 text-left font-semibold text-foreground">Tipo</th>
