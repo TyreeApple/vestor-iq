@@ -1,14 +1,10 @@
+
 import React, { useState } from 'react';
 import { Button } from "@/components/ui/button";
 import { useIsMobile } from '@/hooks/use-mobile';
-import { cn } from '@/lib/utils';
-import { Input } from '@/components/ui/input';
-import { Calendar, Plus, Search, Filter, Grid, List, Download, FileText } from 'lucide-react';
 import { OrdemServico, StatusManutencao, TipoManutencao, PrioridadeOperacao } from '@/types';
 import MaintenanceDialog from '@/components/maintenance/MaintenanceDialog';
 import MaintenanceKpiCards from '@/components/maintenance/MaintenanceKpiCards';
-import PendingMaintenanceCard from '@/components/maintenance/PendingMaintenanceCard';
-import MaintenanceHistoryTable from '@/components/maintenance/MaintenanceHistoryTable';
 import MaintenanceHistorySection from '@/components/maintenance/MaintenanceHistorySection';
 import { useToast } from '@/hooks/use-toast';
 import AdvancedFilters from '@/components/common/AdvancedFilters';
@@ -18,37 +14,28 @@ import MaintenanceHeader from '@/components/maintenance/MaintenanceHeader';
 import MaintenanceFilterBar from '@/components/maintenance/MaintenanceFilterBar';
 import MaintenancePendingSection from '@/components/maintenance/MaintenancePendingSection';
 
-// Mock data for available forklifts and operators
-const availableForklifts = [
-  { id: 'G001', model: 'Toyota 8FGU25' },
-  { id: 'G004', model: 'Yale GLP050' },
-  { id: 'E002', model: 'Hyster E50XN' },
-  { id: 'R003', model: 'Crown RR5725' },
-  { id: 'E005', model: 'Toyota 8FBMT30' }
-];
-
-const availableOperators = [
-  { id: 'OP001', name: 'Carlos Silva' },
-  { id: 'OP002', name: 'Maria Oliveira' },
-  { id: 'OP003', name: 'João Pereira' },
-  { id: 'OP004', name: 'Ana Costa' },
-  { id: 'SV001', name: 'Pedro Santos' }
-];
-
 const MaintenancePage = () => {
   const isMobile = useIsMobile();
   const { toast } = useToast();
-  // MUDANÇA PRINCIPAL: Usando Zustand como fonte de dados para manutenção
+  
+  // Zustand store usage
   const maintenanceItems = useAppStore((state) => state.ordemServicos);
+  const operators = useAppStore((state) => state.operadores);
+  const forklifts = useAppStore((state) => state.empilhadeiras);
   const addOrdemServico = useAppStore((state) => state.addOrdemServico);
   const updateOrdemServico = useAppStore((state) => state.updateOrdemServico);
   const deleteOrdemServico = useAppStore((state) => state.deleteOrdemServico);
 
   const [viewMode, setViewMode] = useState<'grid' | 'list'>('grid');
+  
   // Dialog states
   const [addDialogOpen, setAddDialogOpen] = useState(false);
   const [editDialogOpen, setEditDialogOpen] = useState(false);
   const [selectedMaintenance, setSelectedMaintenance] = useState<OrdemServico | null>(null);
+  
+  // Available options from store data
+  const availableForklifts = forklifts.map(f => ({ id: f.id, model: f.modelo }));
+  const availableOperators = operators.map(o => ({ id: o.id, name: o.nome }));
   
   // Filter configuration
   const filterOptions = [
@@ -90,7 +77,7 @@ const MaintenancePage = () => {
     }
   ];
 
-  // Use the filters hook (filtra a partir da fonte do Zustand)
+  // Use the filters hook
   const {
     search,
     setSearch,
@@ -100,10 +87,10 @@ const MaintenancePage = () => {
     clearFilters
   } = useFilters({
     data: maintenanceItems,
-    searchFields: ['problema', 'empilhadeiraId', 'forkliftModel', 'reportedBy']
+    searchFields: ['problema', 'empilhadeiraId', 'reportedBy']
   });
 
-  // Handle add/edit maintenance usando Zustand
+  // Handle add/edit maintenance
   const handleSaveMaintenance = (maintenanceData: OrdemServico) => {
     if (editDialogOpen && selectedMaintenance) {
       updateOrdemServico(maintenanceData.id, maintenanceData);
@@ -129,7 +116,7 @@ const MaintenancePage = () => {
     setEditDialogOpen(true);
   };
 
-  // Handle delete maintenance usando Zustand
+  // Handle delete maintenance
   const handleDeleteMaintenance = (id: string) => {
     if (confirm("Tem certeza que deseja excluir este registro de manutenção?")) {
       deleteOrdemServico(id);
@@ -140,7 +127,7 @@ const MaintenancePage = () => {
     }
   };
 
-  // Handle status change (usando updateOrdemServico)
+  // Handle status change
   const handleStatusChange = (id: string, newStatus: StatusManutencao) => {
     const item = maintenanceItems.find(m => m.id === id);
     if (!item) return;
@@ -159,7 +146,7 @@ const MaintenancePage = () => {
     });
   };
 
-  // Handle report (histórico)
+  // Handle report
   const handleGenerateReport = () => {
     toast({
       title: "Relatório gerado",
@@ -167,11 +154,11 @@ const MaintenancePage = () => {
     });
   };
 
-  // Get pending and completed maintenance
+  // Get pending maintenance
   const pendingMaintenance = filteredData.filter(m => m.status !== StatusManutencao.CONCLUIDA);
 
   return (
-    <div className="p-6 space-y-6">
+    <div className="space-y-8">
       {/* Header */}
       <MaintenanceHeader
         onExport={handleExport}

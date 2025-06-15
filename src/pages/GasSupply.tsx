@@ -1,8 +1,9 @@
-import React, { useState, useEffect } from 'react';
+
+import React, { useState } from 'react';
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Calendar, Filter, Fuel, Plus, Search, Truck, User, TrendingUp, TrendingDown, Gauge, Droplets, Clock, MapPin, Wrench, Eye, Edit, Trash2, X, ChevronDown, SlidersHorizontal } from 'lucide-react';
-import { Abastecimento, StatusOperador } from '@/types';
+import { Abastecimento } from '@/types';
 import GasSupplyDialog from '@/components/gas/GasSupplyDialog';
 import { useToast } from '@/hooks/use-toast';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
@@ -10,148 +11,19 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { Badge } from '@/components/ui/badge';
 import AdvancedFilters from '@/components/common/AdvancedFilters';
 import StandardCard from '@/components/common/StandardCard';
-
-// Mock data for gas supplies - fixed to match Portuguese interface
-const initialGasSupplies: Abastecimento[] = [
-  {
-    id: 'GS001',
-    empilhadeiraId: 'G001',
-    empilhadeira: {
-      id: 'G001',
-      modelo: 'Toyota 8FGU25',
-      marca: 'Toyota',
-      tipo: 'Gás' as any,
-      status: 'Operacional' as any,
-      capacidade: 2500,
-      anoFabricacao: 2022,
-      dataAquisicao: '10/05/2022',
-      numeroSerie: 'TOY001',
-      horimetro: 12583,
-      ultimaManutencao: '15/09/2023',
-      proximaManutencao: '15/12/2023',
-      localizacaoAtual: 'Setor A',
-      setor: 'Armazém',
-      custoHora: 45.50,
-      eficiencia: 87.5,
-      disponibilidade: 92.3,
-      qrCode: 'QR001'
-    },
-    operadorId: 'OP001',
-    operador: {
-      id: 'OP001',
-      nome: 'Carlos Silva',
-      cpf: '123.456.789-00',
-      email: 'carlos@example.com',
-      telefone: '(11) 99999-9999',
-      funcao: 'Operador' as any,
-      dataAdmissao: '01/01/2020',
-      turno: 'Matutino',
-      setor: 'Armazém',
-      certificacoes: [],
-      avaliacoes: [],
-      horasTrabalhadas: 2000,
-      produtividade: 85,
-      status: StatusOperador.ATIVO
-    },
-    dataAbastecimento: '2023-11-20',
-    horimetroInicial: 12500,
-    horimetroFinal: 12583,
-    quantidadeLitros: 30.5,
-    custoTotal: 150.50,
-    precoLitro: 4.93,
-    fornecedor: 'Petrobras',
-    localAbastecimento: 'Posto interno',
-    eficiencia: 0.37,
-    // Legacy properties for compatibility
-    date: '2023-11-20',
-    forkliftId: 'G001',
-    forkliftModel: 'Toyota 8FGU25',
-    quantity: 30.5,
-    hourMeterBefore: 12500,
-    hourMeterAfter: 12583,
-    operator: 'Carlos Silva'
-  },
-  {
-    id: 'GS002',
-    empilhadeiraId: 'G004',
-    empilhadeira: {
-      id: 'G004',
-      modelo: 'Yale GLP050',
-      marca: 'Yale',
-      tipo: 'Gás' as any,
-      status: 'Operacional' as any,
-      capacidade: 2200,
-      anoFabricacao: 2021,
-      dataAquisicao: '15/08/2021',
-      numeroSerie: 'YAL004',
-      horimetro: 6782,
-      ultimaManutencao: '10/10/2023',
-      proximaManutencao: '10/01/2024',
-      localizacaoAtual: 'Setor B',
-      setor: 'Produção',
-      custoHora: 42.00,
-      eficiencia: 88.1,
-      disponibilidade: 91.5,
-      qrCode: 'QR004'
-    },
-    operadorId: 'OP003',
-    operador: {
-      id: 'OP003',
-      nome: 'João Pereira',
-      cpf: '321.654.987-00',
-      email: 'joao@example.com',
-      telefone: '(11) 88888-8888',
-      funcao: 'Operador' as any,
-      dataAdmissao: '15/03/2021',
-      turno: 'Noturno',
-      setor: 'Produção',
-      certificacoes: [],
-      avaliacoes: [],
-      horasTrabalhadas: 1800,
-      produtividade: 82,
-      status: StatusOperador.ATIVO
-    },
-    dataAbastecimento: '2023-11-18',
-    horimetroInicial: 6700,
-    horimetroFinal: 6782,
-    quantidadeLitros: 25.2,
-    custoTotal: 124.24,
-    precoLitro: 4.93,
-    fornecedor: 'Shell',
-    localAbastecimento: 'Posto externo',
-    eficiencia: 0.31,
-    // Legacy properties for compatibility
-    date: '2023-11-18',
-    forkliftId: 'G004',
-    forkliftModel: 'Yale GLP050',
-    quantity: 25.2,
-    hourMeterBefore: 6700,
-    hourMeterAfter: 6782,
-    operator: 'João Pereira'
-  }
-];
-
-// Mock data for available forklifts and operators
-const availableForklifts = [
-  { id: 'G001', model: 'Toyota 8FGU25' },
-  { id: 'G004', model: 'Yale GLP050' },
-  { id: 'E002', model: 'Hyster E50XN' },
-  { id: 'G006', model: 'Caterpillar DP40' }
-];
-
-const availableOperators = [
-  { id: 'OP001', name: 'Carlos Silva' },
-  { id: 'OP002', name: 'Maria Oliveira' },
-  { id: 'OP003', name: 'João Pereira' },
-  { id: 'OP004', name: 'Ana Costa' },
-  { id: 'SV001', name: 'Pedro Santos' }
-];
+import { useFilters } from '@/hooks/use-filters';
+import { useAppStore } from '@/stores/useAppStore';
 
 const GasSupplyPage = () => {
   const { toast } = useToast();
-  const [search, setSearch] = useState('');
-  const [gasSupplies, setGasSupplies] = useState<Abastecimento[]>(initialGasSupplies);
-  const [filters, setFilters] = useState<Record<string, any>>({});
+  
+  // Zustand store usage
+  const gasSupplies = useAppStore((state) => state.abastecimentos);
+  const operators = useAppStore((state) => state.operadores);
+  const forklifts = useAppStore((state) => state.empilhadeiras);
+  const addAbastecimento = useAppStore((state) => state.addAbastecimento);
+  const updateAbastecimento = useAppStore((state) => state.updateAbastecimento);
+  const deleteAbastecimento = useAppStore((state) => state.deleteAbastecimento);
 
   // Quick filter states
   const [quickOperator, setQuickOperator] = useState('');
@@ -163,9 +35,13 @@ const GasSupplyPage = () => {
   const [editDialogOpen, setEditDialogOpen] = useState(false);
   const [selectedGasSupply, setSelectedGasSupply] = useState<Abastecimento | null>(null);
 
+  // Available options from store data
+  const availableForklifts = forklifts.map(f => ({ id: f.id, model: f.modelo }));
+  const availableOperators = operators.map(o => ({ id: o.id, name: o.nome }));
+
   // Get unique values for filter options
-  const forklifts = [...new Set(gasSupplies.map(supply => supply.empilhadeiraId || supply.forkliftId))];
-  const operators = [...new Set(gasSupplies.map(supply => supply.operador?.nome || supply.operator))];
+  const operatorNames = [...new Set(gasSupplies.map(supply => supply.operador?.nome).filter(Boolean))];
+  const forkliftIds = [...new Set(gasSupplies.map(supply => supply.empilhadeiraId))];
   const suppliers = [...new Set(gasSupplies.map(supply => supply.fornecedor).filter(Boolean))];
   const locations = [...new Set(gasSupplies.map(supply => supply.localAbastecimento).filter(Boolean))];
 
@@ -175,13 +51,13 @@ const GasSupplyPage = () => {
       key: 'empilhadeiraId',
       label: 'Empilhadeira',
       type: 'select' as const,
-      options: forklifts.map(id => ({ value: id, label: id }))
+      options: forkliftIds.map(id => ({ value: id, label: id }))
     },
     {
       key: 'operadorNome',
       label: 'Operador',
       type: 'select' as const,
-      options: operators.map(name => ({ value: name, label: name }))
+      options: operatorNames.map(name => ({ value: name, label: name }))
     },
     {
       key: 'fornecedor',
@@ -214,74 +90,34 @@ const GasSupplyPage = () => {
       key: 'quantidadeMaxima',
       label: 'Quantidade Máxima (L)',
       type: 'number' as const
-    },
-    {
-      key: 'custoMinimo',
-      label: 'Custo Mínimo (R$)',
-      type: 'number' as const
-    },
-    {
-      key: 'custoMaximo',
-      label: 'Custo Máximo (R$)',
-      type: 'number' as const
     }
   ];
 
-  // Filter gas supplies based on search, quick filters and advanced filters
-  const filteredGasSupplies = gasSupplies.filter(supply => {
-    // Search filter
-    const matchesSearch = search === '' || 
-      (supply.empilhadeira?.modelo || supply.forkliftModel || '').toLowerCase().includes(search.toLowerCase()) || 
-      (supply.operador?.nome || supply.operator || '').toLowerCase().includes(search.toLowerCase()) ||
-      supply.id.toLowerCase().includes(search.toLowerCase()) ||
-      (supply.fornecedor || '').toLowerCase().includes(search.toLowerCase()) ||
-      (supply.dataAbastecimento || supply.date || '').toLowerCase().includes(search.toLowerCase());
-    
-    // Quick filters
+  // Use filters hook
+  const {
+    search,
+    setSearch,
+    filters,
+    setFilters,
+    filteredData: filteredGasSupplies,
+    clearFilters
+  } = useFilters({
+    data: gasSupplies,
+    searchFields: ['empilhadeiraId', 'fornecedor', 'localAbastecimento']
+  });
+
+  // Apply additional quick filters
+  const finalFilteredSupplies = filteredGasSupplies.filter(supply => {
     const matchesQuickOperator = quickOperator === '' || quickOperator === 'all' || 
-      (supply.operador?.nome || supply.operator) === quickOperator;
+      supply.operador?.nome === quickOperator;
     
     const matchesQuickForklift = quickForklift === '' || quickForklift === 'all' || 
-      (supply.empilhadeiraId || supply.forkliftId) === quickForklift;
+      supply.empilhadeiraId === quickForklift;
     
     const matchesQuickLocation = quickLocation === '' || quickLocation === 'all' || 
       supply.localAbastecimento === quickLocation;
     
-    // Advanced filters
-    const matchesFilters = Object.entries(filters).every(([key, value]) => {
-      if (!value || value === '' || value === 'all') return true;
-      
-      switch (key) {
-        case 'empilhadeiraId':
-          return supply.empilhadeiraId === value || supply.forkliftId === value;
-        case 'operadorNome':
-          return supply.operador?.nome === value || supply.operator === value;
-        case 'fornecedor':
-          return supply.fornecedor === value;
-        case 'localAbastecimento':
-          return supply.localAbastecimento === value;
-        case 'dataInicial':
-          const supplyDate = supply.dataAbastecimento || supply.date || '';
-          return supplyDate >= value;
-        case 'dataFinal':
-          const supplyDate2 = supply.dataAbastecimento || supply.date || '';
-          return supplyDate2 <= value;
-        case 'quantidadeMinima':
-          const quantity = supply.quantidadeLitros || supply.quantity || 0;
-          return quantity >= parseFloat(value);
-        case 'quantidadeMaxima':
-          const quantity2 = supply.quantidadeLitros || supply.quantity || 0;
-          return quantity2 <= parseFloat(value);
-        case 'custoMinimo':
-          return (supply.custoTotal || 0) >= parseFloat(value);
-        case 'custoMaximo':
-          return (supply.custoTotal || 0) <= parseFloat(value);
-        default:
-          return true;
-      }
-    });
-
-    return matchesSearch && matchesQuickOperator && matchesQuickForklift && matchesQuickLocation && matchesFilters;
+    return matchesQuickOperator && matchesQuickForklift && matchesQuickLocation;
   });
 
   // Clear all filters
@@ -303,47 +139,55 @@ const GasSupplyPage = () => {
 
   // Format date
   const formatDate = (dateString: string) => {
-    const dateParts = dateString.split('-');
-    return `${dateParts[2]}/${dateParts[1]}/${dateParts[0]}`;
+    const date = new Date(dateString);
+    return date.toLocaleDateString('pt-BR', {
+      day: '2-digit',
+      month: '2-digit',
+      year: 'numeric'
+    });
   };
   
   // Calculate KPIs
-  const hasRealData = filteredGasSupplies.length > 0;
+  const hasRealData = finalFilteredSupplies.length > 0;
   const totalConsumption = hasRealData
-    ? filteredGasSupplies.reduce((sum, supply) => sum + (supply.quantidadeLitros || supply.quantity || 0), 0)
+    ? finalFilteredSupplies.reduce((sum, supply) => sum + supply.quantidadeLitros, 0)
     : 0;
   const totalCost = hasRealData
-    ? filteredGasSupplies.reduce((sum, supply) => sum + (supply.custoTotal || 0), 0)
+    ? finalFilteredSupplies.reduce((sum, supply) => sum + supply.custoTotal, 0)
     : 0;
   const averageEfficiency = hasRealData
-    ? filteredGasSupplies.reduce((sum, supply) => sum + (supply.eficiencia || 0), 0) / filteredGasSupplies.length
+    ? finalFilteredSupplies.reduce((sum, supply) => sum + (supply.eficiencia || 0), 0) / finalFilteredSupplies.length
     : 0;
 
   const calculateEfficiency = (supply: Abastecimento) => {
-    const initialHour = supply.horimetroInicial || supply.hourMeterBefore || 0;
-    const finalHour = supply.horimetroFinal || supply.hourMeterAfter || 0;
-    const quantity = supply.quantidadeLitros || supply.quantity || 0;
-    const hours = finalHour - initialHour;
-    return hours > 0 ? quantity / hours : 0;
+    const hours = supply.horimetroFinal - supply.horimetroInicial;
+    return hours > 0 ? supply.quantidadeLitros / hours : 0;
   };
 
   // Handle add/edit gas supply
   const handleSaveGasSupply = (supplyData: Abastecimento) => {
-    if (editDialogOpen) {
-      // Update existing supply
-      setGasSupplies(prev => 
-        prev.map(s => s.id === supplyData.id ? supplyData : s)
-      );
+    if (editDialogOpen && selectedGasSupply) {
+      updateAbastecimento(supplyData.id, supplyData);
+      toast({
+        title: "Abastecimento atualizado",
+        description: "O abastecimento foi atualizado com sucesso."
+      });
     } else {
-      // Add new supply
-      setGasSupplies(prev => [...prev, supplyData]);
+      addAbastecimento(supplyData);
+      toast({
+        title: "Abastecimento criado",
+        description: "Novo abastecimento registrado com sucesso."
+      });
     }
+    setAddDialogOpen(false);
+    setEditDialogOpen(false);
+    setSelectedGasSupply(null);
   };
 
   // Handle delete gas supply
   const handleDeleteGasSupply = (id: string) => {
     if (confirm("Tem certeza que deseja excluir este abastecimento?")) {
-      setGasSupplies(prev => prev.filter(s => s.id !== id));
+      deleteAbastecimento(id);
       toast({
         title: "Abastecimento excluído",
         description: "O abastecimento foi excluído com sucesso."
@@ -352,7 +196,7 @@ const GasSupplyPage = () => {
   };
 
   return (
-    <div className="p-6 space-y-8 bg-gradient-to-br from-slate-50 to-slate-100 dark:from-slate-900 dark:to-slate-800 min-h-screen">
+    <div className="space-y-8">
       {/* Header Section */}
       <div className="flex flex-col lg:flex-row justify-between items-start lg:items-center gap-6">
         <div className="space-y-2">
@@ -378,11 +222,11 @@ const GasSupplyPage = () => {
         </div>
       </div>
 
-      {/* KPI Cards using StandardCard */}
+      {/* KPI Cards */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
         <StandardCard
           title="Total de Abastecimentos"
-          value={hasRealData ? filteredGasSupplies.length : 0}
+          value={hasRealData ? finalFilteredSupplies.length : 0}
           icon={Truck}
           variant="info"
         />
@@ -420,7 +264,7 @@ const GasSupplyPage = () => {
                 <Search className="absolute left-4 top-1/2 transform -translate-y-1/2 text-muted-foreground w-5 h-5" />
                 <Input 
                   type="text" 
-                  placeholder="Buscar por empilhadeira, operador, ID ou fornecedor..." 
+                  placeholder="Buscar por empilhadeira, fornecedor ou local..." 
                   className="pl-12 pr-4 py-4 text-lg bg-white dark:bg-slate-900 border-2 border-slate-200 dark:border-slate-700 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 rounded-xl shadow-lg transition-all duration-200"
                   value={search}
                   onChange={(e) => setSearch(e.target.value)}
@@ -444,7 +288,7 @@ const GasSupplyPage = () => {
                 </SelectTrigger>
                 <SelectContent>
                   <SelectItem value="all">Todos Operadores</SelectItem>
-                  {operators.map(operator => (
+                  {operatorNames.map(operator => (
                     <SelectItem key={operator} value={operator}>
                       {operator}
                     </SelectItem>
@@ -459,7 +303,7 @@ const GasSupplyPage = () => {
                 </SelectTrigger>
                 <SelectContent>
                   <SelectItem value="all">Todas Empilhadeiras</SelectItem>
-                  {forklifts.map(forklift => (
+                  {forkliftIds.map(forklift => (
                     <SelectItem key={forklift} value={forklift}>
                       {forklift}
                     </SelectItem>
@@ -515,7 +359,7 @@ const GasSupplyPage = () => {
                 <div className="flex items-center gap-2">
                   <Filter className="w-4 h-4 text-blue-600" />
                   <span className="text-sm font-medium text-blue-900 dark:text-blue-100">
-                    {activeFiltersCount} filtro{activeFiltersCount > 1 ? 's' : ''} ativo{activeFiltersCount > 1 ? 's' : ''} • {filteredGasSupplies.length} resultado{filteredGasSupplies.length !== 1 ? 's' : ''} encontrado{filteredGasSupplies.length !== 1 ? 's' : ''}
+                    {activeFiltersCount} filtro{activeFiltersCount > 1 ? 's' : ''} ativo{activeFiltersCount > 1 ? 's' : ''} • {finalFilteredSupplies.length} resultado{finalFilteredSupplies.length !== 1 ? 's' : ''} encontrado{finalFilteredSupplies.length !== 1 ? 's' : ''}
                   </span>
                 </div>
               </div>
@@ -531,13 +375,13 @@ const GasSupplyPage = () => {
             Registros de Abastecimento
           </h2>
           <div className="text-sm text-muted-foreground bg-slate-100 dark:bg-slate-800 px-3 py-1 rounded-full">
-            {hasRealData ? filteredGasSupplies.length : 0} registros encontrados
+            {finalFilteredSupplies.length} registros encontrados
           </div>
         </div>
         
-        {hasRealData ? (
+        {finalFilteredSupplies.length > 0 ? (
           <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-6">
-            {filteredGasSupplies.map((supply) => (
+            {finalFilteredSupplies.map((supply) => (
               <Card key={supply.id} className="group hover:shadow-xl transition-all duration-300 transform hover:scale-[1.02] bg-gradient-to-br from-white to-slate-50 dark:from-slate-800 dark:to-slate-900 border-0 shadow-lg">
                 <CardHeader className="pb-3">
                   <div className="flex items-center justify-between">
@@ -550,7 +394,7 @@ const GasSupplyPage = () => {
                           {supply.id}
                         </CardTitle>
                         <p className="text-sm text-muted-foreground">
-                          {formatDate(supply.dataAbastecimento || supply.date || '')}
+                          {formatDate(supply.dataAbastecimento)}
                         </p>
                       </div>
                     </div>
@@ -584,10 +428,10 @@ const GasSupplyPage = () => {
                       <Truck className="w-5 h-5 text-blue-600" />
                       <div>
                         <p className="font-semibold text-slate-800 dark:text-slate-200">
-                          {supply.empilhadeira?.modelo || supply.forkliftModel}
+                          {supply.empilhadeira?.modelo || 'N/A'}
                         </p>
                         <p className="text-xs text-muted-foreground">
-                          ID: {supply.empilhadeiraId || supply.forkliftId}
+                          ID: {supply.empilhadeiraId}
                         </p>
                       </div>
                     </div>
@@ -596,7 +440,7 @@ const GasSupplyPage = () => {
                       <User className="w-5 h-5 text-green-600" />
                       <div>
                         <p className="font-semibold text-slate-800 dark:text-slate-200">
-                          {supply.operador?.nome || supply.operator}
+                          {supply.operador?.nome || 'N/A'}
                         </p>
                         <p className="text-xs text-muted-foreground">Operador</p>
                       </div>
@@ -607,7 +451,7 @@ const GasSupplyPage = () => {
                     <div className="text-center p-3 bg-gradient-to-br from-blue-50 to-blue-100 dark:from-blue-900/20 dark:to-blue-800/20 rounded-lg">
                       <Fuel className="w-5 h-5 mx-auto mb-1 text-blue-600" />
                       <p className="text-2xl font-bold text-blue-700 dark:text-blue-400">
-                        {(supply.quantidadeLitros || supply.quantity || 0).toFixed(1)}
+                        {supply.quantidadeLitros.toFixed(1)}
                       </p>
                       <p className="text-xs text-muted-foreground">Litros</p>
                     </div>
@@ -625,12 +469,12 @@ const GasSupplyPage = () => {
                     <div className="flex items-center gap-2">
                       <Clock className="w-4 h-4 text-muted-foreground" />
                       <span className="text-sm text-muted-foreground">
-                        {supply.horimetroInicial || supply.hourMeterBefore} → {supply.horimetroFinal || supply.hourMeterAfter}h
+                        {supply.horimetroInicial} → {supply.horimetroFinal}h
                       </span>
                     </div>
                     <div className="flex items-center gap-2">
                       <span className="text-sm font-semibold text-slate-800 dark:text-slate-200">
-                        R$ {supply.custoTotal?.toFixed(2) || '0.00'}
+                        R$ {supply.custoTotal.toFixed(2)}
                       </span>
                     </div>
                   </div>

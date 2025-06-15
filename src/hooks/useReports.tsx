@@ -58,7 +58,7 @@ export const useReports = () => {
       const abastecimentosEmp = abastecimentos.filter(ab => ab.empilhadeiraId === emp.id);
       
       const horasOperacao = operacoesConcluidas.reduce((sum, op) => 
-        sum + (op.duracaoReal || op.duracaoEstimada) / 60, 0
+        sum + (op.duracaoReal || op.duracaoEstimada || 0) / 60, 0
       );
       
       const eficienciaMedia = operacoesConcluidas.length > 0 
@@ -126,7 +126,7 @@ export const useReports = () => {
         : op.produtividade;
       
       const horasOperacao = operacoesConcluidas.reduce((sum, operacao) => 
-        sum + (operacao.duracaoReal || operacao.duracaoEstimada) / 60, 0
+        sum + (operacao.duracaoReal || operacao.duracaoEstimada || 0) / 60, 0
       );
 
       // Calcular eficiência baseada nas empilhadeiras que operou
@@ -189,8 +189,12 @@ export const useReports = () => {
     const totalCustoAbastecimento = abastecimentos.reduce((sum, ab) => sum + ab.custoTotal, 0);
     const totalCustoManutencao = ordemServicos.reduce((sum, os) => sum + (os.custos?.total || 0), 0);
     
-    const eficienciaGeral = empilhadeiras.reduce((sum, e) => sum + e.eficiencia, 0) / totalEmpilhadeiras;
-    const disponibilidadeGeral = (empilhadeirasOperacionais / totalEmpilhadeiras) * 100;
+    const eficienciaGeral = totalEmpilhadeiras > 0 
+      ? empilhadeiras.reduce((sum, e) => sum + e.eficiencia, 0) / totalEmpilhadeiras 
+      : 0;
+    const disponibilidadeGeral = totalEmpilhadeiras > 0 
+      ? (empilhadeirasOperacionais / totalEmpilhadeiras) * 100 
+      : 0;
 
     return {
       totalEmpilhadeiras,
