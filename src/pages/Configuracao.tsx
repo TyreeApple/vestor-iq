@@ -93,7 +93,7 @@ const bibliotecas = [
 
 const Configuracao: React.FC = () => {
   return (
-    <section className="max-w-6xl mx-auto my-10 px-1 sm:px-6 py-10 bg-card rounded-2xl border border-border shadow-lg flex flex-col gap-10 animate-fade-in">
+    <section className="max-w-[110rem] mx-auto my-10 px-2 sm:px-10 py-12 bg-card rounded-2xl border border-border shadow-lg flex flex-col gap-10 animate-fade-in">
       <div className="flex flex-col items-center gap-4 mb-5 sm:mb-8">
         <div className="flex items-center gap-3">
           <Settings className="w-8 h-8 text-primary animate-pulse-glow" />
@@ -122,4 +122,3 @@ const Configuracao: React.FC = () => {
 };
 
 export default Configuracao;
-
