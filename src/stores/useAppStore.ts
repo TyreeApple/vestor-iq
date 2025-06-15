@@ -1,3 +1,4 @@
+
 import { create } from 'zustand';
 import { devtools, persist } from 'zustand/middleware';
 import { 
@@ -75,7 +76,7 @@ interface AppState {
   generateAlerts: () => void;
 }
 
-// Dados iniciais expandidos e realísticos
+// Dados iniciais realísticos
 const empilhadeirasIniciais: Empilhadeira[] = [
   {
     id: 'EMP-001',
@@ -141,114 +142,6 @@ const empilhadeirasIniciais: Empilhadeira[] = [
     disponibilidade: 98.5,
     qrCode: 'QR003',
     observacoes: 'Nova aquisição'
-  },
-  {
-    id: 'EMP-004',
-    modelo: 'Yale GP25VX',
-    marca: 'Yale',
-    tipo: TipoEmpilhadeira.GAS,
-    status: StatusEmpilhadeira.OPERACIONAL,
-    capacidade: 2500,
-    anoFabricacao: 2020,
-    dataAquisicao: '2020-06-12',
-    numeroSerie: 'YL2020004',
-    horimetro: 3250,
-    ultimaManutencao: '2024-11-20',
-    proximaManutencao: '2025-02-20',
-    localizacaoAtual: 'Setor C - Estoque',
-    setor: 'Estoque',
-    operadorAtual: 'OP-004',
-    custoHora: 49.80,
-    eficiencia: 91.2,
-    disponibilidade: 95.8,
-    qrCode: 'QR004',
-    observacoes: 'Necessita atenção nos freios'
-  },
-  {
-    id: 'EMP-005',
-    modelo: 'Caterpillar EP16NT',
-    marca: 'Caterpillar',
-    tipo: TipoEmpilhadeira.ELETRICA,
-    status: StatusEmpilhadeira.PARADA,
-    capacidade: 1600,
-    anoFabricacao: 2019,
-    dataAquisicao: '2019-09-08',
-    numeroSerie: 'CT2019005',
-    horimetro: 4120,
-    ultimaManutencao: '2024-10-30',
-    proximaManutencao: '2024-12-25',
-    localizacaoAtual: 'Pátio Externo',
-    setor: 'Pátio',
-    custoHora: 43.20,
-    eficiencia: 0,
-    disponibilidade: 0,
-    qrCode: 'QR005',
-    observacoes: 'Aguardando peças para reparo'
-  },
-  {
-    id: 'EMP-006',
-    modelo: 'Linde H20T',
-    marca: 'Linde',
-    tipo: TipoEmpilhadeira.CONTRA_BALANCEADA,
-    status: StatusEmpilhadeira.OPERACIONAL,
-    capacidade: 2000,
-    anoFabricacao: 2023,
-    dataAquisicao: '2023-05-15',
-    numeroSerie: 'LD2023006',
-    horimetro: 650,
-    ultimaManutencao: '2024-11-10',
-    proximaManutencao: '2025-02-10',
-    localizacaoAtual: 'Setor D - Recebimento',
-    setor: 'Recebimento',
-    operadorAtual: 'OP-005',
-    custoHora: 51.40,
-    eficiencia: 98.1,
-    disponibilidade: 99.2,
-    qrCode: 'QR006',
-    observacoes: 'Equipamento novo, excelente performance'
-  },
-  {
-    id: 'EMP-007',
-    modelo: 'Still RX70-22',
-    marca: 'Still',
-    tipo: TipoEmpilhadeira.ELETRICA,
-    status: StatusEmpilhadeira.OPERACIONAL,
-    capacidade: 2200,
-    anoFabricacao: 2021,
-    dataAquisicao: '2021-11-03',
-    numeroSerie: 'ST2021007',
-    horimetro: 2890,
-    ultimaManutencao: '2024-11-05',
-    proximaManutencao: '2025-01-05',
-    localizacaoAtual: 'Setor E - Picking',
-    setor: 'Picking',
-    operadorAtual: 'OP-006',
-    custoHora: 47.90,
-    eficiencia: 93.7,
-    disponibilidade: 96.4,
-    qrCode: 'QR007',
-    observacoes: 'Ideal para operações de picking'
-  },
-  {
-    id: 'EMP-008',
-    modelo: 'Jungheinrich EFG 220',
-    marca: 'Jungheinrich',
-    tipo: TipoEmpilhadeira.GAS,
-    status: StatusEmpilhadeira.EM_REPARO,
-    capacidade: 2000,
-    anoFabricacao: 2018,
-    dataAquisicao: '2018-04-20',
-    numeroSerie: 'JH2018008',
-    horimetro: 5250,
-    ultimaManutencao: '2024-11-25',
-    proximaManutencao: '2024-12-30',
-    localizacaoAtual: 'Oficina Externa',
-    setor: 'Manutenção',
-    custoHora: 44.60,
-    eficiencia: 0,
-    disponibilidade: 0,
-    qrCode: 'QR008',
-    observacoes: 'Reparo do sistema hidráulico'
   }
 ];
 
@@ -300,86 +193,6 @@ const operadoresIniciais: Operador[] = [
     horasTrabalhadas: 2890,
     produtividade: 92.5,
     status: StatusOperador.ATIVO
-  },
-  {
-    id: 'OP-004',
-    nome: 'Ana Paula Ferreira',
-    cpf: '789.123.456-04',
-    email: 'ana.ferreira@empresa.com',
-    telefone: '(11) 99999-4321',
-    funcao: FuncaoOperador.OPERADOR,
-    dataAdmissao: '2022-01-10',
-    turno: 'Manhã (06:00-14:00)',
-    setor: 'Estoque',
-    certificacoes: [],
-    avaliacoes: [],
-    horasTrabalhadas: 2150,
-    produtividade: 89.3,
-    status: StatusOperador.ATIVO
-  },
-  {
-    id: 'OP-005',
-    nome: 'Roberto Machado Silva',
-    cpf: '321.654.987-05',
-    email: 'roberto.machado@empresa.com',
-    telefone: '(11) 99999-8765',
-    funcao: FuncaoOperador.COORDENADOR,
-    dataAdmissao: '2018-05-14',
-    turno: 'Tarde (14:00-22:00)',
-    setor: 'Recebimento',
-    certificacoes: [],
-    avaliacoes: [],
-    horasTrabalhadas: 5420,
-    produtividade: 95.7,
-    status: StatusOperador.ATIVO
-  },
-  {
-    id: 'OP-006',
-    nome: 'Fernanda Alves Pereira',
-    cpf: '654.987.321-06',
-    email: 'fernanda.alves@empresa.com',
-    telefone: '(11) 99999-2468',
-    funcao: FuncaoOperador.OPERADOR,
-    dataAdmissao: '2023-02-20',
-    turno: 'Noite (22:00-06:00)',
-    setor: 'Picking',
-    certificacoes: [],
-    avaliacoes: [],
-    horasTrabalhadas: 1320,
-    produtividade: 87.9,
-    status: StatusOperador.ATIVO
-  },
-  {
-    id: 'OP-007',
-    nome: 'Marcos Vinicius Souza',
-    cpf: '147.258.369-07',
-    email: 'marcos.souza@empresa.com',
-    telefone: '(11) 99999-1357',
-    funcao: FuncaoOperador.TECNICO,
-    dataAdmissao: '2020-09-12',
-    turno: 'Manhã (06:00-14:00)',
-    setor: 'Manutenção',
-    certificacoes: [],
-    avaliacoes: [],
-    horasTrabalhadas: 3780,
-    produtividade: 96.2,
-    status: StatusOperador.ATIVO
-  },
-  {
-    id: 'OP-008',
-    nome: 'Luciana Santos Rodrigues',
-    cpf: '258.369.147-08',
-    email: 'luciana.rodrigues@empresa.com',
-    telefone: '(11) 99999-9753',
-    funcao: FuncaoOperador.SUPERVISOR,
-    dataAdmissao: '2019-12-03',
-    turno: 'Tarde (14:00-22:00)',
-    setor: 'Expedição',
-    certificacoes: [],
-    avaliacoes: [],
-    horasTrabalhadas: 4230,
-    produtividade: 93.8,
-    status: StatusOperador.FERIAS
   }
 ];
 
@@ -421,62 +234,6 @@ const operacoesIniciais: Operacao[] = [
     observacoes: 'Descarga de mercadorias recebidas',
     consumoGas: 0,
     custoOperacional: 85.50
-  },
-  {
-    id: 'OP-2024-003',
-    empilhadeiraId: 'EMP-004',
-    empilhadeira: empilhadeirasIniciais[3],
-    operadorId: 'OP-004',
-    operador: operadoresIniciais[3],
-    tipo: TipoOperacao.MOVIMENTACAO,
-    status: StatusOperacao.EM_ANDAMENTO,
-    prioridade: PrioridadeOperacao.NORMAL,
-    setor: 'Estoque',
-    localizacao: 'Corredor 5A',
-    dataInicio: '2024-12-15T09:15:00',
-    duracaoEstimada: 180,
-    produtividade: 88.7,
-    observacoes: 'Reorganização de estoque',
-    consumoGas: 12.5,
-    custoOperacional: 149.60
-  },
-  {
-    id: 'OP-2024-004',
-    empilhadeiraId: 'EMP-006',
-    empilhadeira: empilhadeirasIniciais[5],
-    operadorId: 'OP-005',
-    operador: operadoresIniciais[4],
-    tipo: TipoOperacao.DESCARGA,
-    status: StatusOperacao.CONCLUIDA,
-    prioridade: PrioridadeOperacao.ALTA,
-    setor: 'Recebimento',
-    localizacao: 'Doca 3',
-    dataInicio: '2024-12-15T07:00:00',
-    dataFim: '2024-12-15T08:30:00',
-    duracaoEstimada: 75,
-    duracaoReal: 90,
-    produtividade: 94.1,
-    observacoes: 'Recebimento de mercadorias urgentes',
-    consumoGas: 0,
-    custoOperacional: 77.10
-  },
-  {
-    id: 'OP-2024-005',
-    empilhadeiraId: 'EMP-007',
-    empilhadeira: empilhadeirasIniciais[6],
-    operadorId: 'OP-006',
-    operador: operadoresIniciais[5],
-    tipo: TipoOperacao.PICKING,
-    status: StatusOperacao.PAUSADA,
-    prioridade: PrioridadeOperacao.NORMAL,
-    setor: 'Picking',
-    localizacao: 'Zona Pick A',
-    dataInicio: '2024-12-15T10:00:00',
-    duracaoEstimada: 240,
-    produtividade: 76.8,
-    observacoes: 'Pausada para troca de turno',
-    consumoGas: 0,
-    custoOperacional: 95.80
   }
 ];
 
@@ -513,71 +270,6 @@ const ordensServicoIniciais: OrdemServico[] = [
     ],
     anexos: [],
     observacoes: 'Manutenção conforme cronograma'
-  },
-  {
-    id: 'OS-2024-002',
-    empilhadeiraId: 'EMP-008',
-    empilhadeira: empilhadeirasIniciais[7],
-    tipo: TipoManutencao.CORRETIVA,
-    status: StatusManutencao.EM_ANDAMENTO,
-    prioridade: PrioridadeOperacao.CRITICA,
-    problema: 'Vazamento no sistema hidráulico',
-    diagnostico: 'Substituição de vedações e mangueiras hidráulicas',
-    tecnicoId: 'OP-007',
-    tecnico: operadoresIniciais[6],
-    dataAbertura: '2024-12-10',
-    dataInicio: '2024-12-11',
-    horimetroInicio: 5250,
-    custos: {
-      pecas: 890.00,
-      maoObra: 450.00,
-      terceiros: 200.00,
-      total: 1540.00
-    },
-    pecasUtilizadas: [
-      {
-        id: 'PC-002',
-        nome: 'Kit Vedações',
-        codigo: 'KV-HYD-001',
-        quantidade: 1,
-        valorUnitario: 320.00,
-        valorTotal: 320.00
-      },
-      {
-        id: 'PC-003',
-        nome: 'Mangueira Hidráulica',
-        codigo: 'MH-1/2-30',
-        quantidade: 3,
-        valorUnitario: 85.00,
-        valorTotal: 255.00
-      }
-    ],
-    anexos: [],
-    observacoes: 'Reparo urgente - equipamento fora de operação'
-  },
-  {
-    id: 'OS-2024-003',
-    empilhadeiraId: 'EMP-005',
-    empilhadeira: empilhadeirasIniciais[4],
-    tipo: TipoManutencao.CORRETIVA,
-    status: StatusManutencao.AGUARDANDO_PECAS,
-    prioridade: PrioridadeOperacao.ALTA,
-    problema: 'Falha no motor elétrico',
-    diagnostico: 'Motor elétrico queimado - necessita substituição',
-    tecnicoId: 'OP-003',
-    tecnico: operadoresIniciais[2],
-    dataAbertura: '2024-12-05',
-    dataInicio: '2024-12-06',
-    horimetroInicio: 4120,
-    custos: {
-      pecas: 2500.00,
-      maoObra: 600.00,
-      terceiros: 0,
-      total: 3100.00
-    },
-    pecasUtilizadas: [],
-    anexos: [],
-    observacoes: 'Aguardando motor de reposição - previsão 15 dias'
   }
 ];
 
@@ -598,58 +290,24 @@ const abastecimentosIniciais: Abastecimento[] = [
     localAbastecimento: 'Pátio interno',
     eficiencia: 3.03,
     observacoes: 'Abastecimento completo'
-  },
-  {
-    id: 'AB-2024-002',
-    empilhadeiraId: 'EMP-004',
-    empilhadeira: empilhadeirasIniciais[3],
-    operadorId: 'OP-004',
-    operador: operadoresIniciais[3],
-    dataAbastecimento: '2024-12-13T14:15:00',
-    horimetroInicial: 3200,
-    horimetroFinal: 3250,
-    quantidadeLitros: 38.2,
-    custoTotal: 229.20,
-    precoLitro: 6.00,
-    fornecedor: 'Ultragaz',
-    localAbastecimento: 'Pátio interno',
-    eficiencia: 3.82,
-    observacoes: 'Abastecimento parcial'
-  },
-  {
-    id: 'AB-2024-003',
-    empilhadeiraId: 'EMP-008',
-    empilhadeira: empilhadeirasIniciais[7],
-    operadorId: 'OP-007',
-    operador: operadoresIniciais[6],
-    dataAbastecimento: '2024-12-12T16:45:00',
-    horimetroInicial: 5200,
-    horimetroFinal: 5250,
-    quantidadeLitros: 42.8,
-    custoTotal: 256.80,
-    precoLitro: 6.00,
-    fornecedor: 'Supergasbras',
-    localAbastecimento: 'Posto externo',
-    eficiencia: 3.28,
-    observacoes: 'Última operação antes do reparo'
   }
 ];
 
 const initialMetricas: MetricasDashboard = {
-  frotaTotal: 8,
-  empilhadeirasOperacionais: 4,
-  empilhadeirasManutencao: 2,
-  empilhadeirasParadas: 2,
-  operadoresAtivos: 7,
-  operacoesAtivas: 2,
-  operacoesConcluidas: 2,
-  eficienciaGeral: 91.8,
-  disponibilidadeGeral: 89.2,
-  consumoGasTotal: 126.5,
-  custoOperacionalDia: 2854.70,
-  produtividadeMedia: 89.3,
+  frotaTotal: 3,
+  empilhadeirasOperacionais: 2,
+  empilhadeirasManutencao: 1,
+  empilhadeirasParadas: 0,
+  operadoresAtivos: 3,
+  operacoesAtivas: 1,
+  operacoesConcluidas: 1,
+  eficienciaGeral: 94.2,
+  disponibilidadeGeral: 98.5,
+  consumoGasTotal: 45.5,
+  custoOperacionalDia: 1024.50,
+  produtividadeMedia: 88.9,
   tempoMedioOperacao: 97.5,
-  alertasCriticos: 2
+  alertasCriticos: 1
 };
 
 export const useAppStore = create<AppState>()(

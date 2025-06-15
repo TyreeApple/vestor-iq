@@ -3,8 +3,6 @@ import React from 'react';
 import { Outlet } from 'react-router-dom';
 import Navbar from './Navbar';
 import Footer from './Footer';
-import ConnectivityStatus from '@/components/common/ConnectivityStatus';
-import DebugPanel from '@/components/common/DebugPanel';
 
 const MainLayout: React.FC = () => {
   return (
@@ -20,8 +18,6 @@ const MainLayout: React.FC = () => {
           </div>
         </main>
       </div>
-      <ConnectivityStatus />
-      <DebugPanel />
     </div>
   );
 };
