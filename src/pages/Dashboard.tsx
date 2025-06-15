@@ -132,7 +132,7 @@ const Dashboard: React.FC = () => {
                     <div className="flex-1">
                       <div className="flex items-center gap-2">
                         <p className="font-medium text-slate-900 dark:text-white">#{operacao.id}</p>
-                        <Badge variant={getStatusBadgeVariant(operacao.status)} size="sm">
+                        <Badge variant={getStatusBadgeVariant(operacao.status)}>
                           {operacao.status}
                         </Badge>
                       </div>
@@ -175,7 +175,7 @@ const Dashboard: React.FC = () => {
                     <div className="flex-1">
                       <div className="flex items-center gap-2">
                         <p className="font-medium text-red-900 dark:text-red-400">{alerta.titulo}</p>
-                        <Badge variant="destructive" size="sm">
+                        <Badge variant="destructive">
                           {alerta.nivel}
                         </Badge>
                       </div>
@@ -226,7 +226,7 @@ const Dashboard: React.FC = () => {
                     <div className="flex-1">
                       <div className="flex items-center gap-2">
                         <p className="font-medium text-purple-900 dark:text-purple-300">#{ordem.id}</p>
-                        <Badge variant="outline" size="sm" className="border-purple-300 text-purple-700">
+                        <Badge variant="outline" className="border-purple-300 text-purple-700">
                           {ordem.prioridade}
                         </Badge>
                       </div>
@@ -275,7 +275,7 @@ const Dashboard: React.FC = () => {
                     <div className="flex-1">
                       <div className="flex items-center gap-2">
                         <p className="font-medium text-amber-900 dark:text-amber-300">{emp.id}</p>
-                        <Badge variant="outline" size="sm" className="border-amber-300 text-amber-700">
+                        <Badge variant="outline" className="border-amber-300 text-amber-700">
                           {emp.status}
                         </Badge>
                       </div>
