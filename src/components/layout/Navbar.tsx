@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { NavLink } from 'react-router-dom';
-import { Search, User, Menu, X, BarChart3, Users, Activity, Wrench, Fuel, FileText, Gauge } from 'lucide-react';
+import { Search, User, Menu, X, BarChart3, Users, Activity, Wrench, Fuel, FileText, Gauge, Settings } from 'lucide-react';
 import { MdForklift } from 'react-icons/md';
 import { Button } from '@/components/ui/button';
 import ThemeToggle from '@/components/common/ThemeToggle';
@@ -10,6 +10,7 @@ import { StatusOperacao, StatusManutencao } from "@/types";
 
 const Navbar: React.FC = () => {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const [showConfigAlert, setShowConfigAlert] = useState(false);
 
   // Obter dados do Zustand
   const operacoes = useAppStore((state) => state.operacoes);
@@ -129,12 +130,20 @@ const Navbar: React.FC = () => {
         <div className="flex items-center space-x-2">
           {/* Theme Toggle */}
           <ThemeToggle />
-          
+          {/* Settings Button */}
+          <Button
+            variant="ghost"
+            size="icon"
+            className="hover:bg-accent transition-colors"
+            onClick={() => setShowConfigAlert(true)}
+            aria-label="Configurações"
+          >
+            <Settings className="w-5 h-5" />
+          </Button>
           {/* User menu */}
           <Button variant="ghost" size="icon" className="hover:bg-accent transition-colors">
             <User className="w-5 h-5" />
           </Button>
-
           {/* Mobile menu button */}
           <Button
             variant="ghost"
@@ -150,6 +159,29 @@ const Navbar: React.FC = () => {
           </Button>
         </div>
       </header>
+
+      {/* Configuração Placeholder Alert */}
+      {showConfigAlert && (
+        <div
+          className="fixed z-50 inset-0 flex items-center justify-center bg-black/40"
+          onClick={() => setShowConfigAlert(false)}
+        >
+          <div
+            className="bg-card border border-border rounded-lg p-6 shadow-xl min-w-[320px] max-w-xs flex flex-col items-center gap-4 cursor-auto"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <Settings className="w-8 h-8 text-muted-foreground" />
+            <h2 className="font-bold text-lg text-foreground">Configurações</h2>
+            <p className="text-sm text-muted-foreground text-center">
+              Módulo de configurações em desenvolvimento.<br />
+              Em breve você poderá personalizar opções da sua conta e do sistema.
+            </p>
+            <Button variant="outline" className="mt-2" onClick={() => setShowConfigAlert(false)}>
+              Fechar
+            </Button>
+          </div>
+        </div>
+      )}
 
       {/* Mobile Menu Overlay */}
       {isMobileMenuOpen && (
