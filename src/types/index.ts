@@ -34,6 +34,13 @@ export enum StatusOperacao {
   CANCELADA = "Cancelada"
 }
 
+export enum StatusOperador {
+  ATIVO = "Ativo",
+  INATIVO = "Inativo",
+  FERIAS = "Férias",
+  AFASTADO = "Afastado"
+}
+
 export enum PrioridadeOperacao {
   BAIXA = "Baixa",
   NORMAL = "Normal",
@@ -146,7 +153,7 @@ export interface Operador {
   avaliacoes: Avaliacao[];
   horasTrabalhadas: number;
   produtividade: number;
-  status: 'Ativo' | 'Inativo' | 'Férias' | 'Licença';
+  status: StatusOperador;
   observacoes?: string;
   
   // Legacy English properties for backward compatibility

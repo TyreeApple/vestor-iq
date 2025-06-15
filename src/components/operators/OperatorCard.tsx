@@ -1,18 +1,19 @@
 
 import React from 'react';
 import { cn } from '@/lib/utils';
-import { User, StatusCertificacao, FuncaoOperador } from '@/types';
+import { Operador, StatusCertificacao, FuncaoOperador } from '@/types';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { BadgeCheck, Calendar, Phone, Trash2, User as UserIcon } from 'lucide-react';
 
 interface OperatorCardProps {
-  operator: User;
-  onClick: () => void;
-  onDelete?: () => void;
+  operator: Operador;
+  onViewDetails: (operator: Operador) => void;
+  onEdit: (operator: Operador) => void;
+  onDelete: () => void;
 }
 
-const OperatorCard: React.FC<OperatorCardProps> = ({ operator, onClick, onDelete }) => {
+const OperatorCard: React.FC<OperatorCardProps> = ({ operator, onViewDetails, onEdit, onDelete }) => {
   // Get status color classes
   const getStatusBadge = (status: StatusCertificacao) => {
     switch (status) {
@@ -58,15 +59,17 @@ const OperatorCard: React.FC<OperatorCardProps> = ({ operator, onClick, onDelete
 
   const handleDelete = (e: React.MouseEvent) => {
     e.stopPropagation();
-    if (onDelete) {
-      onDelete();
-    }
+    onDelete();
   };
+
+  // Get the first ASO and NR-11 certificates for display
+  const asoCert = operator.certificacoes.find(cert => cert.tipo === 'ASO');
+  const nrCert = operator.certificacoes.find(cert => cert.tipo === 'NR-11');
 
   return (
     <div 
       className="group relative bg-gradient-to-br from-slate-800/60 to-slate-900/80 backdrop-blur-sm border border-slate-700/50 rounded-xl p-3 cursor-pointer transition-all duration-300 ease-out hover:shadow-2xl hover:shadow-slate-900/40 hover:scale-102 hover:-translate-y-1 hover:border-slate-600/60 animate-fade-in"
-      onClick={onClick}
+      onClick={() => onViewDetails(operator)}
       style={{
         boxShadow: '0 4px 12px rgba(0,0,0,0.15)',
       }}
@@ -78,17 +81,15 @@ const OperatorCard: React.FC<OperatorCardProps> = ({ operator, onClick, onDelete
       }}
     >
       {/* Delete button */}
-      {onDelete && (
-        <Button
-          variant="ghost"
-          size="sm"
-          onClick={handleDelete}
-          className="absolute top-2 right-2 h-6 w-6 p-0 text-slate-400 hover:text-red-400 hover:bg-red-500/20 transition-all duration-200 z-20 bg-slate-800/80 backdrop-blur-sm border border-slate-600/50 rounded-full opacity-80 hover:opacity-100"
-          title="Excluir operador"
-        >
-          <Trash2 className="h-3 w-3" />
-        </Button>
-      )}
+      <Button
+        variant="ghost"
+        size="sm"
+        onClick={handleDelete}
+        className="absolute top-2 right-2 h-6 w-6 p-0 text-slate-400 hover:text-red-400 hover:bg-red-500/20 transition-all duration-200 z-20 bg-slate-800/80 backdrop-blur-sm border border-slate-600/50 rounded-full opacity-80 hover:opacity-100"
+        title="Excluir operador"
+      >
+        <Trash2 className="h-3 w-3" />
+      </Button>
 
       {/* Header */}
       <div className="flex flex-col gap-2 mb-3">
@@ -98,7 +99,7 @@ const OperatorCard: React.FC<OperatorCardProps> = ({ operator, onClick, onDelete
               {operator.id}
             </h3>
             <p className="text-slate-400 font-medium tracking-wide text-sm truncate mb-[5px]" style={{ color: '#94a3b8' }}>
-              {operator.name || operator.nome}
+              {operator.nome}
             </p>
           </div>
         </div>
@@ -108,8 +109,8 @@ const OperatorCard: React.FC<OperatorCardProps> = ({ operator, onClick, onDelete
       <div className="relative bg-gradient-to-br from-slate-800/40 to-slate-900/80 rounded-2xl p-6 mb-3 border border-slate-700/30">
         {/* Role Badge - Top Left Corner */}
         <div className="absolute -top-3 left-2 z-10">
-          <Badge variant="outline" className={cn("border font-semibold text-xs tracking-wider whitespace-nowrap shrink-0 px-3 py-1 rounded-full", getRoleBadge(operator.role || operator.funcao))}>
-            {operator.role || operator.funcao}
+          <Badge variant="outline" className={cn("border font-semibold text-xs tracking-wider whitespace-nowrap shrink-0 px-3 py-1 rounded-full", getRoleBadge(operator.funcao))}>
+            {operator.funcao}
           </Badge>
         </div>
 
@@ -120,7 +121,7 @@ const OperatorCard: React.FC<OperatorCardProps> = ({ operator, onClick, onDelete
           </div>
           <div className="flex items-center justify-center text-lg font-semibold text-blue-400">
             <Phone className="w-4 h-4 mr-2" />
-            {operator.contact || operator.telefone}
+            {operator.telefone}
           </div>
         </div>
       </div>
@@ -136,20 +137,20 @@ const OperatorCard: React.FC<OperatorCardProps> = ({ operator, onClick, onDelete
           <div className="p-3 rounded-lg border border-slate-700/30 bg-slate-800/30">
             <div className="flex justify-between items-center mb-1">
               <span className="text-xs font-medium text-slate-300">ASO</span>
-              {getStatusBadge(operator.asoStatus || StatusCertificacao.VALIDO)}
+              {getStatusBadge(asoCert?.status || StatusCertificacao.VALIDO)}
             </div>
             <div className="text-xs text-slate-400">
-              {operator.asoExpirationDate || 'N/A'}
+              {asoCert?.dataVencimento || 'N/A'}
             </div>
           </div>
           
           <div className="p-3 rounded-lg border border-slate-700/30 bg-slate-800/30">
             <div className="flex justify-between items-center mb-1">
               <span className="text-xs font-medium text-slate-300">NR-11</span>
-              {getStatusBadge(operator.nrStatus || StatusCertificacao.VALIDO)}
+              {getStatusBadge(nrCert?.status || StatusCertificacao.VALIDO)}
             </div>
             <div className="text-xs text-slate-400">
-              {operator.nrExpirationDate || 'N/A'}
+              {nrCert?.dataVencimento || 'N/A'}
             </div>
           </div>
         </div>
@@ -163,7 +164,7 @@ const OperatorCard: React.FC<OperatorCardProps> = ({ operator, onClick, onDelete
             <span className="font-medium tracking-wide truncate">Turno</span>
           </div>
           <span className="font-semibold text-slate-200 text-xs flex-shrink-0" style={{ color: '#e2e8f0' }}>
-            {operator.shift || operator.turno}
+            {operator.turno}
           </span>
         </div>
 
@@ -173,7 +174,7 @@ const OperatorCard: React.FC<OperatorCardProps> = ({ operator, onClick, onDelete
             <span className="font-medium tracking-wide truncate">Admissão</span>
           </div>
           <span className="font-semibold text-slate-200 text-xs flex-shrink-0" style={{ color: '#e2e8f0' }}>
-            {operator.registrationDate || operator.dataAdmissao}
+            {operator.dataAdmissao}
           </span>
         </div>
       </div>

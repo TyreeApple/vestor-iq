@@ -4,7 +4,7 @@ import { Button } from "@/components/ui/button";
 import { useIsMobile } from '@/hooks/use-mobile';
 import { Input } from '@/components/ui/input';
 import { Search, Plus, Users, UserCheck, Clock, Award, TrendingUp, Activity } from 'lucide-react';
-import { Operador, FuncaoOperador, StatusOperador } from '@/types';
+import { Operador, FuncaoOperador, StatusOperador, TipoCertificacao, StatusCertificacao } from '@/types';
 import { useToast } from '@/hooks/use-toast';
 import OperatorDialog from '@/components/operators/OperatorDialog';
 import OperatorDetails from '@/components/operators/OperatorDetails';
@@ -27,10 +27,29 @@ const initialOperators: Operador[] = [
     dataAdmissao: '01/01/2020',
     turno: 'Matutino',
     setor: 'Armazém',
-    certificacoes: ['Básico', 'Avançado'],
+    certificacoes: [
+      {
+        id: 'C001',
+        tipo: TipoCertificacao.NR11,
+        numero: 'NR11-001',
+        dataEmissao: '01/01/2023',
+        dataVencimento: '01/01/2024',
+        orgaoEmissor: 'SENAI',
+        status: StatusCertificacao.VALIDO
+      },
+      {
+        id: 'C002',
+        tipo: TipoCertificacao.ASO,
+        numero: 'ASO-001',
+        dataEmissao: '01/06/2023',
+        dataVencimento: '01/06/2024',
+        orgaoEmissor: 'Clínica Ocupacional',
+        status: StatusCertificacao.VALIDO
+      }
+    ],
     avaliacoes: [
-      { data: '15/10/2023', nota: 8.5, comentario: 'Excelente desempenho' },
-      { data: '15/09/2023', nota: 9.0, comentario: 'Muito bom' }
+      { id: 'A001', data: '15/10/2023', nota: 8.5, avaliador: 'João Manager', comentarios: 'Excelente desempenho', pontosMelhoria: [] },
+      { id: 'A002', data: '15/09/2023', nota: 9.0, avaliador: 'João Manager', comentarios: 'Muito bom', pontosMelhoria: [] }
     ],
     horasTrabalhadas: 2000,
     produtividade: 85,
@@ -46,9 +65,37 @@ const initialOperators: Operador[] = [
     dataAdmissao: '15/02/2021',
     turno: 'Vespertino',
     setor: 'Produção',
-    certificacoes: ['Básico', 'Avançado', 'Supervisor'],
+    certificacoes: [
+      {
+        id: 'C003',
+        tipo: TipoCertificacao.NR11,
+        numero: 'NR11-002',
+        dataEmissao: '01/01/2023',
+        dataVencimento: '01/01/2024',
+        orgaoEmissor: 'SENAI',
+        status: StatusCertificacao.VALIDO
+      },
+      {
+        id: 'C004',
+        tipo: TipoCertificacao.ASO,
+        numero: 'ASO-002',
+        dataEmissao: '01/06/2023',
+        dataVencimento: '01/06/2024',
+        orgaoEmissor: 'Clínica Ocupacional',
+        status: StatusCertificacao.VALIDO
+      },
+      {
+        id: 'C005',
+        tipo: TipoCertificacao.TREINAMENTO,
+        numero: 'SUPER-001',
+        dataEmissao: '01/03/2023',
+        dataVencimento: '01/03/2025',
+        orgaoEmissor: 'Empresa',
+        status: StatusCertificacao.VALIDO
+      }
+    ],
     avaliacoes: [
-      { data: '10/10/2023', nota: 9.5, comentario: 'Liderança excepcional' }
+      { id: 'A003', data: '10/10/2023', nota: 9.5, avaliador: 'Diretor RH', comentarios: 'Liderança excepcional', pontosMelhoria: [] }
     ],
     horasTrabalhadas: 1900,
     produtividade: 92,
@@ -64,9 +111,19 @@ const initialOperators: Operador[] = [
     dataAdmissao: '10/06/2022',
     turno: 'Noturno',
     setor: 'Expedição',
-    certificacoes: ['Básico'],
+    certificacoes: [
+      {
+        id: 'C006',
+        tipo: TipoCertificacao.NR11,
+        numero: 'NR11-003',
+        dataEmissao: '01/01/2023',
+        dataVencimento: '01/01/2024',
+        orgaoEmissor: 'SENAI',
+        status: StatusCertificacao.VALIDO
+      }
+    ],
     avaliacoes: [
-      { data: '20/10/2023', nota: 7.8, comentario: 'Bom desempenho' }
+      { id: 'A004', data: '20/10/2023', nota: 7.8, avaliador: 'Maria Supervisor', comentarios: 'Bom desempenho', pontosMelhoria: ['Agilidade'] }
     ],
     horasTrabalhadas: 1200,
     produtividade: 78,
@@ -82,9 +139,28 @@ const initialOperators: Operador[] = [
     dataAdmissao: '05/09/2021',
     turno: 'Matutino',
     setor: 'Recebimento',
-    certificacoes: ['Básico', 'Avançado'],
+    certificacoes: [
+      {
+        id: 'C007',
+        tipo: TipoCertificacao.NR11,
+        numero: 'NR11-004',
+        dataEmissao: '01/01/2023',
+        dataVencimento: '01/01/2024',
+        orgaoEmissor: 'SENAI',
+        status: StatusCertificacao.VALIDO
+      },
+      {
+        id: 'C008',
+        tipo: TipoCertificacao.ASO,
+        numero: 'ASO-004',
+        dataEmissao: '01/06/2023',
+        dataVencimento: '01/06/2024',
+        orgaoEmissor: 'Clínica Ocupacional',
+        status: StatusCertificacao.VALIDO
+      }
+    ],
     avaliacoes: [
-      { data: '25/10/2023', nota: 8.2, comentario: 'Muito dedicada' }
+      { id: 'A005', data: '25/10/2023', nota: 8.2, avaliador: 'Carlos Supervisor', comentarios: 'Muito dedicada', pontosMelhoria: [] }
     ],
     horasTrabalhadas: 1800,
     produtividade: 88,
@@ -100,9 +176,19 @@ const initialOperators: Operador[] = [
     dataAdmissao: '20/03/2023',
     turno: 'Vespertino',
     setor: 'Armazém',
-    certificacoes: ['Básico'],
+    certificacoes: [
+      {
+        id: 'C009',
+        tipo: TipoCertificacao.NR11,
+        numero: 'NR11-005',
+        dataEmissao: '01/01/2023',
+        dataVencimento: '01/01/2024',
+        orgaoEmissor: 'SENAI',
+        status: StatusCertificacao.VALIDO
+      }
+    ],
     avaliacoes: [
-      { data: '30/10/2023', nota: 7.5, comentario: 'Em desenvolvimento' }
+      { id: 'A006', data: '30/10/2023', nota: 7.5, avaliador: 'Ana Supervisor', comentarios: 'Em desenvolvimento', pontosMelhoria: ['Velocidade', 'Organização'] }
     ],
     horasTrabalhadas: 800,
     produtividade: 75,
@@ -363,7 +449,7 @@ const OperatorsPage = () => {
                 operator={operator}
                 onEdit={handleEdit}
                 onViewDetails={handleViewDetails}
-                onDelete={handleDeleteOperator}
+                onDelete={() => handleDeleteOperator(operator.id)}
               />
             ))}
           </div>
