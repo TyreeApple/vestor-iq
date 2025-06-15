@@ -1,3 +1,4 @@
+
 import React, { useState } from 'react';
 import { NavLink } from 'react-router-dom';
 import { Search, User, Menu, X, BarChart3, Users, Activity, Wrench, Fuel, FileText, Gauge, Settings } from 'lucide-react';
@@ -13,18 +14,13 @@ const Navbar: React.FC = () => {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const navigate = useNavigate();
 
-  // Obter dados do Zustand
   const operacoes = useAppStore((state) => state.operacoes);
   const ordemServicos = useAppStore((state) => state.ordemServicos);
 
-  // Badge counts – só aparecem se > 0. Se não quiser badge para algum item, não adicione a prop.
   const operacoesAtivas = operacoes.filter(op => op.status === StatusOperacao.EM_ANDAMENTO).length;
   const manutencoesPendentes = ordemServicos.filter(os => 
     [StatusManutencao.ABERTA, StatusManutencao.EM_ANDAMENTO].includes(os.status)
   ).length;
-  // Exemplos de contadores adicionais caso queira aplicar a mesma lógica:
-  // const relatoriosCount = 0; // ex: relatorios.length
-  // const abastecimentosCount = 0; // ex: abastecimentos.length
 
   const menuItems = [
     {
@@ -64,29 +60,23 @@ const Navbar: React.FC = () => {
       label: 'Abastecimento',
       icon: Fuel,
       path: '/abastecimento'
-      // , badge: abastecimentosCount > 0 ? abastecimentosCount : undefined // Descomente se quiser badge
     },
     {
       id: 'relatorios',
       label: 'Relatórios',
       icon: FileText,
       path: '/relatorios'
-      // , badge: relatoriosCount > 0 ? relatoriosCount : undefined // Descomente se quiser badge
     }
   ];
 
   return (
     <>
       <header className="h-16 bg-card dark:bg-card border-b border-slate-200 dark:border-border flex items-center justify-between px-6 shadow-premium dark:shadow-premium-dark relative z-50">
-        {/* Logo and Brand */}
+        {/* Logo only, no brand name/text */}
         <div className="flex items-center space-x-4">
-          <div className="flex items-center space-x-3">
+          <div className="flex items-center">
             <div className="p-2 bg-gradient-to-r from-blue-600 to-purple-600 rounded-xl">
               <Gauge className="w-6 h-6 text-white" />
-            </div>
-            <div className="hidden sm:block">
-              <h1 className="font-bold text-lg tracking-tight text-foreground">FleetPro</h1>
-              <p className="text-xs text-muted-foreground font-medium">Gestão de Frotas</p>
             </div>
           </div>
         </div>
@@ -115,23 +105,20 @@ const Navbar: React.FC = () => {
           ))}
         </nav>
 
-        {/* Search - Hidden on mobile */}
-        <div className="hidden md:flex flex-1 justify-center max-w-md mx-6">
-          <div className="relative w-full">
-            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground w-4 h-4" />
-            <input
-              type="text"
-              placeholder="Buscar empilhadeiras, operadores..."
-              className="w-full pl-10 pr-4 py-2 border border-input rounded-lg focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent bg-background text-foreground text-sm transition-all duration-200"
-            />
-          </div>
-        </div>
-
-        {/* Right side */}
+        {/* -------- Right side: icons only -------- */}
         <div className="flex items-center space-x-2">
+          {/* Search Icon Only */}
+          <Button
+            variant="ghost"
+            size="icon"
+            className="hover:bg-accent transition-colors"
+            aria-label="Buscar"
+          >
+            <Search className="w-5 h-5" />
+          </Button>
           {/* Theme Toggle */}
           <ThemeToggle />
-          {/* Settings Button NOVO */}
+          {/* Settings Button */}
           <Button
             variant="ghost"
             size="icon"
@@ -141,7 +128,7 @@ const Navbar: React.FC = () => {
           >
             <Settings className="w-5 h-5" />
           </Button>
-          {/* User menu */}
+          {/* User Menu */}
           <Button variant="ghost" size="icon" className="hover:bg-accent transition-colors">
             <User className="w-5 h-5" />
           </Button>
@@ -161,9 +148,6 @@ const Navbar: React.FC = () => {
         </div>
       </header>
 
-      {/* Configuração Placeholder Alert */}
-      {/* Remover Configuração Placeholder Alert */}
-
       {/* Mobile Menu Overlay */}
       {isMobileMenuOpen && (
         <div className="lg:hidden fixed inset-0 z-40 bg-background/80 backdrop-blur-sm" onClick={() => setIsMobileMenuOpen(false)} />
@@ -174,18 +158,17 @@ const Navbar: React.FC = () => {
         "lg:hidden fixed top-16 left-0 right-0 bg-card border-b border-border shadow-lg z-40 transition-all duration-300",
         isMobileMenuOpen ? "opacity-100 translate-y-0" : "opacity-0 -translate-y-full pointer-events-none"
       )}>
-        {/* Mobile Search */}
-        <div className="p-4 border-b border-border">
-          <div className="relative">
-            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground w-4 h-4" />
-            <input
-              type="text"
-              placeholder="Buscar empilhadeiras, operadores..."
-              className="w-full pl-10 pr-4 py-2 border border-input rounded-lg focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent bg-background text-foreground text-sm"
-            />
-          </div>
+        {/* Mobile Actions (including search icon) */}
+        <div className="flex items-center gap-2 px-4 pt-4">
+          <Button
+            variant="ghost"
+            size="icon"
+            className="hover:bg-accent transition-colors"
+            aria-label="Buscar"
+          >
+            <Search className="w-5 h-5" />
+          </Button>
         </div>
-
         {/* Mobile Navigation */}
         <nav className="p-4 space-y-2">
           {menuItems.map((item) => (
@@ -216,3 +199,4 @@ const Navbar: React.FC = () => {
 };
 
 export default Navbar;
+
