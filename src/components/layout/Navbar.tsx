@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { NavLink } from 'react-router-dom';
 import { Search, User, Menu, X, BarChart3, Users, Activity, Wrench, Fuel, FileText, Gauge } from 'lucide-react';
@@ -16,11 +15,15 @@ const Navbar: React.FC = () => {
   const operacoes = useAppStore((state) => state.operacoes);
   const ordemServicos = useAppStore((state) => state.ordemServicos);
 
-  // Calcular quantidade dinâmica
+  // Badge counts – só aparecem se > 0. Se não quiser badge para algum item, não adicione a prop.
   const operacoesAtivas = operacoes.filter(op => op.status === StatusOperacao.EM_ANDAMENTO).length;
-  const manutencoesPendentes = ordemServicos.filter(os => [StatusManutencao.ABERTA, StatusManutencao.EM_ANDAMENTO].includes(os.status)).length;
+  const manutencoesPendentes = ordemServicos.filter(os => 
+    [StatusManutencao.ABERTA, StatusManutencao.EM_ANDAMENTO].includes(os.status)
+  ).length;
+  // Exemplos de contadores adicionais caso queira aplicar a mesma lógica:
+  // const relatoriosCount = 0; // ex: relatorios.length
+  // const abastecimentosCount = 0; // ex: abastecimentos.length
 
-  // Montar o menu com valores dinâmicos
   const menuItems = [
     {
       id: 'dashboard',
@@ -59,12 +62,14 @@ const Navbar: React.FC = () => {
       label: 'Abastecimento',
       icon: Fuel,
       path: '/abastecimento'
+      // , badge: abastecimentosCount > 0 ? abastecimentosCount : undefined // Descomente se quiser badge
     },
     {
       id: 'relatorios',
       label: 'Relatórios',
       icon: FileText,
       path: '/relatorios'
+      // , badge: relatoriosCount > 0 ? relatoriosCount : undefined // Descomente se quiser badge
     }
   ];
 
@@ -99,7 +104,7 @@ const Navbar: React.FC = () => {
             >
               <item.icon className="w-4 h-4" />
               <span>{item.label}</span>
-              {item.badge && (
+              {typeof item.badge === "number" && item.badge > 0 && (
                 <span className="bg-error text-white text-xs px-1.5 py-0.5 rounded-full min-w-[18px] h-[18px] flex items-center justify-center font-semibold">
                   {item.badge > 99 ? '99+' : item.badge}
                 </span>
@@ -184,7 +189,7 @@ const Navbar: React.FC = () => {
             >
               <item.icon className="w-5 h-5" />
               <span className="font-medium">{item.label}</span>
-              {item.badge && (
+              {typeof item.badge === "number" && item.badge > 0 && (
                 <span className="bg-error text-white text-xs px-2 py-1 rounded-full min-w-[20px] h-[20px] flex items-center justify-center font-semibold ml-auto">
                   {item.badge > 99 ? '99+' : item.badge}
                 </span>

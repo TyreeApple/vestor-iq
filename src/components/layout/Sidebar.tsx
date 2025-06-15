@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { NavLink } from 'react-router-dom';
 import { BarChart3, Users, Activity, Wrench, Fuel, FileText, ChevronLeft, ChevronRight, Gauge } from 'lucide-react';
@@ -17,6 +16,8 @@ const Sidebar: React.FC = () => {
   const manutencoesPendentes = ordemServicos.filter(os => 
     [StatusManutencao.ABERTA, StatusManutencao.EM_ANDAMENTO].includes(os.status)
   ).length;
+  // const relatoriosCount = 0; // ex: relatorios.length
+  // const abastecimentosCount = 0; // ex: abastecimentos.length
 
   const menuItems = [
     {
@@ -56,12 +57,14 @@ const Sidebar: React.FC = () => {
       label: 'Abastecimento',
       icon: Fuel,
       path: '/abastecimento'
+      // , badge: abastecimentosCount > 0 ? abastecimentosCount : undefined
     },
     {
       id: 'relatorios',
       label: 'Relatórios',
       icon: FileText,
       path: '/relatorios'
+      // , badge: relatoriosCount > 0 ? relatoriosCount : undefined
     }
   ];
 
@@ -125,17 +128,16 @@ const Sidebar: React.FC = () => {
           >
             <div className="flex items-center justify-center flex-shrink-0 relative">
               <item.icon className="w-5 h-5 transition-transform duration-200 group-hover:scale-110" />
-              {sidebarCollapsed && item.badge && (
+              {sidebarCollapsed && typeof item.badge === "number" && item.badge > 0 && (
                 <span className="absolute -top-2 -right-2 bg-error text-white text-xs min-w-[18px] h-[18px] rounded-full flex items-center justify-center px-1 font-semibold shadow-premium border-2 border-card animate-pulse-glow">
                   {item.badge > 99 ? '99+' : item.badge}
                 </span>
               )}
             </div>
-            
             {!sidebarCollapsed && (
               <>
                 <span className="font-semibold truncate flex-1 transition-all duration-200 group-hover:translate-x-1">{item.label}</span>
-                {item.badge && (
+                {typeof item.badge === "number" && item.badge > 0 && (
                   <span className="bg-error text-white text-xs px-2.5 py-1 rounded-full flex-shrink-0 min-w-[24px] h-6 flex items-center justify-center font-semibold shadow-lg animate-pulse-glow">
                     {item.badge > 99 ? '99+' : item.badge}
                   </span>
