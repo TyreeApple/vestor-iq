@@ -1,3 +1,4 @@
+
 import React from 'react';
 import { Button } from "@/components/ui/button";
 import {
@@ -10,7 +11,7 @@ import {
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { StatusCertificacao, User, FuncaoOperador } from '@/types';
+import { StatusCertificacao, Operador, FuncaoOperador, StatusOperador } from '@/types';
 import { useToast } from '@/hooks/use-toast';
 import { Calendar } from '@/components/ui/calendar';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
@@ -23,15 +24,15 @@ import { CalendarIcon } from 'lucide-react';
 interface OperatorDialogProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
-  operator?: User;
-  onSave: (operator: User) => void;
+  operator?: Operador;
+  onSave: (operator: Operador) => void;
 }
 
 const OperatorDialog = ({ open, onOpenChange, operator, onSave }: OperatorDialogProps) => {
   const { toast } = useToast();
   const isEditing = !!operator;
   
-  const [formData, setFormData] = React.useState<Partial<User>>(
+  const [formData, setFormData] = React.useState<Partial<Operador>>(
     operator || {
       id: `OP${Math.floor(Math.random() * 10000).toString().padStart(3, '0')}`,
       name: '',
@@ -53,7 +54,7 @@ const OperatorDialog = ({ open, onOpenChange, operator, onSave }: OperatorDialog
       avaliacoes: [],
       horasTrabalhadas: 0,
       produtividade: 0,
-      status: 'Ativo',
+      status: StatusOperador.ATIVO,
       email: '',
       setor: ''
     }
@@ -66,7 +67,7 @@ const OperatorDialog = ({ open, onOpenChange, operator, onSave }: OperatorDialog
   };
 
   // Handle form field changes
-  const handleChange = (field: keyof User, value: string) => {
+  const handleChange = (field: keyof Operador, value: string) => {
     setFormData(prev => ({ 
       ...prev, 
       [field]: value,
@@ -125,7 +126,7 @@ const OperatorDialog = ({ open, onOpenChange, operator, onSave }: OperatorDialog
     }
     
     // Save operator
-    onSave(formData as User);
+    onSave(formData as Operador);
     
     // Reset form and close dialog
     if (!isEditing) {
@@ -150,7 +151,7 @@ const OperatorDialog = ({ open, onOpenChange, operator, onSave }: OperatorDialog
         avaliacoes: [],
         horasTrabalhadas: 0,
         produtividade: 0,
-        status: 'Ativo',
+        status: StatusOperador.ATIVO,
         email: '',
         setor: ''
       });

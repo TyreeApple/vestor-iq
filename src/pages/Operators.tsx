@@ -327,7 +327,7 @@ const OperatorsPage = () => {
   const stats = {
     total: operators.length,
     active: operators.filter(op => op.status === StatusOperador.ATIVO).length,
-    avgProductivity: Math.round(operators.reduce((sum, op) => sum + op.produtividade, 0) / operators.length),
+    avgProductivity: operators.length > 0 ? Math.round(operators.reduce((sum, op) => sum + op.produtividade, 0) / operators.length) : 0,
     totalHours: operators.reduce((sum, op) => sum + op.horasTrabalhadas, 0)
   };
 

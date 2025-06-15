@@ -50,7 +50,7 @@ const initialGasSupplies: Abastecimento[] = [
       avaliacoes: [],
       horasTrabalhadas: 2000,
       produtividade: 85,
-      status: 'Ativo'
+      status: StatusOperador.ATIVO
     },
     dataAbastecimento: '2023-11-20',
     horimetroInicial: 12500,
@@ -108,7 +108,7 @@ const initialGasSupplies: Abastecimento[] = [
       avaliacoes: [],
       horasTrabalhadas: 1800,
       produtividade: 82,
-      status: 'Ativo'
+      status: StatusOperador.ATIVO
     },
     dataAbastecimento: '2023-11-18',
     horimetroInicial: 6700,

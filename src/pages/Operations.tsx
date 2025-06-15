@@ -133,6 +133,89 @@ const availableForklifts = [
   { id: 'G006', model: 'Caterpillar DP40' }
 ];
 
+const mockOperators = [
+  {
+    id: 'OP001',
+    nome: 'Carlos Silva',
+    cpf: '123.456.789-00',
+    email: 'carlos@example.com',
+    telefone: '(11) 99999-9999',
+    funcao: 'Operador' as any,
+    dataAdmissao: '01/01/2020',
+    turno: 'Matutino',
+    setor: 'Armazém',
+    certificacoes: [],
+    avaliacoes: [],
+    horasTrabalhadas: 2000,
+    produtividade: 85,
+    status: 'Ativo'
+  },
+  {
+    id: 'OP002',
+    nome: 'Maria Oliveira',
+    cpf: '987.654.321-00',
+    email: 'maria@example.com',
+    telefone: '(11) 88888-8888',
+    funcao: 'Operador' as any,
+    dataAdmissao: '15/02/2021',
+    turno: 'Vespertino',
+    setor: 'Produção',
+    certificacoes: [],
+    avaliacoes: [],
+    horasTrabalhadas: 1900,
+    produtividade: 88,
+    status: 'Ativo'
+  },
+  {
+    id: 'OP003',
+    nome: 'João Pereira',
+    cpf: '543.210.987-65',
+    email: 'joao@example.com',
+    telefone: '(11) 77777-7777',
+    funcao: 'Operador' as any,
+    dataAdmissao: '05/03/2021',
+    turno: 'Vespertino',
+    setor: 'Produção',
+    certificacoes: [],
+    avaliacoes: [],
+    horasTrabalhadas: 1500,
+    produtividade: 80,
+    status: 'Ativo'
+  },
+  {
+    id: 'OP004',
+    nome: 'Ana Costa',
+    cpf: '321.654.987-10',
+    email: 'ana@example.com',
+    telefone: '(11) 66666-6666',
+    funcao: 'Operador' as any,
+    dataAdmissao: '10/04/2021',
+    turno: 'Matutino',
+    setor: 'Armazém',
+    certificacoes: [],
+    avaliacoes: [],
+    horasTrabalhadas: 1800,
+    produtividade: 90,
+    status: 'Ativo'
+  },
+  {
+    id: 'OP005',
+    nome: 'Pedro Santos',
+    cpf: '987.654.321-00',
+    email: 'pedro@example.com',
+    telefone: '(11) 55555-5555',
+    funcao: 'Operador' as any,
+    dataAdmissao: '15/05/2021',
+    turno: 'Matutino',
+    setor: 'Armazém',
+    certificacoes: [],
+    avaliacoes: [],
+    horasTrabalhadas: 2200,
+    produtividade: 95,
+    status: 'Ativo'
+  }
+];
+
 const OperationsPage = () => {
   const isMobile = useIsMobile();
   const { toast } = useToast();
