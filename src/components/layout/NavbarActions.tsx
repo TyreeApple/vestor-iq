@@ -18,13 +18,13 @@ const NavbarActions: React.FC<Props> = ({
   return (
     <div
       className="
-        flex flex-1 justify-end 
+        flex flex-1 justify-center
         items-center 
         gap-4
         min-w-0
         max-w-xs
         md:gap-6
-        "
+      "
       style={{ minWidth: 0 }}
     >
       <Button
@@ -69,4 +69,3 @@ const NavbarActions: React.FC<Props> = ({
 };
 
 export default NavbarActions;
-
