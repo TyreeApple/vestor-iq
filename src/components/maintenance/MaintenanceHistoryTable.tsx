@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { 
   Table, 
@@ -224,65 +223,56 @@ const MaintenanceHistoryTable: React.FC<MaintenanceHistoryTableProps> = ({
   };
 
   return (
-    <div className="space-y-6">
-      {/* Enhanced Search and Filters */}
-      <div className="bg-gradient-to-r from-slate-900 to-slate-800 rounded-xl p-6 shadow-lg border border-slate-700">
-        <div className="space-y-4">
-          {/* Search Bar */}
+    <div className="space-y-3">
+      {/* Ultra Compact Search and Filters */}
+      <div className="bg-gradient-to-r from-slate-900 to-slate-800 rounded-lg p-3 shadow-lg border border-slate-700">
+        <div className="space-y-2">
+          {/* Compact Search Bar */}
           <div className="relative">
-            <Search className="absolute left-4 top-1/2 transform -translate-y-1/2 text-slate-400 w-5 h-5" />
+            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-slate-400 w-4 h-4" />
             <Input
               placeholder="Buscar por ID, modelo, problema ou responsável..."
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
-              className="pl-12 h-12 bg-slate-800 border-slate-600 text-white placeholder:text-slate-400 focus:border-blue-500 focus:ring-blue-500 text-lg"
+              className="pl-9 h-8 bg-slate-800 border-slate-600 text-white placeholder:text-slate-400 focus:border-blue-500 focus:ring-blue-500 text-sm"
             />
           </div>
           
-          {/* Filter Controls */}
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-            <div className="space-y-2">
-              <label className="text-sm font-medium text-slate-300">Status</label>
-              <select
-                value={columnFilters.status || ''}
-                onChange={(e) => setColumnFilters({ ...columnFilters, status: e.target.value })}
-                className="w-full px-4 py-3 border border-slate-600 bg-slate-800 text-white rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
-              >
-                <option value="">Todos os Status</option>
-                <option value="aberta">Aberta</option>
-                <option value="andamento">Em Andamento</option>
-                <option value="concluida">Concluída</option>
-              </select>
-            </div>
+          {/* Ultra Compact Filter Controls */}
+          <div className="grid grid-cols-3 gap-2">
+            <select
+              value={columnFilters.status || ''}
+              onChange={(e) => setColumnFilters({ ...columnFilters, status: e.target.value })}
+              className="w-full px-2 py-1 border border-slate-600 bg-slate-800 text-white rounded text-xs h-7 focus:outline-none focus:ring-1 focus:ring-blue-500"
+            >
+              <option value="">Todos os Status</option>
+              <option value="aberta">Aberta</option>
+              <option value="andamento">Em Andamento</option>
+              <option value="concluida">Concluída</option>
+            </select>
             
-            <div className="space-y-2">
-              <label className="text-sm font-medium text-slate-300">Tipo</label>
-              <select
-                value={columnFilters.tipo || ''}
-                onChange={(e) => setColumnFilters({ ...columnFilters, tipo: e.target.value })}
-                className="w-full px-4 py-3 border border-slate-600 bg-slate-800 text-white rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
-              >
-                <option value="">Todos os Tipos</option>
-                <option value="preventiva">Preventiva</option>
-                <option value="corretiva">Corretiva</option>
-                <option value="preditiva">Preditiva</option>
-              </select>
-            </div>
+            <select
+              value={columnFilters.tipo || ''}
+              onChange={(e) => setColumnFilters({ ...columnFilters, tipo: e.target.value })}
+              className="w-full px-2 py-1 border border-slate-600 bg-slate-800 text-white rounded text-xs h-7 focus:outline-none focus:ring-1 focus:ring-blue-500"
+            >
+              <option value="">Todos os Tipos</option>
+              <option value="preventiva">Preventiva</option>
+              <option value="corretiva">Corretiva</option>
+              <option value="preditiva">Preditiva</option>
+            </select>
 
-            <div className="space-y-2">
-              <label className="text-sm font-medium text-slate-300">Prioridade</label>
-              <select
-                value={columnFilters.prioridade || ''}
-                onChange={(e) => setColumnFilters({ ...columnFilters, prioridade: e.target.value })}
-                className="w-full px-4 py-3 border border-slate-600 bg-slate-800 text-white rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
-              >
-                <option value="">Todas as Prioridades</option>
-                <option value="critica">Crítica</option>
-                <option value="alta">Alta</option>
-                <option value="normal">Normal</option>
-                <option value="baixa">Baixa</option>
-              </select>
-            </div>
+            <select
+              value={columnFilters.prioridade || ''}
+              onChange={(e) => setColumnFilters({ ...columnFilters, prioridade: e.target.value })}
+              className="w-full px-2 py-1 border border-slate-600 bg-slate-800 text-white rounded text-xs h-7 focus:outline-none focus:ring-1 focus:ring-blue-500"
+            >
+              <option value="">Todas as Prioridades</option>
+              <option value="critica">Crítica</option>
+              <option value="alta">Alta</option>
+              <option value="normal">Normal</option>
+              <option value="baixa">Baixa</option>
+            </select>
           </div>
         </div>
       </div>
