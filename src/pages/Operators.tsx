@@ -371,7 +371,7 @@ const OperatorsPage = () => {
         
         <ModernKpiCard
           title="Produtividade Média"
-          value={`${stats.avgProductivity}%`}
+          value={stats.avgProductivity}
           icon={TrendingUp}
           trend="up"
           trendValue={3}
@@ -381,7 +381,7 @@ const OperatorsPage = () => {
         
         <ModernKpiCard
           title="Horas Trabalhadas"
-          value={stats.totalHours.toLocaleString()}
+          value={stats.totalHours}
           icon={Clock}
           colorFrom="from-orange-500"
           colorTo="to-red-600"
