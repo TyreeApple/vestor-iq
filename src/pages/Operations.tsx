@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import Navbar from '@/components/layout/Navbar';
 import Sidebar from '@/components/layout/Sidebar';
@@ -6,13 +5,14 @@ import { Button } from "@/components/ui/button";
 import { useIsMobile } from '@/hooks/use-mobile';
 import { cn } from '@/lib/utils';
 import { Input } from '@/components/ui/input';
-import { Calendar, Clock, Plus, Search, Truck, User } from 'lucide-react';
+import { Calendar, Clock, Plus, Search, Truck, User, Filter } from 'lucide-react';
 import { Operacao, StatusOperacao, TipoOperacao, PrioridadeOperacao } from '@/types';
 import { useToast } from '@/hooks/use-toast';
 import OperationDialog from '@/components/operations/OperationDialog';
 import OperationDetails from '@/components/operations/OperationDetails';
 import AdvancedFilters from '@/components/common/AdvancedFilters';
 import { useFilters } from '@/hooks/use-filters';
+import PageHeader from '@/components/layout/PageHeader';
 
 // Mock data for operations - using proper Portuguese interface
 const initialOperations: Operacao[] = [
@@ -278,109 +278,137 @@ const OperationsPage = () => {
         <Navbar />
         
         <main className="flex-1 px-6 py-6">
-          {/* Header */}
-          <div className="mb-6">
-            <h1 className="text-2xl font-bold">Operações</h1>
-            <p className="text-muted-foreground">Controle de Operações</p>
+          {/* Enhanced Header */}
+          <PageHeader
+            title="Operações"
+            description="Controle de Operações"
+          >
+            <Button 
+              className="gap-2 bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white shadow-lg hover:shadow-xl transition-all duration-200"
+              onClick={() => {
+                setSelectedOperation(null);
+                setAddDialogOpen(true);
+              }}
+            >
+              <Plus className="w-4 h-4" />
+              Nova Operação
+            </Button>
+          </PageHeader>
+
+          {/* Enhanced Statistics Cards */}
+          <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
+            <div className="group relative overflow-hidden bg-gradient-to-br from-slate-800/60 to-slate-900/80 backdrop-blur-sm border border-slate-700/50 rounded-xl p-6 shadow-xl hover:shadow-2xl transition-all duration-300 hover:scale-[1.02]">
+              <div className="absolute inset-0 bg-gradient-to-br from-blue-500/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+              <div className="relative">
+                <h3 className="text-sm font-medium text-slate-400 mb-2">Total de Operações</h3>
+                <p className="text-3xl font-bold text-white">{stats.total}</p>
+              </div>
+            </div>
+            
+            <div className="group relative overflow-hidden bg-gradient-to-br from-slate-800/60 to-slate-900/80 backdrop-blur-sm border border-slate-700/50 rounded-xl p-6 shadow-xl hover:shadow-2xl transition-all duration-300 hover:scale-[1.02]">
+              <div className="absolute inset-0 bg-gradient-to-br from-green-500/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+              <div className="relative">
+                <h3 className="text-sm font-medium text-slate-400 mb-2">Em Andamento</h3>
+                <p className="text-3xl font-bold text-green-400">{stats.active}</p>
+              </div>
+            </div>
+            
+            <div className="group relative overflow-hidden bg-gradient-to-br from-slate-800/60 to-slate-900/80 backdrop-blur-sm border border-slate-700/50 rounded-xl p-6 shadow-xl hover:shadow-2xl transition-all duration-300 hover:scale-[1.02]">
+              <div className="absolute inset-0 bg-gradient-to-br from-blue-500/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+              <div className="relative">
+                <h3 className="text-sm font-medium text-slate-400 mb-2">Concluídas</h3>
+                <p className="text-3xl font-bold text-blue-400">{stats.completed}</p>
+              </div>
+            </div>
+            
+            <div className="group relative overflow-hidden bg-gradient-to-br from-slate-800/60 to-slate-900/80 backdrop-blur-sm border border-slate-700/50 rounded-xl p-6 shadow-xl hover:shadow-2xl transition-all duration-300 hover:scale-[1.02]">
+              <div className="absolute inset-0 bg-gradient-to-br from-orange-500/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+              <div className="relative">
+                <h3 className="text-sm font-medium text-slate-400 mb-2">Consumo Total (L)</h3>
+                <p className="text-3xl font-bold text-orange-400">{stats.totalGasConsumption.toFixed(1)}</p>
+              </div>
+            </div>
           </div>
 
-          {/* Statistics */}
-          <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
-            <div className="bg-card border rounded-lg p-4 shadow">
-              <h3 className="text-sm font-medium text-muted-foreground mb-2">Total de Operações</h3>
-              <p className="text-2xl font-bold">{stats.total}</p>
-            </div>
-            <div className="bg-card border rounded-lg p-4 shadow">
-              <h3 className="text-sm font-medium text-muted-foreground mb-2">Em Andamento</h3>
-              <p className="text-2xl font-bold text-green-600">{stats.active}</p>
-            </div>
-            <div className="bg-card border rounded-lg p-4 shadow">
-              <h3 className="text-sm font-medium text-muted-foreground mb-2">Concluídas</h3>
-              <p className="text-2xl font-bold text-blue-600">{stats.completed}</p>
-            </div>
-            <div className="bg-card border rounded-lg p-4 shadow">
-              <h3 className="text-sm font-medium text-muted-foreground mb-2">Consumo Total (L)</h3>
-              <p className="text-2xl font-bold">{stats.totalGasConsumption.toFixed(1)}</p>
-            </div>
-          </div>
-
-          {/* Filter section */}
-          <div className="flex flex-col sm:flex-row justify-between gap-4 mb-6">
-            <div className="relative flex-1 max-w-md">
-              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground w-4 h-4" />
-              <Input 
-                type="text" 
-                placeholder="Buscar operação..." 
-                className="pl-10"
-                value={search}
-                onChange={(e) => setSearch(e.target.value)}
-              />
-            </div>
-            <div className="flex gap-2">
-              <AdvancedFilters
-                filters={filterOptions}
-                values={filters}
-                onFiltersChange={setFilters}
-                onClearFilters={clearFilters}
-              />
-              <Button 
-                className="gap-2"
-                onClick={() => {
-                  setSelectedOperation(null);
-                  setAddDialogOpen(true);
-                }}
-              >
-                <Plus className="w-4 h-4" />
-                Nova Operação
-              </Button>
+          {/* Enhanced Search and Filter Section */}
+          <div className="w-full bg-gradient-to-br from-slate-800/60 to-slate-900/80 backdrop-blur-sm border border-slate-700/50 rounded-xl p-6 mb-8 shadow-xl">
+            <div className="flex flex-col lg:flex-row gap-4 items-start lg:items-end">
+              <div className="flex-1 space-y-2">
+                <label className="text-sm font-medium text-slate-200">Buscar Operação</label>
+                <div className="relative">
+                  <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-slate-400 w-4 h-4" />
+                  <Input 
+                    type="text" 
+                    placeholder="Buscar por ID ou setor..." 
+                    className="pl-10 bg-slate-700/50 border-slate-600 text-white placeholder:text-slate-400 focus:ring-blue-500 focus:border-blue-500"
+                    value={search}
+                    onChange={(e) => setSearch(e.target.value)}
+                  />
+                </div>
+              </div>
+              
+              <div className="flex gap-3">
+                <AdvancedFilters
+                  filters={filterOptions}
+                  values={filters}
+                  onFiltersChange={setFilters}
+                  onClearFilters={clearFilters}
+                  triggerProps={{
+                    variant: "outline",
+                    className: "border-slate-600 text-slate-200 hover:bg-slate-700/50 hover:text-white"
+                  }}
+                />
+              </div>
             </div>
           </div>
           
-          {/* Active Operations */}
+          {/* Enhanced Active Operations */}
           <div className="mb-8">
-            <h2 className="text-2xl font-semibold mb-4">Operações em Andamento</h2>
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+            <h2 className="text-2xl font-semibold mb-6 text-white">Operações em Andamento</h2>
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
               {filteredOperations
                 .filter(op => op.status === StatusOperacao.EM_ANDAMENTO)
                 .map((operation) => (
-                  <div key={operation.id} className="bg-card border rounded-lg overflow-hidden shadow hover:shadow-md transition-shadow">
-                    <div className="p-4">
-                      <div className="flex justify-between items-start mb-3">
+                  <div key={operation.id} className="group relative overflow-hidden bg-gradient-to-br from-slate-800/60 to-slate-900/80 backdrop-blur-sm border border-slate-700/50 rounded-xl shadow-xl hover:shadow-2xl transition-all duration-300 hover:scale-[1.02]">
+                    <div className="absolute inset-0 bg-gradient-to-br from-green-500/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+                    <div className="relative p-6">
+                      <div className="flex justify-between items-start mb-4">
                         <div>
-                          <h3 className="font-medium">{operation.operador?.nome}</h3>
-                          <p className="text-sm text-muted-foreground">ID: {operation.id}</p>
+                          <h3 className="font-semibold text-white">{operation.operador?.nome}</h3>
+                          <p className="text-sm text-slate-400">ID: {operation.id}</p>
                         </div>
-                        <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs bg-green-100 text-green-800">
+                        <span className="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-green-500/20 text-green-400 border border-green-500/30">
                           Em Andamento
                         </span>
                       </div>
                       
-                      <div className="space-y-2">
+                      <div className="space-y-3">
                         <div className="flex items-center gap-2">
-                          <Truck className="w-4 h-4 text-muted-foreground" />
-                          <span className="text-sm">{operation.empilhadeira?.modelo} ({operation.empilhadeiraId})</span>
+                          <Truck className="w-4 h-4 text-slate-400" />
+                          <span className="text-sm text-slate-300">{operation.empilhadeira?.modelo} ({operation.empilhadeiraId})</span>
                         </div>
                         <div className="flex items-center gap-2">
-                          <User className="w-4 h-4 text-muted-foreground" />
-                          <span className="text-sm">{operation.operador?.nome}</span>
+                          <User className="w-4 h-4 text-slate-400" />
+                          <span className="text-sm text-slate-300">{operation.operador?.nome}</span>
                         </div>
                         <div className="flex items-center gap-2">
-                          <Calendar className="w-4 h-4 text-muted-foreground" />
-                          <span className="text-sm">{formatDate(operation.dataInicio)}</span>
+                          <Calendar className="w-4 h-4 text-slate-400" />
+                          <span className="text-sm text-slate-300">{formatDate(operation.dataInicio)}</span>
                         </div>
                         <div className="flex items-center gap-2">
-                          <Clock className="w-4 h-4 text-muted-foreground" />
-                          <span className="text-sm">Duração: {calculateDuration(operation)}</span>
+                          <Clock className="w-4 h-4 text-slate-400" />
+                          <span className="text-sm text-slate-300">Duração: {calculateDuration(operation)}</span>
                         </div>
                       </div>
                     </div>
                     
-                    <div className="border-t px-4 py-3 bg-muted/30 flex justify-between">
-                      <span className="text-sm">Setor: {operation.setor}</span>
+                    <div className="border-t border-slate-700/50 px-6 py-4 bg-slate-800/30 flex justify-between items-center">
+                      <span className="text-sm text-slate-300">Setor: {operation.setor}</span>
                       <div className="flex gap-2">
                         <Button 
                           variant="ghost" 
                           size="sm"
+                          className="text-slate-300 hover:text-white hover:bg-slate-700/50"
                           onClick={() => handleViewDetails(operation)}
                         >
                           Detalhes
@@ -388,6 +416,7 @@ const OperationsPage = () => {
                         <Button 
                           variant="ghost" 
                           size="sm"
+                          className="text-blue-400 hover:text-blue-300 hover:bg-blue-500/10"
                           onClick={() => {
                             setSelectedOperation(operation);
                             setEditDialogOpen(true);
@@ -401,51 +430,55 @@ const OperationsPage = () => {
                 ))}
               
               {filteredOperations.filter(op => op.status === StatusOperacao.EM_ANDAMENTO).length === 0 && (
-                <div className="col-span-full p-8 text-center bg-card border rounded-lg">
-                  <p className="text-muted-foreground">Nenhuma operação em andamento</p>
+                <div className="col-span-full p-12 text-center bg-gradient-to-br from-slate-800/40 to-slate-900/60 backdrop-blur-sm border border-slate-700/30 rounded-xl">
+                  <div className="w-16 h-16 mx-auto mb-4 rounded-full bg-slate-700/50 flex items-center justify-center">
+                    <Clock className="w-8 h-8 text-slate-400" />
+                  </div>
+                  <p className="text-slate-400 text-lg">Nenhuma operação em andamento</p>
                 </div>
               )}
             </div>
           </div>
           
-          {/* Completed Operations */}
+          {/* Enhanced Completed Operations Table */}
           <div>
-            <h2 className="text-2xl font-semibold mb-4">Operações Concluídas</h2>
-            <div className="bg-card rounded-lg shadow overflow-hidden">
+            <h2 className="text-2xl font-semibold mb-6 text-white">Operações Concluídas</h2>
+            <div className="bg-gradient-to-br from-slate-800/60 to-slate-900/80 backdrop-blur-sm border border-slate-700/50 rounded-xl shadow-xl overflow-hidden">
               <div className="overflow-x-auto">
                 <table className="w-full">
-                  <thead className="bg-muted/50">
+                  <thead className="bg-slate-800/80">
                     <tr>
-                      <th className="p-4 text-left font-medium text-muted-foreground">ID</th>
-                      <th className="p-4 text-left font-medium text-muted-foreground">Operador</th>
-                      <th className="p-4 text-left font-medium text-muted-foreground">Empilhadeira</th>
-                      <th className="p-4 text-left font-medium text-muted-foreground">Setor</th>
-                      <th className="p-4 text-left font-medium text-muted-foreground">Data</th>
-                      <th className="p-4 text-left font-medium text-muted-foreground">Duração</th>
-                      <th className="p-4 text-left font-medium text-muted-foreground">Consumo (L)</th>
-                      <th className="p-4 text-left font-medium text-muted-foreground">Ações</th>
+                      <th className="p-4 text-left font-semibold text-slate-200">ID</th>
+                      <th className="p-4 text-left font-semibold text-slate-200">Operador</th>
+                      <th className="p-4 text-left font-semibold text-slate-200">Empilhadeira</th>
+                      <th className="p-4 text-left font-semibold text-slate-200">Setor</th>
+                      <th className="p-4 text-left font-semibold text-slate-200">Data</th>
+                      <th className="p-4 text-left font-semibold text-slate-200">Duração</th>
+                      <th className="p-4 text-left font-semibold text-slate-200">Consumo (L)</th>
+                      <th className="p-4 text-left font-semibold text-slate-200">Ações</th>
                     </tr>
                   </thead>
-                  <tbody className="divide-y divide-border">
+                  <tbody className="divide-y divide-slate-700/50">
                     {filteredOperations
                       .filter(op => op.status === StatusOperacao.CONCLUIDA)
                       .map((operation) => (
-                        <tr key={operation.id} className="hover:bg-muted/50 transition-colors">
-                          <td className="p-4">{operation.id}</td>
-                          <td className="p-4">{operation.operador?.nome}</td>
+                        <tr key={operation.id} className="hover:bg-slate-700/30 transition-colors">
+                          <td className="p-4 text-white font-medium">{operation.id}</td>
+                          <td className="p-4 text-slate-300">{operation.operador?.nome}</td>
                           <td className="p-4">
-                            <div>{operation.empilhadeira?.modelo}</div>
-                            <div className="text-xs text-muted-foreground">{operation.empilhadeiraId}</div>
+                            <div className="text-slate-300">{operation.empilhadeira?.modelo}</div>
+                            <div className="text-xs text-slate-500">{operation.empilhadeiraId}</div>
                           </td>
-                          <td className="p-4">{operation.setor}</td>
-                          <td className="p-4">{formatDate(operation.dataInicio)}</td>
-                          <td className="p-4">{calculateDuration(operation)}</td>
-                          <td className="p-4">{(operation.consumoGas || 0).toFixed(1)}</td>
+                          <td className="p-4 text-slate-300">{operation.setor}</td>
+                          <td className="p-4 text-slate-300">{formatDate(operation.dataInicio)}</td>
+                          <td className="p-4 text-slate-300">{calculateDuration(operation)}</td>
+                          <td className="p-4 text-slate-300">{(operation.consumoGas || 0).toFixed(1)}</td>
                           <td className="p-4">
                             <div className="flex gap-2">
                               <Button 
                                 variant="ghost" 
                                 size="sm"
+                                className="text-slate-400 hover:text-white hover:bg-slate-700/50"
                                 onClick={() => handleViewDetails(operation)}
                               >
                                 Detalhes
@@ -453,7 +486,7 @@ const OperationsPage = () => {
                               <Button 
                                 variant="ghost" 
                                 size="sm"
-                                className="text-red-500 hover:text-red-700 hover:bg-red-50"
+                                className="text-red-400 hover:text-red-300 hover:bg-red-500/10"
                                 onClick={() => handleDeleteOperation(operation.id)}
                               >
                                 Excluir
@@ -467,8 +500,11 @@ const OperationsPage = () => {
               </div>
               
               {filteredOperations.filter(op => op.status === StatusOperacao.CONCLUIDA).length === 0 && (
-                <div className="p-8 text-center">
-                  <p className="text-muted-foreground">Nenhuma operação concluída</p>
+                <div className="p-12 text-center">
+                  <div className="w-16 h-16 mx-auto mb-4 rounded-full bg-slate-700/50 flex items-center justify-center">
+                    <Calendar className="w-8 h-8 text-slate-400" />
+                  </div>
+                  <p className="text-slate-400 text-lg">Nenhuma operação concluída</p>
                 </div>
               )}
             </div>
