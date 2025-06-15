@@ -106,15 +106,20 @@ const ForkliftCard: React.FC<ForkliftCardProps> = ({ forklift, onClick, onDelete
       </div>
 
       {/* Type Badge */}
-      <div className="mb-3">
+      <div className="mb-2">
         <Badge variant="outline" className={cn("border font-semibold text-xs tracking-wider whitespace-nowrap shrink-0", getTypeBadge(forklift.tipo))}>
           {forklift.tipo}
         </Badge>
       </div>
 
-      {/* Capacity and Status - Combined section like in the image */}
+      {/* Status Badge - positioned right after type badge like in the image */}
+      <div className="mb-3">
+        {getStatusBadge(forklift.status)}
+      </div>
+
+      {/* Capacity - Simplified section */}
       <div className="bg-slate-800/40 rounded-lg p-2.5 mb-3 border border-slate-700/30">
-        <div className="text-center mb-2">
+        <div className="text-center">
           <div className="text-slate-400 text-xs font-medium tracking-wider uppercase mb-0.5" style={{ color: '#64748b', letterSpacing: '0.5px' }}>
             CAPACIDADE
           </div>
@@ -122,10 +127,6 @@ const ForkliftCard: React.FC<ForkliftCardProps> = ({ forklift, onClick, onDelete
             {forklift.capacidade.toLocaleString()}
             <span className="text-sm font-semibold text-slate-300 ml-1">kg</span>
           </div>
-        </div>
-        {/* Status Badge positioned right below capacity */}
-        <div className="flex justify-center">
-          {getStatusBadge(forklift.status)}
         </div>
       </div>
 
