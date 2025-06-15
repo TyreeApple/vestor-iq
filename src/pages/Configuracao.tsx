@@ -1,4 +1,3 @@
-
 import React from "react";
 import { Settings, Activity, BarChart3 } from "lucide-react";
 import {
@@ -16,6 +15,7 @@ import { FaGithub } from "react-icons/fa";
 import { BsStars } from "react-icons/bs";
 import { PiTableDuotone } from "react-icons/pi";
 import { TbBrandRadixUi } from "react-icons/tb";
+import AboutProjectCard from "@/components/about/AboutProjectCard";
 
 const tecnologias = [
   {
@@ -106,21 +106,7 @@ const Configuracao: React.FC = () => {
       <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
         {/* SOBRE O PROJETO */}
         <div className="md:col-span-1 flex flex-col gap-4">
-          <div className="bg-accent/75 rounded-lg p-5 border border-border shadow-sm flex flex-col gap-2">
-            <h3 className="text-lg font-bold text-foreground mb-2">Sobre o Projeto</h3>
-            <p className="text-muted-foreground text-sm">
-              Projeto feito sem fins de implementação real para funcionamento, foi apenas um projeto para brincar com a IA e testar a real capacidade da IA.
-            </p>
-            <a
-              href="https://github.com/olucasmf"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="flex items-center gap-2 mt-2 text-sm font-medium hover:underline text-primary"
-            >
-              <FaGithub className="w-5 h-5" />
-              github.com/olucasmf
-            </a>
-          </div>
+          <AboutProjectCard />
         </div>
         {/* TECNOLOGIAS E BIBLIOTECAS */}
         <div className="md:col-span-2 flex flex-col gap-7">
@@ -169,4 +155,3 @@ const Configuracao: React.FC = () => {
 };
 
 export default Configuracao;
-
