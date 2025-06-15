@@ -11,6 +11,7 @@ import ReportsPage from "./pages/Reports";
 import OperatorsPage from "./pages/Operators";
 import OperationsPage from "./pages/Operations";
 import MaintenancePage from "./pages/Maintenance";
+import MaintenanceAdvanced from "./pages/MaintenanceAdvanced";
 import GasSupplyPage from "./pages/GasSupply";
 import MainLayout from "./components/layout/MainLayout";
 
@@ -29,6 +30,7 @@ const App = () => (
             <Route path="operadores" element={<OperatorsPage />} />
             <Route path="operacoes" element={<OperationsPage />} />
             <Route path="manutencao" element={<MaintenancePage />} />
+            <Route path="manutencao-avancada" element={<MaintenanceAdvanced />} />
             <Route path="abastecimento" element={<GasSupplyPage />} />
             <Route path="relatorios" element={<ReportsPage />} />
           </Route>
