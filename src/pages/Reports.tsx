@@ -1,13 +1,16 @@
+
 import React, { useState } from 'react';
 import Sidebar from '@/components/layout/Sidebar';
 import { useIsMobile } from '@/hooks/use-mobile';
 import { cn } from '@/lib/utils';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { ChevronDown, Download, FileBarChart, Search, Calendar as CalendarIcon, TrendingUp, Users, Wrench, Fuel, BarChart3 } from 'lucide-react';
+import { ChevronDown, Download, FileBarChart, Search, Calendar as CalendarIcon, TrendingUp, Users, Wrench, Fuel, BarChart3, Sparkles, Activity, Zap, Target, Clock, ArrowUpRight, Filter, Eye, Share2 } from 'lucide-react';
 import { Input } from '@/components/ui/input';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Badge } from '@/components/ui/badge';
+import PremiumSummaryCard from '@/components/dashboard/PremiumSummaryCard';
+import ModernKpiCard from '@/components/dashboard/ModernKpiCard';
 
 const ReportsPage = () => {
   const isMobile = useIsMobile();
@@ -22,53 +25,189 @@ const ReportsPage = () => {
       id: 'operacoes',
       title: 'Operações',
       icon: BarChart3,
-      color: 'bg-blue-500',
+      gradient: 'from-blue-500 via-blue-600 to-indigo-700',
+      bgPattern: 'bg-gradient-to-br from-blue-50 to-indigo-100 dark:from-blue-950/50 dark:to-indigo-900/50',
+      iconBg: 'bg-gradient-to-br from-blue-500 to-indigo-600',
       reports: [
-        { name: 'Utilização de Empilhadeiras', description: 'Análise de horas de uso por máquina', type: 'Operacional' },
-        { name: 'Produtividade por Operador', description: 'Eficiência e desempenho dos operadores', type: 'Performance' },
-        { name: 'Movimentações por Período', description: 'Volume de operações realizadas', type: 'Operacional' }
+        { 
+          name: 'Utilização de Empilhadeiras', 
+          description: 'Análise completa de horas de uso por máquina com insights de produtividade', 
+          type: 'Operacional',
+          icon: Activity,
+          trend: '+15%',
+          lastUpdate: '2 min',
+          priority: 'high'
+        },
+        { 
+          name: 'Produtividade por Operador', 
+          description: 'Dashboard detalhado de eficiência e desempenho individual', 
+          type: 'Performance',
+          icon: Target,
+          trend: '+8%',
+          lastUpdate: '5 min',
+          priority: 'medium'
+        },
+        { 
+          name: 'Movimentações por Período', 
+          description: 'Volume de operações com análise temporal avançada', 
+          type: 'Operacional',
+          icon: TrendingUp,
+          trend: '+12%',
+          lastUpdate: '1 min',
+          priority: 'high'
+        }
       ]
     },
     {
       id: 'manutencao',
       title: 'Manutenção',
       icon: Wrench,
-      color: 'bg-orange-500',
+      gradient: 'from-orange-500 via-red-500 to-pink-600',
+      bgPattern: 'bg-gradient-to-br from-orange-50 to-red-100 dark:from-orange-950/50 dark:to-red-900/50',
+      iconBg: 'bg-gradient-to-br from-orange-500 to-red-600',
       reports: [
-        { name: 'Histórico de Manutenções', description: 'Registros completos de manutenções realizadas', type: 'Histórico' },
-        { name: 'Preventivas Programadas', description: 'Cronograma de manutenções preventivas', type: 'Preventivo' },
-        { name: 'Custos de Manutenção', description: 'Análise financeira dos custos', type: 'Financeiro' }
+        { 
+          name: 'Histórico de Manutenções', 
+          description: 'Timeline completo com análise de custos e padrões', 
+          type: 'Histórico',
+          icon: Clock,
+          trend: '-5%',
+          lastUpdate: '10 min',
+          priority: 'medium'
+        },
+        { 
+          name: 'Preventivas Programadas', 
+          description: 'Cronograma inteligente com alertas e notificações', 
+          type: 'Preventivo',
+          icon: Calendar,
+          trend: '0%',
+          lastUpdate: '3 min',
+          priority: 'high'
+        },
+        { 
+          name: 'Análise de Custos', 
+          description: 'Dashboard financeiro com projeções e otimizações', 
+          type: 'Financeiro',
+          icon: TrendingUp,
+          trend: '-8%',
+          lastUpdate: '15 min',
+          priority: 'low'
+        }
       ]
     },
     {
       id: 'abastecimento',
       title: 'Abastecimento',
       icon: Fuel,
-      color: 'bg-green-500',
+      gradient: 'from-green-500 via-emerald-500 to-teal-600',
+      bgPattern: 'bg-gradient-to-br from-green-50 to-emerald-100 dark:from-green-950/50 dark:to-emerald-900/50',
+      iconBg: 'bg-gradient-to-br from-green-500 to-emerald-600',
       reports: [
-        { name: 'Consumo de Combustível', description: 'Consumo de gás por empilhadeira e horímetro', type: 'Consumo' },
-        { name: 'Eficiência Energética', description: 'Análise de eficiência por máquina', type: 'Eficiência' },
-        { name: 'Histórico de Abastecimentos', description: 'Registro de todos os abastecimentos', type: 'Histórico' }
+        { 
+          name: 'Consumo Inteligente', 
+          description: 'AI-powered análise de consumo com previsões precisas', 
+          type: 'Consumo',
+          icon: Zap,
+          trend: '-12%',
+          lastUpdate: '1 min',
+          priority: 'high'
+        },
+        { 
+          name: 'Eficiência Energética', 
+          description: 'Otimização automática com recomendações personalizadas', 
+          type: 'Eficiência',
+          icon: Activity,
+          trend: '+18%',
+          lastUpdate: '2 min',
+          priority: 'high'
+        },
+        { 
+          name: 'Histórico Avançado', 
+          description: 'Machine learning para padrões de abastecimento', 
+          type: 'Histórico',
+          icon: BarChart3,
+          trend: '+5%',
+          lastUpdate: '8 min',
+          priority: 'medium'
+        }
       ]
     },
     {
       id: 'operadores',
       title: 'Operadores',
       icon: Users,
-      color: 'bg-purple-500',
+      gradient: 'from-purple-500 via-violet-500 to-indigo-600',
+      bgPattern: 'bg-gradient-to-br from-purple-50 to-violet-100 dark:from-purple-950/50 dark:to-violet-900/50',
+      iconBg: 'bg-gradient-to-br from-purple-500 to-violet-600',
       reports: [
-        { name: 'Status dos Operadores', description: 'Validade de ASO e certificações', type: 'Certificação' },
-        { name: 'Horas Trabalhadas', description: 'Controle de jornada de trabalho', type: 'Operacional' },
-        { name: 'Treinamentos', description: 'Status de treinamentos e capacitações', type: 'Treinamento' }
+        { 
+          name: 'Certificações Smart', 
+          description: 'Monitoramento automático de ASO e certificações', 
+          type: 'Certificação',
+          icon: Users,
+          trend: '+3%',
+          lastUpdate: '30 min',
+          priority: 'medium'
+        },
+        { 
+          name: 'Performance Analytics', 
+          description: 'Dashboard avançado de produtividade individual', 
+          type: 'Operacional',
+          icon: Target,
+          trend: '+22%',
+          lastUpdate: '5 min',
+          priority: 'high'
+        },
+        { 
+          name: 'Treinamentos 4.0', 
+          description: 'Plataforma digital de capacitação com gamificação', 
+          type: 'Treinamento',
+          icon: Sparkles,
+          trend: '+35%',
+          lastUpdate: '12 min',
+          priority: 'high'
+        }
       ]
     }
   ];
 
   const quickStats = [
-    { label: 'Relatórios Gerados', value: '1,247', change: '+12%', trend: 'up' },
-    { label: 'Downloads Hoje', value: '89', change: '+5%', trend: 'up' },
-    { label: 'Relatórios Agendados', value: '23', change: '0%', trend: 'neutral' },
-    { label: 'Última Atualização', value: '2min', change: 'agora', trend: 'neutral' }
+    { 
+      title: 'Relatórios Gerados', 
+      value: 1247, 
+      icon: FileBarChart,
+      trend: 'up',
+      trendValue: 12,
+      colorFrom: 'from-blue-600',
+      colorTo: 'to-purple-600'
+    },
+    { 
+      title: 'Downloads Hoje', 
+      value: 89, 
+      icon: Download,
+      trend: 'up',
+      trendValue: 5,
+      colorFrom: 'from-green-500',
+      colorTo: 'to-emerald-600'
+    },
+    { 
+      title: 'Relatórios Agendados', 
+      value: 23, 
+      icon: CalendarIcon,
+      trend: null,
+      trendValue: 0,
+      colorFrom: 'from-orange-500',
+      colorTo: 'to-red-600'
+    },
+    { 
+      title: 'Última Atualização', 
+      value: '2min', 
+      icon: Clock,
+      trend: null,
+      trendValue: 0,
+      colorFrom: 'from-purple-500',
+      colorTo: 'to-pink-600'
+    }
   ];
 
   const filteredCategories = reportCategories.filter(category => {
@@ -83,198 +222,254 @@ const ReportsPage = () => {
     return true;
   });
 
+  const getPriorityColor = (priority: string) => {
+    switch (priority) {
+      case 'high': return 'bg-red-500';
+      case 'medium': return 'bg-yellow-500';
+      case 'low': return 'bg-green-500';
+      default: return 'bg-gray-500';
+    }
+  };
+
   return (
-    <div className="space-y-6">
-      {/* Header */}
-      <div className="flex flex-col space-y-4">
-        <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
-          <div>
-            <h1 className="text-3xl font-bold text-foreground">Relatórios do Sistema</h1>
-            <p className="text-muted-foreground mt-1">Análises e insights da sua operação</p>
-          </div>
-          
-          <div className="flex gap-3">
-            <Button variant="outline" className="gap-2">
-              <CalendarIcon className="w-4 h-4" />
-              Agendar Relatório
-            </Button>
-            <Button className="gap-2 bg-blue-600 hover:bg-blue-700">
-              <Download className="w-4 h-4" />
-              Exportar Selecionados
-            </Button>
-          </div>
-        </div>
-
-        {/* Quick Stats */}
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-          {quickStats.map((stat, index) => (
-            <Card key={index} className="p-4">
-              <div className="flex items-center justify-between">
-                <div>
-                  <p className="text-sm text-muted-foreground">{stat.label}</p>
-                  <p className="text-2xl font-bold">{stat.value}</p>
-                </div>
-                <div className="flex items-center gap-1">
-                  {stat.trend === 'up' && <TrendingUp className="w-4 h-4 text-green-500" />}
-                  <span className={cn(
-                    "text-sm font-medium",
-                    stat.trend === 'up' ? "text-green-500" : "text-muted-foreground"
-                  )}>
-                    {stat.change}
-                  </span>
-                </div>
-              </div>
-            </Card>
-          ))}
-        </div>
-      </div>
-
-      {/* Search and Filters */}
-      <Card className="p-6">
-        <div className="flex flex-col lg:flex-row gap-4">
-          <div className="relative flex-1">
-            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground w-4 h-4" />
-            <Input
-              placeholder="Buscar relatórios por nome ou descrição..."
-              value={search}
-              onChange={(e) => setSearch(e.target.value)}
-              className="pl-10"
-            />
-          </div>
-          
-          <div className="flex flex-wrap gap-3">
-            <Select value={selectedCategory} onValueChange={setSelectedCategory}>
-              <SelectTrigger className="w-40">
-                <SelectValue placeholder="Categoria" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="all">Todas</SelectItem>
-                <SelectItem value="operacoes">Operações</SelectItem>
-                <SelectItem value="manutencao">Manutenção</SelectItem>
-                <SelectItem value="abastecimento">Abastecimento</SelectItem>
-                <SelectItem value="operadores">Operadores</SelectItem>
-              </SelectContent>
-            </Select>
-
-            <Select value={selectedPeriod} onValueChange={setSelectedPeriod}>
-              <SelectTrigger className="w-36">
-                <SelectValue placeholder="Período" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="hoje">Hoje</SelectItem>
-                <SelectItem value="semana">Esta Semana</SelectItem>
-                <SelectItem value="mes">Este Mês</SelectItem>
-                <SelectItem value="trimestre">Trimestre</SelectItem>
-                <SelectItem value="ano">Este Ano</SelectItem>
-              </SelectContent>
-            </Select>
-
-            <Select value={selectedForklift} onValueChange={setSelectedForklift}>
-              <SelectTrigger className="w-40">
-                <SelectValue placeholder="Empilhadeira" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="all">Todas</SelectItem>
-                <SelectItem value="emp-001">EMP-001</SelectItem>
-                <SelectItem value="emp-002">EMP-002</SelectItem>
-                <SelectItem value="emp-003">EMP-003</SelectItem>
-                <SelectItem value="emp-004">EMP-004</SelectItem>
-                <SelectItem value="emp-005">EMP-005</SelectItem>
-              </SelectContent>
-            </Select>
-
-            <Select value={selectedOperator} onValueChange={setSelectedOperator}>
-              <SelectTrigger className="w-36">
-                <SelectValue placeholder="Operador" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="all">Todos</SelectItem>
-                <SelectItem value="joao-silva">João Silva</SelectItem>
-                <SelectItem value="maria-santos">Maria Santos</SelectItem>
-                <SelectItem value="pedro-oliveira">Pedro Oliveira</SelectItem>
-                <SelectItem value="ana-costa">Ana Costa</SelectItem>
-                <SelectItem value="carlos-souza">Carlos Souza</SelectItem>
-              </SelectContent>
-            </Select>
-          </div>
-        </div>
-      </Card>
-
-      {/* Reports Categories */}
-      <div className="space-y-6">
-        {filteredCategories.map((category) => (
-          <Card key={category.id} className="overflow-hidden">
-            <CardHeader className="bg-gradient-to-r from-slate-50 to-slate-100 dark:from-slate-800 dark:to-slate-900">
-              <div className="flex items-center gap-4">
-                <div className={cn("p-3 rounded-lg text-white", category.color)}>
-                  <category.icon className="w-6 h-6" />
+    <div className="space-y-8 p-6 bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-50 dark:from-slate-900 dark:via-slate-800 dark:to-slate-900 min-h-screen">
+      {/* Hero Header */}
+      <div className="relative overflow-hidden">
+        <div className="absolute inset-0 bg-gradient-to-r from-blue-600/10 via-purple-600/10 to-indigo-600/10 rounded-3xl" />
+        <div className="relative bg-white/70 dark:bg-slate-800/70 backdrop-blur-xl rounded-3xl p-8 border border-white/20 shadow-2xl">
+          <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-6">
+            <div className="space-y-2">
+              <div className="flex items-center gap-3">
+                <div className="p-3 bg-gradient-to-br from-blue-500 to-purple-600 rounded-2xl shadow-lg">
+                  <FileBarChart className="w-8 h-8 text-white" />
                 </div>
                 <div>
-                  <CardTitle className="text-xl">{category.title}</CardTitle>
-                  <p className="text-muted-foreground">
-                    {category.reports.length} relatórios disponíveis
+                  <h1 className="text-4xl font-black bg-gradient-to-r from-blue-600 via-purple-600 to-indigo-600 bg-clip-text text-transparent">
+                    Relatórios do Sistema
+                  </h1>
+                  <p className="text-lg text-muted-foreground font-medium">
+                    Análises inteligentes e insights da sua operação
                   </p>
                 </div>
               </div>
-            </CardHeader>
-            <CardContent className="p-6">
-              <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-4">
-                {category.reports.map((report, index) => (
-                  <Card key={index} className="group hover:shadow-md transition-all duration-200 cursor-pointer border-2 hover:border-blue-200 dark:hover:border-blue-800">
-                    <CardContent className="p-5">
-                      <div className="flex items-start justify-between mb-3">
-                        <div className="flex-1">
-                          <h4 className="font-semibold text-foreground group-hover:text-blue-600 transition-colors">
-                            {report.name}
-                          </h4>
-                          <p className="text-sm text-muted-foreground mt-1">
-                            {report.description}
-                          </p>
-                        </div>
-                        <FileBarChart className="w-5 h-5 text-blue-500 opacity-60 group-hover:opacity-100 transition-opacity" />
-                      </div>
-                      
-                      <div className="flex items-center justify-between">
-                        <Badge variant="secondary" className="text-xs">
-                          {report.type}
-                        </Badge>
-                        <div className="flex gap-2">
-                          <Button variant="ghost" size="sm" className="h-8 px-3 text-xs">
-                            Visualizar
-                          </Button>
-                          <Button variant="ghost" size="sm" className="h-8 px-3 text-xs">
-                            <Download className="w-3 h-3" />
-                          </Button>
-                        </div>
-                      </div>
-                    </CardContent>
-                  </Card>
-                ))}
-              </div>
-            </CardContent>
-          </Card>
+            </div>
+            
+            <div className="flex gap-3">
+              <Button variant="outline" className="gap-2 bg-white/50 backdrop-blur-sm border-white/20 hover:bg-white/70 transition-all duration-300 shadow-lg">
+                <CalendarIcon className="w-4 h-4" />
+                Agendar Relatório
+              </Button>
+              <Button className="gap-2 bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white shadow-xl hover:shadow-2xl transition-all duration-300 transform hover:scale-105">
+                <Download className="w-4 h-4" />
+                Exportar Selecionados
+              </Button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* Premium Stats Grid */}
+      <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-6">
+        {quickStats.map((stat, index) => (
+          <ModernKpiCard
+            key={index}
+            title={stat.title}
+            value={typeof stat.value === 'string' ? 0 : stat.value}
+            icon={stat.icon}
+            trend={stat.trend}
+            trendValue={stat.trendValue}
+            colorFrom={stat.colorFrom}
+            colorTo={stat.colorTo}
+            className="hover:scale-105 transition-transform duration-300"
+          />
         ))}
       </div>
 
+      {/* Advanced Search and Filters */}
+      <Card className="overflow-hidden bg-white/70 dark:bg-slate-800/70 backdrop-blur-xl border-white/20 shadow-2xl">
+        <CardContent className="p-6">
+          <div className="flex flex-col lg:flex-row gap-4">
+            <div className="relative flex-1">
+              <Search className="absolute left-4 top-1/2 transform -translate-y-1/2 text-muted-foreground w-5 h-5" />
+              <Input
+                placeholder="Buscar relatórios inteligentes..."
+                value={search}
+                onChange={(e) => setSearch(e.target.value)}
+                className="pl-12 h-12 bg-white/50 border-white/20 backdrop-blur-sm focus:bg-white/70 transition-all duration-300"
+              />
+            </div>
+            
+            <div className="flex flex-wrap gap-3">
+              <Select value={selectedCategory} onValueChange={setSelectedCategory}>
+                <SelectTrigger className="w-40 h-12 bg-white/50 border-white/20 backdrop-blur-sm">
+                  <Filter className="w-4 h-4 mr-2" />
+                  <SelectValue placeholder="Categoria" />
+                </SelectTrigger>
+                <SelectContent className="bg-white/95 backdrop-blur-xl border-white/20">
+                  <SelectItem value="all">Todas</SelectItem>
+                  <SelectItem value="operacoes">Operações</SelectItem>
+                  <SelectItem value="manutencao">Manutenção</SelectItem>
+                  <SelectItem value="abastecimento">Abastecimento</SelectItem>
+                  <SelectItem value="operadores">Operadores</SelectItem>
+                </SelectContent>
+              </Select>
+
+              <Select value={selectedPeriod} onValueChange={setSelectedPeriod}>
+                <SelectTrigger className="w-36 h-12 bg-white/50 border-white/20 backdrop-blur-sm">
+                  <CalendarIcon className="w-4 h-4 mr-2" />
+                  <SelectValue placeholder="Período" />
+                </SelectTrigger>
+                <SelectContent className="bg-white/95 backdrop-blur-xl border-white/20">
+                  <SelectItem value="all">Todos</SelectItem>
+                  <SelectItem value="hoje">Hoje</SelectItem>
+                  <SelectItem value="semana">Esta Semana</SelectItem>
+                  <SelectItem value="mes">Este Mês</SelectItem>
+                  <SelectItem value="trimestre">Trimestre</SelectItem>
+                  <SelectItem value="ano">Este Ano</SelectItem>
+                </SelectContent>
+              </Select>
+
+              <Select value={selectedForklift} onValueChange={setSelectedForklift}>
+                <SelectTrigger className="w-40 h-12 bg-white/50 border-white/20 backdrop-blur-sm">
+                  <SelectValue placeholder="Empilhadeira" />
+                </SelectTrigger>
+                <SelectContent className="bg-white/95 backdrop-blur-xl border-white/20">
+                  <SelectItem value="all">Todas</SelectItem>
+                  <SelectItem value="emp-001">EMP-001</SelectItem>
+                  <SelectItem value="emp-002">EMP-002</SelectItem>
+                  <SelectItem value="emp-003">EMP-003</SelectItem>
+                  <SelectItem value="emp-004">EMP-004</SelectItem>
+                  <SelectItem value="emp-005">EMP-005</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+          </div>
+        </CardContent>
+      </Card>
+
+      {/* Ultra-Premium Report Categories */}
+      <div className="space-y-8">
+        {filteredCategories.map((category) => (
+          <div key={category.id} className="space-y-6">
+            {/* Category Header */}
+            <div className={cn(
+              "relative overflow-hidden rounded-3xl p-8",
+              category.bgPattern
+            )}>
+              <div className="absolute inset-0 bg-gradient-to-r opacity-10" style={{
+                background: `linear-gradient(135deg, ${category.gradient.split(' ')[1]}, ${category.gradient.split(' ')[3]})`
+              }} />
+              
+              <div className="relative flex items-center gap-6">
+                <div className={cn(
+                  "p-4 rounded-2xl shadow-2xl",
+                  category.iconBg
+                )}>
+                  <category.icon className="w-10 h-10 text-white" />
+                </div>
+                <div>
+                  <h2 className="text-3xl font-black text-foreground mb-2">{category.title}</h2>
+                  <p className="text-lg text-muted-foreground font-medium">
+                    {category.reports.length} relatórios premium disponíveis
+                  </p>
+                </div>
+              </div>
+            </div>
+
+            {/* Reports Grid */}
+            <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-6">
+              {category.reports.map((report, index) => (
+                <Card key={index} className="group relative overflow-hidden bg-white/70 dark:bg-slate-800/70 backdrop-blur-xl border-white/20 shadow-2xl hover:shadow-3xl transition-all duration-500 hover:scale-105 cursor-pointer">
+                  {/* Priority Indicator */}
+                  <div className={cn(
+                    "absolute top-4 right-4 w-3 h-3 rounded-full animate-pulse",
+                    getPriorityColor(report.priority)
+                  )} />
+                  
+                  {/* Gradient Overlay */}
+                  <div className="absolute inset-0 bg-gradient-to-br from-transparent via-transparent to-blue-500/5 opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+                  
+                  <CardContent className="p-6 relative z-10">
+                    <div className="flex items-start justify-between mb-4">
+                      <div className="p-3 bg-gradient-to-br from-blue-500/10 to-purple-500/10 rounded-xl group-hover:from-blue-500/20 group-hover:to-purple-500/20 transition-all duration-300">
+                        <report.icon className="w-6 h-6 text-blue-600 dark:text-blue-400" />
+                      </div>
+                      <div className="flex items-center gap-1 text-xs text-muted-foreground">
+                        <Clock className="w-3 h-3" />
+                        {report.lastUpdate}
+                      </div>
+                    </div>
+                    
+                    <div className="space-y-3">
+                      <div>
+                        <h4 className="font-bold text-lg text-foreground group-hover:text-blue-600 transition-colors duration-300">
+                          {report.name}
+                        </h4>
+                        <p className="text-sm text-muted-foreground leading-relaxed mt-1">
+                          {report.description}
+                        </p>
+                      </div>
+                      
+                      <div className="flex items-center justify-between pt-3 border-t border-white/10">
+                        <div className="flex items-center gap-3">
+                          <Badge variant="secondary" className="text-xs font-semibold bg-white/50 backdrop-blur-sm">
+                            {report.type}
+                          </Badge>
+                          <div className="flex items-center gap-1 text-xs font-medium text-green-600">
+                            <TrendingUp className="w-3 h-3" />
+                            {report.trend}
+                          </div>
+                        </div>
+                        
+                        <div className="flex gap-2">
+                          <Button variant="ghost" size="sm" className="h-8 px-3 text-xs bg-white/50 hover:bg-white/70 backdrop-blur-sm">
+                            <Eye className="w-3 h-3 mr-1" />
+                            Ver
+                          </Button>
+                          <Button variant="ghost" size="sm" className="h-8 px-3 text-xs bg-white/50 hover:bg-white/70 backdrop-blur-sm">
+                            <Download className="w-3 h-3" />
+                          </Button>
+                          <Button variant="ghost" size="sm" className="h-8 px-3 text-xs bg-white/50 hover:bg-white/70 backdrop-blur-sm">
+                            <Share2 className="w-3 h-3" />
+                          </Button>
+                        </div>
+                      </div>
+                    </div>
+                  </CardContent>
+                </Card>
+              ))}
+            </div>
+          </div>
+        ))}
+      </div>
+
+      {/* Empty State */}
       {filteredCategories.length === 0 && (
-        <Card className="p-12 text-center">
-          <div className="space-y-4">
-            <div className="w-16 h-16 bg-muted rounded-full flex items-center justify-center mx-auto">
-              <FileBarChart className="w-8 h-8 text-muted-foreground" />
+        <Card className="p-16 text-center bg-white/70 dark:bg-slate-800/70 backdrop-blur-xl border-white/20 shadow-2xl">
+          <div className="space-y-6">
+            <div className="w-24 h-24 bg-gradient-to-br from-blue-500/10 to-purple-500/10 rounded-full flex items-center justify-center mx-auto">
+              <FileBarChart className="w-12 h-12 text-blue-500" />
             </div>
             <div>
-              <h3 className="text-lg font-semibold">Nenhum relatório encontrado</h3>
-              <p className="text-muted-foreground">
+              <h3 className="text-2xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
+                Nenhum relatório encontrado
+              </h3>
+              <p className="text-muted-foreground mt-2 text-lg">
                 Tente ajustar os filtros ou termo de busca para encontrar relatórios.
               </p>
             </div>
-            <Button variant="outline" onClick={() => {
-              setSearch('');
-              setSelectedCategory('');
-              setSelectedPeriod('');
-              setSelectedForklift('');
-              setSelectedOperator('');
-            }}>
+            <Button 
+              variant="outline" 
+              onClick={() => {
+                setSearch('');
+                setSelectedCategory('');
+                setSelectedPeriod('');
+                setSelectedForklift('');
+                setSelectedOperator('');
+              }}
+              className="bg-white/50 backdrop-blur-sm border-white/20 hover:bg-white/70 transition-all duration-300"
+            >
+              <Sparkles className="w-4 h-4 mr-2" />
               Limpar Filtros
             </Button>
           </div>
