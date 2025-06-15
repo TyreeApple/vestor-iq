@@ -1,3 +1,4 @@
+
 import React, { useState } from 'react';
 import { NavLink } from 'react-router-dom';
 import { Search, User, Menu, X, BarChart3, Users, Activity, Wrench, Fuel, FileText, Gauge, Settings } from 'lucide-react';
@@ -8,9 +9,6 @@ import { cn } from '@/lib/utils';
 import { useAppStore } from '@/stores/useAppStore';
 import { StatusOperacao, StatusManutencao } from "@/types";
 import { useNavigate } from "react-router-dom";
-import LogoOnly from "./LogoOnly";
-import NavbarActions from "./NavbarActions";
-import NavbarMenu from "./NavbarMenu";
 
 const Navbar: React.FC = () => {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
@@ -74,16 +72,131 @@ const Navbar: React.FC = () => {
   return (
     <>
       <header className="h-16 bg-card dark:bg-card border-b border-slate-200 dark:border-border flex items-center justify-between px-6 shadow-premium dark:shadow-premium-dark relative z-50">
+        {/* Logo only, no brand name/text */}
         <div className="flex items-center space-x-4">
-          <LogoOnly />
+          <div className="flex items-center">
+            <div className="p-2 bg-gradient-to-r from-blue-600 to-purple-600 rounded-xl">
+              <Gauge className="w-6 h-6 text-white" />
+            </div>
+          </div>
         </div>
 
-        <NavbarMenu isMobileMenuOpen={isMobileMenuOpen} setIsMobileMenuOpen={setIsMobileMenuOpen} />
+        {/* Desktop Navigation */}
+        <nav className="hidden lg:flex items-center space-x-1">
+          {menuItems.map((item) => (
+            <NavLink
+              key={item.id}
+              to={item.path}
+              className={({ isActive }) => cn(
+                "flex items-center space-x-2 px-3 py-2 rounded-lg transition-all duration-200 text-sm font-medium relative",
+                isActive
+                  ? "bg-primary text-primary-foreground shadow-sm"
+                  : "text-muted-foreground hover:text-foreground hover:bg-accent"
+              )}
+            >
+              <item.icon className="w-4 h-4" />
+              <span>{item.label}</span>
+              {typeof item.badge === "number" && item.badge > 0 && (
+                <span className="bg-error text-white text-xs px-1.5 py-0.5 rounded-full min-w-[18px] h-[18px] flex items-center justify-center font-semibold">
+                  {item.badge > 99 ? '99+' : item.badge}
+                </span>
+              )}
+            </NavLink>
+          ))}
+        </nav>
 
-        <NavbarActions isMobileMenuOpen={isMobileMenuOpen} setIsMobileMenuOpen={setIsMobileMenuOpen} />
+        {/* -------- Right side: icons only -------- */}
+        <div className="flex items-center space-x-2">
+          {/* Search Icon Only */}
+          <Button
+            variant="ghost"
+            size="icon"
+            className="hover:bg-accent transition-colors"
+            aria-label="Buscar"
+          >
+            <Search className="w-5 h-5" />
+          </Button>
+          {/* Theme Toggle */}
+          <ThemeToggle />
+          {/* Settings Button */}
+          <Button
+            variant="ghost"
+            size="icon"
+            className="hover:bg-accent transition-colors"
+            onClick={() => navigate('/configuracao')}
+            aria-label="Configurações"
+          >
+            <Settings className="w-5 h-5" />
+          </Button>
+          {/* User Menu */}
+          <Button variant="ghost" size="icon" className="hover:bg-accent transition-colors">
+            <User className="w-5 h-5" />
+          </Button>
+          {/* Mobile menu button */}
+          <Button
+            variant="ghost"
+            size="icon"
+            className="lg:hidden"
+            onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+          >
+            {isMobileMenuOpen ? (
+              <X className="w-5 h-5" />
+            ) : (
+              <Menu className="w-5 h-5" />
+            )}
+          </Button>
+        </div>
       </header>
+
+      {/* Mobile Menu Overlay */}
+      {isMobileMenuOpen && (
+        <div className="lg:hidden fixed inset-0 z-40 bg-background/80 backdrop-blur-sm" onClick={() => setIsMobileMenuOpen(false)} />
+      )}
+
+      {/* Mobile Menu */}
+      <div className={cn(
+        "lg:hidden fixed top-16 left-0 right-0 bg-card border-b border-border shadow-lg z-40 transition-all duration-300",
+        isMobileMenuOpen ? "opacity-100 translate-y-0" : "opacity-0 -translate-y-full pointer-events-none"
+      )}>
+        {/* Mobile Actions (including search icon) */}
+        <div className="flex items-center gap-2 px-4 pt-4">
+          <Button
+            variant="ghost"
+            size="icon"
+            className="hover:bg-accent transition-colors"
+            aria-label="Buscar"
+          >
+            <Search className="w-5 h-5" />
+          </Button>
+        </div>
+        {/* Mobile Navigation */}
+        <nav className="p-4 space-y-2">
+          {menuItems.map((item) => (
+            <NavLink
+              key={item.id}
+              to={item.path}
+              onClick={() => setIsMobileMenuOpen(false)}
+              className={({ isActive }) => cn(
+                "flex items-center space-x-3 px-4 py-3 rounded-lg transition-all duration-200 relative",
+                isActive
+                  ? "bg-primary text-primary-foreground shadow-sm"
+                  : "text-muted-foreground hover:text-foreground hover:bg-accent"
+              )}
+            >
+              <item.icon className="w-5 h-5" />
+              <span className="font-medium">{item.label}</span>
+              {typeof item.badge === "number" && item.badge > 0 && (
+                <span className="bg-error text-white text-xs px-2 py-1 rounded-full min-w-[20px] h-[20px] flex items-center justify-center font-semibold ml-auto">
+                  {item.badge > 99 ? '99+' : item.badge}
+                </span>
+              )}
+            </NavLink>
+          ))}
+        </nav>
+      </div>
     </>
   );
 };
 
 export default Navbar;
+
