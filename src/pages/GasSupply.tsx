@@ -9,6 +9,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Badge } from '@/components/ui/badge';
 import AdvancedFilters from '@/components/common/AdvancedFilters';
+import StandardCard from '@/components/common/StandardCard';
 
 // Mock data for gas supplies - fixed to match Portuguese interface
 const initialGasSupplies: Abastecimento[] = [
@@ -372,75 +373,35 @@ const GasSupplyPage = () => {
         </div>
       </div>
 
-      {/* KPI Cards */}
+      {/* KPI Cards using StandardCard */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-        <Card className="relative overflow-hidden bg-gradient-to-br from-blue-500 to-blue-600 border-0 text-white shadow-xl hover:shadow-2xl transition-all duration-300 transform hover:scale-105">
-          <CardHeader className="pb-2">
-            <div className="flex items-center justify-between">
-              <CardTitle className="text-sm font-medium opacity-90">Total de Abastecimentos</CardTitle>
-              <Truck className="w-5 h-5 opacity-80" />
-            </div>
-          </CardHeader>
-          <CardContent>
-            <div className="text-3xl font-bold">{filteredGasSupplies.length}</div>
-            <div className="flex items-center gap-1 mt-2 text-xs opacity-80">
-              <TrendingUp className="w-3 h-3" />
-              +2 esta semana
-            </div>
-          </CardContent>
-          <div className="absolute top-0 right-0 w-20 h-20 bg-white/10 rounded-full -mr-10 -mt-10"></div>
-        </Card>
-
-        <Card className="relative overflow-hidden bg-gradient-to-br from-emerald-500 to-emerald-600 border-0 text-white shadow-xl hover:shadow-2xl transition-all duration-300 transform hover:scale-105">
-          <CardHeader className="pb-2">
-            <div className="flex items-center justify-between">
-              <CardTitle className="text-sm font-medium opacity-90">Consumo Total</CardTitle>
-              <Fuel className="w-5 h-5 opacity-80" />
-            </div>
-          </CardHeader>
-          <CardContent>
-            <div className="text-3xl font-bold">{totalConsumption.toFixed(1)}L</div>
-            <div className="flex items-center gap-1 mt-2 text-xs opacity-80">
-              <TrendingDown className="w-3 h-3" />
-              -5% vs mês anterior
-            </div>
-          </CardContent>
-          <div className="absolute top-0 right-0 w-20 h-20 bg-white/10 rounded-full -mr-10 -mt-10"></div>
-        </Card>
-
-        <Card className="relative overflow-hidden bg-gradient-to-br from-orange-500 to-orange-600 border-0 text-white shadow-xl hover:shadow-2xl transition-all duration-300 transform hover:scale-105">
-          <CardHeader className="pb-2">
-            <div className="flex items-center justify-between">
-              <CardTitle className="text-sm font-medium opacity-90">Custo Total</CardTitle>
-              <Gauge className="w-5 h-5 opacity-80" />
-            </div>
-          </CardHeader>
-          <CardContent>
-            <div className="text-3xl font-bold">R$ {totalCost.toFixed(0)}</div>
-            <div className="flex items-center gap-1 mt-2 text-xs opacity-80">
-              <TrendingUp className="w-3 h-3" />
-              +3% vs período anterior
-            </div>
-          </CardContent>
-          <div className="absolute top-0 right-0 w-20 h-20 bg-white/10 rounded-full -mr-10 -mt-10"></div>
-        </Card>
-
-        <Card className="relative overflow-hidden bg-gradient-to-br from-purple-500 to-purple-600 border-0 text-white shadow-xl hover:shadow-2xl transition-all duration-300 transform hover:scale-105">
-          <CardHeader className="pb-2">
-            <div className="flex items-center justify-between">
-              <CardTitle className="text-sm font-medium opacity-90">Eficiência Média</CardTitle>
-              <Droplets className="w-5 h-5 opacity-80" />
-            </div>
-          </CardHeader>
-          <CardContent>
-            <div className="text-3xl font-bold">{averageEfficiency.toFixed(2)}</div>
-            <div className="flex items-center gap-1 mt-2 text-xs opacity-80">
-              <TrendingUp className="w-3 h-3" />
-              L/h por operação
-            </div>
-          </CardContent>
-          <div className="absolute top-0 right-0 w-20 h-20 bg-white/10 rounded-full -mr-10 -mt-10"></div>
-        </Card>
+        <StandardCard
+          title="Total de Abastecimentos"
+          value={filteredGasSupplies.length}
+          icon={Truck}
+          variant="info"
+        />
+        
+        <StandardCard
+          title="Consumo Total"
+          value={`${totalConsumption.toFixed(1)}L`}
+          icon={Fuel}
+          variant="success"
+        />
+        
+        <StandardCard
+          title="Custo Total"
+          value={`R$ ${totalCost.toFixed(0)}`}
+          icon={Gauge}
+          variant="warning"
+        />
+        
+        <StandardCard
+          title="Eficiência Média"
+          value={averageEfficiency.toFixed(2)}
+          icon={Droplets}
+          variant="default"
+        />
       </div>
 
       {/* Advanced Search and Filters */}
