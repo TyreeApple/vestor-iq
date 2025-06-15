@@ -77,15 +77,19 @@ const NavbarMenu: React.FC<MobileMenuProps> = ({
 
   return (
     <>
-      {/* Desktop Navigation */}
-      <nav className="hidden lg:flex items-center space-x-1">
+      {/* Desktop Navigation 
+        - Ajuste: Desktop nav só aparece em telas xl+ (>=1280px)
+        - Em menor largura, menu móvel é exibido.
+      */}
+      <nav className="hidden xl:flex items-center space-x-1">
         {menuItems.map(item => (
           <NavLink
             key={item.id}
             to={item.path}
             className={({ isActive }) =>
               cn(
-                "flex items-center space-x-2 px-3 py-2 rounded-lg transition-all duration-200 text-sm font-medium relative",
+                // Padding menor para caber mais itens
+                "flex items-center space-x-2 px-2 py-1 rounded-lg transition-all duration-200 text-sm font-medium relative",
                 isActive
                   ? "bg-primary text-primary-foreground shadow-sm"
                   : "text-muted-foreground hover:text-foreground hover:bg-accent"
@@ -93,7 +97,8 @@ const NavbarMenu: React.FC<MobileMenuProps> = ({
             }
           >
             <item.icon className="w-4 h-4" />
-            <span>{item.label}</span>
+            <span className="hidden 2xl:inline">{item.label}</span>
+            {/* Em xl mostra só ícones; a partir de 2xl (1536px) mostra texto também */}
             {typeof item.badge === "number" && item.badge > 0 && (
               <span className="bg-error text-white text-xs px-1.5 py-0.5 rounded-full min-w-[18px] h-[18px] flex items-center justify-center font-semibold">
                 {item.badge > 99 ? '99+' : item.badge}
@@ -106,7 +111,7 @@ const NavbarMenu: React.FC<MobileMenuProps> = ({
       {/* Mobile Menu Overlay */}
       {isMobileMenuOpen && (
         <div
-          className="lg:hidden fixed inset-0 z-40 bg-background/80 backdrop-blur-sm"
+          className="xl:hidden fixed inset-0 z-40 bg-background/80 backdrop-blur-sm"
           onClick={() => setIsMobileMenuOpen(false)}
         />
       )}
@@ -114,16 +119,12 @@ const NavbarMenu: React.FC<MobileMenuProps> = ({
       {/* Mobile Menu */}
       <div
         className={cn(
-          "lg:hidden fixed top-16 left-0 right-0 bg-card border-b border-border shadow-lg z-40 transition-all duration-300",
+          "xl:hidden fixed top-16 left-0 right-0 bg-card border-b border-border shadow-lg z-40 transition-all duration-300",
           isMobileMenuOpen
             ? "opacity-100 translate-y-0"
             : "opacity-0 -translate-y-full pointer-events-none"
         )}
       >
-        {/* Mobile Actions (apenas a lupa) */}
-        <div className="flex items-center gap-2 px-4 pt-4">
-          {/* A lupa do mobile já está com NavbarActions */}
-        </div>
         {/* Mobile Navigation */}
         <nav className="p-4 space-y-2">
           {menuItems.map(item => (
