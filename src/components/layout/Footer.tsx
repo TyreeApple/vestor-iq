@@ -1,6 +1,7 @@
 
 import React from 'react';
 import { Gauge, Shield, Clock, Users, Github } from 'lucide-react';
+import ThemeToggle from '@/components/common/ThemeToggle';
 
 const Footer: React.FC = () => {
   return (
@@ -52,6 +53,11 @@ const Footer: React.FC = () => {
               </div>
             </div>
           </div>
+        </div>
+
+        {/* Theme Toggle centralizado */}
+        <div className="flex justify-center mt-6 mb-2">
+          <ThemeToggle />
         </div>
 
         {/* Copyright */}

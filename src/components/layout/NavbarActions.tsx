@@ -1,8 +1,6 @@
-
 import React from "react";
 import { Search, User, Menu, X, Settings } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import ThemeToggle from "@/components/common/ThemeToggle";
 import { useNavigate } from "react-router-dom";
 
 type Props = {
@@ -23,7 +21,6 @@ const NavbarActions: React.FC<Props> = ({ isMobileMenuOpen, setIsMobileMenuOpen 
       >
         <Search className="w-5 h-5" />
       </Button>
-      <ThemeToggle />
       <Button
         variant="ghost"
         size="icon"
