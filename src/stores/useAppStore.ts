@@ -531,14 +531,20 @@ export const useAppStore = create<AppState>()(
           ),
         // ---------- MOCK DATA PARA DEMONSTRAÇÃO ----------
         addMockData: () => {
-          // Empilhadeiras mock (atendendo interface completa)
+          // Import enums (do this in the import block at top! If not, move up accordingly)
+          // import { 
+          //   TipoEmpilhadeira, StatusEmpilhadeira, FuncaoOperador, StatusOperador, StatusOperacao, 
+          //   TipoOperacao, StatusManutencao, TipoManutencao, PrioridadeOperacao
+          // } from '@/types';
+
+          // Empilhadeiras mock (agora com os enums certo)
           const empilhadeiras = [
             {
               id: "E-001",
               modelo: "Hyster H2.5FT",
               marca: "Hyster",
-              tipo: 0,
-              status: 0,
+              tipo: TipoEmpilhadeira.GAS,
+              status: StatusEmpilhadeira.OPERACIONAL,
               capacidade: 2500,
               anoFabricacao: 2019,
               dataAquisicao: "2019-06-10",
@@ -559,8 +565,8 @@ export const useAppStore = create<AppState>()(
               id: "E-002",
               modelo: "Toyota 8FGCU25",
               marca: "Toyota",
-              tipo: 0,
-              status: 2,
+              tipo: TipoEmpilhadeira.GAS,
+              status: StatusEmpilhadeira.PARADA,
               capacidade: 2500,
               anoFabricacao: 2021,
               dataAquisicao: "2021-01-15",
@@ -578,7 +584,7 @@ export const useAppStore = create<AppState>()(
             }
           ];
 
-          // Operadores mock
+          // Operadores
           const operadores = [
             {
               id: "O-001",
@@ -586,7 +592,7 @@ export const useAppStore = create<AppState>()(
               cpf: "123.456.789-00",
               email: "ana.silva@email.com",
               telefone: "11999999999",
-              funcao: 0,
+              funcao: FuncaoOperador.OPERADOR,
               dataAdmissao: "2022-02-17",
               turno: "Manhã",
               setor: "Logística",
@@ -594,7 +600,7 @@ export const useAppStore = create<AppState>()(
               avaliacoes: [],
               horasTrabalhadas: 1800,
               produtividade: 97,
-              status: 0,
+              status: StatusOperador.ATIVO,
             },
             {
               id: "O-002",
@@ -602,7 +608,7 @@ export const useAppStore = create<AppState>()(
               cpf: "987.654.321-00",
               email: "carlos.dias@email.com",
               telefone: "11988888888",
-              funcao: 0,
+              funcao: FuncaoOperador.OPERADOR,
               dataAdmissao: "2021-11-02",
               turno: "Noite",
               setor: "Produção",
@@ -610,11 +616,11 @@ export const useAppStore = create<AppState>()(
               avaliacoes: [],
               horasTrabalhadas: 2100,
               produtividade: 92,
-              status: 0,
+              status: StatusOperador.ATIVO,
             }
-          ];
+          ]
 
-          // Operações mock
+          // Operações
           const operacoes = [
             {
               id: "OP-101",
@@ -622,26 +628,26 @@ export const useAppStore = create<AppState>()(
               empilhadeira: empilhadeiras[0],
               operadorId: "O-001",
               operador: operadores[0],
-              tipo: 2, // Movimentação
-              status: 1,
-              prioridade: 1,
+              tipo: TipoOperacao.MOVIMENTACAO,
+              status: StatusOperacao.EM_ANDAMENTO,
+              prioridade: PrioridadeOperacao.NORMAL,
               setor: "Logística",
               localizacao: "Doca 3",
               dataInicio: new Date().toISOString(),
               duracaoEstimada: 40,
               produtividade: 90,
-            },
+            }
           ];
 
-          // Ordem de Serviço mock
+          // Ordem de Serviço
           const ordemServicos = [
             {
               id: "OS-001",
               empilhadeiraId: "E-002",
               empilhadeira: empilhadeiras[1],
-              tipo: 1, // Corretiva
-              status: 1, // Em Andamento
-              prioridade: 3, // Crítica
+              tipo: TipoManutencao.CORRETIVA,
+              status: StatusManutencao.EM_ANDAMENTO,
+              prioridade: PrioridadeOperacao.CRITICA,
               problema: "Vazamento de óleo",
               dataAbertura: new Date().toISOString(),
               custos: {
@@ -653,9 +659,9 @@ export const useAppStore = create<AppState>()(
               pecasUtilizadas: [],
               anexos: [],
             },
-          ];
+          ]
 
-          // Abastecimento mock
+          // Abastecimento
           const abastecimentos = [
             {
               id: "AB-001",
@@ -669,7 +675,7 @@ export const useAppStore = create<AppState>()(
               custoTotal: 160,
               precoLitro: 6.40,
               fornecedor: "Posto Shell",
-              localAbastecimento: "Base Logística",
+              localAbastecimento: "Base Logística"
             }
           ];
 
