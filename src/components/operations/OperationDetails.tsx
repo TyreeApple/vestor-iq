@@ -93,7 +93,9 @@ const OperationDetails = ({ open, onOpenChange, operation, onEdit }: OperationDe
                   <User className="h-4 w-4 text-muted-foreground" />
                   <span className="text-sm">Operador</span>
                 </div>
-                <span className="text-sm font-medium">{operation.operador.nome}</span>
+                <span className="text-sm font-medium">
+                  {operation.operador?.nome || 'Não informado'}
+                </span>
               </div>
               
               <div className="flex items-center justify-between border-b pb-2">
@@ -101,7 +103,9 @@ const OperationDetails = ({ open, onOpenChange, operation, onEdit }: OperationDe
                   <Truck className="h-4 w-4 text-muted-foreground" />
                   <span className="text-sm">Empilhadeira</span>
                 </div>
-                <span className="text-sm font-medium">{operation.empilhadeira.modelo} ({operation.empilhadeiraId})</span>
+                <span className="text-sm font-medium">
+                  {operation.empilhadeira?.modelo || 'Não informado'} ({operation.empilhadeiraId})
+                </span>
               </div>
               
               <div className="flex items-center justify-between border-b pb-2">
