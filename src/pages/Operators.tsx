@@ -1,200 +1,161 @@
 
 import React, { useState } from 'react';
-import PageHeader from '@/components/layout/PageHeader';
 import { Button } from "@/components/ui/button";
-import { StatusCertificacao, User, FuncaoOperador } from '@/types';
-import { Search, UserPlus, Phone, Trash2, Edit, Eye } from 'lucide-react';
+import { useIsMobile } from '@/hooks/use-mobile';
 import { Input } from '@/components/ui/input';
-import { Badge } from '@/components/ui/badge';
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from "@/components/ui/table";
+import { Search, Plus, Users, UserCheck, Clock, Award, TrendingUp, Activity } from 'lucide-react';
+import { Operador, FuncaoOperador, StatusOperador } from '@/types';
+import { useToast } from '@/hooks/use-toast';
 import OperatorDialog from '@/components/operators/OperatorDialog';
 import OperatorDetails from '@/components/operators/OperatorDetails';
+import OperatorCard from '@/components/operators/OperatorCard';
 import AdvancedFilters from '@/components/common/AdvancedFilters';
-import { useToast } from '@/hooks/use-toast';
-import { cn } from '@/lib/utils';
-import PaginationControls from '@/components/common/PaginationControls';
 import { useFilters } from '@/hooks/use-filters';
+import PageHeader from '@/components/layout/PageHeader';
+import ModernKpiCard from '@/components/dashboard/ModernKpiCard';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 
 // Mock data for operators
-const initialOperators: User[] = [
+const initialOperators: Operador[] = [
   {
     id: 'OP001',
     nome: 'Carlos Silva',
-    name: 'Carlos Silva',
+    cpf: '123.456.789-00',
+    email: 'carlos@example.com',
+    telefone: '(11) 99999-9999',
     funcao: FuncaoOperador.OPERADOR,
-    role: FuncaoOperador.OPERADOR,
-    cpf: '123.456.789-10',
-    telefone: '(11) 98765-4321',
-    contact: '(11) 98765-4321',
-    turno: 'Manhã',
-    shift: 'Manhã',
-    dataAdmissao: '15/03/2022',
-    registrationDate: '15/03/2022',
-    asoExpirationDate: '15/03/2024',
-    nrExpirationDate: '20/05/2024',
-    asoStatus: StatusCertificacao.VALIDO,
-    nrStatus: StatusCertificacao.VALIDO,
-    email: 'carlos.silva@empresa.com',
+    dataAdmissao: '01/01/2020',
+    turno: 'Matutino',
     setor: 'Armazém',
-    certificacoes: [],
-    avaliacoes: [],
-    horasTrabalhadas: 1200,
-    produtividade: 92.5,
-    status: 'Ativo'
+    certificacoes: ['Básico', 'Avançado'],
+    avaliacoes: [
+      { data: '15/10/2023', nota: 8.5, comentario: 'Excelente desempenho' },
+      { data: '15/09/2023', nota: 9.0, comentario: 'Muito bom' }
+    ],
+    horasTrabalhadas: 2000,
+    produtividade: 85,
+    status: StatusOperador.ATIVO
   },
   {
     id: 'OP002',
     nome: 'Maria Oliveira',
-    name: 'Maria Oliveira',
-    funcao: FuncaoOperador.OPERADOR,
-    role: FuncaoOperador.OPERADOR,
     cpf: '987.654.321-00',
-    telefone: '(11) 91234-5678',
-    contact: '(11) 91234-5678',
-    turno: 'Tarde',
-    shift: 'Tarde',
-    dataAdmissao: '10/06/2022',
-    registrationDate: '10/06/2022',
-    asoExpirationDate: '10/06/2023',
-    nrExpirationDate: '15/08/2023',
-    asoStatus: StatusCertificacao.VENCIDO,
-    nrStatus: StatusCertificacao.VENCIDO,
-    email: 'maria.oliveira@empresa.com',
+    email: 'maria@example.com',
+    telefone: '(11) 88888-8888',
+    funcao: FuncaoOperador.SUPERVISOR,
+    dataAdmissao: '15/02/2021',
+    turno: 'Vespertino',
     setor: 'Produção',
-    certificacoes: [],
-    avaliacoes: [],
-    horasTrabalhadas: 980,
-    produtividade: 88.3,
-    status: 'Ativo'
+    certificacoes: ['Básico', 'Avançado', 'Supervisor'],
+    avaliacoes: [
+      { data: '10/10/2023', nota: 9.5, comentario: 'Liderança excepcional' }
+    ],
+    horasTrabalhadas: 1900,
+    produtividade: 92,
+    status: StatusOperador.ATIVO
   },
   {
     id: 'OP003',
     nome: 'João Pereira',
-    name: 'João Pereira',
+    cpf: '456.789.123-00',
+    email: 'joao@example.com',
+    telefone: '(11) 77777-7777',
     funcao: FuncaoOperador.OPERADOR,
-    role: FuncaoOperador.OPERADOR,
-    cpf: '456.789.123-45',
-    telefone: '(11) 97654-3210',
-    contact: '(11) 97654-3210',
-    turno: 'Noite',
-    shift: 'Noite',
-    dataAdmissao: '05/01/2023',
-    registrationDate: '05/01/2023',
-    asoExpirationDate: '05/01/2024',
-    nrExpirationDate: '10/02/2024',
-    asoStatus: StatusCertificacao.VENCENDO,
-    nrStatus: StatusCertificacao.VALIDO,
-    email: 'joao.pereira@empresa.com',
-    setor: 'Logística',
-    certificacoes: [],
-    avaliacoes: [],
-    horasTrabalhadas: 756,
-    produtividade: 95.1,
-    status: 'Ativo'
+    dataAdmissao: '10/06/2022',
+    turno: 'Noturno',
+    setor: 'Expedição',
+    certificacoes: ['Básico'],
+    avaliacoes: [
+      { data: '20/10/2023', nota: 7.8, comentario: 'Bom desempenho' }
+    ],
+    horasTrabalhadas: 1200,
+    produtividade: 78,
+    status: StatusOperador.ATIVO
   },
   {
     id: 'OP004',
     nome: 'Ana Costa',
-    name: 'Ana Costa',
+    cpf: '321.654.987-00',
+    email: 'ana@example.com',
+    telefone: '(11) 66666-6666',
     funcao: FuncaoOperador.OPERADOR,
-    role: FuncaoOperador.OPERADOR,
-    cpf: '789.123.456-78',
-    telefone: '(11) 94321-8765',
-    contact: '(11) 94321-8765',
-    turno: 'Manhã',
-    shift: 'Manhã',
-    dataAdmissao: '20/04/2023',
-    registrationDate: '20/04/2023',
-    asoExpirationDate: '20/04/2024',
-    nrExpirationDate: '25/06/2023',
-    asoStatus: StatusCertificacao.VALIDO,
-    nrStatus: StatusCertificacao.VENCENDO,
-    email: 'ana.costa@empresa.com',
-    setor: 'Expedição',
-    certificacoes: [],
-    avaliacoes: [],
-    horasTrabalhadas: 420,
-    produtividade: 91.7,
-    status: 'Ativo'
+    dataAdmissao: '05/09/2021',
+    turno: 'Matutino',
+    setor: 'Recebimento',
+    certificacoes: ['Básico', 'Avançado'],
+    avaliacoes: [
+      { data: '25/10/2023', nota: 8.2, comentario: 'Muito dedicada' }
+    ],
+    horasTrabalhadas: 1800,
+    produtividade: 88,
+    status: StatusOperador.INATIVO
   },
   {
-    id: 'SV001',
+    id: 'OP005',
     nome: 'Pedro Santos',
-    name: 'Pedro Santos',
-    funcao: FuncaoOperador.SUPERVISOR,
-    role: FuncaoOperador.SUPERVISOR,
-    cpf: '321.654.987-00',
-    telefone: '(11) 95678-1234',
-    contact: '(11) 95678-1234',
-    turno: 'Integral',
-    shift: 'Integral',
-    dataAdmissao: '12/11/2021',
-    registrationDate: '12/11/2021',
-    asoExpirationDate: '12/11/2023',
-    nrExpirationDate: '20/01/2024',
-    asoStatus: StatusCertificacao.VENCENDO,
-    nrStatus: StatusCertificacao.VENCENDO,
-    email: 'pedro.santos@empresa.com',
-    setor: 'Supervisão',
-    certificacoes: [],
-    avaliacoes: [],
-    horasTrabalhadas: 1850,
-    produtividade: 97.2,
-    status: 'Ativo'
+    cpf: '159.753.486-00',
+    email: 'pedro@example.com',
+    telefone: '(11) 55555-5555',
+    funcao: FuncaoOperador.OPERADOR,
+    dataAdmissao: '20/03/2023',
+    turno: 'Vespertino',
+    setor: 'Armazém',
+    certificacoes: ['Básico'],
+    avaliacoes: [
+      { data: '30/10/2023', nota: 7.5, comentario: 'Em desenvolvimento' }
+    ],
+    horasTrabalhadas: 800,
+    produtividade: 75,
+    status: StatusOperador.ATIVO
   }
 ];
 
 const OperatorsPage = () => {
+  const isMobile = useIsMobile();
   const { toast } = useToast();
-  const [operators, setOperators] = useState<User[]>(initialOperators);
+  const [operators, setOperators] = useState<Operador[]>(initialOperators);
   
   // Dialog states
   const [addDialogOpen, setAddDialogOpen] = useState(false);
   const [editDialogOpen, setEditDialogOpen] = useState(false);
   const [detailsDialogOpen, setDetailsDialogOpen] = useState(false);
-  const [selectedOperator, setSelectedOperator] = useState<User | null>(null);
+  const [selectedOperator, setSelectedOperator] = useState<Operador | null>(null);
 
-  // Pagination
-  const [currentPage, setCurrentPage] = useState(1);
-  const itemsPerPage = 10;
+  // Use filters hook
+  const {
+    search,
+    setSearch,
+    filters,
+    setFilters,
+    filteredData: filteredOperators,
+    clearFilters
+  } = useFilters({
+    data: operators,
+    searchFields: ['nome', 'cpf', 'email', 'setor']
+  });
 
-  // Filter configuration
+  // Filter configuration for advanced filters
   const filterOptions = [
     {
-      key: 'role',
-      label: 'Função',
+      key: 'status',
+      label: 'Status',
       type: 'select' as const,
       options: [
-        { value: 'OPERADOR', label: 'Operador' },
-        { value: 'SUPERVISOR', label: 'Supervisor' },
-        { value: 'TECNICO', label: 'Técnico' },
-        { value: 'COORDENADOR', label: 'Coordenador' },
-        { value: 'GERENTE', label: 'Gerente' }
+        { value: StatusOperador.ATIVO, label: 'Ativo' },
+        { value: StatusOperador.INATIVO, label: 'Inativo' },
+        { value: StatusOperador.FERIAS, label: 'Férias' },
+        { value: StatusOperador.AFASTADO, label: 'Afastado' }
       ]
     },
     {
-      key: 'shift',
-      label: 'Turno',
+      key: 'funcao',
+      label: 'Função',
       type: 'select' as const,
       options: [
-        { value: 'Manhã', label: 'Manhã' },
-        { value: 'Tarde', label: 'Tarde' },
-        { value: 'Noite', label: 'Noite' },
-        { value: 'Integral', label: 'Integral' }
+        { value: FuncaoOperador.OPERADOR, label: 'Operador' },
+        { value: FuncaoOperador.SUPERVISOR, label: 'Supervisor' },
+        { value: FuncaoOperador.COORDENADOR, label: 'Coordenador' },
+        { value: FuncaoOperador.GERENTE, label: 'Gerente' }
       ]
     },
     {
@@ -204,131 +165,68 @@ const OperatorsPage = () => {
       options: [
         { value: 'Armazém', label: 'Armazém' },
         { value: 'Produção', label: 'Produção' },
-        { value: 'Logística', label: 'Logística' },
         { value: 'Expedição', label: 'Expedição' },
-        { value: 'Supervisão', label: 'Supervisão' }
+        { value: 'Recebimento', label: 'Recebimento' },
+        { value: 'Manutenção', label: 'Manutenção' }
       ]
     },
     {
-      key: 'status',
-      label: 'Status',
+      key: 'turno',
+      label: 'Turno',
       type: 'select' as const,
       options: [
-        { value: 'Ativo', label: 'Ativo' },
-        { value: 'Inativo', label: 'Inativo' },
-        { value: 'Licença', label: 'Licença' }
+        { value: 'Matutino', label: 'Matutino' },
+        { value: 'Vespertino', label: 'Vespertino' },
+        { value: 'Noturno', label: 'Noturno' }
       ]
+    },
+    {
+      key: 'produtividade',
+      label: 'Produtividade Mínima (%)',
+      type: 'number' as const
     }
   ];
 
-  // Use filters hook
-  const {
-    search,
-    setSearch,
-    filters,
-    setFilters,
-    filteredData: baseFilteredData,
-    clearFilters,
-    hasActiveFilters
-  } = useFilters({
-    data: operators,
-    searchFields: ['name', 'nome', 'id', 'cpf', 'email']
-  });
-
-  // Additional certification status filter
-  const [certStatus, setCertStatus] = useState<string>('all');
-
-  // Apply certification status filter
-  const filteredOperators = baseFilteredData.filter(operator => {
-    if (certStatus === 'all') return true;
+  // Handle save operator
+  const handleSaveOperator = (operatorData: Operador) => {
+    const isNewOperator = !operators.some(op => op.id === operatorData.id);
     
-    if (certStatus === 'regular') {
-      return operator.asoStatus === StatusCertificacao.VALIDO && 
-             operator.nrStatus === StatusCertificacao.VALIDO;
-    }
-    
-    if (certStatus === 'warning') {
-      return operator.asoStatus === StatusCertificacao.VENCENDO || 
-             operator.nrStatus === StatusCertificacao.VENCENDO;
-    }
-    
-    if (certStatus === 'expired') {
-      return operator.asoStatus === StatusCertificacao.VENCIDO || 
-             operator.nrStatus === StatusCertificacao.VENCIDO;
-    }
-    
-    return true;
-  });
-
-  // Get status color classes
-  const getStatusBadge = (status: StatusCertificacao) => {
-    switch (status) {
-      case StatusCertificacao.VALIDO:
-        return (
-          <Badge className="bg-gradient-to-r from-emerald-500 to-emerald-600 text-white border-0 font-semibold text-xs px-2 py-1 rounded-full">
-            ✓ Válido
-          </Badge>
-        );
-      case StatusCertificacao.VENCENDO:
-        return (
-          <Badge className="bg-gradient-to-r from-amber-500 to-orange-600 text-white border-0 font-semibold text-xs px-2 py-1 rounded-full animate-pulse">
-            ⚠ Vencendo
-          </Badge>
-        );
-      case StatusCertificacao.VENCIDO:
-        return (
-          <Badge className="bg-gradient-to-r from-red-500 to-red-600 text-white border-0 font-semibold text-xs px-2 py-1 rounded-full">
-            ✗ Vencido
-          </Badge>
-        );
-      default:
-        return (
-          <Badge className="bg-gradient-to-r from-slate-500 to-slate-600 text-white border-0 font-semibold text-xs px-2 py-1 rounded-full">
-            {status}
-          </Badge>
-        );
-    }
-  };
-
-  // Get role color for badge
-  const getRoleBadge = (role: FuncaoOperador) => {
-    const colors = {
-      [FuncaoOperador.OPERADOR]: 'bg-blue-500/20 text-blue-300 border-blue-400/30',
-      [FuncaoOperador.SUPERVISOR]: 'bg-purple-500/20 text-purple-300 border-purple-400/30',
-      [FuncaoOperador.TECNICO]: 'bg-emerald-500/20 text-emerald-300 border-emerald-400/30',
-      [FuncaoOperador.COORDENADOR]: 'bg-orange-500/20 text-orange-300 border-orange-400/30',
-      [FuncaoOperador.GERENTE]: 'bg-red-500/20 text-red-300 border-red-400/30'
-    };
-    
-    return colors[role] || 'bg-slate-500/20 text-slate-300 border-slate-400/30';
-  };
-
-  // Handle add/edit operator
-  const handleSaveOperator = (operatorData: User) => {
-    if (editDialogOpen) {
-      // Update existing operator
+    if (isNewOperator) {
+      setOperators(prev => [operatorData, ...prev]);
+      toast({
+        title: "Operador criado",
+        description: "O operador foi criado com sucesso."
+      });
+    } else {
       setOperators(prev => 
         prev.map(op => op.id === operatorData.id ? operatorData : op)
       );
-    } else {
-      // Add new operator
-      setOperators(prev => [...prev, operatorData]);
+      toast({
+        title: "Operador atualizado",
+        description: "O operador foi atualizado com sucesso."
+      });
     }
   };
 
-  // Handle view operator details
-  const handleViewDetails = (operator: User) => {
+  // Open details dialog
+  const handleViewDetails = (operator: Operador) => {
     setSelectedOperator(operator);
     setDetailsDialogOpen(true);
   };
 
-  // Handle edit from details view
+  // Open edit dialog from details
   const handleEditFromDetails = () => {
     setDetailsDialogOpen(false);
     setEditDialogOpen(true);
   };
 
-  // Handle delete operator
+  // Open edit dialog directly
+  const handleEdit = (operator: Operador) => {
+    setSelectedOperator(operator);
+    setEditDialogOpen(true);
+  };
+
+  // Delete operator
   const handleDeleteOperator = (id: string) => {
     if (confirm("Tem certeza que deseja excluir este operador?")) {
       setOperators(prev => prev.filter(op => op.id !== id));
@@ -339,308 +237,170 @@ const OperatorsPage = () => {
     }
   };
 
-  // Handle filter toggle
-  const handleFilterToggle = () => {
-    toast({
-      title: "Filtros",
-      description: "Esta funcionalidade permitiria filtros mais avançados."
-    });
+  // Get statistics
+  const stats = {
+    total: operators.length,
+    active: operators.filter(op => op.status === StatusOperador.ATIVO).length,
+    avgProductivity: Math.round(operators.reduce((sum, op) => sum + op.produtividade, 0) / operators.length),
+    totalHours: operators.reduce((sum, op) => sum + op.horasTrabalhadas, 0)
   };
-
-  // Handle clear all filters
-  const handleClearAllFilters = () => {
-    clearFilters();
-    setCertStatus('all');
-  };
-
-  // Pagination calculations
-  const totalItems = filteredOperators.length;
-  const totalPages = Math.ceil(totalItems / itemsPerPage);
-  const startIndex = (currentPage - 1) * itemsPerPage + 1;
-  const endIndex = Math.min(currentPage * itemsPerPage, totalItems);
-  const paginatedOperators = filteredOperators.slice(
-    (currentPage - 1) * itemsPerPage,
-    currentPage * itemsPerPage
-  );
 
   return (
-    <div className="w-full space-y-6">
+    <div className="space-y-8">
+      {/* Enhanced Header */}
       <PageHeader
-        title="Gestão de Operadores"
-        subtitle="Gerencie operadores de empilhadeiras e suas certificações"
+        title="Operadores"
+        description="Gestão completa da equipe de operadores"
       >
-        <div className="flex flex-col sm:flex-row gap-2">
-          <div className="relative flex-1 max-w-md">
-            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground w-4 h-4" />
-            <Input 
-              type="text" 
-              placeholder="Buscar operador..." 
-              className="pl-10 bg-slate-800/60 border-slate-700/50 text-white placeholder:text-slate-400"
-              value={search}
-              onChange={(e) => setSearch(e.target.value)}
-            />
-          </div>
-          <AdvancedFilters
-            filters={filterOptions}
-            values={filters}
-            onFiltersChange={setFilters}
-            onClearFilters={handleClearAllFilters}
-          />
-          <Button 
-            className="gap-2 bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800"
-            onClick={() => {
-              setSelectedOperator(null);
-              setAddDialogOpen(true);
-            }}
-          >
-            <UserPlus className="w-4 h-4" />
-            Novo Operador
-          </Button>
-        </div>
+        <Button 
+          className="gap-2 bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white shadow-lg hover:shadow-xl transition-all duration-200"
+          onClick={() => {
+            setSelectedOperator(null);
+            setAddDialogOpen(true);
+          }}
+        >
+          <Plus className="w-4 h-4" />
+          Novo Operador
+        </Button>
       </PageHeader>
-      
-      {/* Enhanced filter options - compact layout */}
-      <div className="w-full bg-gradient-to-br from-slate-800/60 to-slate-900/80 backdrop-blur-sm border border-slate-700/50 rounded-xl p-6">
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4">
-          <div className="space-y-2">
-            <h4 className="text-sm font-medium text-slate-200">Função</h4>
-            <Select value={filters.role || 'all'} onValueChange={(value) => setFilters({...filters, role: value === 'all' ? '' : value})}>
-              <SelectTrigger className="bg-slate-700/50 border-slate-600/50 text-white">
-                <SelectValue placeholder="Selecione função" />
-              </SelectTrigger>
-              <SelectContent className="bg-slate-800 border-slate-700">
-                <SelectItem value="all">Todos</SelectItem>
-                <SelectItem value="OPERADOR">Operador</SelectItem>
-                <SelectItem value="SUPERVISOR">Supervisor</SelectItem>
-                <SelectItem value="TECNICO">Técnico</SelectItem>
-                <SelectItem value="COORDENADOR">Coordenador</SelectItem>
-                <SelectItem value="GERENTE">Gerente</SelectItem>
-              </SelectContent>
-            </Select>
-          </div>
-          
-          <div className="space-y-2">
-            <h4 className="text-sm font-medium text-slate-200">Status de Certificação</h4>
-            <Select value={certStatus} onValueChange={setCertStatus}>
-              <SelectTrigger className="bg-slate-700/50 border-slate-600/50 text-white">
-                <SelectValue placeholder="Status certificação" />
-              </SelectTrigger>
-              <SelectContent className="bg-slate-800 border-slate-700">
-                <SelectItem value="all">Todos</SelectItem>
-                <SelectItem value="regular">Regular</SelectItem>
-                <SelectItem value="warning">Próximo do Vencimento</SelectItem>
-                <SelectItem value="expired">Vencido</SelectItem>
-              </SelectContent>
-            </Select>
-          </div>
-          
-          <div className="space-y-2">
-            <h4 className="text-sm font-medium text-slate-200">Turno</h4>
-            <Select value={filters.shift || 'all'} onValueChange={(value) => setFilters({...filters, shift: value === 'all' ? '' : value})}>
-              <SelectTrigger className="bg-slate-700/50 border-slate-600/50 text-white">
-                <SelectValue placeholder="Selecione turno" />
-              </SelectTrigger>
-              <SelectContent className="bg-slate-800 border-slate-700">
-                <SelectItem value="all">Todos</SelectItem>
-                <SelectItem value="Manhã">Manhã</SelectItem>
-                <SelectItem value="Tarde">Tarde</SelectItem>
-                <SelectItem value="Noite">Noite</SelectItem>
-                <SelectItem value="Integral">Integral</SelectItem>
-              </SelectContent>
-            </Select>
-          </div>
 
-          <div className="space-y-2">
-            <h4 className="text-sm font-medium text-slate-200">Setor</h4>
-            <Select value={filters.setor || 'all'} onValueChange={(value) => setFilters({...filters, setor: value === 'all' ? '' : value})}>
-              <SelectTrigger className="bg-slate-700/50 border-slate-600/50 text-white">
-                <SelectValue placeholder="Selecione setor" />
-              </SelectTrigger>
-              <SelectContent className="bg-slate-800 border-slate-700">
-                <SelectItem value="all">Todos</SelectItem>
-                <SelectItem value="Armazém">Armazém</SelectItem>
-                <SelectItem value="Produção">Produção</SelectItem>
-                <SelectItem value="Logística">Logística</SelectItem>
-                <SelectItem value="Expedição">Expedição</SelectItem>
-                <SelectItem value="Supervisão">Supervisão</SelectItem>
-              </SelectContent>
-            </Select>
-          </div>
-
-          <div className="space-y-2">
-            <h4 className="text-sm font-medium text-slate-200">Status</h4>
-            <Select value={filters.status || 'all'} onValueChange={(value) => setFilters({...filters, status: value === 'all' ? '' : value})}>
-              <SelectTrigger className="bg-slate-700/50 border-slate-600/50 text-white">
-                <SelectValue placeholder="Selecione status" />
-              </SelectTrigger>
-              <SelectContent className="bg-slate-800 border-slate-700">
-                <SelectItem value="all">Todos</SelectItem>
-                <SelectItem value="Ativo">Ativo</SelectItem>
-                <SelectItem value="Inativo">Inativo</SelectItem>
-                <SelectItem value="Licença">Licença</SelectItem>
-              </SelectContent>
-            </Select>
-          </div>
-        </div>
-
-        {(hasActiveFilters || certStatus !== 'all') && (
-          <div className="flex justify-center mt-4">
-            <Button
-              variant="ghost"
-              size="sm"
-              onClick={handleClearAllFilters}
-              className="text-slate-400 hover:text-white hover:bg-slate-700/50"
-            >
-              Limpar Filtros
-            </Button>
-          </div>
-        )}
-      </div>
-      
-      {/* Operators table - using full width */}
-      <div className="w-full bg-gradient-to-br from-slate-800/60 to-slate-900/80 backdrop-blur-sm border border-slate-700/50 rounded-xl overflow-hidden">
-        <div className="overflow-x-auto">
-          <Table>
-            <TableHeader>
-              <TableRow className="border-slate-700/50">
-                <TableHead className="text-slate-200 font-semibold whitespace-nowrap">ID / Nome</TableHead>
-                <TableHead className="text-slate-200 font-semibold whitespace-nowrap">Função</TableHead>
-                <TableHead className="text-slate-200 font-semibold whitespace-nowrap">Contato</TableHead>
-                <TableHead className="text-slate-200 font-semibold whitespace-nowrap">Turno</TableHead>
-                <TableHead className="text-slate-200 font-semibold whitespace-nowrap">Setor</TableHead>
-                <TableHead className="text-slate-200 font-semibold whitespace-nowrap">ASO</TableHead>
-                <TableHead className="text-slate-200 font-semibold whitespace-nowrap">NR-11</TableHead>
-                <TableHead className="text-slate-200 font-semibold whitespace-nowrap">Admissão</TableHead>
-                <TableHead className="text-slate-200 font-semibold whitespace-nowrap">Ações</TableHead>
-              </TableRow>
-            </TableHeader>
-            <TableBody>
-              {paginatedOperators.map((operator) => (
-                <TableRow 
-                  key={operator.id} 
-                  className="border-slate-700/30 hover:bg-slate-800/40 transition-colors"
-                >
-                  <TableCell className="whitespace-nowrap">
-                    <div className="space-y-1">
-                      <div className="font-bold text-white text-sm">{operator.id}</div>
-                      <div className="text-slate-400 text-sm">{operator.name || operator.nome}</div>
-                    </div>
-                  </TableCell>
-                  <TableCell className="whitespace-nowrap">
-                    <Badge 
-                      variant="outline" 
-                      className={cn("border font-semibold text-xs px-2 py-1 rounded-full", getRoleBadge(operator.role || operator.funcao))}
-                    >
-                      {operator.role || operator.funcao}
-                    </Badge>
-                  </TableCell>
-                  <TableCell className="whitespace-nowrap">
-                    <div className="flex items-center gap-2 text-blue-400 text-sm">
-                      <Phone className="w-3 h-3" />
-                      {operator.contact || operator.telefone}
-                    </div>
-                  </TableCell>
-                  <TableCell className="whitespace-nowrap">
-                    <span className="text-slate-200 text-sm font-medium">
-                      {operator.shift || operator.turno}
-                    </span>
-                  </TableCell>
-                  <TableCell className="whitespace-nowrap">
-                    <span className="text-slate-200 text-sm">
-                      {operator.setor}
-                    </span>
-                  </TableCell>
-                  <TableCell className="whitespace-nowrap">
-                    <div className="space-y-1">
-                      {getStatusBadge(operator.asoStatus || StatusCertificacao.VALIDO)}
-                      <div className="text-xs text-slate-400">
-                        {operator.asoExpirationDate || 'N/A'}
-                      </div>
-                    </div>
-                  </TableCell>
-                  <TableCell className="whitespace-nowrap">
-                    <div className="space-y-1">
-                      {getStatusBadge(operator.nrStatus || StatusCertificacao.VALIDO)}
-                      <div className="text-xs text-slate-400">
-                        {operator.nrExpirationDate || 'N/A'}
-                      </div>
-                    </div>
-                  </TableCell>
-                  <TableCell className="whitespace-nowrap">
-                    <span className="text-slate-200 text-sm">
-                      {operator.registrationDate || operator.dataAdmissao}
-                    </span>
-                  </TableCell>
-                  <TableCell className="whitespace-nowrap">
-                    <div className="flex items-center gap-1">
-                      <Button
-                        variant="ghost"
-                        size="sm"
-                        onClick={() => handleViewDetails(operator)}
-                        className="h-8 w-8 p-0 text-slate-400 hover:text-blue-400 hover:bg-blue-500/20"
-                        title="Ver detalhes"
-                      >
-                        <Eye className="h-3 w-3" />
-                      </Button>
-                      <Button
-                        variant="ghost"
-                        size="sm"
-                        onClick={() => {
-                          setSelectedOperator(operator);
-                          setEditDialogOpen(true);
-                        }}
-                        className="h-8 w-8 p-0 text-slate-400 hover:text-emerald-400 hover:bg-emerald-500/20"
-                        title="Editar"
-                      >
-                        <Edit className="h-3 w-3" />
-                      </Button>
-                      <Button
-                        variant="ghost"
-                        size="sm"
-                        onClick={() => handleDeleteOperator(operator.id)}
-                        className="h-8 w-8 p-0 text-slate-400 hover:text-red-400 hover:bg-red-500/20"
-                        title="Excluir"
-                      >
-                        <Trash2 className="h-3 w-3" />
-                      </Button>
-                    </div>
-                  </TableCell>
-                </TableRow>
-              ))}
-            </TableBody>
-          </Table>
-        </div>
-        
-        {paginatedOperators.length === 0 && (
-          <div className="text-center py-12">
-            <p className="text-slate-400">Nenhum operador encontrado</p>
-          </div>
-        )}
-      </div>
-
-      {/* Pagination */}
-      {totalPages > 1 && (
-        <PaginationControls
-          currentPage={currentPage}
-          totalPages={totalPages}
-          onPageChange={setCurrentPage}
-          canGoPrevious={currentPage > 1}
-          canGoNext={currentPage < totalPages}
-          startIndex={startIndex}
-          endIndex={endIndex}
-          totalItems={totalItems}
+      {/* Modern Statistics Cards */}
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+        <ModernKpiCard
+          title="Total de Operadores"
+          value={stats.total}
+          icon={Users}
+          colorFrom="from-slate-600"
+          colorTo="to-slate-800"
         />
-      )}
-      
-      {/* Add/Edit Operator Dialog */}
-      <OperatorDialog 
-        open={addDialogOpen} 
+        
+        <ModernKpiCard
+          title="Operadores Ativos"
+          value={stats.active}
+          icon={UserCheck}
+          trend="up"
+          trendValue={8}
+          colorFrom="from-green-500"
+          colorTo="to-emerald-600"
+        />
+        
+        <ModernKpiCard
+          title="Produtividade Média"
+          value={`${stats.avgProductivity}%`}
+          icon={TrendingUp}
+          trend="up"
+          trendValue={3}
+          colorFrom="from-blue-500"
+          colorTo="to-cyan-600"
+        />
+        
+        <ModernKpiCard
+          title="Horas Trabalhadas"
+          value={stats.totalHours.toLocaleString()}
+          icon={Clock}
+          colorFrom="from-orange-500"
+          colorTo="to-red-600"
+        />
+      </div>
+
+      {/* Enhanced Search and Filter Section */}
+      <Card className="glass-card">
+        <CardHeader className="pb-4">
+          <CardTitle className="text-lg font-semibold text-foreground flex items-center gap-2">
+            <Search className="w-5 h-5" />
+            Busca e Filtros
+          </CardTitle>
+        </CardHeader>
+        <CardContent>
+          <div className="flex flex-col lg:flex-row gap-4 items-start lg:items-end">
+            <div className="flex-1 space-y-2">
+              <label className="text-sm font-medium text-muted-foreground">Buscar Operador</label>
+              <div className="relative">
+                <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground w-4 h-4" />
+                <Input 
+                  type="text" 
+                  placeholder="Buscar por nome, CPF, email ou setor..." 
+                  className="pl-10 bg-background/50 border-border/50 focus:border-primary/50 focus:ring-primary/20"
+                  value={search}
+                  onChange={(e) => setSearch(e.target.value)}
+                />
+              </div>
+            </div>
+            
+            <div className="flex gap-3">
+              <AdvancedFilters
+                filters={filterOptions}
+                values={filters}
+                onFiltersChange={setFilters}
+                onClearFilters={clearFilters}
+                triggerProps={{
+                  variant: "outline",
+                  className: "border-border/50 text-foreground hover:bg-accent/50 hover:text-accent-foreground shadow-sm"
+                }}
+              />
+            </div>
+          </div>
+        </CardContent>
+      </Card>
+
+      {/* Operators Grid */}
+      <div className="space-y-6">
+        <div className="flex items-center justify-between">
+          <h2 className="text-2xl font-semibold text-foreground flex items-center gap-2">
+            <Activity className="w-6 h-6 text-primary" />
+            Equipe de Operadores
+          </h2>
+          <span className="text-sm text-muted-foreground">
+            {filteredOperators.length} operador{filteredOperators.length !== 1 ? 'es' : ''} encontrado{filteredOperators.length !== 1 ? 's' : ''}
+          </span>
+        </div>
+
+        {filteredOperators.length > 0 ? (
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+            {filteredOperators.map((operator) => (
+              <OperatorCard
+                key={operator.id}
+                operator={operator}
+                onEdit={handleEdit}
+                onViewDetails={handleViewDetails}
+                onDelete={handleDeleteOperator}
+              />
+            ))}
+          </div>
+        ) : (
+          <Card className="glass-card">
+            <CardContent className="p-12 text-center">
+              <div className="w-16 h-16 mx-auto mb-4 rounded-full bg-accent/30 flex items-center justify-center">
+                <Users className="w-8 h-8 text-muted-foreground" />
+              </div>
+              <h3 className="text-lg font-semibold text-foreground mb-2">
+                Nenhum operador encontrado
+              </h3>
+              <p className="text-muted-foreground mb-6">
+                Não há operadores que correspondam aos critérios de busca.
+              </p>
+              <Button
+                variant="outline"
+                onClick={clearFilters}
+                className="hover:bg-accent/50"
+              >
+                Limpar Filtros
+              </Button>
+            </CardContent>
+          </Card>
+        )}
+      </div>
+
+      {/* Add Operator Dialog */}
+      <OperatorDialog
+        open={addDialogOpen}
         onOpenChange={setAddDialogOpen}
         onSave={handleSaveOperator}
       />
       
-      <OperatorDialog 
-        open={editDialogOpen} 
+      {/* Edit Operator Dialog */}
+      <OperatorDialog
+        open={editDialogOpen}
         onOpenChange={setEditDialogOpen}
         operator={selectedOperator || undefined}
         onSave={handleSaveOperator}
