@@ -21,8 +21,8 @@
     --secondary: 210 15% 95%;           /* neutral-100 */
     --secondary-foreground: 210 15% 12%; /* neutral-900 */
 
-    --muted: 210 15% 95%;               /* neutral-100 */
-    --muted-foreground: 210 6% 45%;     /* neutral-500 */
+    --muted: 210 12% 88%;               /* neutral-200 - MAIS ESCURO */
+    --muted-foreground: 210 8% 35%;     /* neutral-600 - MAIS ESCURO */
 
     --accent: 30 70% 45%;               /* orange-600 */
     --accent-foreground: 0 0% 100%;     /* white */
@@ -30,7 +30,7 @@
     --destructive: 0 65% 50%;           /* error light */
     --destructive-foreground: 0 0% 100%; /* white */
 
-    --border: 210 12% 88%;              /* neutral-200 */
+    --border: 210 12% 78%;              /* neutral-300 - MAIS ESCURO */
     --input: 210 12% 88%;               /* neutral-200 */
     --ring: 220 75% 55%;                /* blue-500 */
 
@@ -52,23 +52,23 @@
     --status-inactive: 210 8% 58%;      /* neutral-400 */
     --status-warning: 0 65% 50%;        /* error light */
 
-    /* === CUSTOM SURFACE TOKENS === */
-    --bg-primary: 210 20% 98%;          /* neutral-50 */
-    --bg-secondary: 210 15% 95%;        /* neutral-100 */
-    --bg-tertiary: 210 12% 88%;         /* neutral-200 */
+    /* === CUSTOM SURFACE TOKENS - MELHORADOS === */
+    --bg-primary: 210 20% 96%;          /* neutral-100 - MAIS ESCURO */
+    --bg-secondary: 210 15% 92%;        /* neutral-200 - MAIS ESCURO */
+    --bg-tertiary: 210 12% 85%;         /* neutral-300 - MAIS ESCURO */
     
     --surface-primary: 0 0% 100%;       /* white */
     --surface-secondary: 210 20% 98%;   /* neutral-50 */
-    --surface-tertiary: 210 15% 95%;    /* neutral-100 */
+    --surface-tertiary: 210 15% 94%;    /* neutral-150 - MAIS ESCURO */
     
     --text-primary: 210 15% 12%;        /* neutral-900 */
     --text-secondary: 210 10% 25%;      /* neutral-700 */
     --text-tertiary: 210 8% 35%;        /* neutral-600 */
     --text-muted: 210 6% 45%;           /* neutral-500 */
     
-    --border-primary: 210 12% 88%;      /* neutral-200 */
-    --border-secondary: 210 10% 78%;    /* neutral-300 */
-    --border-muted: 210 15% 95%;        /* neutral-100 */
+    --border-primary: 210 12% 78%;      /* neutral-300 - MAIS ESCURO */
+    --border-secondary: 210 10% 68%;    /* neutral-400 - MAIS ESCURO */
+    --border-muted: 210 15% 88%;        /* neutral-200 - MAIS ESCURO */
   }
 
   .dark {
@@ -177,7 +177,7 @@
 @layer components {
   /* === GLASS EFFECTS === */
   .glass-card {
-    @apply bg-white/80 dark:bg-card/80 backdrop-blur-md border border-white/20 dark:border-border;
+    @apply bg-white/90 dark:bg-card/80 backdrop-blur-md border border-neutral-300/60 dark:border-border;
     box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
     transition: background-color 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
   }
@@ -191,7 +191,7 @@
   }
 
   .glass-card-hover:hover {
-    @apply bg-white/90 dark:bg-card/90;
+    @apply bg-white/95 dark:bg-card/90;
     box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
   }
 
@@ -201,13 +201,13 @@
 
   /* === MODERN CARDS === */
   .modern-card {
-    @apply bg-surface-primary border border-border-primary rounded-xl;
-    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12), 0 1px 2px rgba(0, 0, 0, 0.24);
+    @apply bg-white border border-neutral-300 dark:bg-surface-primary dark:border-border-primary rounded-xl;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
     transition: all 0.3s ease;
   }
 
   .modern-card:hover {
-    box-shadow: 0 3px 6px rgba(0, 0, 0, 0.16), 0 3px 6px rgba(0, 0, 0, 0.23);
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.12);
     transform: translateY(-2px);
   }
 
