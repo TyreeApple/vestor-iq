@@ -1,3 +1,4 @@
+
 import React from "react";
 import { Settings, Activity, BarChart3 } from "lucide-react";
 import {
@@ -94,7 +95,7 @@ const bibliotecas = [
 
 const Configuracao: React.FC = () => {
   return (
-    <section className="max-w-2xl mx-auto mt-10 p-6 bg-card rounded-lg border border-border shadow">
+    <section className="max-w-5xl mx-auto mt-10 p-6 bg-card rounded-lg border border-border shadow">
       <div className="flex items-center gap-3 mb-4">
         <Settings className="w-7 h-7 text-primary" />
         <h2 className="text-2xl font-bold text-foreground">Configurações</h2>
@@ -102,40 +103,65 @@ const Configuracao: React.FC = () => {
       <p className="text-muted-foreground mb-2">
         Gerencie suas preferências da conta e personalizações do sistema neste painel.
       </p>
-      <div>
-        <h3 className="text-lg font-semibold text-foreground mb-4 flex items-center gap-2">
-          Tecnologias Utilizadas
-        </h3>
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-7">
-          {tecnologias.map((tec) => (
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+        {/* SOBRE O PROJETO */}
+        <div className="md:col-span-1 flex flex-col gap-4">
+          <div className="bg-accent/75 rounded-lg p-5 border border-border shadow-sm flex flex-col gap-2">
+            <h3 className="text-lg font-bold text-foreground mb-2">Sobre o Projeto</h3>
+            <p className="text-muted-foreground text-sm">
+              Projeto feito sem fins de implementação real para funcionamento, foi apenas um projeto para brincar com a IA e testar a real capacidade da IA.
+            </p>
             <a
-              key={tec.nome}
-              href={tec.url}
+              href="https://github.com/olucasmf"
               target="_blank"
               rel="noopener noreferrer"
-              className="flex items-center gap-4 p-4 border border-border rounded-lg bg-background hover:bg-accent transition-all shadow"
+              className="flex items-center gap-2 mt-2 text-sm font-medium hover:underline text-primary"
             >
-              <span>{tec.icon}</span>
-              <span className="font-medium text-foreground">{tec.nome}</span>
+              <FaGithub className="w-5 h-5" />
+              github.com/olucasmf
             </a>
-          ))}
+          </div>
         </div>
-        <h3 className="text-lg font-semibold text-foreground mb-4 flex items-center gap-2">
-          Bibliotecas Utilizadas
-        </h3>
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-          {bibliotecas.map((lib) => (
-            <a
-              key={lib.nome}
-              href={lib.url}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="flex items-center gap-4 p-4 border border-border rounded-lg bg-background hover:bg-accent transition-all shadow"
-            >
-              <span>{lib.icon}</span>
-              <span className="font-medium text-foreground">{lib.nome}</span>
-            </a>
-          ))}
+        {/* TECNOLOGIAS E BIBLIOTECAS */}
+        <div className="md:col-span-2 flex flex-col gap-7">
+          <div>
+            <h3 className="text-lg font-semibold text-foreground mb-4 flex items-center gap-2">
+              Tecnologias Utilizadas
+            </h3>
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-4">
+              {tecnologias.map((tec) => (
+                <a
+                  key={tec.nome}
+                  href={tec.url}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="flex items-center gap-4 p-4 border border-border rounded-lg bg-background hover:bg-accent transition-all shadow"
+                >
+                  <span>{tec.icon}</span>
+                  <span className="font-medium text-foreground">{tec.nome}</span>
+                </a>
+              ))}
+            </div>
+          </div>
+          <div>
+            <h3 className="text-lg font-semibold text-foreground mb-4 flex items-center gap-2">
+              Bibliotecas Utilizadas
+            </h3>
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              {bibliotecas.map((lib) => (
+                <a
+                  key={lib.nome}
+                  href={lib.url}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="flex items-center gap-4 p-4 border border-border rounded-lg bg-background hover:bg-accent transition-all shadow"
+                >
+                  <span>{lib.icon}</span>
+                  <span className="font-medium text-foreground">{lib.nome}</span>
+                </a>
+              ))}
+            </div>
+          </div>
         </div>
       </div>
     </section>
@@ -143,3 +169,4 @@ const Configuracao: React.FC = () => {
 };
 
 export default Configuracao;
+
