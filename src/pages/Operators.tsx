@@ -1,14 +1,13 @@
+
 import React, { useState } from 'react';
-import Navbar from '@/components/layout/Navbar';
-import Sidebar from '@/components/layout/Sidebar';
+import PageHeader from '@/components/layout/PageHeader';
 import { Button } from "@/components/ui/button";
-import { useIsMobile } from '@/hooks/use-mobile';
-import { cn } from '@/lib/utils';
 import { StatusCertificacao, User, FuncaoOperador } from '@/types';
-import { BadgeCheck, Filter, Search, UserPlus } from 'lucide-react';
+import { Filter, Search, UserPlus } from 'lucide-react';
 import { Input } from '@/components/ui/input';
 import OperatorDialog from '@/components/operators/OperatorDialog';
 import OperatorDetails from '@/components/operators/OperatorDetails';
+import OperatorCard from '@/components/operators/OperatorCard';
 import { useToast } from '@/hooks/use-toast';
 
 // Mock data for operators
@@ -141,7 +140,6 @@ const initialOperators: User[] = [
 ];
 
 const OperatorsPage = () => {
-  const isMobile = useIsMobile();
   const { toast } = useToast();
   const [search, setSearch] = useState('');
   const [role, setRole] = useState<string>('all');
@@ -179,20 +177,6 @@ const OperatorsPage = () => {
     
     return matchesSearch && matchesRole && matchesCertStatus;
   });
-
-  // Get status color classes
-  const getStatusClass = (status: StatusCertificacao) => {
-    switch (status) {
-      case StatusCertificacao.VALIDO:
-        return 'bg-status-operational/10 text-status-operational';
-      case StatusCertificacao.VENCENDO:
-        return 'bg-status-maintenance/10 text-status-maintenance';
-      case StatusCertificacao.VENCIDO:
-        return 'bg-status-warning/10 text-status-warning';
-      default:
-        return 'bg-muted text-muted-foreground';
-    }
-  };
 
   // Handle add/edit operator
   const handleSaveOperator = (operatorData: User) => {
@@ -232,8 +216,6 @@ const OperatorsPage = () => {
 
   // Handle filter toggle
   const handleFilterToggle = () => {
-    // This would normally open a more complex filter dialog
-    // For now, we'll just toggle filters being shown
     toast({
       title: "Filtros",
       description: "Esta funcionalidade permitiria filtros mais avançados."
@@ -241,160 +223,89 @@ const OperatorsPage = () => {
   };
 
   return (
-    <div className="flex min-h-screen bg-background">
-      <Sidebar />
+    <div className="space-y-6">
+      <PageHeader
+        title="Gestão de Operadores"
+        subtitle="Gerencie operadores de empilhadeiras e suas certificações"
+      >
+        <div className="flex flex-col sm:flex-row gap-2">
+          <div className="relative flex-1 max-w-md">
+            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground w-4 h-4" />
+            <Input 
+              type="text" 
+              placeholder="Buscar operador..." 
+              className="pl-10"
+              value={search}
+              onChange={(e) => setSearch(e.target.value)}
+            />
+          </div>
+          <Button 
+            variant="outline" 
+            className="flex items-center gap-2"
+            onClick={handleFilterToggle}
+          >
+            <Filter className="w-4 h-4" />
+            Filtrar
+          </Button>
+          <Button 
+            className="gap-2"
+            onClick={() => {
+              setSelectedOperator(null);
+              setAddDialogOpen(true);
+            }}
+          >
+            <UserPlus className="w-4 h-4" />
+            Novo Operador
+          </Button>
+        </div>
+      </PageHeader>
       
-      <div className={cn(
-        "flex-1 flex flex-col",
-        !isMobile && "ml-64"
-      )}>
-        <Navbar />
-        
-        <main className="flex-1 px-6 py-6">
-          {/* Filter section */}
-          <div className="flex flex-col sm:flex-row justify-between gap-4 mb-6">
-            <div className="relative flex-1 max-w-md">
-              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground w-4 h-4" />
-              <Input 
-                type="text" 
-                placeholder="Buscar operador..." 
-                className="pl-10"
-                value={search}
-                onChange={(e) => setSearch(e.target.value)}
-              />
-            </div>
-            <div className="flex gap-2">
-              <div className="relative">
-                <Button 
-                  variant="outline" 
-                  className="flex items-center gap-2"
-                  onClick={handleFilterToggle}
-                >
-                  <Filter className="w-4 h-4" />
-                  Filtrar
-                </Button>
-              </div>
-              <Button 
-                className="gap-2"
-                onClick={() => {
-                  setSelectedOperator(null);
-                  setAddDialogOpen(true);
-                }}
-              >
-                <UserPlus className="w-4 h-4" />
-                Novo Operador
-              </Button>
-            </div>
-          </div>
-          
-          {/* Filter options */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
-            <div className="space-y-2">
-              <h4 className="text-sm font-medium">Função</h4>
-              <select 
-                className="w-full p-2 rounded-md border border-input bg-background"
-                value={role}
-                onChange={(e) => setRole(e.target.value)}
-              >
-                <option value="all">Todos</option>
-                <option value="operator">Operadores</option>
-                <option value="supervisor">Supervisores</option>
-              </select>
-            </div>
-            <div className="space-y-2">
-              <h4 className="text-sm font-medium">Status de Certificação</h4>
-              <select 
-                className="w-full p-2 rounded-md border border-input bg-background"
-                value={certStatus}
-                onChange={(e) => setCertStatus(e.target.value)}
-              >
-                <option value="all">Todos</option>
-                <option value="regular">Regular</option>
-                <option value="warning">Próximo do Vencimento</option>
-                <option value="expired">Vencido</option>
-              </select>
-            </div>
-          </div>
-          
-          {/* Operators list */}
-          <div className="bg-card rounded-lg shadow">
-            <div className="overflow-x-auto">
-              <table className="w-full">
-                <thead className="bg-muted/50">
-                  <tr>
-                    <th className="p-4 text-left font-medium text-muted-foreground">ID</th>
-                    <th className="p-4 text-left font-medium text-muted-foreground">Nome</th>
-                    <th className="p-4 text-left font-medium text-muted-foreground">Função</th>
-                    <th className="p-4 text-left font-medium text-muted-foreground">ASO</th>
-                    <th className="p-4 text-left font-medium text-muted-foreground">NR-11</th>
-                    <th className="p-4 text-left font-medium text-muted-foreground">Ações</th>
-                  </tr>
-                </thead>
-                <tbody className="divide-y divide-border">
-                  {filteredOperators.map((operator) => (
-                    <tr key={operator.id} className="hover:bg-muted/50 transition-colors">
-                      <td className="p-4">{operator.id}</td>
-                      <td className="p-4">
-                        <div className="font-medium">{operator.name || operator.nome}</div>
-                        <div className="text-sm text-muted-foreground">{operator.contact || operator.telefone}</div>
-                      </td>
-                      <td className="p-4">{operator.role || operator.funcao}</td>
-                      <td className="p-4">
-                        <div className={cn(
-                          "inline-flex items-center px-2.5 py-0.5 rounded-full text-xs",
-                          getStatusClass(operator.asoStatus || StatusCertificacao.VALIDO)
-                        )}>
-                          <BadgeCheck className="w-3 h-3 mr-1" />
-                          {operator.asoStatus || StatusCertificacao.VALIDO}
-                        </div>
-                        <div className="text-xs text-muted-foreground mt-1">
-                          Vence: {operator.asoExpirationDate || 'N/A'}
-                        </div>
-                      </td>
-                      <td className="p-4">
-                        <div className={cn(
-                          "inline-flex items-center px-2.5 py-0.5 rounded-full text-xs",
-                          getStatusClass(operator.nrStatus || StatusCertificacao.VALIDO)
-                        )}>
-                          <BadgeCheck className="w-3 h-3 mr-1" />
-                          {operator.nrStatus || StatusCertificacao.VALIDO}
-                        </div>
-                        <div className="text-xs text-muted-foreground mt-1">
-                          Vence: {operator.nrExpirationDate || 'N/A'}
-                        </div>
-                      </td>
-                      <td className="p-4">
-                        <div className="flex gap-2">
-                          <Button 
-                            variant="ghost" 
-                            size="sm"
-                            onClick={() => handleViewDetails(operator)}
-                          >
-                            Detalhes
-                          </Button>
-                          <Button 
-                            variant="ghost" 
-                            size="sm"
-                            className="text-red-500 hover:text-red-700 hover:bg-red-50"
-                            onClick={() => handleDeleteOperator(operator.id)}
-                          >
-                            Excluir
-                          </Button>
-                        </div>
-                      </td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-            </div>
-            {filteredOperators.length === 0 && (
-              <div className="p-8 text-center">
-                <p className="text-muted-foreground">Nenhum operador encontrado</p>
-              </div>
-            )}
-          </div>
-        </main>
+      {/* Filter options */}
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+        <div className="space-y-2">
+          <h4 className="text-sm font-medium">Função</h4>
+          <select 
+            className="w-full p-2 rounded-md border border-input bg-background"
+            value={role}
+            onChange={(e) => setRole(e.target.value)}
+          >
+            <option value="all">Todos</option>
+            <option value="operator">Operadores</option>
+            <option value="supervisor">Supervisores</option>
+          </select>
+        </div>
+        <div className="space-y-2">
+          <h4 className="text-sm font-medium">Status de Certificação</h4>
+          <select 
+            className="w-full p-2 rounded-md border border-input bg-background"
+            value={certStatus}
+            onChange={(e) => setCertStatus(e.target.value)}
+          >
+            <option value="all">Todos</option>
+            <option value="regular">Regular</option>
+            <option value="warning">Próximo do Vencimento</option>
+            <option value="expired">Vencido</option>
+          </select>
+        </div>
       </div>
+      
+      {/* Operators grid */}
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+        {filteredOperators.map((operator) => (
+          <OperatorCard
+            key={operator.id}
+            operator={operator}
+            onClick={() => handleViewDetails(operator)}
+            onDelete={() => handleDeleteOperator(operator.id)}
+          />
+        ))}
+      </div>
+
+      {filteredOperators.length === 0 && (
+        <div className="text-center py-12">
+          <p className="text-muted-foreground">Nenhum operador encontrado</p>
+        </div>
+      )}
       
       {/* Add/Edit Operator Dialog */}
       <OperatorDialog 
