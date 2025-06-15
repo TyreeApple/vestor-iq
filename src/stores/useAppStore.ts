@@ -1,3 +1,4 @@
+
 import { create } from 'zustand';
 import { devtools, persist } from 'zustand/middleware';
 import { 
@@ -10,10 +11,15 @@ import {
   AlertaCritico,
   Notificacao,
   StatusEmpilhadeira,
+  TipoEmpilhadeira,
   StatusOperador,
   StatusOperacao,
+  TipoOperacao,
+  OrdemServico as OrdemServicoType, // caso precise
   StatusManutencao,
-  PrioridadeOperacao
+  TipoManutencao,
+  PrioridadeOperacao,
+  FuncaoOperador,
 } from '@/types';
 
 interface AppState {
