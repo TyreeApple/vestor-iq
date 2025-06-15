@@ -3,7 +3,7 @@ import { Button } from "@/components/ui/button";
 import { useIsMobile } from '@/hooks/use-mobile';
 import { cn } from '@/lib/utils';
 import { Input } from '@/components/ui/input';
-import { Calendar, Clock, Plus, Search, Truck, User, Filter } from 'lucide-react';
+import { Calendar, Clock, Plus, Search, Truck, User, Filter, MapPin, AlertCircle, Play, CheckCircle2, Fuel, Timer, Gauge } from 'lucide-react';
 import { Operacao, StatusOperacao, TipoOperacao, PrioridadeOperacao } from '@/types';
 import { useToast } from '@/hooks/use-toast';
 import OperationDialog from '@/components/operations/OperationDialog';
@@ -265,6 +265,48 @@ const OperationsPage = () => {
       .reduce((sum, op) => sum + (op.consumoGas || 0), 0)
   };
 
+  // Get priority color and icon
+  const getPriorityInfo = (prioridade: PrioridadeOperacao) => {
+    switch (prioridade) {
+      case PrioridadeOperacao.ALTA:
+        return { color: 'text-red-400', bgColor: 'bg-red-500/20', borderColor: 'border-red-500/30', icon: AlertCircle };
+      case PrioridadeOperacao.NORMAL:
+        return { color: 'text-blue-400', bgColor: 'bg-blue-500/20', borderColor: 'border-blue-500/30', icon: CheckCircle2 };
+      case PrioridadeOperacao.BAIXA:
+        return { color: 'text-green-400', bgColor: 'bg-green-500/20', borderColor: 'border-green-500/30', icon: CheckCircle2 };
+      default:
+        return { color: 'text-gray-400', bgColor: 'bg-gray-500/20', borderColor: 'border-gray-500/30', icon: CheckCircle2 };
+    }
+  };
+
+  // Get operation type info
+  const getOperationTypeInfo = (tipo: TipoOperacao) => {
+    switch (tipo) {
+      case TipoOperacao.MOVIMENTACAO:
+        return { label: 'Movimentação', color: 'text-blue-400' };
+      case TipoOperacao.CARGA:
+        return { label: 'Carga', color: 'text-green-400' };
+      case TipoOperacao.DESCARGA:
+        return { label: 'Descarga', color: 'text-orange-400' };
+      case TipoOperacao.MANUTENCAO:
+        return { label: 'Manutenção', color: 'text-red-400' };
+      default:
+        return { label: 'Outro', color: 'text-gray-400' };
+    }
+  };
+
+  // Calculate progress percentage for active operations
+  const calculateProgress = (operation: Operacao) => {
+    if (operation.status !== StatusOperacao.EM_ANDAMENTO) return 100;
+    
+    const startTime = new Date(operation.dataInicio);
+    const now = new Date();
+    const elapsed = now.getTime() - startTime.getTime();
+    const estimatedDuration = (operation.duracaoEstimada || 480) * 60 * 1000; // Convert minutes to milliseconds
+    
+    return Math.min((elapsed / estimatedDuration) * 100, 95);
+  };
+
   return (
     <div className="space-y-6">
       {/* Enhanced Header */}
@@ -357,66 +399,146 @@ const OperationsPage = () => {
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {filteredOperations
             .filter(op => op.status === StatusOperacao.EM_ANDAMENTO)
-            .map((operation) => (
-              <div key={operation.id} className="group relative overflow-hidden bg-gradient-to-br from-slate-800/60 to-slate-900/80 backdrop-blur-sm border border-slate-700/50 rounded-xl shadow-xl hover:shadow-2xl transition-all duration-300 hover:scale-[1.02]">
-                <div className="absolute inset-0 bg-gradient-to-br from-green-500/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
-                <div className="relative p-6">
-                  <div className="flex justify-between items-start mb-4">
-                    <div>
-                      <h3 className="font-semibold text-white">{operation.operador?.nome}</h3>
-                      <p className="text-sm text-slate-400">ID: {operation.id}</p>
+            .map((operation) => {
+              const priorityInfo = getPriorityInfo(operation.prioridade);
+              const typeInfo = getOperationTypeInfo(operation.tipo);
+              const progress = calculateProgress(operation);
+              
+              return (
+                <div key={operation.id} className="group relative overflow-hidden bg-gradient-to-br from-slate-800/60 to-slate-900/80 backdrop-blur-sm border border-slate-700/50 rounded-xl shadow-xl hover:shadow-2xl transition-all duration-300 hover:scale-[1.02]">
+                  <div className="absolute inset-0 bg-gradient-to-br from-green-500/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+                  
+                  {/* Header with Status and Priority */}
+                  <div className="relative p-6 pb-4">
+                    <div className="flex justify-between items-start mb-4">
+                      <div className="flex items-center gap-3">
+                        <div className="relative">
+                          <div className="w-3 h-3 bg-green-500 rounded-full animate-pulse"></div>
+                          <div className="absolute inset-0 w-3 h-3 bg-green-500 rounded-full animate-ping opacity-75"></div>
+                        </div>
+                        <div>
+                          <h3 className="font-semibold text-white text-lg">{operation.operador?.nome}</h3>
+                          <p className="text-sm text-slate-400">ID: {operation.id}</p>
+                        </div>
+                      </div>
+                      
+                      <div className="flex flex-col items-end gap-2">
+                        <span className="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-green-500/20 text-green-400 border border-green-500/30">
+                          <Play className="w-3 h-3 mr-1" />
+                          Em Andamento
+                        </span>
+                        
+                        <span className={cn(
+                          "inline-flex items-center px-2 py-1 rounded-md text-xs font-medium",
+                          priorityInfo.bgColor, priorityInfo.color, priorityInfo.borderColor, "border"
+                        )}>
+                          <priorityInfo.icon className="w-3 h-3 mr-1" />
+                          {operation.prioridade}
+                        </span>
+                      </div>
                     </div>
-                    <span className="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-green-500/20 text-green-400 border border-green-500/30">
-                      Em Andamento
-                    </span>
+                    
+                    {/* Operation Type */}
+                    <div className="mb-4">
+                      <span className={cn("text-sm font-medium", typeInfo.color)}>
+                        {typeInfo.label}
+                      </span>
+                    </div>
+                    
+                    {/* Progress Bar */}
+                    <div className="mb-4">
+                      <div className="flex justify-between items-center mb-2">
+                        <span className="text-xs text-slate-400">Progresso Estimado</span>
+                        <span className="text-xs text-slate-300">{Math.round(progress)}%</span>
+                      </div>
+                      <div className="w-full bg-slate-700/50 rounded-full h-2">
+                        <div 
+                          className="bg-gradient-to-r from-green-500 to-emerald-500 h-2 rounded-full transition-all duration-500 ease-out"
+                          style={{ width: `${progress}%` }}
+                        />
+                      </div>
+                    </div>
+                    
+                    {/* Details Grid */}
+                    <div className="grid grid-cols-1 gap-3">
+                      <div className="flex items-center gap-2 p-2 bg-slate-800/30 rounded-lg">
+                        <Truck className="w-4 h-4 text-slate-400" />
+                        <div className="flex-1">
+                          <span className="text-sm text-slate-300">{operation.empilhadeira?.modelo}</span>
+                          <p className="text-xs text-slate-500">{operation.empilhadeiraId}</p>
+                        </div>
+                      </div>
+                      
+                      <div className="flex items-center gap-2 p-2 bg-slate-800/30 rounded-lg">
+                        <MapPin className="w-4 h-4 text-slate-400" />
+                        <div className="flex-1">
+                          <span className="text-sm text-slate-300">{operation.setor}</span>
+                          <p className="text-xs text-slate-500">{operation.localizacao}</p>
+                        </div>
+                      </div>
+                      
+                      <div className="grid grid-cols-2 gap-2">
+                        <div className="flex items-center gap-2 p-2 bg-slate-800/30 rounded-lg">
+                          <Calendar className="w-4 h-4 text-slate-400" />
+                          <div>
+                            <span className="text-xs text-slate-300">{formatDate(operation.dataInicio)}</span>
+                            <p className="text-xs text-slate-500">{formatTime(operation.dataInicio)}</p>
+                          </div>
+                        </div>
+                        
+                        <div className="flex items-center gap-2 p-2 bg-slate-800/30 rounded-lg">
+                          <Timer className="w-4 h-4 text-slate-400" />
+                          <div>
+                            <span className="text-xs text-slate-300">{calculateDuration(operation)}</span>
+                            <p className="text-xs text-slate-500">Duração</p>
+                          </div>
+                        </div>
+                      </div>
+                      
+                      {operation.consumoGas && (
+                        <div className="flex items-center gap-2 p-2 bg-slate-800/30 rounded-lg">
+                          <Fuel className="w-4 h-4 text-slate-400" />
+                          <div className="flex-1">
+                            <span className="text-sm text-slate-300">{operation.consumoGas}L</span>
+                            <p className="text-xs text-slate-500">Consumo de combustível</p>
+                          </div>
+                          <Gauge className="w-4 h-4 text-orange-400" />
+                        </div>
+                      )}
+                    </div>
                   </div>
                   
-                  <div className="space-y-3">
+                  {/* Actions Footer */}
+                  <div className="border-t border-slate-700/50 px-6 py-4 bg-slate-800/30 flex justify-between items-center">
                     <div className="flex items-center gap-2">
-                      <Truck className="w-4 h-4 text-slate-400" />
-                      <span className="text-sm text-slate-300">{operation.empilhadeira?.modelo} ({operation.empilhadeiraId})</span>
+                      <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></div>
+                      <span className="text-xs text-slate-400">Ativo</span>
                     </div>
-                    <div className="flex items-center gap-2">
-                      <User className="w-4 h-4 text-slate-400" />
-                      <span className="text-sm text-slate-300">{operation.operador?.nome}</span>
-                    </div>
-                    <div className="flex items-center gap-2">
-                      <Calendar className="w-4 h-4 text-slate-400" />
-                      <span className="text-sm text-slate-300">{formatDate(operation.dataInicio)}</span>
-                    </div>
-                    <div className="flex items-center gap-2">
-                      <Clock className="w-4 h-4 text-slate-400" />
-                      <span className="text-sm text-slate-300">Duração: {calculateDuration(operation)}</span>
+                    <div className="flex gap-2">
+                      <Button 
+                        variant="ghost" 
+                        size="sm"
+                        className="text-slate-300 hover:text-white hover:bg-slate-700/50"
+                        onClick={() => handleViewDetails(operation)}
+                      >
+                        Detalhes
+                      </Button>
+                      <Button 
+                        variant="ghost" 
+                        size="sm"
+                        className="text-blue-400 hover:text-blue-300 hover:bg-blue-500/10"
+                        onClick={() => {
+                          setSelectedOperation(operation);
+                          setEditDialogOpen(true);
+                        }}
+                      >
+                        Editar
+                      </Button>
                     </div>
                   </div>
                 </div>
-                
-                <div className="border-t border-slate-700/50 px-6 py-4 bg-slate-800/30 flex justify-between items-center">
-                  <span className="text-sm text-slate-300">Setor: {operation.setor}</span>
-                  <div className="flex gap-2">
-                    <Button 
-                      variant="ghost" 
-                      size="sm"
-                      className="text-slate-300 hover:text-white hover:bg-slate-700/50"
-                      onClick={() => handleViewDetails(operation)}
-                    >
-                      Detalhes
-                    </Button>
-                    <Button 
-                      variant="ghost" 
-                      size="sm"
-                      className="text-blue-400 hover:text-blue-300 hover:bg-blue-500/10"
-                      onClick={() => {
-                        setSelectedOperation(operation);
-                        setEditDialogOpen(true);
-                      }}
-                    >
-                      Editar
-                    </Button>
-                  </div>
-                </div>
-              </div>
-            ))}
+              );
+            })}
           
           {filteredOperations.filter(op => op.status === StatusOperacao.EM_ANDAMENTO).length === 0 && (
             <div className="col-span-full p-12 text-center bg-gradient-to-br from-slate-800/40 to-slate-900/60 backdrop-blur-sm border border-slate-700/30 rounded-xl">
@@ -438,11 +560,13 @@ const OperationsPage = () => {
               <thead className="bg-slate-800/80">
                 <tr>
                   <th className="p-4 text-left font-semibold text-slate-200">ID</th>
+                  <th className="p-4 text-left font-semibold text-slate-200">Tipo</th>
                   <th className="p-4 text-left font-semibold text-slate-200">Operador</th>
                   <th className="p-4 text-left font-semibold text-slate-200">Empilhadeira</th>
                   <th className="p-4 text-left font-semibold text-slate-200">Setor</th>
                   <th className="p-4 text-left font-semibold text-slate-200">Data</th>
                   <th className="p-4 text-left font-semibold text-slate-200">Duração</th>
+                  <th className="p-4 text-left font-semibold text-slate-200">Prioridade</th>
                   <th className="p-4 text-left font-semibold text-slate-200">Consumo (L)</th>
                   <th className="p-4 text-left font-semibold text-slate-200">Ações</th>
                 </tr>
@@ -450,40 +574,72 @@ const OperationsPage = () => {
               <tbody className="divide-y divide-slate-700/50">
                 {filteredOperations
                   .filter(op => op.status === StatusOperacao.CONCLUIDA)
-                  .map((operation) => (
-                    <tr key={operation.id} className="hover:bg-slate-700/30 transition-colors">
-                      <td className="p-4 text-white font-medium">{operation.id}</td>
-                      <td className="p-4 text-slate-300">{operation.operador?.nome}</td>
-                      <td className="p-4">
-                        <div className="text-slate-300">{operation.empilhadeira?.modelo}</div>
-                        <div className="text-xs text-slate-500">{operation.empilhadeiraId}</div>
-                      </td>
-                      <td className="p-4 text-slate-300">{operation.setor}</td>
-                      <td className="p-4 text-slate-300">{formatDate(operation.dataInicio)}</td>
-                      <td className="p-4 text-slate-300">{calculateDuration(operation)}</td>
-                      <td className="p-4 text-slate-300">{(operation.consumoGas || 0).toFixed(1)}</td>
-                      <td className="p-4">
-                        <div className="flex gap-2">
-                          <Button 
-                            variant="ghost" 
-                            size="sm"
-                            className="text-slate-400 hover:text-white hover:bg-slate-700/50"
-                            onClick={() => handleViewDetails(operation)}
-                          >
-                            Detalhes
-                          </Button>
-                          <Button 
-                            variant="ghost" 
-                            size="sm"
-                            className="text-red-400 hover:text-red-300 hover:bg-red-500/10"
-                            onClick={() => handleDeleteOperation(operation.id)}
-                          >
-                            Excluir
-                          </Button>
-                        </div>
-                      </td>
-                    </tr>
-                  ))}
+                  .map((operation) => {
+                    const priorityInfo = getPriorityInfo(operation.prioridade);
+                    const typeInfo = getOperationTypeInfo(operation.tipo);
+                    
+                    return (
+                      <tr key={operation.id} className="hover:bg-slate-700/30 transition-colors">
+                        <td className="p-4">
+                          <div className="flex items-center gap-2">
+                            <CheckCircle2 className="w-4 h-4 text-green-400" />
+                            <span className="text-white font-medium">{operation.id}</span>
+                          </div>
+                        </td>
+                        <td className="p-4">
+                          <span className={cn("text-sm font-medium", typeInfo.color)}>
+                            {typeInfo.label}
+                          </span>
+                        </td>
+                        <td className="p-4 text-slate-300">{operation.operador?.nome}</td>
+                        <td className="p-4">
+                          <div className="text-slate-300">{operation.empilhadeira?.modelo}</div>
+                          <div className="text-xs text-slate-500">{operation.empilhadeiraId}</div>
+                        </td>
+                        <td className="p-4 text-slate-300">{operation.setor}</td>
+                        <td className="p-4">
+                          <div className="text-slate-300">{formatDate(operation.dataInicio)}</div>
+                          <div className="text-xs text-slate-500">{formatTime(operation.dataInicio)} - {operation.dataFim ? formatTime(operation.dataFim) : 'N/A'}</div>
+                        </td>
+                        <td className="p-4 text-slate-300">{calculateDuration(operation)}</td>
+                        <td className="p-4">
+                          <span className={cn(
+                            "inline-flex items-center px-2 py-1 rounded-md text-xs font-medium",
+                            priorityInfo.bgColor, priorityInfo.color, priorityInfo.borderColor, "border"
+                          )}>
+                            <priorityInfo.icon className="w-3 h-3 mr-1" />
+                            {operation.prioridade}
+                          </span>
+                        </td>
+                        <td className="p-4">
+                          <div className="flex items-center gap-2">
+                            <Fuel className="w-4 h-4 text-orange-400" />
+                            <span className="text-slate-300">{(operation.consumoGas || 0).toFixed(1)}</span>
+                          </div>
+                        </td>
+                        <td className="p-4">
+                          <div className="flex gap-2">
+                            <Button 
+                              variant="ghost" 
+                              size="sm"
+                              className="text-slate-400 hover:text-white hover:bg-slate-700/50"
+                              onClick={() => handleViewDetails(operation)}
+                            >
+                              Detalhes
+                            </Button>
+                            <Button 
+                              variant="ghost" 
+                              size="sm"
+                              className="text-red-400 hover:text-red-300 hover:bg-red-500/10"
+                              onClick={() => handleDeleteOperation(operation.id)}
+                            >
+                              Excluir
+                            </Button>
+                          </div>
+                        </td>
+                      </tr>
+                    );
+                  })}
               </tbody>
             </table>
           </div>
