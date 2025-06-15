@@ -71,7 +71,7 @@ const Navbar: React.FC = () => {
 
   return (
     <>
-      <header className="h-16 bg-card dark:bg-card border-b border-slate-200 dark:border-border flex items-center justify-between px-6 shadow-premium dark:shadow-premium-dark relative z-50">
+      <header className="h-16 bg-card dark:bg-card border-b border-slate-200 dark:border-border flex items-center justify-between px-2 sm:px-4 md:px-6 shadow-premium dark:shadow-premium-dark relative z-50">
         {/* Logo only, no brand name/text */}
         <div className="flex items-center space-x-4">
           <div className="flex items-center">
@@ -81,28 +81,31 @@ const Navbar: React.FC = () => {
           </div>
         </div>
 
-        {/* Desktop Navigation */}
-        <nav className="hidden lg:flex items-center space-x-1">
-          {menuItems.map((item) => (
-            <NavLink
-              key={item.id}
-              to={item.path}
-              className={({ isActive }) => cn(
-                "flex items-center space-x-2 px-3 py-2 rounded-lg transition-all duration-200 text-sm font-medium relative",
-                isActive
-                  ? "bg-primary text-primary-foreground shadow-sm"
-                  : "text-muted-foreground hover:text-foreground hover:bg-accent"
-              )}
-            >
-              <item.icon className="w-4 h-4" />
-              <span>{item.label}</span>
-              {typeof item.badge === "number" && item.badge > 0 && (
-                <span className="bg-error text-white text-xs px-1.5 py-0.5 rounded-full min-w-[18px] h-[18px] flex items-center justify-center font-semibold">
-                  {item.badge > 99 ? '99+' : item.badge}
-                </span>
-              )}
-            </NavLink>
-          ))}
+        {/* Desktop Navigation - responsivo e scroll horizontal */}
+        <nav className="hidden lg:flex items-center overflow-x-auto scrollbar-thin scrollbar-thumb-primary/30 scrollbar-track-transparent 
+          gap-1 sm:gap-2 md:gap-4 xl:gap-6 min-w-0 flex-1 justify-center">
+          <div className="flex items-center min-w-fit gap-0.5 sm:gap-2 md:gap-3 xl:gap-4">
+            {menuItems.map((item) => (
+              <NavLink
+                key={item.id}
+                to={item.path}
+                className={({ isActive }) => cn(
+                  "flex items-center space-x-1 px-2 sm:px-3 py-2 rounded-lg transition-all duration-200 text-sm font-medium relative",
+                  isActive
+                    ? "bg-primary text-primary-foreground shadow-sm"
+                    : "text-muted-foreground hover:text-foreground hover:bg-accent"
+                )}
+              >
+                <item.icon className="w-4 h-4" />
+                <span className="hidden xs:inline">{item.label}</span>
+                {typeof item.badge === "number" && item.badge > 0 && (
+                  <span className="bg-error text-white text-xs px-1.5 py-0.5 rounded-full min-w-[18px] h-[18px] flex items-center justify-center font-semibold">
+                    {item.badge > 99 ? '99+' : item.badge}
+                  </span>
+                )}
+              </NavLink>
+            ))}
+          </div>
         </nav>
 
         {/* -------- Right side: icons only -------- */}
@@ -199,4 +202,3 @@ const Navbar: React.FC = () => {
 };
 
 export default Navbar;
-
