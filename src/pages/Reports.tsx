@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import Sidebar from '@/components/layout/Sidebar';
 import { useIsMobile } from '@/hooks/use-mobile';
@@ -79,7 +78,7 @@ const ReportsPage = () => {
           name: 'Preventivas Programadas', 
           description: 'Cronograma inteligente com alertas e notificações', 
           type: 'Preventivo',
-          icon: Calendar,
+          icon: CalendarIcon,
           trend: '0%',
           lastUpdate: '3 min',
           priority: 'high'
