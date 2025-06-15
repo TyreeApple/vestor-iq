@@ -17,6 +17,7 @@ import { Badge } from '@/components/ui/badge';
 import PageHeader from '@/components/layout/PageHeader';
 import ForkliftStatsCard from '@/components/forklift/ForkliftStatsCard';
 import ForkliftDeleteDialog from '@/components/forklift/ForkliftDeleteDialog';
+import { useAppStore } from '@/stores/useAppStore';
 
 // Mock data for the forklifts - Updated with proper data
 const initialForklifts: Forklift[] = [
@@ -241,18 +242,24 @@ const initialForklifts: Forklift[] = [
 const ForkliftsPage = () => {
   const isMobile = useIsMobile();
   const { toast } = useToast();
-  const [forklifts, setForklifts] = useState<Forklift[]>(initialForklifts);
+
+  // Zustand como FONTE DE DADOS para empilhadeiras
+  const forklifts = useAppStore((state) => state.empilhadeiras);
+  const addEmpilhadeira = useAppStore((state) => state.addEmpilhadeira);
+  const updateEmpilhadeira = useAppStore((state) => state.updateEmpilhadeira);
+  const deleteEmpilhadeira = useAppStore((state) => state.deleteEmpilhadeira);
+
   const [viewMode, setViewMode] = useState<'grid' | 'list'>('grid');
   const [statusFilter, setStatusFilter] = useState<StatusEmpilhadeira | 'all'>('all');
   const [typeFilter, setTypeFilter] = useState<TipoEmpilhadeira | 'all'>('all');
   const [searchQuery, setSearchQuery] = useState<string>('');
   const [advancedFilters, setAdvancedFilters] = useState<Record<string, any>>({});
-  
-  // Dialog states
   const [addDialogOpen, setAddDialogOpen] = useState(false);
   const [editDialogOpen, setEditDialogOpen] = useState(false);
   const [detailsDialogOpen, setDetailsDialogOpen] = useState(false);
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
+
+  // Estado só de seleção, não de dados reais
   const [selectedForklift, setSelectedForklift] = useState<Forklift | null>(null);
 
   // Advanced filter options
@@ -342,7 +349,7 @@ const ForkliftsPage = () => {
     itemsPerPage: viewMode === 'grid' ? 12 : 10
   });
 
-  // Calculate summary statistics
+  // Calculate summary statistics (já usando forklifts do Zustand)
   const stats = {
     total: forklifts.length,
     operational: forklifts.filter(f => f.status === StatusEmpilhadeira.OPERACIONAL).length,
@@ -350,18 +357,16 @@ const ForkliftsPage = () => {
     stopped: forklifts.filter(f => f.status === StatusEmpilhadeira.PARADA).length,
   };
 
-  // Handle add/edit forklift
+  // NOVO CRUD: todas ações refletem no Zustand 
   const handleSaveForklift = (forkliftData: Forklift) => {
-    if (editDialogOpen) {
-      setForklifts(prev => 
-        prev.map(f => f.id === forkliftData.id ? forkliftData : f)
-      );
+    if (editDialogOpen && selectedForklift) {
+      updateEmpilhadeira(forkliftData.id, forkliftData);
       toast({
         title: "Empilhadeira atualizada",
         description: "A empilhadeira foi atualizada com sucesso."
       });
     } else {
-      setForklifts(prev => [...prev, forkliftData]);
+      addEmpilhadeira(forkliftData);
       toast({
         title: "Empilhadeira adicionada",
         description: "A empilhadeira foi adicionada com sucesso."
@@ -396,13 +401,14 @@ const ForkliftsPage = () => {
   // Confirm delete forklift
   const handleConfirmDelete = () => {
     if (selectedForklift) {
-      setForklifts(prev => prev.filter(f => f.id !== selectedForklift.id));
+      deleteEmpilhadeira(selectedForklift.id);
       toast({
         title: "Empilhadeira excluída",
         description: `A empilhadeira ${selectedForklift.id} foi excluída com sucesso.`,
         variant: "destructive"
       });
       setSelectedForklift(null);
+      setDeleteDialogOpen(false);
     }
   };
 
