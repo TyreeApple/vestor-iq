@@ -1,4 +1,3 @@
-
 import React from "react";
 import { IconType } from "react-icons";
 import { cn } from "@/lib/utils";
@@ -18,14 +17,14 @@ interface TechIconCardProps {
   gradient?: boolean;
   extra?: React.ReactNode;
 }
-const gradientDefault = "bg-gradient-to-tr from-blue-100 via-purple-100 to-orange-50 dark:from-blue-800/40 dark:via-purple-700/25 dark:to-orange-700/20";
 
+// Mantém tipo de fundo azul-$ para todos os cards, customizável via bg prop
 const TechIconCard: React.FC<TechIconCardProps> = ({
   icon: Icon,
   name,
   url,
-  bg = gradientDefault,
-  gradient = true,
+  bg = "bg-[#161f33]",
+  gradient,
   extra
 }) => (
   <a
@@ -33,30 +32,22 @@ const TechIconCard: React.FC<TechIconCardProps> = ({
     target="_blank"
     rel="noopener noreferrer"
     className={cn(
-      "group transform duration-300 relative rounded-2xl p-0.5 shadow-xl hover:scale-105 hover:shadow-2xl card-hover-effect",
-      "focus-ring-premium transition-all"
+      "group w-[140px] h-[140px] md:w-[155px] md:h-[155px] rounded-2xl flex flex-col items-center justify-center text-center px-2 py-4 bg-transparent hover:scale-105 transition-all shadow-none ring-0 focus-ring-premium border-0",
+      "card-hover-effect"
     )}
+    style={{ boxShadow: "0 0 0 1.5px #1d263a, 0 8px 36px 0 rgba(36,46,68,0.40)" }}
   >
     <div className={cn(
-      "flex flex-col items-center justify-center bg-background rounded-2xl px-4 py-6 md:py-5 gap-3 border border-border w-full h-full",
-      "transition-all duration-300 min-w-[118px] sm:min-w-0"
+      "flex items-center justify-center rounded-full", bg,
+      "w-[64px] h-[64px] md:w-[72px] md:h-[72px] mb-3 shadow-custom"
     )}>
-      <div className={cn(
-        "w-16 h-16 flex items-center justify-center rounded-full shadow-inner border-2 border-border mb-1",
-        gradient ? gradientDefault : bg,
-        "bg-opacity-80 backdrop-blur"
-      )}>
-        <Icon size={38} className="drop-shadow-glow text-[2.2rem] transition-colors duration-500 group-hover:text-primary" />
-      </div>
-      <span className="font-bold text-foreground text-[1rem] tracking-tight text-center w-full truncate group-hover:text-primary transition-colors duration-150">
-        {name}
-      </span>
-      {extra}
+      <Icon size={44} className="text-blue-400 drop-shadow-lg transition duration-500" />
     </div>
-    {/* Efeito glow animado ao hover */}
-    <div className="absolute inset-0 pointer-events-none rounded-2xl opacity-0 group-hover:opacity-80 transition duration-500 animate-fade-in z-0 bg-gradient-to-br from-primary/10 via-accent/10 to-pink-300/5 blur-[2px]" />
+    <span className="font-bold text-blue-100 text-base md:text-lg tracking-tight mt-1">
+      {name}
+    </span>
+    {extra}
   </a>
 );
 
 export default TechIconCard;
-
