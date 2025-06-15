@@ -43,6 +43,23 @@ export default function ThemeToggle() {
     setDarkClass(dark);
   }, [dark]);
 
+  // Verificar se o tema aplicado no DOM corresponde ao estado
+  React.useEffect(() => {
+    const checkTheme = () => {
+      const isDarkApplied = document.documentElement.classList.contains(DARK_CLASS);
+      if (isDarkApplied !== dark) {
+        console.log("Theme mismatch detected, correcting...");
+        setDarkClass(dark);
+      }
+    };
+    
+    // Verificar imediatamente e depois periodicamente
+    checkTheme();
+    const interval = setInterval(checkTheme, 1000);
+    
+    return () => clearInterval(interval);
+  }, [dark]);
+
   const handleToggle = () => {
     if (dark) {
       // Tentando mudar para modo claro - mostrar modal
@@ -99,19 +116,33 @@ export default function ThemeToggle() {
               <Sun className="w-5 h-5" />
               Modo Claro Não Recomendado
             </AlertDialogTitle>
-            <AlertDialogDescription className="text-left space-y-2">
-              <p>
-                O modo claro ainda não está totalmente configurado para esta aplicação e pode ocasionar:
-              </p>
-              <ul className="list-disc list-inside space-y-1 text-sm text-muted-foreground ml-2">
-                <li>Irritação e fadiga ocular</li>
-                <li>Dificuldade na leitura prolongada</li>
-                <li>Contraste inadequado em alguns elementos</li>
-                <li>Experiência visual inconsistente</li>
-              </ul>
-              <p className="text-sm font-medium text-foreground">
-                Recomendamos fortemente o uso do modo escuro para uma melhor experiência.
-              </p>
+            <AlertDialogDescription className="text-left">
+              <div className="space-y-3">
+                <p>
+                  O modo claro ainda não está totalmente configurado para esta aplicação e pode ocasionar:
+                </p>
+                <div className="space-y-2">
+                  <div className="flex items-start gap-2">
+                    <span className="text-destructive mt-1">•</span>
+                    <span className="text-sm text-muted-foreground">Irritação e fadiga ocular</span>
+                  </div>
+                  <div className="flex items-start gap-2">
+                    <span className="text-destructive mt-1">•</span>
+                    <span className="text-sm text-muted-foreground">Dificuldade na leitura prolongada</span>
+                  </div>
+                  <div className="flex items-start gap-2">
+                    <span className="text-destructive mt-1">•</span>
+                    <span className="text-sm text-muted-foreground">Contraste inadequado em alguns elementos</span>
+                  </div>
+                  <div className="flex items-start gap-2">
+                    <span className="text-destructive mt-1">•</span>
+                    <span className="text-sm text-muted-foreground">Experiência visual inconsistente</span>
+                  </div>
+                </div>
+                <p className="text-sm font-medium text-foreground">
+                  Recomendamos fortemente o uso do modo escuro para uma melhor experiência.
+                </p>
+              </div>
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter className="flex gap-2">
