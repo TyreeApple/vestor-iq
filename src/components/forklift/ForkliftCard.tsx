@@ -13,30 +13,30 @@ interface ForkliftCardProps {
 }
 
 const ForkliftCard: React.FC<ForkliftCardProps> = ({ forklift, onClick, onDelete }) => {
-  // Get status color classes with gradients - More compact versions
+  // Get status color classes with gradients - Fixed positioning
   const getStatusBadge = (status: StatusEmpilhadeira) => {
     switch (status) {
       case StatusEmpilhadeira.OPERACIONAL:
         return (
-          <Badge className="bg-gradient-to-r from-emerald-500 to-emerald-600 hover:from-emerald-600 hover:to-emerald-700 text-white border-0 font-semibold tracking-wide shadow-lg shadow-emerald-500/25 text-xs px-2 py-0.5 whitespace-nowrap">
+          <Badge className="bg-gradient-to-r from-emerald-500 to-emerald-600 hover:from-emerald-600 hover:to-emerald-700 text-white border-0 font-semibold tracking-wide shadow-lg shadow-emerald-500/25 text-xs px-2 py-1 whitespace-nowrap shrink-0">
             ✓ OK
           </Badge>
         );
       case StatusEmpilhadeira.EM_MANUTENCAO:
         return (
-          <Badge className="bg-gradient-to-r from-amber-500 to-orange-600 hover:from-amber-600 hover:to-orange-700 text-white border-0 font-semibold tracking-wide shadow-lg shadow-amber-500/25 animate-pulse text-xs px-2 py-0.5 whitespace-nowrap">
+          <Badge className="bg-gradient-to-r from-amber-500 to-orange-600 hover:from-amber-600 hover:to-orange-700 text-white border-0 font-semibold tracking-wide shadow-lg shadow-amber-500/25 animate-pulse text-xs px-2 py-1 whitespace-nowrap shrink-0">
             🔧 Manutenção
           </Badge>
         );
       case StatusEmpilhadeira.PARADA:
         return (
-          <Badge className="bg-gradient-to-r from-red-500 to-red-600 hover:from-red-600 hover:to-red-700 text-white border-0 font-semibold tracking-wide shadow-lg shadow-red-500/25 text-xs px-2 py-0.5 whitespace-nowrap">
+          <Badge className="bg-gradient-to-r from-red-500 to-red-600 hover:from-red-600 hover:to-red-700 text-white border-0 font-semibold tracking-wide shadow-lg shadow-red-500/25 text-xs px-2 py-1 whitespace-nowrap shrink-0">
             ⚠ Parada
           </Badge>
         );
       default:
         return (
-          <Badge className="bg-gradient-to-r from-slate-500 to-slate-600 text-white border-0 font-semibold tracking-wide text-xs px-2 py-0.5 whitespace-nowrap">
+          <Badge className="bg-gradient-to-r from-slate-500 to-slate-600 text-white border-0 font-semibold tracking-wide text-xs px-2 py-1 whitespace-nowrap shrink-0">
             {status}
           </Badge>
         );
@@ -88,9 +88,9 @@ const ForkliftCard: React.FC<ForkliftCardProps> = ({ forklift, onClick, onDelete
         </Button>
       )}
 
-      {/* Header - Improved layout for better responsiveness */}
-      <div className="flex flex-col gap-2 mb-3 pr-8">
-        <div className="flex items-start justify-between">
+      {/* Header - Fixed layout for better badge positioning */}
+      <div className="flex flex-col gap-2 mb-3">
+        <div className="flex items-start justify-between pr-8">
           <div className="flex-1 min-w-0">
             <h3 className="text-base font-bold text-white mb-0.5 tracking-wide truncate">
               {forklift.id}
@@ -104,15 +104,15 @@ const ForkliftCard: React.FC<ForkliftCardProps> = ({ forklift, onClick, onDelete
           </div>
         </div>
         
-        {/* Status Badge - Now in a separate row for better spacing */}
-        <div className="flex justify-end">
+        {/* Status Badge - Fixed positioning with flex container */}
+        <div className="flex justify-end items-center min-h-[28px]">
           {getStatusBadge(forklift.status)}
         </div>
       </div>
 
       {/* Type Badge */}
       <div className="mb-3">
-        <Badge variant="outline" className={cn("border font-semibold text-xs tracking-wider whitespace-nowrap", getTypeBadge(forklift.tipo))}>
+        <Badge variant="outline" className={cn("border font-semibold text-xs tracking-wider whitespace-nowrap shrink-0", getTypeBadge(forklift.tipo))}>
           {forklift.tipo}
         </Badge>
       </div>
