@@ -152,6 +152,11 @@ const GasSupplyPage = () => {
   const [gasSupplies, setGasSupplies] = useState<Abastecimento[]>(initialGasSupplies);
   const [filters, setFilters] = useState<Record<string, any>>({});
 
+  // Quick filter states
+  const [quickOperator, setQuickOperator] = useState('');
+  const [quickForklift, setQuickForklift] = useState('');
+  const [quickLocation, setQuickLocation] = useState('');
+
   // Dialog states
   const [addDialogOpen, setAddDialogOpen] = useState(false);
   const [editDialogOpen, setEditDialogOpen] = useState(false);
@@ -221,7 +226,7 @@ const GasSupplyPage = () => {
     }
   ];
 
-  // Filter gas supplies based on search and advanced filters
+  // Filter gas supplies based on search, quick filters and advanced filters
   const filteredGasSupplies = gasSupplies.filter(supply => {
     // Search filter
     const matchesSearch = search === '' || 
@@ -230,6 +235,16 @@ const GasSupplyPage = () => {
       supply.id.toLowerCase().includes(search.toLowerCase()) ||
       (supply.fornecedor || '').toLowerCase().includes(search.toLowerCase()) ||
       (supply.dataAbastecimento || supply.date || '').toLowerCase().includes(search.toLowerCase());
+    
+    // Quick filters
+    const matchesQuickOperator = quickOperator === '' || quickOperator === 'all' || 
+      (supply.operador?.nome || supply.operator) === quickOperator;
+    
+    const matchesQuickForklift = quickForklift === '' || quickForklift === 'all' || 
+      (supply.empilhadeiraId || supply.forkliftId) === quickForklift;
+    
+    const matchesQuickLocation = quickLocation === '' || quickLocation === 'all' || 
+      supply.localAbastecimento === quickLocation;
     
     // Advanced filters
     const matchesFilters = Object.entries(filters).every(([key, value]) => {
@@ -265,19 +280,25 @@ const GasSupplyPage = () => {
       }
     });
 
-    return matchesSearch && matchesFilters;
+    return matchesSearch && matchesQuickOperator && matchesQuickForklift && matchesQuickLocation && matchesFilters;
   });
 
   // Clear all filters
   const clearAllFilters = () => {
     setSearch('');
     setFilters({});
+    setQuickOperator('');
+    setQuickForklift('');
+    setQuickLocation('');
   };
 
   // Count active filters
   const activeFiltersCount = Object.keys(filters).filter(key => 
     filters[key] && filters[key] !== '' && filters[key] !== 'all'
-  ).length + (search ? 1 : 0);
+  ).length + (search ? 1 : 0) + 
+  (quickOperator && quickOperator !== 'all' ? 1 : 0) +
+  (quickForklift && quickForklift !== 'all' ? 1 : 0) +
+  (quickLocation && quickLocation !== 'all' ? 1 : 0);
 
   // Format date
   const formatDate = (dateString: string) => {
@@ -425,7 +446,7 @@ const GasSupplyPage = () => {
       {/* Advanced Search and Filters */}
       <Card className="shadow-xl border-0 bg-white/90 dark:bg-slate-800/90 backdrop-blur-lg">
         <CardContent className="p-8">
-          <div className="flex flex-col lg:flex-row gap-6 items-start">
+          <div className="flex flex-col gap-6">
             {/* Main Search Bar */}
             <div className="relative flex-1 max-w-2xl">
               <Search className="absolute left-4 top-1/2 transform -translate-y-1/2 text-muted-foreground w-5 h-5" />
@@ -448,8 +469,93 @@ const GasSupplyPage = () => {
               )}
             </div>
             
-            {/* Advanced Filters and Quick Actions */}
-            <div className="flex items-center gap-3">
+            {/* Quick Filters and Advanced Filters */}
+            <div className="flex flex-wrap items-center gap-3">
+              {/* Quick Filter - Operador */}
+              <div className="flex items-center gap-2">
+                <User className="w-4 h-4 text-green-600" />
+                <Select value={quickOperator} onValueChange={setQuickOperator}>
+                  <SelectTrigger className="w-[180px] border-2 border-slate-200 dark:border-slate-700 hover:border-green-300 dark:hover:border-green-600 transition-colors">
+                    <SelectValue placeholder="Operador" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="all">Todos Operadores</SelectItem>
+                    {operators.map(operator => (
+                      <SelectItem key={operator} value={operator}>
+                        {operator}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+                {quickOperator && quickOperator !== 'all' && (
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    onClick={() => setQuickOperator('')}
+                    className="h-8 w-8 p-0 hover:bg-red-100 dark:hover:bg-red-900/20"
+                  >
+                    <X className="w-3 h-3 text-red-500" />
+                  </Button>
+                )}
+              </div>
+
+              {/* Quick Filter - Empilhadeira */}
+              <div className="flex items-center gap-2">
+                <Truck className="w-4 h-4 text-blue-600" />
+                <Select value={quickForklift} onValueChange={setQuickForklift}>
+                  <SelectTrigger className="w-[180px] border-2 border-slate-200 dark:border-slate-700 hover:border-blue-300 dark:hover:border-blue-600 transition-colors">
+                    <SelectValue placeholder="Empilhadeira" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="all">Todas Empilhadeiras</SelectItem>
+                    {forklifts.map(forklift => (
+                      <SelectItem key={forklift} value={forklift}>
+                        {forklift}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+                {quickForklift && quickForklift !== 'all' && (
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    onClick={() => setQuickForklift('')}
+                    className="h-8 w-8 p-0 hover:bg-red-100 dark:hover:bg-red-900/20"
+                  >
+                    <X className="w-3 h-3 text-red-500" />
+                  </Button>
+                )}
+              </div>
+
+              {/* Quick Filter - Local */}
+              <div className="flex items-center gap-2">
+                <MapPin className="w-4 h-4 text-purple-600" />
+                <Select value={quickLocation} onValueChange={setQuickLocation}>
+                  <SelectTrigger className="w-[180px] border-2 border-slate-200 dark:border-slate-700 hover:border-purple-300 dark:hover:border-purple-600 transition-colors">
+                    <SelectValue placeholder="Local" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="all">Todos Locais</SelectItem>
+                    {locations.map(location => (
+                      <SelectItem key={location} value={location}>
+                        {location}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+                {quickLocation && quickLocation !== 'all' && (
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    onClick={() => setQuickLocation('')}
+                    className="h-8 w-8 p-0 hover:bg-red-100 dark:hover:bg-red-900/20"
+                  >
+                    <X className="w-3 h-3 text-red-500" />
+                  </Button>
+                )}
+              </div>
+
+              {/* Advanced Filters */}
               <AdvancedFilters
                 filters={filterOptions}
                 values={filters}
@@ -460,6 +566,7 @@ const GasSupplyPage = () => {
                 }}
               />
               
+              {/* Clear All Filters */}
               {activeFiltersCount > 0 && (
                 <Button
                   variant="outline"
