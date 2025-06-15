@@ -88,7 +88,7 @@ const ForkliftCard: React.FC<ForkliftCardProps> = ({ forklift, onClick, onDelete
         </Button>
       )}
 
-      {/* Header - Fixed layout for better badge positioning */}
+      {/* Header - Simplified without status badge */}
       <div className="flex flex-col gap-2 mb-3">
         <div className="flex items-start justify-between pr-8">
           <div className="flex-1 min-w-0">
@@ -102,11 +102,6 @@ const ForkliftCard: React.FC<ForkliftCardProps> = ({ forklift, onClick, onDelete
               {forklift.marca}
             </p>
           </div>
-        </div>
-        
-        {/* Status Badge - Fixed positioning with flex container */}
-        <div className="flex justify-end items-center min-h-[28px]">
-          {getStatusBadge(forklift.status)}
         </div>
       </div>
 
@@ -128,6 +123,11 @@ const ForkliftCard: React.FC<ForkliftCardProps> = ({ forklift, onClick, onDelete
             <span className="text-sm font-semibold text-slate-300 ml-1">kg</span>
           </div>
         </div>
+      </div>
+
+      {/* Status Badge - Now positioned after capacity */}
+      <div className="mb-3 flex justify-center">
+        {getStatusBadge(forklift.status)}
       </div>
 
       {/* Details - Improved spacing and responsiveness */}
