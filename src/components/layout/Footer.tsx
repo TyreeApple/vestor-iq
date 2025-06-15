@@ -72,7 +72,7 @@ const Footer: React.FC = () => {
             <p className="text-xs text-muted-foreground">
               © 2024 FleetPro. Sistema de Gestão de Frotas - Todos os direitos reservados.
             </p>
-            <div className="flex items-center space-x-1 text-xs text-muted-foreground">
+            <div className="flex items-center space-x-2 text-xs text-muted-foreground">
               <span>Desenvolvido por diversão</span>
               <a 
                 href="https://github.com/olucasmf" 
@@ -80,7 +80,7 @@ const Footer: React.FC = () => {
                 rel="noopener noreferrer"
                 className="hover:text-foreground transition-colors"
               >
-                <Github className="w-3 h-3" />
+                <Github className="w-4 h-4" />
               </a>
             </div>
           </div>
