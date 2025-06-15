@@ -33,6 +33,12 @@ const availableForklifts = [
   { id: 'G006', model: 'Caterpillar DP40' }
 ];
 
+// Tipo estendido para operações enriquecidas
+type EnrichedOperacao = Operacao & {
+  operador: { id: string; nome: string };
+  empilhadeira: { id: string; modelo: string };
+};
+
 const OperationsPage = () => {
   const isMobile = useIsMobile();
   const { toast } = useToast();
@@ -50,7 +56,7 @@ const OperationsPage = () => {
   const [addDialogOpen, setAddDialogOpen] = useState(false);
   const [editDialogOpen, setEditDialogOpen] = useState(false);
   const [detailsDialogOpen, setDetailsDialogOpen] = useState(false);
-  const [selectedOperation, setSelectedOperation] = useState<Operacao | null>(null);
+  const [selectedOperation, setSelectedOperation] = useState<EnrichedOperacao | null>(null);
 
   // Use filters hook with corrected search fields
   const {
@@ -66,19 +72,19 @@ const OperationsPage = () => {
   });
 
   // FAZENDO O "JOIN" DOS OBJETOS COMPLETOS ANTES DE REPASSAR PARA OS COMPONENTES
-  const joinOperationData = (operation: Operacao) => {
-    const operador =
-      operators.find((op) => op.id === operation.operadorId) ||
+  const joinOperationData = (operation: Operacao): EnrichedOperacao => {
+    const operador = operators.find((op) => op.id === operation.operadorId) ||
       availableOperators.find((op) => op.id === operation.operadorId) ||
-      { id: operation.operadorId, nome: "Outro" };
-    const empilhadeira =
-      forklifts.find((fork) => fork.id === operation.empilhadeiraId) ||
+      { id: operation.operadorId, nome: "Operador Não Encontrado" };
+
+    const empilhadeira = forklifts.find((fork) => fork.id === operation.empilhadeiraId) ||
       availableForklifts.find((fork) => fork.id === operation.empilhadeiraId) ||
-      { id: operation.empilhadeiraId, modelo: "Outro" };
+      { id: operation.empilhadeiraId, modelo: "Empilhadeira Não Encontrada" };
+
     return {
       ...operation,
-      operador,
-      empilhadeira,
+      operador: { id: operador.id, nome: operador.nome || operador.name || "Operador Não Encontrado" },
+      empilhadeira: { id: empilhadeira.id, modelo: empilhadeira.modelo || empilhadeira.model || "Empilhadeira Não Encontrada" },
     };
   };
 
@@ -138,8 +144,8 @@ const OperationsPage = () => {
   };
 
   // Open details dialog
-  const handleViewDetails = (operation: Operacao) => {
-    setSelectedOperation(joinOperationData(operation));
+  const handleViewDetails = (operation: EnrichedOperacao) => {
+    setSelectedOperation(operation);
     setDetailsDialogOpen(true);
   };
 
@@ -150,8 +156,8 @@ const OperationsPage = () => {
   };
 
   // Open edit dialog directly
-  const handleEdit = (operation: Operacao) => {
-    setSelectedOperation(joinOperationData(operation));
+  const handleEdit = (operation: EnrichedOperacao) => {
+    setSelectedOperation(operation);
     setEditDialogOpen(true);
   };
 
@@ -210,10 +216,6 @@ const OperationsPage = () => {
 
   // View mode state
   const [viewMode, setViewMode] = useState<"grid" | "list">("grid");
-
-  // Split filtered operations
-  // const activeOps = filteredOperations.filter(op => op.status === StatusOperacao.EM_ANDAMENTO);
-  // const completedOps = filteredOperations.filter(op => op.status === StatusOperacao.CONCLUIDA);
 
   // Filter configuration for advanced filters
   const filterOptions = [

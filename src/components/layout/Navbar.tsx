@@ -4,7 +4,6 @@ import { NavLink } from 'react-router-dom';
 import { Search, User, Menu, X, BarChart3, Users, Activity, Wrench, Fuel, FileText, Gauge, Settings } from 'lucide-react';
 import { MdForklift } from 'react-icons/md';
 import { Button } from '@/components/ui/button';
-// Removido: import ThemeToggle from '@/components/common/ThemeToggle'; // <-- Remove this comment
 import { cn } from '@/lib/utils';
 import { useAppStore } from '@/stores/useAppStore';
 import { StatusOperacao, StatusManutencao } from "@/types";
@@ -74,8 +73,8 @@ const Navbar: React.FC = () => {
 
   return (
     <>
-      <header className="h-16 bg-card dark:bg-card border-b border-slate-200 dark:border-border flex items-center justify-between px-6 shadow-premium dark:shadow-premium-dark relative z-50">
-        <div className="flex items-center space-x-4">
+      <header className="sticky top-0 z-50 h-14 sm:h-16 bg-card/95 dark:bg-card/95 backdrop-blur-md border-b border-slate-200 dark:border-border flex items-center justify-between px-3 sm:px-4 lg:px-6 shadow-premium dark:shadow-premium-dark">
+        <div className="flex items-center space-x-2 sm:space-x-4 min-w-0">
           <LogoOnly />
         </div>
 
@@ -88,4 +87,3 @@ const Navbar: React.FC = () => {
 };
 
 export default Navbar;
-

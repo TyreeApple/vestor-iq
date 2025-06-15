@@ -11,11 +11,11 @@ const MainLayout: React.FC = () => {
   useRealTimeSync();
 
   return (
-    <div className="relative min-h-screen flex flex-col bg-slate-50 dark:bg-background transition-colors duration-300 overflow-x-hidden">
+    <div className="relative min-h-screen flex flex-col bg-slate-50 dark:bg-background transition-colors duration-300">
       <FloatingMockDataButton />
       <Navbar />
-      <main className="flex-grow overflow-y-auto overflow-x-hidden bg-slate-50 dark:bg-background w-full">
-        <div className="w-full max-w-7xl mx-auto px-2 sm:px-4 py-4 flex flex-col min-h-full">
+      <main className="flex-grow overflow-y-auto bg-slate-50 dark:bg-background">
+        <div className="w-full max-w-[1920px] mx-auto px-3 sm:px-4 lg:px-6 xl:px-8 py-4 lg:py-6">
           <Outlet />
         </div>
         <Footer />
@@ -25,4 +25,3 @@ const MainLayout: React.FC = () => {
 };
 
 export default MainLayout;
-

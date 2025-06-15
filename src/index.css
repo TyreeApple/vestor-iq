@@ -1,3 +1,4 @@
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -53,6 +54,10 @@
   body {
     @apply bg-background text-foreground font-sans overflow-x-hidden;
     transition: background-color 0.3s ease, color 0.3s ease;
+    font-feature-settings: 'rlig' 1, 'calt' 1;
+    text-rendering: optimizeLegibility;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
   }
 
   /* Custom scrollbar premium */
@@ -81,6 +86,16 @@
   .dark ::-webkit-scrollbar-thumb:hover {
     @apply bg-primary/50;
   }
+
+  /* Performance optimizations */
+  img {
+    content-visibility: auto;
+  }
+  
+  .glass-card,
+  .glass-card-hover {
+    contain: layout style paint;
+  }
 }
 
 @layer components {
@@ -88,11 +103,30 @@
   .modern-card {
     @apply bg-card border border-border rounded-xl shadow-premium dark:shadow-premium-dark;
     transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    will-change: transform, box-shadow;
   }
 
   .modern-card:hover {
     @apply shadow-glass-hover dark:shadow-glass-dark;
     transform: translateY(-3px);
+  }
+
+  /* === GLASS EFFECTS PREMIUM === */
+  .glass-card {
+    @apply bg-card/80 dark:bg-card/80 backdrop-blur-sm border border-border/50 rounded-xl shadow-lg;
+    backdrop-filter: blur(12px);
+  }
+
+  .glass-card-hover {
+    @apply glass-card;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    will-change: transform, box-shadow;
+  }
+
+  .glass-card-hover:hover {
+    @apply shadow-xl;
+    transform: translateY(-2px);
+    backdrop-filter: blur(16px);
   }
 
   /* === STATUS BADGES PREMIUM === */
@@ -132,16 +166,23 @@
   .status-warning {
     @apply bg-status-warning shadow-[0_0_12px_rgba(239,68,68,0.4)];
   }
+
+  /* === RESPONSIVE UTILITIES === */
+  .responsive-padding {
+    @apply px-3 sm:px-4 lg:px-6 xl:px-8;
+  }
+
+  .responsive-text {
+    @apply text-sm sm:text-base lg:text-lg;
+  }
+
+  .responsive-heading {
+    @apply text-lg sm:text-xl lg:text-2xl xl:text-3xl;
+  }
 }
 
 /* === FONT IMPORTS PREMIUM === */
-@font-face {
-  font-family: 'Inter';
-  src: url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap');
-  font-weight: 300 900;
-  font-style: normal;
-  font-display: swap;
-}
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap');
 
 html {
   font-family: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
@@ -159,5 +200,58 @@ html {
 
   .gradient-text {
     @apply bg-gradient-to-r from-blue-600 via-purple-600 to-indigo-600 bg-clip-text text-transparent;
+  }
+
+  /* Performance utilities */
+  .gpu-accelerated {
+    will-change: transform;
+    transform: translateZ(0);
+  }
+
+  .smooth-scroll {
+    scroll-behavior: smooth;
+  }
+
+  /* Responsive utilities */
+  .container-responsive {
+    @apply w-full max-w-7xl mx-auto px-3 sm:px-4 lg:px-6 xl:px-8;
+  }
+}
+
+/* === MEDIA QUERIES FOR ENHANCED MOBILE EXPERIENCE === */
+@media (max-width: 640px) {
+  .mobile-optimized {
+    font-size: 14px;
+    line-height: 1.4;
+  }
+  
+  .mobile-padding {
+    padding: 0.75rem;
+  }
+  
+  .mobile-spacing {
+    gap: 0.5rem;
+  }
+}
+
+@media (max-width: 380px) {
+  .text-xs {
+    font-size: 0.7rem;
+  }
+  
+  .mobile-compact {
+    padding: 0.5rem;
+    font-size: 0.8rem;
+  }
+}
+
+/* === PRINT STYLES === */
+@media print {
+  * {
+    @apply text-black bg-white;
+  }
+  
+  .no-print {
+    display: none !important;
   }
 }
