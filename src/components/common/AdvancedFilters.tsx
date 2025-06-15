@@ -23,13 +23,15 @@ interface AdvancedFiltersProps {
   values: Record<string, any>;
   onFiltersChange: (filters: Record<string, any>) => void;
   onClearFilters: () => void;
+  triggerProps?: React.ComponentProps<typeof Button>;
 }
 
 const AdvancedFilters = ({ 
   filters, 
   values, 
   onFiltersChange, 
-  onClearFilters 
+  onClearFilters,
+  triggerProps
 }: AdvancedFiltersProps) => {
   const [open, setOpen] = useState(false);
 
@@ -100,7 +102,11 @@ const AdvancedFilters = ({
   return (
     <Popover open={open} onOpenChange={setOpen}>
       <PopoverTrigger asChild>
-        <Button variant="outline" className="flex items-center gap-2">
+        <Button 
+          variant="outline" 
+          className="flex items-center gap-2"
+          {...triggerProps}
+        >
           <Filter className="w-4 h-4" />
           Filtros Avançados
           {activeFiltersCount > 0 && (
