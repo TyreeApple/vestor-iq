@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { useIsMobile } from '@/hooks/use-mobile';
 import { cn } from '@/lib/utils';
@@ -15,6 +14,7 @@ import OperationsKpiCards from "@/components/operations/OperationsKpiCards";
 import OperationsFilterBar from "@/components/operations/OperationsFilterBar";
 import ActiveOperationsSection from "@/components/operations/ActiveOperationsSection";
 import CompletedOperationsSection from "@/components/operations/CompletedOperationsSection";
+import { AlertCircle, CheckCircle2 } from "lucide-react";
 
 // Mock data for available operators and forklifts
 const availableOperators = [
