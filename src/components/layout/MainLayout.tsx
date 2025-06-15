@@ -12,21 +12,16 @@ const MainLayout: React.FC = () => {
   useRealTimeSync();
 
   return (
-    <div className="flex h-screen bg-slate-50 dark:bg-background transition-colors duration-300">
+    <div className="flex flex-col h-screen bg-slate-50 dark:bg-background transition-colors duration-300">
       <EducationalModal />
       <FloatingMockDataButton />
-      <div className="flex-1 flex flex-col">
-        <Navbar />
-        <main className="flex-1 overflow-auto bg-slate-50 dark:bg-background">
-          <div className="flex-1 flex flex-col">
-            {/* Adiciona container global responsivo com margens */}
-            <div className="flex-1 w-full max-w-7xl mx-auto px-2 sm:px-4 py-4">
-              <Outlet />
-            </div>
-            <Footer />
-          </div>
-        </main>
-      </div>
+      <Navbar />
+      <main className="flex-grow overflow-y-auto overflow-x-hidden bg-slate-50 dark:bg-background">
+        <div className="w-full max-w-7xl mx-auto px-2 sm:px-4 py-4 flex flex-col min-h-full">
+          <Outlet />
+        </div>
+        <Footer />
+      </main>
     </div>
   );
 };
