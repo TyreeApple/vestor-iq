@@ -1,3 +1,4 @@
+
 import React, { useState } from 'react';
 import { Button } from "@/components/ui/button";
 import { useIsMobile } from '@/hooks/use-mobile';
@@ -12,95 +13,7 @@ import MaintenanceHistoryTable from '@/components/maintenance/MaintenanceHistory
 import { useToast } from '@/hooks/use-toast';
 import AdvancedFilters from '@/components/common/AdvancedFilters';
 import { useFilters } from '@/hooks/use-filters';
-
-// Mock data for maintenance
-const initialMaintenance: OrdemServico[] = [
-  {
-    id: 'M001',
-    empilhadeiraId: 'G001',
-    empilhadeira: {
-      id: 'G001',
-      modelo: 'Toyota 8FGU25',
-      marca: 'Toyota',
-      tipo: 'Gás' as any,
-      status: 'Operacional' as any,
-      capacidade: 2500,
-      anoFabricacao: 2022,
-      dataAquisicao: '10/05/2022',
-      numeroSerie: 'TOY001',
-      horimetro: 12583,
-      ultimaManutencao: '15/09/2023',
-      proximaManutencao: '15/12/2023',
-      localizacaoAtual: 'Setor A',
-      setor: 'Armazém',
-      custoHora: 45.50,
-      eficiencia: 87.5,
-      disponibilidade: 92.3,
-      qrCode: 'QR001'
-    },
-    tipo: TipoManutencao.CORRETIVA,
-    status: StatusManutencao.ABERTA,
-    prioridade: PrioridadeOperacao.ALTA,
-    problema: 'Vazamento de óleo hidráulico',
-    dataAbertura: '2023-11-15',
-    custos: {
-      pecas: 0,
-      maoObra: 0,
-      terceiros: 0,
-      total: 0
-    },
-    pecasUtilizadas: [],
-    anexos: [],
-    forkliftId: 'G001',
-    forkliftModel: 'Toyota 8FGU25',
-    issue: 'Vazamento de óleo hidráulico',
-    reportedBy: 'Carlos Silva',
-    reportedDate: '2023-11-15'
-  },
-  {
-    id: 'M002',
-    empilhadeiraId: 'R003',
-    empilhadeira: {
-      id: 'R003',
-      modelo: 'Crown RR5725',
-      marca: 'Crown',
-      tipo: 'Retrátil' as any,
-      status: 'Em Manutenção' as any,
-      capacidade: 1800,
-      anoFabricacao: 2022,
-      dataAquisicao: '04/03/2022',
-      numeroSerie: 'CRW003',
-      horimetro: 10974,
-      ultimaManutencao: '12/08/2023',
-      proximaManutencao: '12/11/2023',
-      localizacaoAtual: 'Oficina',
-      setor: 'Manutenção',
-      custoHora: 42.30,
-      eficiencia: 85.1,
-      disponibilidade: 88.7,
-      qrCode: 'QR003'
-    },
-    tipo: TipoManutencao.CORRETIVA,
-    status: StatusManutencao.EM_ANDAMENTO,
-    prioridade: PrioridadeOperacao.ALTA,
-    problema: 'Motor de tração com ruído anormal',
-    dataAbertura: '2023-11-10',
-    dataInicio: '2023-11-12',
-    custos: {
-      pecas: 500,
-      maoObra: 200,
-      terceiros: 0,
-      total: 700
-    },
-    pecasUtilizadas: [],
-    anexos: [],
-    forkliftId: 'R003',
-    forkliftModel: 'Crown RR5725',
-    issue: 'Motor de tração com ruído anormal',
-    reportedBy: 'João Pereira',
-    reportedDate: '2023-11-10'
-  }
-];
+import { useAppStore } from '@/stores/useAppStore';
 
 // Mock data for available forklifts and operators
 const availableForklifts = [
@@ -122,9 +35,13 @@ const availableOperators = [
 const MaintenancePage = () => {
   const isMobile = useIsMobile();
   const { toast } = useToast();
-  const [maintenanceItems, setMaintenanceItems] = useState<OrdemServico[]>(initialMaintenance);
+  // MUDANÇA PRINCIPAL: Usando Zustand como fonte de dados para manutenção
+  const maintenanceItems = useAppStore((state) => state.ordemServicos);
+  const addOrdemServico = useAppStore((state) => state.addOrdemServico);
+  const updateOrdemServico = useAppStore((state) => state.updateOrdemServico);
+  const deleteOrdemServico = useAppStore((state) => state.deleteOrdemServico);
+
   const [viewMode, setViewMode] = useState<'grid' | 'list'>('grid');
-  
   // Dialog states
   const [addDialogOpen, setAddDialogOpen] = useState(false);
   const [editDialogOpen, setEditDialogOpen] = useState(false);
@@ -170,7 +87,7 @@ const MaintenancePage = () => {
     }
   ];
 
-  // Use the filters hook
+  // Use the filters hook (filtra a partir da fonte do Zustand)
   const {
     search,
     setSearch,
@@ -183,18 +100,16 @@ const MaintenancePage = () => {
     searchFields: ['problema', 'empilhadeiraId', 'forkliftModel', 'reportedBy']
   });
 
-  // Handle add/edit maintenance
+  // Handle add/edit maintenance usando Zustand
   const handleSaveMaintenance = (maintenanceData: OrdemServico) => {
-    if (editDialogOpen) {
-      setMaintenanceItems(prev => 
-        prev.map(m => m.id === maintenanceData.id ? maintenanceData : m)
-      );
+    if (editDialogOpen && selectedMaintenance) {
+      updateOrdemServico(maintenanceData.id, maintenanceData);
       toast({
         title: "Manutenção atualizada",
         description: "Os dados da manutenção foram atualizados com sucesso."
       });
     } else {
-      setMaintenanceItems(prev => [...prev, maintenanceData]);
+      addOrdemServico(maintenanceData);
       toast({
         title: "Manutenção criada",
         description: "Nova ordem de serviço criada com sucesso."
@@ -211,10 +126,10 @@ const MaintenancePage = () => {
     setEditDialogOpen(true);
   };
 
-  // Handle delete maintenance
+  // Handle delete maintenance usando Zustand
   const handleDeleteMaintenance = (id: string) => {
     if (confirm("Tem certeza que deseja excluir este registro de manutenção?")) {
-      setMaintenanceItems(prev => prev.filter(m => m.id !== id));
+      deleteOrdemServico(id);
       toast({
         title: "Manutenção excluída",
         description: "O registro de manutenção foi excluído com sucesso."
@@ -222,11 +137,11 @@ const MaintenancePage = () => {
     }
   };
 
-  // Handle status change
+  // Handle status change (usando updateOrdemServico)
   const handleStatusChange = (id: string, newStatus: StatusManutencao) => {
-    setMaintenanceItems(prev => 
-      prev.map(m => m.id === id ? { ...m, status: newStatus } : m)
-    );
+    const item = maintenanceItems.find(m => m.id === id);
+    if (!item) return;
+    updateOrdemServico(id, { ...item, status: newStatus });
     toast({
       title: "Status atualizado",
       description: `Status da manutenção alterado para ${newStatus}.`
@@ -241,9 +156,10 @@ const MaintenancePage = () => {
     });
   };
 
-  // Get pending maintenance items
+  // Get pending and completed maintenance
   const pendingMaintenance = filteredData.filter(m => m.status !== StatusManutencao.CONCLUIDA);
-  const completedMaintenance = filteredData.filter(m => m.status === StatusManutencao.CONCLUIDA);
+  // (a tabela sempre mostra todos do Zustand)
+  // const completedMaintenance = filteredData.filter(m => m.status === StatusManutencao.CONCLUIDA);
 
   return (
     <div className="p-6 space-y-6">
@@ -257,7 +173,6 @@ const MaintenancePage = () => {
             Controle completo das ordens de serviço e manutenções
           </p>
         </div>
-        
         <div className="flex items-center gap-3">
           <Button
             variant="outline"
@@ -453,3 +368,4 @@ const MaintenancePage = () => {
 };
 
 export default MaintenancePage;
+
