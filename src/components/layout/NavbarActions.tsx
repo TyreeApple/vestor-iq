@@ -1,9 +1,7 @@
-
 import React from "react";
 import { Search, User, Menu, X, Settings } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useNavigate } from "react-router-dom";
-import ThemeToggle from "@/components/common/ThemeToggle";
 
 type Props = {
   isMobileMenuOpen: boolean;
@@ -32,7 +30,6 @@ const NavbarActions: React.FC<Props> = ({ isMobileMenuOpen, setIsMobileMenuOpen 
       >
         <Settings className="w-5 h-5" />
       </Button>
-      <ThemeToggle />
       <Button variant="ghost" size="icon" className="hover:bg-accent transition-colors">
         <User className="w-5 h-5" />
       </Button>

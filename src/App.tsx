@@ -1,4 +1,3 @@
-
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
@@ -14,33 +13,30 @@ import MaintenancePage from "./pages/Maintenance";
 import GasSupplyPage from "./pages/GasSupply";
 import MainLayout from "./components/layout/MainLayout";
 import Configuracao from "./pages/Configuracao";
-import { ThemeProvider } from "./components/common/ThemeProvider";
 
 const queryClient = new QueryClient();
 
 const App = () => (
   <QueryClientProvider client={queryClient}>
-    <ThemeProvider defaultTheme="dark" storageKey="vite-ui-theme">
-      <TooltipProvider>
-        <Toaster />
-        <Sonner />
-        <BrowserRouter>
-          <Routes>
-            <Route path="/" element={<MainLayout />}>
-              <Route index element={<Dashboard />} />
-              <Route path="empilhadeiras" element={<ForkliftsPage />} />
-              <Route path="operadores" element={<OperatorsPage />} />
-              <Route path="operacoes" element={<OperationsPage />} />
-              <Route path="manutencao" element={<MaintenancePage />} />
-              <Route path="abastecimento" element={<GasSupplyPage />} />
-              <Route path="relatorios" element={<ReportsPage />} />
-              <Route path="configuracao" element={<Configuracao />} />
-            </Route>
-            <Route path="*" element={<NotFound />} />
-          </Routes>
-        </BrowserRouter>
-      </TooltipProvider>
-    </ThemeProvider>
+    <TooltipProvider>
+      <Toaster />
+      <Sonner />
+      <BrowserRouter>
+        <Routes>
+          <Route path="/" element={<MainLayout />}>
+            <Route index element={<Dashboard />} />
+            <Route path="empilhadeiras" element={<ForkliftsPage />} />
+            <Route path="operadores" element={<OperatorsPage />} />
+            <Route path="operacoes" element={<OperationsPage />} />
+            <Route path="manutencao" element={<MaintenancePage />} />
+            <Route path="abastecimento" element={<GasSupplyPage />} />
+            <Route path="relatorios" element={<ReportsPage />} />
+            <Route path="configuracao" element={<Configuracao />} />
+          </Route>
+          <Route path="*" element={<NotFound />} />
+        </Routes>
+      </BrowserRouter>
+    </TooltipProvider>
   </QueryClientProvider>
 );
 
