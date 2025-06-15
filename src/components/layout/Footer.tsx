@@ -1,6 +1,6 @@
 
 import React from 'react';
-import { Gauge, Shield, Clock, Users } from 'lucide-react';
+import { Gauge, Shield, Clock, Users, Github } from 'lucide-react';
 
 const Footer: React.FC = () => {
   return (
@@ -21,6 +21,18 @@ const Footer: React.FC = () => {
             <p className="text-xs text-muted-foreground">
               Sistema de Gestão de Frotas
             </p>
+            {/* GitHub Link */}
+            <div className="flex items-center space-x-2">
+              <a 
+                href="https://github.com/olucasmf" 
+                target="_blank" 
+                rel="noopener noreferrer"
+                className="flex items-center space-x-1 text-xs text-muted-foreground hover:text-foreground transition-colors"
+              >
+                <Github className="w-3 h-3" />
+                <span>@olucasmf</span>
+              </a>
+            </div>
           </div>
 
           {/* Status do Sistema */}
