@@ -3,7 +3,7 @@ import { Button } from "@/components/ui/button";
 import { useIsMobile } from '@/hooks/use-mobile';
 import { cn } from '@/lib/utils';
 import { Input } from '@/components/ui/input';
-import { Calendar, Clock, Plus, Search, Truck, User, Filter, MapPin, AlertCircle, Play, CheckCircle2, Fuel, Timer, Gauge, Activity, TrendingUp } from 'lucide-react';
+import { Calendar, Clock, Plus, Search, Truck, User, Filter, MapPin, AlertCircle, Play, CheckCircle2, Fuel, Timer, Gauge, Activity, TrendingUp, Grid3X3, List } from 'lucide-react';
 import { Operacao, StatusOperacao, TipoOperacao, PrioridadeOperacao, StatusOperador } from '@/types';
 import { useToast } from '@/hooks/use-toast';
 import OperationDialog from '@/components/operations/OperationDialog';
@@ -13,6 +13,7 @@ import { useFilters } from '@/hooks/use-filters';
 import PageHeader from '@/components/layout/PageHeader';
 import ModernKpiCard from '@/components/dashboard/ModernKpiCard';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 
 // Mock data for operations - using proper Portuguese interface
 const initialOperations: Operacao[] = [
@@ -243,39 +244,6 @@ const OperationsPage = () => {
   // Filter configuration for advanced filters
   const filterOptions = [
     {
-      key: 'status',
-      label: 'Status',
-      type: 'select' as const,
-      options: [
-        { value: StatusOperacao.EM_ANDAMENTO, label: 'Em Andamento' },
-        { value: StatusOperacao.CONCLUIDA, label: 'Concluídas' }
-      ]
-    },
-    {
-      key: 'setor',
-      label: 'Setor',
-      type: 'select' as const,
-      options: [
-        { value: 'Armazém A', label: 'Armazém A' },
-        { value: 'Armazém B', label: 'Armazém B' },
-        { value: 'Expedição', label: 'Expedição' },
-        { value: 'Recebimento', label: 'Recebimento' },
-        { value: 'Produção', label: 'Produção' }
-      ]
-    },
-    {
-      key: 'tipo',
-      label: 'Tipo',
-      type: 'select' as const,
-      options: [
-        { value: TipoOperacao.MOVIMENTACAO, label: 'Movimentação' },
-        { value: TipoOperacao.CARGA, label: 'Carga' },
-        { value: TipoOperacao.DESCARGA, label: 'Descarga' },
-        { value: TipoOperacao.ESTOQUE, label: 'Estoque' },
-        { value: TipoOperacao.PICKING, label: 'Picking' }
-      ]
-    },
-    {
       key: 'prioridade',
       label: 'Prioridade',
       type: 'select' as const,
@@ -478,41 +446,90 @@ const OperationsPage = () => {
         />
       </div>
 
-      {/* Enhanced Search and Filter Section */}
+      {/* Enhanced Inline Search and Filter Section */}
       <Card className="glass-card">
-        <CardHeader className="pb-4">
-          <CardTitle className="text-lg font-semibold text-foreground flex items-center gap-2">
-            <Search className="w-5 h-5" />
-            Busca e Filtros
-          </CardTitle>
-        </CardHeader>
-        <CardContent>
-          <div className="flex flex-col lg:flex-row gap-4 items-start lg:items-end">
-            <div className="flex-1 space-y-2">
-              <label className="text-sm font-medium text-muted-foreground">Buscar Operação</label>
+        <CardContent className="p-6">
+          <div className="flex flex-col lg:flex-row gap-4 items-stretch lg:items-center">
+            {/* Search Bar */}
+            <div className="flex-1">
               <div className="relative">
                 <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground w-4 h-4" />
                 <Input 
                   type="text" 
-                  placeholder="Buscar por ID, operador ou setor..." 
-                  className="pl-10 bg-background/50 border-border/50 focus:border-primary/50 focus:ring-primary/20"
+                  placeholder="Buscar por ID ou modelo..." 
+                  className="pl-10 h-10 bg-background/50 border-border/50 focus:border-primary/50 focus:ring-primary/20"
                   value={search}
                   onChange={(e) => setSearch(e.target.value)}
                 />
               </div>
             </div>
             
-            <div className="flex gap-3">
-              <AdvancedFilters
-                filters={filterOptions}
-                values={filters}
-                onFiltersChange={setFilters}
-                onClearFilters={clearFilters}
-                triggerProps={{
-                  variant: "outline",
-                  className: "border-border/50 text-foreground hover:bg-accent/50 hover:text-accent-foreground shadow-sm"
-                }}
-              />
+            {/* Status Filter */}
+            <div className="min-w-[200px]">
+              <Select
+                value={filters.status || 'all'}
+                onValueChange={(value) => setFilters({ ...filters, status: value === 'all' ? '' : value })}
+              >
+                <SelectTrigger className="h-10 bg-background/50 border-border/50">
+                  <SelectValue placeholder="Todos os Status" />
+                </SelectTrigger>
+                <SelectContent className="bg-background border-border">
+                  <SelectItem value="all">Todos os Status</SelectItem>
+                  <SelectItem value={StatusOperacao.EM_ANDAMENTO}>Em Andamento</SelectItem>
+                  <SelectItem value={StatusOperacao.CONCLUIDA}>Concluídas</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+            
+            {/* Type Filter */}
+            <div className="min-w-[200px]">
+              <Select
+                value={filters.tipo || 'all'}
+                onValueChange={(value) => setFilters({ ...filters, tipo: value === 'all' ? '' : value })}
+              >
+                <SelectTrigger className="h-10 bg-background/50 border-border/50">
+                  <SelectValue placeholder="Todos os Tipos" />
+                </SelectTrigger>
+                <SelectContent className="bg-background border-border">
+                  <SelectItem value="all">Todos os Tipos</SelectItem>
+                  <SelectItem value={TipoOperacao.MOVIMENTACAO}>Movimentação</SelectItem>
+                  <SelectItem value={TipoOperacao.CARGA}>Carga</SelectItem>
+                  <SelectItem value={TipoOperacao.DESCARGA}>Descarga</SelectItem>
+                  <SelectItem value={TipoOperacao.ESTOQUE}>Estoque</SelectItem>
+                  <SelectItem value={TipoOperacao.PICKING}>Picking</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+            
+            {/* Advanced Filters Button */}
+            <AdvancedFilters
+              filters={filterOptions}
+              values={filters}
+              onFiltersChange={setFilters}
+              onClearFilters={clearFilters}
+              triggerProps={{
+                variant: "outline",
+                className: "h-10 px-4 border-border/50 text-foreground hover:bg-accent/50 hover:text-accent-foreground shadow-sm"
+              }}
+            />
+
+            {/* View Toggle Buttons */}
+            <div className="flex gap-1 border border-border/50 rounded-lg p-1 bg-background/30">
+              <Button
+                variant="ghost"
+                size="sm"
+                className="h-8 px-3 data-[state=active]:bg-primary data-[state=active]:text-primary-foreground"
+                data-state="active"
+              >
+                <Grid3X3 className="w-4 h-4" />
+              </Button>
+              <Button
+                variant="ghost"
+                size="sm"
+                className="h-8 px-3"
+              >
+                <List className="w-4 h-4" />
+              </Button>
             </div>
           </div>
         </CardContent>
