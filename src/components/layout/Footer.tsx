@@ -7,7 +7,7 @@ const Footer: React.FC = () => {
   return (
     <footer className="bg-card dark:bg-card border-t border-border mt-auto">
       <div className="w-full px-6 py-4">
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 items-center">
           {/* Informações do Sistema */}
           <div className="space-y-3">
             <div className="flex items-center space-x-2">
@@ -24,8 +24,8 @@ const Footer: React.FC = () => {
             </p>
           </div>
 
-          {/* Status do Sistema */}
-          <div className="space-y-3">
+          {/* Status do Sistema COM TOGGLE DENTRO */}
+          <div className="space-y-3 flex flex-col items-start md:items-center">
             <h4 className="font-semibold text-sm text-foreground">Status do Sistema</h4>
             <div className="space-y-2">
               <div className="flex items-center space-x-2">
@@ -34,13 +34,19 @@ const Footer: React.FC = () => {
               </div>
               <div className="flex items-center space-x-2">
                 <Clock className="w-3 h-3 text-muted-foreground" />
-                <span className="text-xs text-muted-foreground">Última atualização: {new Date().toLocaleTimeString()}</span>
+                <span className="text-xs text-muted-foreground">
+                  Última atualização: {new Date().toLocaleTimeString()}
+                </span>
               </div>
+            </div>
+            {/* Botão ThemeToggle alinhado à coluna central (só visível em tela md pra cima) */}
+            <div className="hidden md:flex w-full justify-center mt-2">
+              <ThemeToggle />
             </div>
           </div>
 
           {/* Informações Técnicas */}
-          <div className="space-y-3">
+          <div className="space-y-3 flex flex-col items-end">
             <h4 className="font-semibold text-sm text-foreground">Suporte Técnico</h4>
             <div className="space-y-2">
               <div className="flex items-center space-x-2">
@@ -55,8 +61,8 @@ const Footer: React.FC = () => {
           </div>
         </div>
 
-        {/* Theme Toggle centralizado */}
-        <div className="flex justify-center mt-6 mb-2">
+        {/* Mobile: Toggle centralizado abaixo dos blocos */}
+        <div className="flex justify-center mt-5 mb-2 md:hidden">
           <ThemeToggle />
         </div>
 
@@ -68,9 +74,9 @@ const Footer: React.FC = () => {
             </p>
             <div className="flex items-center space-x-2 text-xs text-muted-foreground">
               <span>Desenvolvido por diversão</span>
-              <a 
-                href="https://github.com/olucasmf" 
-                target="_blank" 
+              <a
+                href="https://github.com/olucasmf"
+                target="_blank"
                 rel="noopener noreferrer"
                 className="hover:text-foreground transition-colors"
               >
