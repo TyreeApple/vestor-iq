@@ -117,15 +117,13 @@ export default function ThemeToggle() {
           <AlertDialogFooter className="flex gap-2">
             <AlertDialogAction
               onClick={() => setShowModal(false)}
-              variant="outline"
-              className="bg-background hover:bg-muted"
+              className="bg-background hover:bg-muted border border-input"
             >
               Manter Modo Escuro
             </AlertDialogAction>
             <AlertDialogAction
               onClick={handleConfirmLightMode}
-              variant="destructive"
-              className="bg-warning hover:bg-warning/90 text-black"
+              className="bg-destructive hover:bg-destructive/90 text-destructive-foreground"
             >
               Ativar Mesmo Assim
             </AlertDialogAction>
