@@ -98,9 +98,9 @@ const MaintenanceHistoryTable: React.FC<MaintenanceHistoryTableProps> = ({
   const filteredAndSortedData = React.useMemo(() => {
     let filtered = data.filter(item => {
       const searchMatch = searchTerm === '' || 
-        item.id.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        (item.id || '').toLowerCase().includes(searchTerm.toLowerCase()) ||
         (item.empilhadeira?.modelo || item.forkliftModel || '').toLowerCase().includes(searchTerm.toLowerCase()) ||
-        item.problema.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        (item.problema || '').toLowerCase().includes(searchTerm.toLowerCase()) ||
         (item.reportedBy || '').toLowerCase().includes(searchTerm.toLowerCase());
 
       const filterMatch = Object.entries(filterValues).every(([key, value]) => {
@@ -108,11 +108,11 @@ const MaintenanceHistoryTable: React.FC<MaintenanceHistoryTableProps> = ({
         
         switch (key) {
           case 'status':
-            return item.status.toLowerCase().includes(value.toLowerCase());
+            return (item.status || '').toLowerCase().includes(value.toLowerCase());
           case 'tipo':
-            return item.tipo.toLowerCase().includes(value.toLowerCase());
+            return (item.tipo || '').toLowerCase().includes(value.toLowerCase());
           case 'prioridade':
-            return item.prioridade.toLowerCase().includes(value.toLowerCase());
+            return (item.prioridade || '').toLowerCase().includes(value.toLowerCase());
           default:
             return true;
         }
@@ -263,6 +263,21 @@ const MaintenanceHistoryTable: React.FC<MaintenanceHistoryTableProps> = ({
       <SortDesc className="ml-1 h-3 w-3 text-blue-500" />;
   };
 
+  // Pagination
+  const {
+    currentPage,
+    totalPages,
+    paginatedData,
+    canGoPrevious,
+    canGoNext,
+    goToPage,
+    startIndex,
+    endIndex
+  } = usePagination({
+    data: filteredAndSortedData,
+    itemsPerPage: 10
+  });
+
   return (
     <div className="space-y-6">
       {/* Standardized Filters */}
@@ -357,32 +372,32 @@ const MaintenanceHistoryTable: React.FC<MaintenanceHistoryTableProps> = ({
                 <TableCell className="font-bold text-blue-600 dark:text-blue-400">#{maintenance.id}</TableCell>
                 <TableCell>
                   <div className="space-y-1">
-                    <p className="font-semibold text-slate-900 dark:text-slate-100">{maintenance.empilhadeira?.modelo || maintenance.forkliftModel}</p>
-                    <p className="text-xs text-slate-600 dark:text-slate-400">{maintenance.empilhadeiraId || maintenance.forkliftId}</p>
+                    <p className="font-semibold text-slate-900 dark:text-slate-100">{maintenance.empilhadeira?.modelo || maintenance.forkliftModel || 'N/A'}</p>
+                    <p className="text-xs text-slate-600 dark:text-slate-400">{maintenance.empilhadeiraId || maintenance.forkliftId || 'N/A'}</p>
                   </div>
                 </TableCell>
                 <TableCell>
                   <div className="flex items-center gap-2 text-slate-700 dark:text-slate-300">
                     {getTypeIcon(maintenance.tipo)}
-                    <span className="capitalize font-medium">{maintenance.tipo.toLowerCase()}</span>
+                    <span className="capitalize font-medium">{maintenance.tipo ? maintenance.tipo.toLowerCase() : 'N/A'}</span>
                   </div>
                 </TableCell>
                 <TableCell>
                   <div className="max-w-xs">
-                    <p className="truncate text-slate-900 dark:text-slate-100 font-medium" title={maintenance.problema}>
-                      {maintenance.problema}
+                    <p className="truncate text-slate-900 dark:text-slate-100 font-medium" title={maintenance.problema || 'Sem descrição'}>
+                      {maintenance.problema || 'Sem descrição'}
                     </p>
                   </div>
                 </TableCell>
                 <TableCell>
                   <Badge variant={getStatusVariant(maintenance.status) as any} size="sm" className="gap-1">
                     {getStatusIcon(maintenance.status)}
-                    {maintenance.status}
+                    {maintenance.status || 'N/A'}
                   </Badge>
                 </TableCell>
                 <TableCell>
                   <Badge variant={getPriorityVariant(maintenance.prioridade) as any} size="sm">
-                    {maintenance.prioridade}
+                    {maintenance.prioridade || 'N/A'}
                   </Badge>
                 </TableCell>
                 <TableCell>
