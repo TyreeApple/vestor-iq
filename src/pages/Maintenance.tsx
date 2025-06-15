@@ -233,15 +233,15 @@ const MaintenancePage = () => {
   };
 
   return (
-    <div className="p-6 space-y-4">
+    <div className="p-6">
       {/* Header */}
-      <div>
+      <div className="mb-4">
         <h1 className="text-2xl font-bold">Manutenção</h1>
         <p className="text-muted-foreground">Gestão de Manutenções</p>
       </div>
 
       {/* Dark Filter Bar - Compact spacing */}
-      <div className="bg-slate-800 rounded-lg p-4">
+      <div className="bg-slate-800 rounded-lg p-4 mb-4">
         <div className="flex flex-wrap items-center gap-3">
           {/* Search */}
           <div className="relative flex-1 min-w-[250px] max-w-sm">
@@ -328,7 +328,7 @@ const MaintenancePage = () => {
       </div>
       
       {/* Maintenance Cards - Waiting & In Progress */}
-      <div>
+      <div className="mb-6">
         <h2 className="text-2xl font-semibold mb-4">Manutenções Pendentes</h2>
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
           {filteredData
