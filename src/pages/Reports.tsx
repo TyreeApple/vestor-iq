@@ -275,10 +275,7 @@ const ReportsPage = () => {
             title={stat.title}
             value={typeof stat.value === 'string' ? 0 : stat.value}
             icon={stat.icon}
-            trend={stat.trend}
-            trendValue={stat.trendValue}
-            colorFrom={stat.colorFrom}
-            colorTo={stat.colorTo}
+            variant="info"
             className="hover:scale-105 transition-transform duration-300"
           />
         ))}

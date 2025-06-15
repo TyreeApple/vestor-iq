@@ -413,36 +413,28 @@ const OperationsPage = () => {
           title="Total de Operações"
           value={stats.total}
           icon={Activity}
-          colorFrom="from-slate-600"
-          colorTo="to-slate-800"
+          variant="default"
         />
         
         <ModernKpiCard
           title="Em Andamento"
           value={stats.active}
           icon={Play}
-          trend="up"
-          trendValue={12}
-          colorFrom="from-green-500"
-          colorTo="to-emerald-600"
+          variant="success"
         />
         
         <ModernKpiCard
           title="Concluídas"
           value={stats.completed}
           icon={CheckCircle2}
-          colorFrom="from-blue-500"
-          colorTo="to-cyan-600"
+          variant="info"
         />
         
         <ModernKpiCard
           title="Consumo Total (L)"
           value={stats.totalGasConsumption}
           icon={Fuel}
-          trend="down"
-          trendValue={8}
-          colorFrom="from-orange-500"
-          colorTo="to-red-600"
+          variant="warning"
         />
       </div>
 

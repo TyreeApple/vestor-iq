@@ -455,8 +455,7 @@ const ForkliftsPage = () => {
           value={stats.total}
           icon={Truck}
           info="Empilhadeiras"
-          colorFrom="from-slate-600"
-          colorTo="to-slate-800"
+          variant="default"
         />
         
         <ForkliftStatsCard
@@ -464,8 +463,7 @@ const ForkliftsPage = () => {
           value={stats.operational}
           icon={CheckCircle}
           info="Ativas"
-          colorFrom="from-emerald-500"
-          colorTo="to-emerald-700"
+          variant="success"
         />
         
         <ForkliftStatsCard
@@ -473,8 +471,7 @@ const ForkliftsPage = () => {
           value={stats.maintenance}
           icon={Wrench}
           info="Manutenção"
-          colorFrom="from-amber-500"
-          colorTo="to-orange-600"
+          variant="warning"
         />
         
         <ForkliftStatsCard
@@ -482,8 +479,7 @@ const ForkliftsPage = () => {
           value={stats.stopped}
           icon={AlertTriangle}
           info="Inativas"
-          colorFrom="from-red-500"
-          colorTo="to-red-700"
+          variant="danger"
         />
       </div>
       

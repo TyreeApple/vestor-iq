@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { Button } from "@/components/ui/button";
 import { useIsMobile } from '@/hooks/use-mobile';
@@ -336,36 +335,28 @@ const OperatorsPage = () => {
           title="Total de Operadores"
           value={stats.total}
           icon={Users}
-          colorFrom="from-slate-600"
-          colorTo="to-slate-800"
+          variant="default"
         />
         
         <ModernKpiCard
           title="Operadores Ativos"
           value={stats.active}
           icon={UserCheck}
-          trend="up"
-          trendValue={8}
-          colorFrom="from-green-500"
-          colorTo="to-emerald-600"
+          variant="success"
         />
         
         <ModernKpiCard
           title="Produtividade Média"
           value={stats.avgProductivity}
           icon={TrendingUp}
-          trend="up"
-          trendValue={3}
-          colorFrom="from-blue-500"
-          colorTo="to-cyan-600"
+          variant="info"
         />
         
         <ModernKpiCard
           title="Horas Trabalhadas"
           value={stats.totalHours}
           icon={Clock}
-          colorFrom="from-orange-500"
-          colorTo="to-red-600"
+          variant="warning"
         />
       </div>
 
