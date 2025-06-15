@@ -1,4 +1,3 @@
-
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -8,84 +7,27 @@
 
 @layer base {
   :root {
-    /* === LIGHT MODE - PALETA PROFISSIONAL === */
-    --background: 210 36% 98%;           
-    --foreground: 217 19% 23%;           
-
-    --card: 0 0% 100%;                   
-    --card-foreground: 217 19% 23%;      
-
-    --popover: 0 0% 100%;                
-    --popover-foreground: 217 19% 23%;   
-
-    --primary: 221 83% 56%;              
-    --primary-foreground: 0 0% 100%;     
-
-    --secondary: 210 16% 95%;            
-    --secondary-foreground: 217 19% 23%; 
-
-    --muted: 210 16% 90%;                
-    --muted-foreground: 215 19% 56%;     
-
-    --accent: 262 83% 58%;               
-    --accent-foreground: 0 0% 100%;      
-
-    --destructive: 0 71% 48%;            
-    --destructive-foreground: 0 0% 100%; 
-
-    --border: 210 16% 90%;               
-    --input: 210 16% 95%;                
-    --ring: 221 83% 56%;                 
-
-    --radius: 0.75rem;
-
-    /* === SIDEBAR LIGHT === */
-    --sidebar-background: 221 83% 56%;   
-    --sidebar-foreground: 0 0% 100%;     
-    --sidebar-primary: 0 0% 100%;        
-    --sidebar-primary-foreground: 217 19% 23%; 
-    --sidebar-accent: 262 83% 58%;       
-    --sidebar-accent-foreground: 0 0% 100%; 
-    --sidebar-border: 221 83% 48%;       
-    --sidebar-ring: 0 0% 100%;           
-
-    /* === STATUS COLORS LIGHT === */
-    --status-operational: 142 76% 36%;   
-    --status-maintenance: 48 96% 46%;    
-    --status-inactive: 215 19% 56%;      
-    --status-warning: 0 71% 48%;         
-  }
-
-  .dark {
-    /* === DARK MODE - PALETA PROFISSIONAL === */
+    /* === DARK MODE SOMENTE === */
     --background: 222 23% 9%;            
     --foreground: 210 20% 98%;           
-
     --card: 222 17% 12%;                 
     --card-foreground: 210 20% 98%;      
-
     --popover: 226 16% 17%;              
     --popover-foreground: 210 20% 98%;   
-
     --primary: 217 91% 60%;              
     --primary-foreground: 0 0% 100%;     
-
     --secondary: 226 16% 17%;            
     --secondary-foreground: 210 20% 98%; 
-
     --muted: 220 19% 20%;                
     --muted-foreground: 215 19% 56%;     
-
     --accent: 262 83% 67%;               
     --accent-foreground: 0 0% 100%;      
-
     --destructive: 0 84% 60%;            
     --destructive-foreground: 0 0% 100%; 
-
     --border: 220 19% 20%;               
     --input: 226 16% 17%;                
     --ring: 217 91% 60%;                 
-
+    --radius: 0.75rem;
     /* === SIDEBAR DARK === */
     --sidebar-background: 222 23% 9%;    
     --sidebar-foreground: 210 20% 98%;   
@@ -95,7 +37,6 @@
     --sidebar-accent-foreground: 0 0% 100%; 
     --sidebar-border: 220 19% 20%;       
     --sidebar-ring: 217 91% 60%;         
-
     /* === STATUS COLORS DARK === */
     --status-operational: 142 70% 47%;   
     --status-maintenance: 48 96% 56%;    
