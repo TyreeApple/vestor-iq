@@ -47,11 +47,6 @@ const Configuracao: React.FC = () => {
       <p className="text-muted-foreground mb-2">
         Gerencie suas preferências da conta e personalizações do sistema neste painel.
       </p>
-      <div className="text-sm text-muted-foreground italic border border-dashed border-border p-6 rounded-lg bg-background/70 mb-8">
-        Este módulo de configurações está em desenvolvimento.<br />
-        Em breve você poderá editar preferências de conta, sistema e notificações.
-      </div>
-
       <div>
         <h3 className="text-lg font-semibold text-foreground mb-4 flex items-center gap-2">
           Tecnologias Utilizadas
@@ -76,3 +71,4 @@ const Configuracao: React.FC = () => {
 };
 
 export default Configuracao;
+
