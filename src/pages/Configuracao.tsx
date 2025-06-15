@@ -3,7 +3,7 @@ import { SiLucide } from "react-icons/si";
 import { Settings } from "lucide-react";
 import { 
   SiVite, SiTypescript, SiTailwindcss, SiReact, SiShadcnui, SiReacthookform, 
-  SiReactrouter, SiZod, SiGithub 
+  SiReactrouter, SiZod, SiGithub, SiLucide 
 } from "react-icons/si";
 import { FaGithub, FaRegSmile, FaReact } from "react-icons/fa";
 import { BsStars } from "react-icons/bs";
@@ -71,7 +71,7 @@ const bibliotecas = [
   },
   {
     name: "Lucide (ícones)",
-    icon: BsStars,
+    icon: SiLucide,
     url: "https://lucide.dev/"
   },
   {
