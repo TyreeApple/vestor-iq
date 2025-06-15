@@ -1,122 +1,20 @@
+
 import React, { useState } from 'react';
-import { Button } from "@/components/ui/button";
 import { useIsMobile } from '@/hooks/use-mobile';
 import { cn } from '@/lib/utils';
-import { Input } from '@/components/ui/input';
-import { Calendar, Clock, Plus, Search, Truck, User, Filter, MapPin, AlertCircle, Play, CheckCircle2, Fuel, Timer, Gauge, Activity, TrendingUp, Grid3X3, List } from 'lucide-react';
 import { Operacao, StatusOperacao, TipoOperacao, PrioridadeOperacao, StatusOperador } from '@/types';
 import { useToast } from '@/hooks/use-toast';
 import OperationDialog from '@/components/operations/OperationDialog';
 import OperationDetails from '@/components/operations/OperationDetails';
 import AdvancedFilters from '@/components/common/AdvancedFilters';
 import { useFilters } from '@/hooks/use-filters';
-import PageHeader from '@/components/layout/PageHeader';
-import ModernKpiCard from '@/components/dashboard/ModernKpiCard';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-
-// Mock data for operations - using proper Portuguese interface
-const initialOperations: Operacao[] = [
-  {
-    id: 'OP001',
-    empilhadeiraId: 'G001',
-    empilhadeira: {
-      id: 'G001',
-      modelo: 'Toyota 8FGU25',
-      marca: 'Toyota',
-      tipo: 'Gás' as any,
-      status: 'Operacional' as any,
-      capacidade: 2500,
-      anoFabricacao: 2022,
-      dataAquisicao: '10/05/2022',
-      numeroSerie: 'TOY001',
-      horimetro: 12583,
-      ultimaManutencao: '15/09/2023',
-      proximaManutencao: '15/12/2023',
-      localizacaoAtual: 'Setor A',
-      setor: 'Armazém',
-      custoHora: 45.50,
-      eficiencia: 87.5,
-      disponibilidade: 92.3,
-      qrCode: 'QR001'
-    },
-    operadorId: 'OP001',
-    operador: {
-      id: 'OP001',
-      nome: 'Carlos Silva',
-      cpf: '123.456.789-00',
-      email: 'carlos@example.com',
-      telefone: '(11) 99999-9999',
-      funcao: 'Operador' as any,
-      dataAdmissao: '01/01/2020',
-      turno: 'Matutino',
-      setor: 'Armazém',
-      certificacoes: [],
-      avaliacoes: [],
-      horasTrabalhadas: 2000,
-      produtividade: 85,
-      status: StatusOperador.ATIVO
-    },
-    tipo: TipoOperacao.MOVIMENTACAO,
-    status: StatusOperacao.EM_ANDAMENTO,
-    prioridade: PrioridadeOperacao.NORMAL,
-    setor: 'Armazém A',
-    localizacao: 'Setor A',
-    dataInicio: '2023-11-20T08:00:00',
-    duracaoEstimada: 480,
-    consumoGas: 25.5
-  },
-  {
-    id: 'OP002',
-    empilhadeiraId: 'E002',
-    empilhadeira: {
-      id: 'E002',
-      modelo: 'Hyster E50XN',
-      marca: 'Hyster',
-      tipo: 'Elétrica' as any,
-      status: 'Operacional' as any,
-      capacidade: 2250,
-      anoFabricacao: 2021,
-      dataAquisicao: '22/11/2021',
-      numeroSerie: 'HYS002',
-      horimetro: 8452,
-      ultimaManutencao: '30/10/2023',
-      proximaManutencao: '30/01/2024',
-      localizacaoAtual: 'Setor B',
-      setor: 'Produção',
-      custoHora: 38.75,
-      eficiencia: 89.2,
-      disponibilidade: 94.1,
-      qrCode: 'QR002'
-    },
-    operadorId: 'OP002',
-    operador: {
-      id: 'OP002',
-      nome: 'Maria Oliveira',
-      cpf: '987.654.321-00',
-      email: 'maria@example.com',
-      telefone: '(11) 88888-8888',
-      funcao: 'Operador' as any,
-      dataAdmissao: '15/02/2021',
-      turno: 'Vespertino',
-      setor: 'Produção',
-      certificacoes: [],
-      avaliacoes: [],
-      horasTrabalhadas: 1900,
-      produtividade: 88,
-      status: StatusOperador.ATIVO
-    },
-    tipo: TipoOperacao.CARGA,
-    status: StatusOperacao.CONCLUIDA,
-    prioridade: PrioridadeOperacao.ALTA,
-    setor: 'Expedição',
-    localizacao: 'Expedição',
-    dataInicio: '2023-11-20T14:00:00',
-    dataFim: '2023-11-20T18:00:00',
-    duracaoEstimada: 240,
-    duracaoReal: 240
-  }
-];
+import { useAppStore } from '@/stores/useAppStore';
+import { Button } from "@/components/ui/button";
+import OperationsHeader from "@/components/operations/OperationsHeader";
+import OperationsKpiCards from "@/components/operations/OperationsKpiCards";
+import OperationsFilterBar from "@/components/operations/OperationsFilterBar";
+import ActiveOperationsSection from "@/components/operations/ActiveOperationsSection";
+import CompletedOperationsSection from "@/components/operations/CompletedOperationsSection";
 
 // Mock data for available operators and forklifts
 const availableOperators = [
@@ -134,100 +32,22 @@ const availableForklifts = [
   { id: 'G006', model: 'Caterpillar DP40' }
 ];
 
-const mockOperators = [
-  {
-    id: 'OP001',
-    nome: 'Carlos Silva',
-    cpf: '123.456.789-00',
-    email: 'carlos@example.com',
-    telefone: '(11) 99999-9999',
-    funcao: 'Operador' as any,
-    dataAdmissao: '01/01/2020',
-    turno: 'Matutino',
-    setor: 'Armazém',
-    certificacoes: [],
-    avaliacoes: [],
-    horasTrabalhadas: 2000,
-    produtividade: 85,
-    status: StatusOperador.ATIVO
-  },
-  {
-    id: 'OP002',
-    nome: 'Maria Oliveira',
-    cpf: '987.654.321-00',
-    email: 'maria@example.com',
-    telefone: '(11) 88888-8888',
-    funcao: 'Operador' as any,
-    dataAdmissao: '15/02/2021',
-    turno: 'Vespertino',
-    setor: 'Produção',
-    certificacoes: [],
-    avaliacoes: [],
-    horasTrabalhadas: 1900,
-    produtividade: 88,
-    status: StatusOperador.ATIVO
-  },
-  {
-    id: 'OP003',
-    nome: 'João Pereira',
-    cpf: '543.210.987-65',
-    email: 'joao@example.com',
-    telefone: '(11) 77777-7777',
-    funcao: 'Operador' as any,
-    dataAdmissao: '05/03/2021',
-    turno: 'Vespertino',
-    setor: 'Produção',
-    certificacoes: [],
-    avaliacoes: [],
-    horasTrabalhadas: 1500,
-    produtividade: 80,
-    status: StatusOperador.ATIVO
-  },
-  {
-    id: 'OP004',
-    nome: 'Ana Costa',
-    cpf: '321.654.987-10',
-    email: 'ana@example.com',
-    telefone: '(11) 66666-6666',
-    funcao: 'Operador' as any,
-    dataAdmissao: '10/04/2021',
-    turno: 'Matutino',
-    setor: 'Armazém',
-    certificacoes: [],
-    avaliacoes: [],
-    horasTrabalhadas: 1800,
-    produtividade: 90,
-    status: StatusOperador.ATIVO
-  },
-  {
-    id: 'OP005',
-    nome: 'Pedro Santos',
-    cpf: '987.654.321-00',
-    email: 'pedro@example.com',
-    telefone: '(11) 55555-5555',
-    funcao: 'Operador' as any,
-    dataAdmissao: '15/05/2021',
-    turno: 'Matutino',
-    setor: 'Armazém',
-    certificacoes: [],
-    avaliacoes: [],
-    horasTrabalhadas: 2200,
-    produtividade: 95,
-    status: StatusOperador.ATIVO
-  }
-];
-
 const OperationsPage = () => {
   const isMobile = useIsMobile();
   const { toast } = useToast();
-  const [operations, setOperations] = useState<Operacao[]>(initialOperations);
-  
+
+  // Zustand store usage
+  const operations = useAppStore((state) => state.operacoes);
+  const addOperacao = useAppStore((state) => state.addOperacao);
+  const updateOperacao = useAppStore((state) => state.updateOperacao);
+  const deleteOperacao = useAppStore((state) => state.deleteOperacao);
+
   // Dialog states
   const [addDialogOpen, setAddDialogOpen] = useState(false);
   const [editDialogOpen, setEditDialogOpen] = useState(false);
   const [detailsDialogOpen, setDetailsDialogOpen] = useState(false);
   const [selectedOperation, setSelectedOperation] = useState<Operacao | null>(null);
-  
+
   // Use filters hook with corrected search fields
   const {
     search,
@@ -258,7 +78,7 @@ const OperationsPage = () => {
   // Format date
   const formatDate = (dateString: string) => {
     const date = new Date(dateString);
-    return date.toLocaleDateString('pt-BR', { 
+    return date.toLocaleDateString('pt-BR', {
       day: '2-digit',
       month: '2-digit',
       year: 'numeric'
@@ -268,7 +88,7 @@ const OperationsPage = () => {
   // Format time
   const formatTime = (dateString: string) => {
     const date = new Date(dateString);
-    return date.toLocaleTimeString('pt-BR', { 
+    return date.toLocaleTimeString('pt-BR', {
       hour: '2-digit',
       minute: '2-digit'
     });
@@ -284,23 +104,19 @@ const OperationsPage = () => {
     return `${hours}h ${minutes}m${!operation.dataFim ? ' (em andamento)' : ''}`;
   };
 
-  // Handle save operation
+  // Save operation (uses Zustand)
   const handleSaveOperation = (operationData: Operacao) => {
-    const isNewOperation = !operations.some(op => op.id === operationData.id);
-    
-    if (isNewOperation) {
-      setOperations(prev => [operationData, ...prev]);
-      toast({
-        title: "Operação criada",
-        description: "A operação foi criada com sucesso."
-      });
-    } else {
-      setOperations(prev => 
-        prev.map(op => op.id === operationData.id ? operationData : op)
-      );
+    if (operations.some(op => op.id === operationData.id)) {
+      updateOperacao(operationData.id, operationData);
       toast({
         title: "Operação atualizada",
         description: "A operação foi atualizada com sucesso."
+      });
+    } else {
+      addOperacao(operationData);
+      toast({
+        title: "Operação criada",
+        description: "A operação foi criada com sucesso."
       });
     }
   };
@@ -323,25 +139,15 @@ const OperationsPage = () => {
     setEditDialogOpen(true);
   };
 
-  // Delete operation
+  // Delete operation (Zustand)
   const handleDeleteOperation = (id: string) => {
     if (confirm("Tem certeza que deseja excluir esta operação?")) {
-      setOperations(prev => prev.filter(op => op.id !== id));
+      deleteOperacao(id);
       toast({
         title: "Operação excluída",
         description: "A operação foi excluída com sucesso."
       });
     }
-  };
-
-  // Get statistics
-  const stats = {
-    total: operations.length,
-    active: operations.filter(op => op.status === StatusOperacao.EM_ANDAMENTO).length,
-    completed: operations.filter(op => op.status === StatusOperacao.CONCLUIDA).length,
-    totalGasConsumption: operations
-      .filter(op => op.consumoGas)
-      .reduce((sum, op) => sum + (op.consumoGas || 0), 0)
   };
 
   // Get priority color and icon
@@ -379,394 +185,65 @@ const OperationsPage = () => {
   // Calculate progress percentage for active operations
   const calculateProgress = (operation: Operacao) => {
     if (operation.status !== StatusOperacao.EM_ANDAMENTO) return 100;
-    
     const startTime = new Date(operation.dataInicio);
     const now = new Date();
     const elapsed = now.getTime() - startTime.getTime();
-    const estimatedDuration = (operation.duracaoEstimada || 480) * 60 * 1000; // Convert minutes to milliseconds
-    
+    const estimatedDuration = (operation.duracaoEstimada || 480) * 60 * 1000;
     return Math.min((elapsed / estimatedDuration) * 100, 95);
   };
 
+  // View mode state
+  const [viewMode, setViewMode] = useState<"grid" | "list">("grid");
+
+  // Split filtered operations
+  const activeOps = filteredOperations.filter(op => op.status === StatusOperacao.EM_ANDAMENTO);
+  const completedOps = filteredOperations.filter(op => op.status === StatusOperacao.CONCLUIDA);
+
   return (
     <div className="space-y-8">
-      {/* Enhanced Header */}
-      <PageHeader
-        title="Operações"
-        description="Controle e monitoramento de operações em tempo real"
-      >
-        <Button 
-          className="gap-2 bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white shadow-lg hover:shadow-xl transition-all duration-200"
-          onClick={() => {
-            setSelectedOperation(null);
-            setAddDialogOpen(true);
-          }}
-        >
-          <Plus className="w-4 h-4" />
-          Nova Operação
-        </Button>
-      </PageHeader>
+      {/* Header */}
+      <OperationsHeader onAdd={() => {
+        setSelectedOperation(null);
+        setAddDialogOpen(true);
+      }} />
 
-      {/* Modern Statistics Cards using ModernKpiCard */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-        <ModernKpiCard
-          title="Total de Operações"
-          value={stats.total}
-          icon={Activity}
-          variant="default"
-        />
-        
-        <ModernKpiCard
-          title="Em Andamento"
-          value={stats.active}
-          icon={Play}
-          variant="success"
-        />
-        
-        <ModernKpiCard
-          title="Concluídas"
-          value={stats.completed}
-          icon={CheckCircle2}
-          variant="info"
-        />
-        
-        <ModernKpiCard
-          title="Consumo Total (L)"
-          value={stats.totalGasConsumption}
-          icon={Fuel}
-          variant="warning"
-        />
-      </div>
+      {/* KPI Cards */}
+      <OperationsKpiCards data={operations} />
 
-      {/* Enhanced Inline Search and Filter Section */}
-      <Card className="glass-card">
-        <CardContent className="p-6">
-          <div className="flex flex-col lg:flex-row gap-4 items-stretch lg:items-center">
-            {/* Search Bar */}
-            <div className="flex-1">
-              <div className="relative">
-                <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground w-4 h-4" />
-                <Input 
-                  type="text" 
-                  placeholder="Buscar por ID ou modelo..." 
-                  className="pl-10 h-10 bg-background/50 border-border/50 focus:border-primary/50 focus:ring-primary/20"
-                  value={search}
-                  onChange={(e) => setSearch(e.target.value)}
-                />
-              </div>
-            </div>
-            
-            {/* Status Filter */}
-            <div className="min-w-[200px]">
-              <Select
-                value={filters.status || 'all'}
-                onValueChange={(value) => setFilters({ ...filters, status: value === 'all' ? '' : value })}
-              >
-                <SelectTrigger className="h-10 bg-background/50 border-border/50">
-                  <SelectValue placeholder="Todos os Status" />
-                </SelectTrigger>
-                <SelectContent className="bg-background border-border">
-                  <SelectItem value="all">Todos os Status</SelectItem>
-                  <SelectItem value={StatusOperacao.EM_ANDAMENTO}>Em Andamento</SelectItem>
-                  <SelectItem value={StatusOperacao.CONCLUIDA}>Concluídas</SelectItem>
-                </SelectContent>
-              </Select>
-            </div>
-            
-            {/* Type Filter */}
-            <div className="min-w-[200px]">
-              <Select
-                value={filters.tipo || 'all'}
-                onValueChange={(value) => setFilters({ ...filters, tipo: value === 'all' ? '' : value })}
-              >
-                <SelectTrigger className="h-10 bg-background/50 border-border/50">
-                  <SelectValue placeholder="Todos os Tipos" />
-                </SelectTrigger>
-                <SelectContent className="bg-background border-border">
-                  <SelectItem value="all">Todos os Tipos</SelectItem>
-                  <SelectItem value={TipoOperacao.MOVIMENTACAO}>Movimentação</SelectItem>
-                  <SelectItem value={TipoOperacao.CARGA}>Carga</SelectItem>
-                  <SelectItem value={TipoOperacao.DESCARGA}>Descarga</SelectItem>
-                  <SelectItem value={TipoOperacao.ESTOQUE}>Estoque</SelectItem>
-                  <SelectItem value={TipoOperacao.PICKING}>Picking</SelectItem>
-                </SelectContent>
-              </Select>
-            </div>
-            
-            {/* Advanced Filters Button */}
-            <AdvancedFilters
-              filters={filterOptions}
-              values={filters}
-              onFiltersChange={setFilters}
-              onClearFilters={clearFilters}
-              triggerProps={{
-                variant: "outline",
-                className: "h-10 px-4 border-border/50 text-foreground hover:bg-accent/50 hover:text-accent-foreground shadow-sm"
-              }}
-            />
+      {/* Filter Bar */}
+      <OperationsFilterBar
+        search={search}
+        setSearch={setSearch}
+        filters={filters}
+        setFilters={setFilters}
+        clearFilters={clearFilters}
+        filterOptions={filterOptions}
+        viewMode={viewMode}
+        setViewMode={setViewMode}
+      />
 
-            {/* View Toggle Buttons */}
-            <div className="flex gap-1 border border-border/50 rounded-lg p-1 bg-background/30">
-              <Button
-                variant="ghost"
-                size="sm"
-                className="h-8 px-3 data-[state=active]:bg-primary data-[state=active]:text-primary-foreground"
-                data-state="active"
-              >
-                <Grid3X3 className="w-4 h-4" />
-              </Button>
-              <Button
-                variant="ghost"
-                size="sm"
-                className="h-8 px-3"
-              >
-                <List className="w-4 h-4" />
-              </Button>
-            </div>
-          </div>
-        </CardContent>
-      </Card>
-      
-      {/* Compact Active Operations */}
-      <div className="space-y-6">
-        <div className="flex items-center justify-between">
-          <h2 className="text-2xl font-semibold text-foreground flex items-center gap-2">
-            <Activity className="w-6 h-6 text-primary" />
-            Operações em Andamento
-          </h2>
-          <span className="text-sm text-muted-foreground">
-            {filteredOperations.filter(op => op.status === StatusOperacao.EM_ANDAMENTO).length} ativas
-          </span>
-        </div>
-        
-        <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-4">
-          {filteredOperations
-            .filter(op => op.status === StatusOperacao.EM_ANDAMENTO)
-            .map((operation) => {
-              const priorityInfo = getPriorityInfo(operation.prioridade);
-              const typeInfo = getOperationTypeInfo(operation.tipo);
-              const progress = calculateProgress(operation);
-              
-              return (
-                <Card key={operation.id} className="glass-card-hover group relative overflow-hidden">
-                  {/* Priority indicator */}
-                  <div className={cn("absolute top-0 left-0 w-1 h-full", priorityInfo.bgColor)} />
-                  
-                  <CardHeader className="pb-3">
-                    <div className="flex justify-between items-start">
-                      <div className="flex items-center gap-3">
-                        <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse" />
-                        <div>
-                          <h3 className="font-semibold text-foreground text-base">{operation.operador?.nome}</h3>
-                          <p className="text-sm text-muted-foreground">#{operation.id}</p>
-                        </div>
-                      </div>
-                      
-                      <div className="flex flex-col items-end gap-2">
-                        <span className="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-green-500/20 text-green-400 border border-green-500/30">
-                          Em Andamento
-                        </span>
-                        <span className={cn(
-                          "inline-flex items-center px-2 py-1 rounded-full text-xs font-medium border",
-                          priorityInfo.bgColor, priorityInfo.color, priorityInfo.borderColor
-                        )}>
-                          {operation.prioridade}
-                        </span>
-                      </div>
-                    </div>
-                  </CardHeader>
-                  
-                  <CardContent className="pt-0 space-y-4">
-                    {/* Type and Progress */}
-                    <div>
-                      <div className="flex justify-between items-center mb-2">
-                        <span className={cn("text-sm font-medium", typeInfo.color)}>
-                          {typeInfo.label}
-                        </span>
-                        <span className="text-sm text-muted-foreground">{Math.round(progress)}%</span>
-                      </div>
-                      <div className="w-full bg-secondary/50 rounded-full h-2">
-                        <div 
-                          className="bg-gradient-to-r from-green-500 to-emerald-500 h-2 rounded-full transition-all duration-500"
-                          style={{ width: `${progress}%` }}
-                        />
-                      </div>
-                    </div>
-                    
-                    {/* Details Grid */}
-                    <div className="grid grid-cols-2 gap-3 text-sm">
-                      <div className="flex items-center gap-2 p-2 bg-background/50 rounded-md border border-border/30">
-                        <Truck className="w-4 h-4 text-blue-500" />
-                        <span className="text-foreground truncate">{operation.empilhadeira?.modelo}</span>
-                      </div>
-                      
-                      <div className="flex items-center gap-2 p-2 bg-background/50 rounded-md border border-border/30">
-                        <MapPin className="w-4 h-4 text-orange-500" />
-                        <span className="text-foreground truncate">{operation.setor}</span>
-                      </div>
-                      
-                      <div className="flex items-center gap-2 p-2 bg-background/50 rounded-md border border-border/30">
-                        <Clock className="w-4 h-4 text-cyan-500" />
-                        <span className="text-foreground">{formatTime(operation.dataInicio)}</span>
-                      </div>
-                      
-                      {operation.consumoGas && (
-                        <div className="flex items-center gap-2 p-2 bg-background/50 rounded-md border border-border/30">
-                          <Fuel className="w-4 h-4 text-red-500" />
-                          <span className="text-foreground">{operation.consumoGas}L</span>
-                        </div>
-                      )}
-                    </div>
-                    
-                    {/* Actions */}
-                    <div className="flex justify-end gap-2 pt-3 border-t border-border/30">
-                      <Button 
-                        variant="ghost" 
-                        size="sm"
-                        className="h-8 px-3 text-xs hover:bg-accent/50"
-                        onClick={() => handleViewDetails(operation)}
-                      >
-                        Detalhes
-                      </Button>
-                      <Button 
-                        variant="ghost" 
-                        size="sm"
-                        className="h-8 px-3 text-xs text-primary hover:text-primary/80 hover:bg-primary/10"
-                        onClick={() => handleEdit(operation)}
-                      >
-                        Editar
-                      </Button>
-                    </div>
-                  </CardContent>
-                </Card>
-              );
-            })}
-          
-          {filteredOperations.filter(op => op.status === StatusOperacao.EM_ANDAMENTO).length === 0 && (
-            <Card className="col-span-full glass-card">
-              <CardContent className="p-12 text-center">
-                <div className="w-16 h-16 mx-auto mb-4 rounded-full bg-accent/30 flex items-center justify-center">
-                  <Clock className="w-8 h-8 text-muted-foreground" />
-                </div>
-                <p className="text-muted-foreground text-lg">Nenhuma operação em andamento</p>
-              </CardContent>
-            </Card>
-          )}
-        </div>
-      </div>
-      
-      {/* Enhanced Completed Operations Table */}
-      <div className="space-y-6">
-        <div className="flex items-center justify-between">
-          <h2 className="text-2xl font-semibold text-foreground flex items-center gap-2">
-            <CheckCircle2 className="w-6 h-6 text-primary" />
-            Operações Concluídas
-          </h2>
-          <span className="text-sm text-muted-foreground">
-            {filteredOperations.filter(op => op.status === StatusOperacao.CONCLUIDA).length} concluídas
-          </span>
-        </div>
-        
-        <Card className="glass-card overflow-hidden">
-          <div className="overflow-x-auto">
-            <table className="w-full">
-              <thead className="bg-secondary/50">
-                <tr>
-                  <th className="p-4 text-left font-semibold text-foreground">ID</th>
-                  <th className="p-4 text-left font-semibold text-foreground">Tipo</th>
-                  <th className="p-4 text-left font-semibold text-foreground">Operador</th>
-                  <th className="p-4 text-left font-semibold text-foreground">Empilhadeira</th>
-                  <th className="p-4 text-left font-semibold text-foreground">Setor</th>
-                  <th className="p-4 text-left font-semibold text-foreground">Data</th>
-                  <th className="p-4 text-left font-semibold text-foreground">Duração</th>
-                  <th className="p-4 text-left font-semibold text-foreground">Prioridade</th>
-                  <th className="p-4 text-left font-semibold text-foreground">Consumo (L)</th>
-                  <th className="p-4 text-left font-semibold text-foreground">Ações</th>
-                </tr>
-              </thead>
-              <tbody className="divide-y divide-border/50">
-                {filteredOperations
-                  .filter(op => op.status === StatusOperacao.CONCLUIDA)
-                  .map((operation) => {
-                    const priorityInfo = getPriorityInfo(operation.prioridade);
-                    const typeInfo = getOperationTypeInfo(operation.tipo);
-                    
-                    return (
-                      <tr key={operation.id} className="hover:bg-muted/30 transition-colors">
-                        <td className="p-4">
-                          <div className="flex items-center gap-2">
-                            <CheckCircle2 className="w-4 h-4 text-green-400" />
-                            <span className="text-foreground font-medium">{operation.id}</span>
-                          </div>
-                        </td>
-                        <td className="p-4">
-                          <span className={cn("text-sm font-medium", typeInfo.color)}>
-                            {typeInfo.label}
-                          </span>
-                        </td>
-                        <td className="p-4 text-foreground">{operation.operador?.nome}</td>
-                        <td className="p-4">
-                          <div className="text-foreground">{operation.empilhadeira?.modelo}</div>
-                          <div className="text-xs text-muted-foreground">{operation.empilhadeiraId}</div>
-                        </td>
-                        <td className="p-4 text-foreground">{operation.setor}</td>
-                        <td className="p-4">
-                          <div className="text-foreground">{formatDate(operation.dataInicio)}</div>
-                          <div className="text-xs text-muted-foreground">{formatTime(operation.dataInicio)} - {operation.dataFim ? formatTime(operation.dataFim) : 'N/A'}</div>
-                        </td>
-                        <td className="p-4 text-foreground">{calculateDuration(operation)}</td>
-                        <td className="p-4">
-                          <span className={cn(
-                            "inline-flex items-center px-2 py-1 rounded-md text-xs font-medium border",
-                            priorityInfo.bgColor, priorityInfo.color, priorityInfo.borderColor
-                          )}>
-                            <priorityInfo.icon className="w-3 h-3 mr-1" />
-                            {operation.prioridade}
-                          </span>
-                        </td>
-                        <td className="p-4">
-                          <div className="flex items-center gap-2">
-                            <Fuel className="w-4 h-4 text-orange-400" />
-                            <span className="text-foreground">{(operation.consumoGas || 0).toFixed(1)}</span>
-                          </div>
-                        </td>
-                        <td className="p-4">
-                          <div className="flex gap-2">
-                            <Button 
-                              variant="ghost" 
-                              size="sm"
-                              className="text-muted-foreground hover:text-foreground hover:bg-accent/50"
-                              onClick={() => handleViewDetails(operation)}
-                            >
-                              Detalhes
-                            </Button>
-                            <Button 
-                              variant="ghost" 
-                              size="sm"
-                              className="text-destructive hover:text-destructive/80 hover:bg-destructive/10"
-                              onClick={() => handleDeleteOperation(operation.id)}
-                            >
-                              Excluir
-                            </Button>
-                          </div>
-                        </td>
-                      </tr>
-                    );
-                  })}
-              </tbody>
-            </table>
-          </div>
-          
-          {filteredOperations.filter(op => op.status === StatusOperacao.CONCLUIDA).length === 0 && (
-            <CardContent className="p-12 text-center">
-              <div className="w-16 h-16 mx-auto mb-4 rounded-full bg-accent/30 flex items-center justify-center">
-                <Calendar className="w-8 h-8 text-muted-foreground" />
-              </div>
-              <p className="text-muted-foreground text-lg">Nenhuma operação concluída</p>
-            </CardContent>
-          )}
-        </Card>
-      </div>
+      {/* Active Operations Section */}
+      <ActiveOperationsSection
+        operations={activeOps}
+        onDetails={handleViewDetails}
+        onEdit={handleEdit}
+        calculateProgress={calculateProgress}
+        getPriorityInfo={getPriorityInfo}
+        getOperationTypeInfo={getOperationTypeInfo}
+        formatTime={formatTime}
+      />
+
+      {/* Completed Operations Section */}
+      <CompletedOperationsSection
+        operations={completedOps}
+        onDetails={handleViewDetails}
+        onDelete={handleDeleteOperation}
+        formatDate={formatDate}
+        formatTime={formatTime}
+        calculateDuration={calculateDuration}
+        getPriorityInfo={getPriorityInfo}
+        getOperationTypeInfo={getOperationTypeInfo}
+      />
 
       {/* Add Operation Dialog */}
       <OperationDialog
@@ -776,7 +253,7 @@ const OperationsPage = () => {
         availableOperators={availableOperators}
         availableForklifts={availableForklifts}
       />
-      
+
       {/* Edit Operation Dialog */}
       <OperationDialog
         open={editDialogOpen}
@@ -786,7 +263,7 @@ const OperationsPage = () => {
         availableOperators={availableOperators}
         availableForklifts={availableForklifts}
       />
-      
+
       {/* Operation Details Dialog */}
       <OperationDetails
         open={detailsDialogOpen}
