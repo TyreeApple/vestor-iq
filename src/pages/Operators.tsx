@@ -3,7 +3,7 @@ import React, { useState } from 'react';
 import { Button } from "@/components/ui/button";
 import { useIsMobile } from '@/hooks/use-mobile';
 import { Input } from '@/components/ui/input';
-import { Search, Plus, Bot, CheckCircle, Clock, Award, TrendingUp, Activity, Filter, Grid3X3, List } from 'lucide-react';
+import { Search, Plus, Bot, CheckCircle, Clock, Award, TrendingUp, Activity, Filter, Grid3X3, List, Zap, Shield, Target, BarChart3, DollarSign, AlertTriangle } from 'lucide-react';
 import { Operador, FuncaoOperador, StatusOperador, TipoCertificacao, StatusCertificacao } from '@/types';
 import { useToast } from '@/hooks/use-toast';
 import OperatorDialog from '@/components/operators/OperatorDialog';
@@ -15,6 +15,9 @@ import PageHeader from '@/components/layout/PageHeader';
 import ModernKpiCard from '@/components/dashboard/ModernKpiCard';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
+import { Badge } from "@/components/ui/badge";
+import { Progress } from "@/components/ui/progress";
 import { useAppStore } from '@/stores/useAppStore';
 
 const AlgorithmsPage = () => {
@@ -79,20 +82,20 @@ const AlgorithmsPage = () => {
     }
   ];
 
-  // Updated handlers for AI algorithms
+  // Enhanced handlers for AI algorithms
   const handleSaveOperator = (operatorData: Operador) => {
     const operadorExistente = operadores.some(op => op.id === operatorData.id);
 
     if (operadorExistente) {
       updateOperador(operatorData.id, operatorData);
       toast({
-        title: "Algorithm updated",
+        title: "Algorithm Updated",
         description: "The trading algorithm has been updated successfully."
       });
     } else {
       addOperador(operatorData);
       toast({
-        title: "Algorithm deployed",
+        title: "Algorithm Deployed",
         description: "New trading algorithm has been deployed successfully."
       });
     }
@@ -117,7 +120,7 @@ const AlgorithmsPage = () => {
     if (confirm("Are you sure you want to deactivate this algorithm?")) {
       deleteOperador(id);
       toast({
-        title: "Algorithm deactivated",
+        title: "Algorithm Deactivated",
         description: "The trading algorithm has been deactivated successfully."
       });
     }
@@ -127,8 +130,65 @@ const AlgorithmsPage = () => {
   const stats = {
     total: operadores.length,
     active: operadores.filter(op => op.status === StatusOperador.ATIVO).length,
-    avgProductivity: operadores.length > 0 ? Math.round(operadores.reduce((sum, op) => sum + op.produtividade, 0) / operadores.length) : 0,
-    totalHours: operadores.reduce((sum, op) => sum + op.horasTrabalhadas, 0)
+    avgSuccessRate: operadores.length > 0 ? Math.round(operadores.reduce((sum, op) => sum + op.produtividade, 0) / operadores.length) : 0,
+    totalProfitToday: 12450.75,
+    totalTrades: operadores.reduce((sum, op) => sum + op.horasTrabalhadas * 8, 0) // Simulating trades
+  };
+
+  // Algorithm performance data
+  const getAlgorithmMetrics = (operator: Operador) => {
+    const baseMetrics = {
+      winRate: operator.produtividade,
+      sharpeRatio: (operator.produtividade / 100) * 2.5 + Math.random() * 0.5,
+      maxDrawdown: Math.random() * 15 + 5,
+      avgReturn: operator.produtividade * 0.8 + Math.random() * 20,
+      totalTrades: operator.horasTrabalhadas * 8,
+      profitToday: Math.random() * 5000 + 500
+    };
+    return baseMetrics;
+  };
+
+  const getStatusColor = (status: StatusOperador) => {
+    switch (status) {
+      case StatusOperador.ATIVO:
+        return 'bg-green-500';
+      case StatusOperador.INATIVO:
+        return 'bg-red-500';
+      case StatusOperador.FERIAS:
+        return 'bg-yellow-500';
+      default:
+        return 'bg-gray-500';
+    }
+  };
+
+  const getStatusText = (status: StatusOperador) => {
+    switch (status) {
+      case StatusOperador.ATIVO:
+        return 'Active';
+      case StatusOperador.INATIVO:
+        return 'Inactive';
+      case StatusOperador.FERIAS:
+        return 'Paused';
+      case StatusOperador.AFASTADO:
+        return 'Disabled';
+      default:
+        return 'Unknown';
+    }
+  };
+
+  const getAlgorithmTypeText = (funcao: FuncaoOperador) => {
+    switch (funcao) {
+      case FuncaoOperador.OPERADOR:
+        return 'Scalping Bot';
+      case FuncaoOperador.SUPERVISOR:
+        return 'Swing Trader';
+      case FuncaoOperador.COORDENADOR:
+        return 'ML Predictor';
+      case FuncaoOperador.GERENTE:
+        return 'Master Strategy';
+      default:
+        return 'Basic Algorithm';
+    }
   };
 
   return (
@@ -136,7 +196,8 @@ const AlgorithmsPage = () => {
       {/* Enhanced Header */}
       <PageHeader
         title="AI Trading Algorithms"
-        description="Manage your automated trading strategies and AI models"
+        description="Manage and monitor your automated trading strategies powered by advanced AI models"
+        icon={Bot}
       >
         <Button 
           className="gap-2 bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white shadow-lg hover:shadow-xl transition-all duration-200"
@@ -146,12 +207,12 @@ const AlgorithmsPage = () => {
           }}
         >
           <Plus className="w-4 h-4" />
-          Deploy Algorithm
+          Deploy New Algorithm
         </Button>
       </PageHeader>
 
-      {/* Modern Statistics Cards */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+      {/* Enhanced Statistics Cards */}
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-6">
         <ModernKpiCard
           title="Total Algorithms"
           value={stats.total}
@@ -160,36 +221,43 @@ const AlgorithmsPage = () => {
         />
         
         <ModernKpiCard
-          title="Active Models"
+          title="Active Trading"
           value={stats.active}
-          icon={CheckCircle}
+          icon={Zap}
           variant="success"
         />
         
         <ModernKpiCard
           title="Avg Success Rate"
-          value={stats.avgProductivity}
-          icon={TrendingUp}
+          value={`${stats.avgSuccessRate}%`}
+          icon={Target}
           variant="info"
         />
         
         <ModernKpiCard
-          title="Runtime Hours"
-          value={stats.totalHours}
-          icon={Clock}
+          title="Today's Profit"
+          value={`$${stats.totalProfitToday.toLocaleString()}`}
+          icon={DollarSign}
+          variant="success"
+        />
+        
+        <ModernKpiCard
+          title="Total Trades"
+          value={stats.totalTrades}
+          icon={BarChart3}
           variant="warning"
         />
       </div>
 
-      {/* Enhanced Inline Filter Section */}
-      <div className="bg-slate-800/30 backdrop-blur-sm border border-slate-700/50 rounded-xl p-4">
+      {/* Enhanced Filter Section */}
+      <div className="bg-slate-800/30 backdrop-blur-sm border border-slate-700/50 rounded-xl p-6">
         <div className="flex flex-col lg:flex-row gap-4 items-start lg:items-center">
           {/* Search */}
           <div className="flex-1 relative">
             <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-slate-400 w-4 h-4" />
             <Input 
               type="text" 
-              placeholder="Search by algorithm name or strategy..." 
+              placeholder="Search algorithms by name, strategy, or market focus..." 
               className="pl-10 bg-slate-900/50 border-slate-600/50 text-slate-100 placeholder:text-slate-400 focus:border-blue-500/50 focus:ring-blue-500/20"
               value={search}
               onChange={(e) => setSearch(e.target.value)}
@@ -206,16 +274,16 @@ const AlgorithmsPage = () => {
                 <SelectValue placeholder="All Statuses" />
               </SelectTrigger>
               <SelectContent className="bg-slate-800 border-slate-600">
-                <SelectItem value="all" className="text-slate-100 hover:bg-slate-700 focus:bg-slate-700">All Statuses</SelectItem>
-                <SelectItem value={StatusOperador.ATIVO} className="text-slate-100 hover:bg-slate-700 focus:bg-slate-700">Active</SelectItem>
-                <SelectItem value={StatusOperador.INATIVO} className="text-slate-100 hover:bg-slate-700 focus:bg-slate-700">Inactive</SelectItem>
-                <SelectItem value={StatusOperador.FERIAS} className="text-slate-100 hover:bg-slate-700 focus:bg-slate-700">Paused</SelectItem>
-                <SelectItem value={StatusOperador.AFASTADO} className="text-slate-100 hover:bg-slate-700 focus:bg-slate-700">Disabled</SelectItem>
+                <SelectItem value="all" className="text-slate-100">All Statuses</SelectItem>
+                <SelectItem value={StatusOperador.ATIVO} className="text-slate-100">Active</SelectItem>
+                <SelectItem value={StatusOperador.INATIVO} className="text-slate-100">Inactive</SelectItem>
+                <SelectItem value={StatusOperador.FERIAS} className="text-slate-100">Paused</SelectItem>
+                <SelectItem value={StatusOperador.AFASTADO} className="text-slate-100">Disabled</SelectItem>
               </SelectContent>
             </Select>
           </div>
 
-          {/* Function Filter */}
+          {/* Algorithm Type Filter */}
           <div className="w-full lg:w-auto min-w-[160px]">
             <Select
               value={filters.funcao || 'all'}
@@ -225,16 +293,16 @@ const AlgorithmsPage = () => {
                 <SelectValue placeholder="All Algorithm Types" />
               </SelectTrigger>
               <SelectContent className="bg-slate-800 border-slate-600">
-                <SelectItem value="all" className="text-slate-100 hover:bg-slate-700 focus:bg-slate-700">All Types</SelectItem>
-                <SelectItem value={FuncaoOperador.OPERADOR} className="text-slate-100 hover:bg-slate-700 focus:bg-slate-700">Basic Algorithm</SelectItem>
-                <SelectItem value={FuncaoOperador.SUPERVISOR} className="text-slate-100 hover:bg-slate-700 focus:bg-slate-700">Advanced AI</SelectItem>
-                <SelectItem value={FuncaoOperador.COORDENADOR} className="text-slate-100 hover:bg-slate-700 focus:bg-slate-700">ML Model</SelectItem>
-                <SelectItem value={FuncaoOperador.GERENTE} className="text-slate-100 hover:bg-slate-700 focus:bg-slate-700">Master Strategy</SelectItem>
+                <SelectItem value="all" className="text-slate-100">All Types</SelectItem>
+                <SelectItem value={FuncaoOperador.OPERADOR} className="text-slate-100">Scalping Bot</SelectItem>
+                <SelectItem value={FuncaoOperador.SUPERVISOR} className="text-slate-100">Swing Trader</SelectItem>
+                <SelectItem value={FuncaoOperador.COORDENADOR} className="text-slate-100">ML Predictor</SelectItem>
+                <SelectItem value={FuncaoOperador.GERENTE} className="text-slate-100">Master Strategy</SelectItem>
               </SelectContent>
             </Select>
           </div>
 
-          {/* Advanced Filters Button */}
+          {/* Advanced Filters */}
           <AdvancedFilters
             filters={filterOptions}
             values={filters}
@@ -274,12 +342,38 @@ const AlgorithmsPage = () => {
         </div>
       </div>
 
-      {/* Algorithms Grid */}
+      {/* Algorithm Performance Overview */}
+      <Card className="glass-card">
+        <CardHeader>
+          <CardTitle className="flex items-center gap-2 text-foreground">
+            <BarChart3 className="w-5 h-5 text-blue-500" />
+            Algorithm Performance Overview
+          </CardTitle>
+        </CardHeader>
+        <CardContent>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+            <div className="text-center">
+              <div className="text-3xl font-bold text-green-500">+12.4%</div>
+              <div className="text-muted-foreground">Portfolio Return (30d)</div>
+            </div>
+            <div className="text-center">
+              <div className="text-3xl font-bold text-blue-500">2.1</div>
+              <div className="text-muted-foreground">Average Sharpe Ratio</div>
+            </div>
+            <div className="text-center">
+              <div className="text-3xl font-bold text-orange-500">-5.2%</div>
+              <div className="text-muted-foreground">Max Drawdown</div>
+            </div>
+          </div>
+        </CardContent>
+      </Card>
+
+      {/* Algorithms Display */}
       <div className="space-y-6">
         <div className="flex items-center justify-between">
           <h2 className="text-2xl font-semibold text-foreground flex items-center gap-2">
             <Activity className="w-6 h-6 text-primary" />
-            AI Trading Algorithms
+            {viewMode === 'grid' ? 'AI Trading Algorithms' : 'Algorithm Performance Table'}
           </h2>
           <span className="text-sm text-muted-foreground">
             {filteredOperators.length} algorithm{filteredOperators.length !== 1 ? 's' : ''} found
@@ -287,17 +381,158 @@ const AlgorithmsPage = () => {
         </div>
 
         {filteredOperators.length > 0 ? (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-            {filteredOperators.map((operator) => (
-              <OperatorCard
-                key={operator.id}
-                operator={operator}
-                onEdit={handleEdit}
-                onViewDetails={handleViewDetails}
-                onDelete={() => handleDeleteOperator(operator.id)}
-              />
-            ))}
-          </div>
+          viewMode === 'grid' ? (
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+              {filteredOperators.map((operator) => {
+                const metrics = getAlgorithmMetrics(operator);
+                return (
+                  <Card key={operator.id} className="glass-card hover:shadow-xl transition-all duration-300 cursor-pointer" onClick={() => handleViewDetails(operator)}>
+                    <CardHeader className="pb-3">
+                      <div className="flex items-center justify-between">
+                        <div className="flex items-center gap-3">
+                          <div className="p-2 bg-gradient-to-br from-blue-500 to-purple-600 rounded-lg">
+                            <Bot className="w-5 h-5 text-white" />
+                          </div>
+                          <div>
+                            <h3 className="font-semibold text-foreground">{operator.nome}</h3>
+                            <p className="text-sm text-muted-foreground">{getAlgorithmTypeText(operator.funcao)}</p>
+                          </div>
+                        </div>
+                        <Badge className={`${getStatusColor(operator.status)} text-white border-0`}>
+                          {getStatusText(operator.status)}
+                        </Badge>
+                      </div>
+                    </CardHeader>
+                    <CardContent className="space-y-4">
+                      <div className="grid grid-cols-2 gap-4">
+                        <div className="text-center">
+                          <div className="text-2xl font-bold text-green-500">{metrics.winRate}%</div>
+                          <div className="text-xs text-muted-foreground">Win Rate</div>
+                        </div>
+                        <div className="text-center">
+                          <div className="text-2xl font-bold text-blue-500">${metrics.profitToday.toFixed(0)}</div>
+                          <div className="text-xs text-muted-foreground">Today's P&L</div>
+                        </div>
+                      </div>
+                      
+                      <div className="space-y-2">
+                        <div className="flex justify-between text-sm">
+                          <span className="text-muted-foreground">Sharpe Ratio:</span>
+                          <span className="font-medium">{metrics.sharpeRatio.toFixed(2)}</span>
+                        </div>
+                        <div className="flex justify-between text-sm">
+                          <span className="text-muted-foreground">Max Drawdown:</span>
+                          <span className="font-medium text-red-400">-{metrics.maxDrawdown.toFixed(1)}%</span>
+                        </div>
+                        <div className="flex justify-between text-sm">
+                          <span className="text-muted-foreground">Total Trades:</span>
+                          <span className="font-medium">{metrics.totalTrades}</span>
+                        </div>
+                      </div>
+                      
+                      <div className="space-y-1">
+                        <div className="flex justify-between text-sm">
+                          <span className="text-muted-foreground">Performance</span>
+                          <span className="font-medium">{metrics.winRate}%</span>
+                        </div>
+                        <Progress value={metrics.winRate} className="h-2" />
+                      </div>
+                      
+                      <div className="flex gap-2 pt-2">
+                        <Button 
+                          size="sm" 
+                          variant="outline" 
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            handleEdit(operator);
+                          }}
+                          className="flex-1"
+                        >
+                          Configure
+                        </Button>
+                        <Button 
+                          size="sm" 
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            handleViewDetails(operator);
+                          }}
+                          className="flex-1"
+                        >
+                          View Details
+                        </Button>
+                      </div>
+                    </CardContent>
+                  </Card>
+                );
+              })}
+            </div>
+          ) : (
+            <Card className="glass-card">
+              <CardContent className="p-0">
+                <Table>
+                  <TableHeader>
+                    <TableRow>
+                      <TableHead>Algorithm</TableHead>
+                      <TableHead>Type</TableHead>
+                      <TableHead>Status</TableHead>
+                      <TableHead>Win Rate</TableHead>
+                      <TableHead>Sharpe Ratio</TableHead>
+                      <TableHead>Today's P&L</TableHead>
+                      <TableHead>Total Trades</TableHead>
+                      <TableHead>Risk Level</TableHead>
+                      <TableHead>Actions</TableHead>
+                    </TableRow>
+                  </TableHeader>
+                  <TableBody>
+                    {filteredOperators.map((operator) => {
+                      const metrics = getAlgorithmMetrics(operator);
+                      const riskLevel = metrics.maxDrawdown > 10 ? 'High' : metrics.maxDrawdown > 5 ? 'Medium' : 'Low';
+                      const riskColor = riskLevel === 'High' ? 'text-red-500' : riskLevel === 'Medium' ? 'text-yellow-500' : 'text-green-500';
+                      
+                      return (
+                        <TableRow key={operator.id} className="hover:bg-muted/50">
+                          <TableCell>
+                            <div className="flex items-center gap-2">
+                              <Bot className="w-4 h-4 text-blue-500" />
+                              <div>
+                                <div className="font-medium">{operator.nome}</div>
+                                <div className="text-sm text-muted-foreground">{operator.setor}</div>
+                              </div>
+                            </div>
+                          </TableCell>
+                          <TableCell>
+                            <Badge variant="outline">{getAlgorithmTypeText(operator.funcao)}</Badge>
+                          </TableCell>
+                          <TableCell>
+                            <Badge className={`${getStatusColor(operator.status)} text-white border-0`}>
+                              {getStatusText(operator.status)}
+                            </Badge>
+                          </TableCell>
+                          <TableCell className="font-medium text-green-500">{metrics.winRate}%</TableCell>
+                          <TableCell className="font-medium">{metrics.sharpeRatio.toFixed(2)}</TableCell>
+                          <TableCell className={`font-medium ${metrics.profitToday > 0 ? 'text-green-500' : 'text-red-500'}`}>
+                            ${metrics.profitToday.toFixed(2)}
+                          </TableCell>
+                          <TableCell>{metrics.totalTrades}</TableCell>
+                          <TableCell className={riskColor}>{riskLevel}</TableCell>
+                          <TableCell>
+                            <div className="flex gap-2">
+                              <Button size="sm" variant="outline" onClick={() => handleEdit(operator)}>
+                                Configure
+                              </Button>
+                              <Button size="sm" onClick={() => handleViewDetails(operator)}>
+                                Details
+                              </Button>
+                            </div>
+                          </TableCell>
+                        </TableRow>
+                      );
+                    })}
+                  </TableBody>
+                </Table>
+              </CardContent>
+            </Card>
+          )
         ) : (
           <Card className="glass-card">
             <CardContent className="p-12 text-center">
@@ -305,17 +540,19 @@ const AlgorithmsPage = () => {
                 <Bot className="w-8 h-8 text-muted-foreground" />
               </div>
               <h3 className="text-lg font-semibold text-foreground mb-2">
-                No algorithms found
+                No Algorithms Found
               </h3>
               <p className="text-muted-foreground mb-6">
-                No trading algorithms match your search criteria.
+                No trading algorithms match your search criteria. Deploy your first algorithm to get started.
               </p>
               <Button
-                variant="outline"
-                onClick={clearFilters}
-                className="hover:bg-accent/50"
+                onClick={() => {
+                  setSelectedOperator(null);
+                  setAddDialogOpen(true);
+                }}
+                className="bg-blue-600 hover:bg-blue-700"
               >
-                Clear Filters
+                Deploy Algorithm
               </Button>
             </CardContent>
           </Card>
