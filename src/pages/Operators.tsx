@@ -139,11 +139,11 @@ const AlgorithmsPage = () => {
   const getAlgorithmMetrics = (operator: Operador) => {
     const baseMetrics = {
       winRate: operator.produtividade,
-      sharpeRatio: (operator.produtividade / 100) * 2.5 + Math.random() * 0.5,
-      maxDrawdown: Math.random() * 15 + 5,
-      avgReturn: operator.produtividade * 0.8 + Math.random() * 20,
+      sharpeRatio: Number(((operator.produtividade / 100) * 2.5 + Math.random() * 0.5).toFixed(2)),
+      maxDrawdown: Number((Math.random() * 15 + 5).toFixed(1)),
+      avgReturn: Number((operator.produtividade * 0.8 + Math.random() * 20).toFixed(2)),
       totalTrades: operator.horasTrabalhadas * 8,
-      profitToday: Math.random() * 5000 + 500
+      profitToday: Number((Math.random() * 5000 + 500).toFixed(2))
     };
     return baseMetrics;
   };
