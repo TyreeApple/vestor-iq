@@ -42,11 +42,11 @@ const CompletedOperationsSection: React.FC<CompletedOperationsSectionProps> = ({
     <div className="flex items-center justify-between">
       <h2 className="text-xl lg:text-2xl font-semibold text-foreground flex items-center gap-2">
         <CheckCircle2 className="w-5 h-5 lg:w-6 lg:h-6 text-primary" />
-        <span className="hidden sm:inline">Operações Concluídas</span>
-        <span className="sm:hidden">Concluídas</span>
+        <span className="hidden sm:inline">Completed Operations</span>
+        <span className="sm:hidden">Completed</span>
       </h2>
       <span className="text-xs lg:text-sm text-muted-foreground">
-        {operations.length} concluída{operations.length !== 1 ? 's' : ''}
+        {operations.length} completed
       </span>
     </div>
 
@@ -76,13 +76,13 @@ const CompletedOperationsSection: React.FC<CompletedOperationsSectionProps> = ({
                     </DropdownMenuTrigger>
                     <DropdownMenuContent align="end" className="bg-popover">
                       <DropdownMenuItem onClick={() => onDetails(operation)}>
-                        Detalhes
+                        Details
                       </DropdownMenuItem>
                       <DropdownMenuItem 
                         onClick={() => onDelete(operation.id)}
                         className="text-destructive focus:text-destructive"
                       >
-                        Excluir
+                        Delete
                       </DropdownMenuItem>
                     </DropdownMenuContent>
                   </DropdownMenu>
@@ -90,27 +90,27 @@ const CompletedOperationsSection: React.FC<CompletedOperationsSectionProps> = ({
                 
                 <div className="grid grid-cols-2 gap-3 text-xs">
                   <div>
-                    <span className="text-muted-foreground">Tipo:</span>
+                    <span className="text-muted-foreground">Type:</span>
                     <div className={cn("font-medium", typeInfo.color)}>{typeInfo.label}</div>
                   </div>
                   <div>
-                    <span className="text-muted-foreground">Empilhadeira:</span>
+                    <span className="text-muted-foreground">Bot:</span>
                     <div className="text-foreground font-medium truncate">{operation.empilhadeiraModelo}</div>
                   </div>
                   <div>
-                    <span className="text-muted-foreground">Setor:</span>
+                    <span className="text-muted-foreground">Sector:</span>
                     <div className="text-foreground font-medium">{operation.setor}</div>
                   </div>
                   <div>
-                    <span className="text-muted-foreground">Duração:</span>
+                    <span className="text-muted-foreground">Duration:</span>
                     <div className="text-foreground font-medium">{calculateDuration(operation)}</div>
                   </div>
                   <div>
-                    <span className="text-muted-foreground">Data:</span>
+                    <span className="text-muted-foreground">Date:</span>
                     <div className="text-foreground font-medium">{formatDate(operation.dataInicio)}</div>
                   </div>
                   <div>
-                    <span className="text-muted-foreground">Consumo:</span>
+                    <span className="text-muted-foreground">Consumption:</span>
                     <div className="text-foreground font-medium">{(operation.consumoGas || 0).toFixed(1)}L</div>
                   </div>
                 </div>
@@ -136,15 +136,15 @@ const CompletedOperationsSection: React.FC<CompletedOperationsSectionProps> = ({
           <thead className="bg-secondary/50">
             <tr>
               <th className="p-3 lg:p-4 text-left font-semibold text-foreground text-sm">ID</th>
-              <th className="p-3 lg:p-4 text-left font-semibold text-foreground text-sm">Tipo</th>
-              <th className="p-3 lg:p-4 text-left font-semibold text-foreground text-sm">Operador</th>
-              <th className="p-3 lg:p-4 text-left font-semibold text-foreground text-sm">Empilhadeira</th>
-              <th className="p-3 lg:p-4 text-left font-semibold text-foreground text-sm">Setor</th>
-              <th className="p-3 lg:p-4 text-left font-semibold text-foreground text-sm">Data</th>
-              <th className="p-3 lg:p-4 text-left font-semibold text-foreground text-sm">Duração</th>
-              <th className="p-3 lg:p-4 text-left font-semibold text-foreground text-sm">Prioridade</th>
-              <th className="p-3 lg:p-4 text-left font-semibold text-foreground text-sm">Consumo (L)</th>
-              <th className="p-3 lg:p-4 text-left font-semibold text-foreground text-sm">Ações</th>
+              <th className="p-3 lg:p-4 text-left font-semibold text-foreground text-sm">Type</th>
+              <th className="p-3 lg:p-4 text-left font-semibold text-foreground text-sm">Algorithm</th>
+              <th className="p-3 lg:p-4 text-left font-semibold text-foreground text-sm">Bot</th>
+              <th className="p-3 lg:p-4 text-left font-semibold text-foreground text-sm">Sector</th>
+              <th className="p-3 lg:p-4 text-left font-semibold text-foreground text-sm">Date</th>
+              <th className="p-3 lg:p-4 text-left font-semibold text-foreground text-sm">Duration</th>
+              <th className="p-3 lg:p-4 text-left font-semibold text-foreground text-sm">Priority</th>
+              <th className="p-3 lg:p-4 text-left font-semibold text-foreground text-sm">Consumption (L)</th>
+              <th className="p-3 lg:p-4 text-left font-semibold text-foreground text-sm">Actions</th>
             </tr>
           </thead>
           <tbody className="divide-y divide-border/50">
@@ -201,7 +201,7 @@ const CompletedOperationsSection: React.FC<CompletedOperationsSectionProps> = ({
                         className="text-muted-foreground hover:text-foreground hover:bg-accent/50 h-7 lg:h-8 px-2 lg:px-3 text-xs"
                         onClick={() => onDetails(operation)}
                       >
-                        Detalhes
+                        Details
                       </Button>
                       <Button
                         variant="ghost"
@@ -209,7 +209,7 @@ const CompletedOperationsSection: React.FC<CompletedOperationsSectionProps> = ({
                         className="text-destructive hover:text-destructive/80 hover:bg-destructive/10 h-7 lg:h-8 px-2 lg:px-3 text-xs"
                         onClick={() => onDelete(operation.id)}
                       >
-                        Excluir
+                        Delete
                       </Button>
                     </div>
                   </td>
@@ -224,7 +224,7 @@ const CompletedOperationsSection: React.FC<CompletedOperationsSectionProps> = ({
           <div className="w-12 h-12 lg:w-16 lg:h-16 mx-auto mb-4 rounded-full bg-accent/30 flex items-center justify-center">
             <Calendar className="w-6 h-6 lg:w-8 lg:h-8 text-muted-foreground" />
           </div>
-          <p className="text-muted-foreground text-base lg:text-lg">Nenhuma operação concluída</p>
+          <p className="text-muted-foreground text-base lg:text-lg">No completed operations</p>
         </CardContent>
       )}
     </Card>

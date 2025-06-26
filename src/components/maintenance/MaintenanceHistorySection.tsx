@@ -22,14 +22,14 @@ const MaintenanceHistorySection: React.FC<MaintenanceHistorySectionProps> = ({
     <div>
       <div className="flex items-center justify-between mb-6">
         <div>
-          <h2 className="text-2xl font-bold text-foreground">Histórico Completo</h2>
+          <h2 className="text-2xl font-bold text-foreground">Complete History</h2>
           <p className="text-muted-foreground">
-            Todas as manutenções registradas no sistema
+            All maintenance records in the system
           </p>
         </div>
         <Button variant="outline" className="gap-2" onClick={onReport}>
           <FileText className="w-4 h-4" />
-          Gerar Relatório
+          Generate Report
         </Button>
       </div>
       <MaintenanceHistoryTable

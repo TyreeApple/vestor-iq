@@ -1,3 +1,4 @@
+
 import React from 'react';
 import { 
   Wrench, 
@@ -27,31 +28,31 @@ const MaintenanceKpiCards: React.FC<MaintenanceKpiCardsProps> = ({ maintenanceDa
 
   const kpis = [
     {
-      title: 'Total de Manutenções',
+      title: 'Total Maintenance',
       value: totalMaintenance,
       icon: Wrench,
       variant: 'info' as const
     },
     {
-      title: 'Pendentes',
+      title: 'Pending',
       value: pendingMaintenance,
       icon: Clock,
       variant: 'warning' as const
     },
     {
-      title: 'Concluídas',
+      title: 'Completed',
       value: completedMaintenance,
       icon: CheckCircle,
       variant: 'success' as const
     },
     {
-      title: 'Custo Total',
-      value: new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(totalCosts),
+      title: 'Total Cost',
+      value: new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format(totalCosts),
       icon: DollarSign,
       variant: 'danger' as const
     },
     {
-      title: 'Urgentes',
+      title: 'Urgent',
       value: urgentMaintenance,
       icon: AlertTriangle,
       variant: 'danger' as const

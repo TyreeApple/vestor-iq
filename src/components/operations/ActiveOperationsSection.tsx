@@ -34,11 +34,11 @@ const ActiveOperationsSection: React.FC<ActiveOperationsSectionProps> = ({
     <div className="flex items-center justify-between">
       <h2 className="text-xl lg:text-2xl font-semibold text-foreground flex items-center gap-2">
         <Activity className="w-5 h-5 lg:w-6 lg:h-6 text-primary" />
-        <span className="hidden sm:inline">Operações em Andamento</span>
-        <span className="sm:hidden">Ativas</span>
+        <span className="hidden sm:inline">Active Operations</span>
+        <span className="sm:hidden">Active</span>
       </h2>
       <span className="text-xs lg:text-sm text-muted-foreground">
-        {operations.length} ativa{operations.length !== 1 ? 's' : ''}
+        {operations.length} active
       </span>
     </div>
 
@@ -63,8 +63,8 @@ const ActiveOperationsSection: React.FC<ActiveOperationsSectionProps> = ({
                 </div>
                 <div className="flex flex-col items-end gap-1 lg:gap-2 flex-shrink-0">
                   <span className="inline-flex items-center px-2 lg:px-3 py-0.5 lg:py-1 rounded-full text-xs font-medium bg-green-500/20 text-green-400 border border-green-500/30 whitespace-nowrap">
-                    <span className="hidden sm:inline">Em Andamento</span>
-                    <span className="sm:hidden">Ativa</span>
+                    <span className="hidden sm:inline">In Progress</span>
+                    <span className="sm:hidden">Active</span>
                   </span>
                   <span className={cn("inline-flex items-center px-1.5 lg:px-2 py-0.5 lg:py-1 rounded-full text-xs font-medium border", priorityInfo.bgColor, priorityInfo.color, priorityInfo.borderColor)}>
                     {operation.prioridade}
@@ -110,10 +110,10 @@ const ActiveOperationsSection: React.FC<ActiveOperationsSectionProps> = ({
               </div>
               <div className="flex justify-end gap-2 pt-2 lg:pt-3 border-t border-border/30">
                 <Button variant="ghost" size="sm" className="h-7 lg:h-8 px-2 lg:px-3 text-xs hover:bg-accent/50" onClick={() => onDetails(operation)}>
-                  Detalhes
+                  Details
                 </Button>
                 <Button variant="ghost" size="sm" className="h-7 lg:h-8 px-2 lg:px-3 text-xs text-primary hover:text-primary/80 hover:bg-primary/10" onClick={() => onEdit(operation)}>
-                  Editar
+                  Edit
                 </Button>
               </div>
             </CardContent>
@@ -126,7 +126,7 @@ const ActiveOperationsSection: React.FC<ActiveOperationsSectionProps> = ({
             <div className="w-12 h-12 lg:w-16 lg:h-16 mx-auto mb-4 rounded-full bg-accent/30 flex items-center justify-center">
               <Clock className="w-6 h-6 lg:w-8 lg:h-8 text-muted-foreground" />
             </div>
-            <p className="text-muted-foreground text-base lg:text-lg">Nenhuma operação em andamento</p>
+            <p className="text-muted-foreground text-base lg:text-lg">No active operations</p>
           </CardContent>
         </Card>
       )}

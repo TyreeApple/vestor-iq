@@ -22,14 +22,14 @@ const MaintenancePendingSection: React.FC<MaintenancePendingSectionProps> = ({
     <div>
       <div className="flex items-center justify-between mb-6">
         <div>
-          <h2 className="text-2xl font-bold text-foreground">Manutenções Pendentes</h2>
+          <h2 className="text-2xl font-bold text-foreground">Pending Maintenance</h2>
           <p className="text-muted-foreground">
-            {pendingMaintenance.length} {pendingMaintenance.length === 1 ? 'manutenção aguardando' : 'manutenções aguardando'} atenção
+            {pendingMaintenance.length} {pendingMaintenance.length === 1 ? 'maintenance awaiting' : 'maintenance awaiting'} attention
           </p>
         </div>
         <div className="flex items-center gap-2">
           <div className="w-3 h-3 bg-orange-500 rounded-full animate-pulse" />
-          <span className="text-sm text-muted-foreground">Atualizando em tempo real</span>
+          <span className="text-sm text-muted-foreground">Updating in real time</span>
         </div>
       </div>
       <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-6">

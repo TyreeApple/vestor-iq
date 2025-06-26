@@ -45,7 +45,7 @@ const PendingMaintenanceCard: React.FC<PendingMaintenanceCardProps> = ({
   const formatDate = (dateString: string) => {
     try {
       const dateParts = dateString.split('-');
-      return `${dateParts[2]}/${dateParts[1]}/${dateParts[0]}`;
+      return `${dateParts[1]}/${dateParts[2]}/${dateParts[0]}`;
     } catch (e) {
       return dateString;
     }
@@ -57,14 +57,14 @@ const PendingMaintenanceCard: React.FC<PendingMaintenanceCardProps> = ({
         return { 
           color: 'bg-red-500', 
           textColor: 'text-red-700', 
-          label: 'Alta',
+          label: 'Critical',
           accentColor: 'border-l-red-500'
         };
       case PrioridadeOperacao.ALTA:
         return { 
           color: 'bg-orange-500', 
           textColor: 'text-orange-700', 
-          label: 'Alta',
+          label: 'High',
           accentColor: 'border-l-orange-500'
         };
       case PrioridadeOperacao.NORMAL:
@@ -78,7 +78,7 @@ const PendingMaintenanceCard: React.FC<PendingMaintenanceCardProps> = ({
         return { 
           color: 'bg-gray-500', 
           textColor: 'text-gray-700', 
-          label: 'Baixa',
+          label: 'Low',
           accentColor: 'border-l-gray-500'
         };
     }
@@ -87,9 +87,9 @@ const PendingMaintenanceCard: React.FC<PendingMaintenanceCardProps> = ({
   const getStatusConfig = (status: StatusManutencao) => {
     switch (status) {
       case StatusManutencao.ABERTA:
-        return { variant: 'warning' as const, label: 'Aberta', icon: Clock };
+        return { variant: 'warning' as const, label: 'Open', icon: Clock };
       case StatusManutencao.EM_ANDAMENTO:
-        return { variant: 'info' as const, label: 'Em Andamento', icon: Timer };
+        return { variant: 'info' as const, label: 'In Progress', icon: Timer };
       default:
         return { variant: 'default' as const, label: status, icon: Clock };
     }
@@ -115,7 +115,7 @@ const PendingMaintenanceCard: React.FC<PendingMaintenanceCardProps> = ({
 
   const handleDelete = (e: React.MouseEvent) => {
     e.stopPropagation();
-    if (confirm("Tem certeza que deseja excluir esta manutenção?")) {
+    if (confirm("Are you sure you want to delete this maintenance?")) {
       onDelete(maintenance.id);
     }
   };
@@ -178,7 +178,7 @@ const PendingMaintenanceCard: React.FC<PendingMaintenanceCardProps> = ({
             <DropdownMenuContent align="end" className="w-40 bg-slate-800 border-slate-700">
               <DropdownMenuItem onClick={handleEdit} className="text-gray-300 hover:text-white hover:bg-slate-700">
                 <Edit className="w-3 h-3 mr-2" />
-                Editar
+                Edit
               </DropdownMenuItem>
               {maintenance.status === StatusManutencao.ABERTA && onStatusChange && (
                 <DropdownMenuItem 
@@ -186,7 +186,7 @@ const PendingMaintenanceCard: React.FC<PendingMaintenanceCardProps> = ({
                   className="text-green-400 hover:text-green-300 hover:bg-slate-700"
                 >
                   <Play className="w-3 h-3 mr-2" />
-                  Iniciar
+                  Start
                 </DropdownMenuItem>
               )}
               {maintenance.status === StatusManutencao.EM_ANDAMENTO && onStatusChange && (
@@ -196,14 +196,14 @@ const PendingMaintenanceCard: React.FC<PendingMaintenanceCardProps> = ({
                     className="text-yellow-400 hover:text-yellow-300 hover:bg-slate-700"
                   >
                     <Pause className="w-3 h-3 mr-2" />
-                    Pausar
+                    Pause
                   </DropdownMenuItem>
                   <DropdownMenuItem 
                     onClick={(e) => handleStatusChange(e, StatusManutencao.CONCLUIDA)} 
                     className="text-green-400 hover:text-green-300 hover:bg-slate-700"
                   >
                     <CheckCircle className="w-3 h-3 mr-2" />
-                    Concluir
+                    Complete
                   </DropdownMenuItem>
                 </>
               )}
@@ -212,7 +212,7 @@ const PendingMaintenanceCard: React.FC<PendingMaintenanceCardProps> = ({
                 className="text-red-400 hover:text-red-300 hover:bg-red-900/20"
               >
                 <Trash2 className="w-3 h-3 mr-2" />
-                Excluir
+                Delete
               </DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>
@@ -224,7 +224,7 @@ const PendingMaintenanceCard: React.FC<PendingMaintenanceCardProps> = ({
           "bg-gradient-to-r from-white/10 to-white/5 border border-white/20 w-fit"
         )}>
           <div className={cn("w-1.5 h-1.5 rounded-full", priorityConfig.color)} />
-          <span className="text-white text-xs">Prioridade {priorityConfig.label}</span>
+          <span className="text-white text-xs">Priority {priorityConfig.label}</span>
         </div>
       </CardHeader>
 
@@ -233,7 +233,7 @@ const PendingMaintenanceCard: React.FC<PendingMaintenanceCardProps> = ({
         <div className="p-3 bg-gradient-to-r from-orange-500/10 to-red-500/10 rounded-lg border border-orange-500/20">
           <div className="flex items-start gap-2">
             <AlertTriangle className="w-4 h-4 text-orange-400 mt-0.5 flex-shrink-0" />
-            <p className="text-sm text-gray-200 leading-relaxed">{maintenance.problema || 'Sem descrição'}</p>
+            <p className="text-sm text-gray-200 leading-relaxed">{maintenance.problema || 'No description'}</p>
           </div>
         </div>
 
@@ -242,7 +242,7 @@ const PendingMaintenanceCard: React.FC<PendingMaintenanceCardProps> = ({
           <div className="p-2 bg-white/5 rounded-lg border border-white/10">
             <div className="flex items-center gap-1.5 text-gray-400 mb-1">
               <Truck className="w-3 h-3" />
-              <span className="text-xs uppercase tracking-wide">Empilhadeira</span>
+              <span className="text-xs uppercase tracking-wide">Forklift</span>
             </div>
             <p className="text-sm font-bold text-white">{maintenance.empilhadeiraId || maintenance.forkliftId || 'N/A'}</p>
           </div>
@@ -250,15 +250,15 @@ const PendingMaintenanceCard: React.FC<PendingMaintenanceCardProps> = ({
           <div className="p-2 bg-white/5 rounded-lg border border-white/10">
             <div className="flex items-center gap-1.5 text-gray-400 mb-1">
               <User className="w-3 h-3" />
-              <span className="text-xs uppercase tracking-wide">Responsável</span>
+              <span className="text-xs uppercase tracking-wide">Responsible</span>
             </div>
-            <p className="text-sm font-bold text-white">{maintenance.reportedBy || 'Sistema'}</p>
+            <p className="text-sm font-bold text-white">{maintenance.reportedBy || 'System'}</p>
           </div>
           
           <div className="p-2 bg-white/5 rounded-lg border border-white/10">
             <div className="flex items-center gap-1.5 text-gray-400 mb-1">
               <Calendar className="w-3 h-3" />
-              <span className="text-xs uppercase tracking-wide">Abertura</span>
+              <span className="text-xs uppercase tracking-wide">Opened</span>
             </div>
             <p className="text-sm font-bold text-white">
               {formatDate(maintenance.dataAbertura || maintenance.reportedDate || '')}
@@ -268,12 +268,12 @@ const PendingMaintenanceCard: React.FC<PendingMaintenanceCardProps> = ({
           <div className="p-2 bg-white/5 rounded-lg border border-white/10">
             <div className="flex items-center gap-1.5 text-gray-400 mb-1">
               <DollarSign className="w-3 h-3" />
-              <span className="text-xs uppercase tracking-wide">Custo</span>
+              <span className="text-xs uppercase tracking-wide">Cost</span>
             </div>
             <p className="text-sm font-bold text-white">
               {maintenance.custos?.total ? 
-                new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(maintenance.custos.total) : 
-                'R$ 0,00'
+                new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format(maintenance.custos.total) : 
+                '$0.00'
               }
             </p>
           </div>
@@ -283,7 +283,7 @@ const PendingMaintenanceCard: React.FC<PendingMaintenanceCardProps> = ({
         {maintenance.status === StatusManutencao.EM_ANDAMENTO && (
           <div className="space-y-2 p-3 bg-gradient-to-r from-blue-500/10 to-purple-500/10 rounded-lg border border-blue-500/20">
             <div className="flex justify-between items-center">
-              <span className="text-xs font-medium text-gray-300">Progresso estimado</span>
+              <span className="text-xs font-medium text-gray-300">Estimated progress</span>
               <span className="text-xs font-bold text-blue-400">65%</span>
             </div>
             <div className="relative">
@@ -302,7 +302,7 @@ const PendingMaintenanceCard: React.FC<PendingMaintenanceCardProps> = ({
           onClick={handleEdit}
           className="w-full bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white font-medium py-2 rounded-lg transition-all duration-300 group text-sm"
         >
-          <span>Ver Detalhes</span>
+          <span>View Details</span>
           <ArrowRight className="w-3 h-3 ml-2 transition-transform group-hover:translate-x-1" />
         </Button>
       </CardContent>

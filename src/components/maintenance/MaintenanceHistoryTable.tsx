@@ -66,30 +66,30 @@ const MaintenanceHistoryTable: React.FC<MaintenanceHistoryTableProps> = ({
       label: 'Status',
       type: 'select',
       options: [
-        { value: 'aberta', label: 'Aberta' },
-        { value: 'andamento', label: 'Em Andamento' },
-        { value: 'concluida', label: 'Concluída' }
+        { value: 'aberta', label: 'Open' },
+        { value: 'andamento', label: 'In Progress' },
+        { value: 'concluida', label: 'Completed' }
       ]
     },
     {
       key: 'tipo',
-      label: 'Tipo',
+      label: 'Type',
       type: 'select',
       options: [
-        { value: 'preventiva', label: 'Preventiva' },
-        { value: 'corretiva', label: 'Corretiva' },
-        { value: 'preditiva', label: 'Preditiva' }
+        { value: 'preventiva', label: 'Preventive' },
+        { value: 'corretiva', label: 'Corrective' },
+        { value: 'preditiva', label: 'Predictive' }
       ]
     },
     {
       key: 'prioridade',
-      label: 'Prioridade',
+      label: 'Priority',
       type: 'select',
       options: [
-        { value: 'critica', label: 'Crítica' },
-        { value: 'alta', label: 'Alta' },
+        { value: 'critica', label: 'Critical' },
+        { value: 'alta', label: 'High' },
         { value: 'normal', label: 'Normal' },
-        { value: 'baixa', label: 'Baixa' }
+        { value: 'baixa', label: 'Low' }
       ]
     }
   ];
@@ -198,7 +198,7 @@ const MaintenanceHistoryTable: React.FC<MaintenanceHistoryTableProps> = ({
     if (!dateString) return '-';
     try {
       const dateParts = dateString.split('-');
-      return `${dateParts[2]}/${dateParts[1]}/${dateParts[0]}`;
+      return `${dateParts[1]}/${dateParts[2]}/${dateParts[0]}`;
     } catch (e) {
       return dateString;
     }
@@ -269,7 +269,7 @@ const MaintenanceHistoryTable: React.FC<MaintenanceHistoryTableProps> = ({
       <StandardFilters
         searchValue={searchTerm}
         onSearchChange={setSearchTerm}
-        searchPlaceholder="Buscar por ID, modelo, problema ou responsável..."
+        searchPlaceholder="Search by ID, model, problem or responsible..."
         filters={filters}
         filterValues={filterValues}
         onFilterChange={handleFilterChange}
@@ -292,9 +292,9 @@ const MaintenanceHistoryTable: React.FC<MaintenanceHistoryTableProps> = ({
                   {getSortIcon('id')}
                 </Button>
               </TableHead>
-              <TableHead className="text-slate-700 dark:text-slate-300 font-semibold">Empilhadeira</TableHead>
-              <TableHead className="text-slate-700 dark:text-slate-300 font-semibold">Tipo</TableHead>
-              <TableHead className="text-slate-700 dark:text-slate-300 font-semibold">Problema</TableHead>
+              <TableHead className="text-slate-700 dark:text-slate-300 font-semibold">Forklift</TableHead>
+              <TableHead className="text-slate-700 dark:text-slate-300 font-semibold">Type</TableHead>
+              <TableHead className="text-slate-700 dark:text-slate-300 font-semibold">Problem</TableHead>
               <TableHead className="text-slate-700 dark:text-slate-300 font-semibold">Status</TableHead>
               <TableHead className="text-slate-700 dark:text-slate-300 font-semibold">
                 <Button
@@ -303,11 +303,11 @@ const MaintenanceHistoryTable: React.FC<MaintenanceHistoryTableProps> = ({
                   onClick={() => handleSort('prioridade')}
                   className="h-auto p-0 font-semibold text-slate-700 dark:text-slate-300 hover:text-slate-900 dark:hover:text-slate-100"
                 >
-                  Prioridade
+                  Priority
                   {getSortIcon('prioridade')}
                 </Button>
               </TableHead>
-              <TableHead className="text-slate-700 dark:text-slate-300 font-semibold">Responsável</TableHead>
+              <TableHead className="text-slate-700 dark:text-slate-300 font-semibold">Responsible</TableHead>
               <TableHead className="text-slate-700 dark:text-slate-300 font-semibold">
                 <Button
                   variant="ghost"
@@ -315,7 +315,7 @@ const MaintenanceHistoryTable: React.FC<MaintenanceHistoryTableProps> = ({
                   onClick={() => handleSort('dataAbertura')}
                   className="h-auto p-0 font-semibold text-slate-700 dark:text-slate-300 hover:text-slate-900 dark:hover:text-slate-100"
                 >
-                  Abertura
+                  Opened
                   {getSortIcon('dataAbertura')}
                 </Button>
               </TableHead>
@@ -326,7 +326,7 @@ const MaintenanceHistoryTable: React.FC<MaintenanceHistoryTableProps> = ({
                   onClick={() => handleSort('dataConclusao')}
                   className="h-auto p-0 font-semibold text-slate-700 dark:text-slate-300 hover:text-slate-900 dark:hover:text-slate-100"
                 >
-                  Conclusão
+                  Completed
                   {getSortIcon('dataConclusao')}
                 </Button>
               </TableHead>
@@ -337,11 +337,11 @@ const MaintenanceHistoryTable: React.FC<MaintenanceHistoryTableProps> = ({
                   onClick={() => handleSort('custos.total')}
                   className="h-auto p-0 font-semibold text-slate-700 dark:text-slate-300 hover:text-slate-900 dark:hover:text-slate-100"
                 >
-                  Custo
+                  Cost
                   {getSortIcon('custos.total')}
                 </Button>
               </TableHead>
-              <TableHead className="text-slate-700 dark:text-slate-300 font-semibold w-20">Ações</TableHead>
+              <TableHead className="text-slate-700 dark:text-slate-300 font-semibold w-20">Actions</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
@@ -369,8 +369,8 @@ const MaintenanceHistoryTable: React.FC<MaintenanceHistoryTableProps> = ({
                 </TableCell>
                 <TableCell>
                   <div className="max-w-xs">
-                    <p className="truncate text-slate-900 dark:text-slate-100 font-medium" title={maintenance.problema || 'Sem descrição'}>
-                      {maintenance.problema || 'Sem descrição'}
+                    <p className="truncate text-slate-900 dark:text-slate-100 font-medium" title={maintenance.problema || 'No description'}>
+                      {maintenance.problema || 'No description'}
                     </p>
                   </div>
                 </TableCell>
@@ -388,7 +388,7 @@ const MaintenanceHistoryTable: React.FC<MaintenanceHistoryTableProps> = ({
                 <TableCell>
                   <div className="flex items-center gap-2 text-slate-700 dark:text-slate-300">
                     <User className="w-4 h-4" />
-                    <span className="font-medium">{maintenance.reportedBy || 'Sistema'}</span>
+                    <span className="font-medium">{maintenance.reportedBy || 'System'}</span>
                   </div>
                 </TableCell>
                 <TableCell>
@@ -408,8 +408,8 @@ const MaintenanceHistoryTable: React.FC<MaintenanceHistoryTableProps> = ({
                     <DollarSign className="w-4 h-4 text-green-600 dark:text-green-400" />
                     <span className="font-bold text-green-600 dark:text-green-400">
                       {maintenance.custos?.total ? 
-                        new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(maintenance.custos.total) : 
-                        'R$ 0,00'
+                        new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format(maintenance.custos.total) : 
+                        '$0.00'
                       }
                     </span>
                   </div>
@@ -425,23 +425,23 @@ const MaintenanceHistoryTable: React.FC<MaintenanceHistoryTableProps> = ({
                       {onView && (
                         <DropdownMenuItem onClick={() => onView(maintenance)} className="text-slate-700 dark:text-slate-300 hover:text-slate-900 dark:hover:text-slate-100 hover:bg-slate-100/50 dark:hover:bg-slate-700/50">
                           <Eye className="w-4 h-4 mr-2" />
-                          Visualizar
+                          View
                         </DropdownMenuItem>
                       )}
                       <DropdownMenuItem onClick={() => onEdit(maintenance)} className="text-slate-700 dark:text-slate-300 hover:text-slate-900 dark:hover:text-slate-100 hover:bg-slate-100/50 dark:hover:bg-slate-700/50">
                         <Edit className="w-4 h-4 mr-2" />
-                        Editar
+                        Edit
                       </DropdownMenuItem>
                       <DropdownMenuItem className="text-slate-700 dark:text-slate-300 hover:text-slate-900 dark:hover:text-slate-100 hover:bg-slate-100/50 dark:hover:bg-slate-700/50">
                         <FileText className="w-4 h-4 mr-2" />
-                        Relatório
+                        Report
                       </DropdownMenuItem>
                       <DropdownMenuItem 
                         onClick={() => onDelete(maintenance.id)}
                         className="text-red-600 dark:text-red-400 hover:text-red-700 dark:hover:text-red-300 hover:bg-red-50 dark:hover:bg-red-900/20"
                       >
                         <Trash2 className="w-4 h-4 mr-2" />
-                        Excluir
+                        Delete
                       </DropdownMenuItem>
                     </DropdownMenuContent>
                   </DropdownMenu>
@@ -456,11 +456,11 @@ const MaintenanceHistoryTable: React.FC<MaintenanceHistoryTableProps> = ({
             <div className="w-16 h-16 mx-auto mb-4 bg-slate-200/50 dark:bg-slate-700/50 rounded-full flex items-center justify-center">
               <Wrench className="w-8 h-8 text-slate-500 dark:text-slate-400" />
             </div>
-            <h3 className="text-xl font-semibold text-slate-700 dark:text-slate-300 mb-2">Nenhuma manutenção encontrada</h3>
+            <h3 className="text-xl font-semibold text-slate-700 dark:text-slate-300 mb-2">No maintenance found</h3>
             <p className="text-slate-600 dark:text-slate-400">
               {searchTerm || Object.values(filterValues).some(f => f) 
-                ? "Tente ajustar os filtros de busca" 
-                : "Não há registros de manutenção no histórico"
+                ? "Try adjusting your search filters" 
+                : "No maintenance records in history"
               }
             </p>
           </div>

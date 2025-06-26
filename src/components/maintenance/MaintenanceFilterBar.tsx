@@ -36,7 +36,7 @@ const MaintenanceFilterBar: React.FC<MaintenanceFilterBarProps> = ({
           <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-slate-400 w-4 h-4" />
           <Input 
             type="text" 
-            placeholder="Buscar por problema, empilhadeira ou responsável..." 
+            placeholder="Search by problem, forklift or responsible..." 
             className="pl-10 bg-slate-800 border-slate-600 text-white placeholder:text-slate-400 focus:border-blue-500 focus:ring-blue-500"
             value={search}
             onChange={(e) => setSearch(e.target.value)}
@@ -51,30 +51,30 @@ const MaintenanceFilterBar: React.FC<MaintenanceFilterBarProps> = ({
               onChange={(e) => setFilters({ ...filters, status: e.target.value === 'all' ? '' : e.target.value })}
             >
               <option value="all">Status</option>
-              <option value={StatusManutencao.ABERTA}>Aberta</option>
-              <option value={StatusManutencao.EM_ANDAMENTO}>Em Andamento</option>
-              <option value={StatusManutencao.CONCLUIDA}>Concluída</option>
+              <option value={StatusManutencao.ABERTA}>Open</option>
+              <option value={StatusManutencao.EM_ANDAMENTO}>In Progress</option>
+              <option value={StatusManutencao.CONCLUIDA}>Completed</option>
             </select>
             <select 
               className="px-3 py-2 rounded-lg border border-slate-600 bg-slate-800 text-white text-sm h-10 focus:border-blue-500 focus:ring-1 focus:ring-blue-500 min-w-[120px]"
               value={filters.tipo || 'all'}
               onChange={(e) => setFilters({ ...filters, tipo: e.target.value === 'all' ? '' : e.target.value })}
             >
-              <option value="all">Tipos</option>
-              <option value={TipoManutencao.PREVENTIVA}>Preventiva</option>
-              <option value={TipoManutencao.CORRETIVA}>Corretiva</option>
-              <option value={TipoManutencao.PREDITIVA}>Preditiva</option>
+              <option value="all">Types</option>
+              <option value={TipoManutencao.PREVENTIVA}>Preventive</option>
+              <option value={TipoManutencao.CORRETIVA}>Corrective</option>
+              <option value={TipoManutencao.PREDITIVA}>Predictive</option>
             </select>
             <select 
               className="px-3 py-2 rounded-lg border border-slate-600 bg-slate-800 text-white text-sm h-10 focus:border-blue-500 focus:ring-1 focus:ring-blue-500 min-w-[120px]"
               value={filters.prioridade || 'all'}
               onChange={(e) => setFilters({ ...filters, prioridade: e.target.value === 'all' ? '' : e.target.value })}
             >
-              <option value="all">Prioridades</option>
-              <option value={PrioridadeOperacao.CRITICA}>Crítica</option>
-              <option value={PrioridadeOperacao.ALTA}>Alta</option>
+              <option value="all">Priorities</option>
+              <option value={PrioridadeOperacao.CRITICA}>Critical</option>
+              <option value={PrioridadeOperacao.ALTA}>High</option>
               <option value={PrioridadeOperacao.NORMAL}>Normal</option>
-              <option value={PrioridadeOperacao.BAIXA}>Baixa</option>
+              <option value={PrioridadeOperacao.BAIXA}>Low</option>
             </select>
           </div>
           {/* Advanced Filters and View Toggle */}
