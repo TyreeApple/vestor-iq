@@ -1,8 +1,9 @@
+
 import React from "react";
 import { Github, Cog } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
-// Importando ícones oficiais das tecnologias
+// Importing official technology icons
 import { 
   SiReact, 
   SiTypescript, 
@@ -24,24 +25,24 @@ const techs = [
 export default function Configuracao() {
   return (
     <div className="w-full max-w-4xl mx-auto space-y-7 py-8 px-2">
-      {/* Sobre o Sistema */}
+      {/* About the System */}
       <section className="rounded-xl border border-slate-600/40 bg-card/80 p-6 shadow-md">
         <div className="flex items-center gap-2 mb-4">
           <Cog className="w-5 h-5 opacity-80" />
-          <span className="font-semibold text-lg">Sobre o Sistema</span>
+          <span className="font-semibold text-lg">About the System</span>
         </div>
         <div className="space-y-1 pl-1 text-sm">
           <div>
-            <span className="text-slate-400">Descrição:</span>
+            <span className="text-slate-400">Description:</span>
             <br />
             <span>
-              Plataforma para gestão de empilhadeiras, operadores, operações, abastecimento e manutenção em tempo real, focada em produtividade e usabilidade.
+              Platform for AI trading algorithms management, operators, operations, fuel supply and maintenance in real time, focused on productivity and usability.
             </span>
           </div>
         </div>
       </section>
 
-      {/* Botão centralizado */}
+      {/* Centered button */}
       <section className="rounded-xl border border-slate-600/40 bg-card/80 p-6 shadow-md flex justify-center">
         <Button
           asChild
@@ -52,15 +53,15 @@ export default function Configuracao() {
             target="_blank"
             rel="noopener noreferrer"
           >
-            <Github className="w-5 h-5 mr-2" /> Profile DEV
+            <Github className="w-5 h-5 mr-2" /> Developer Profile
           </a>
         </Button>
       </section>
 
-      {/* Tecnologias */}
+      {/* Technologies */}
       <section className="rounded-xl border border-slate-600/40 bg-card/80 p-6 shadow-md">
         <div className="flex items-center gap-2 mb-4">
-          <span className="font-semibold text-lg">Principais Tecnologias</span>
+          <span className="font-semibold text-lg">Core Technologies</span>
         </div>
         <div className="grid grid-cols-2 sm:grid-cols-3 gap-4">
           {techs.map(({ name, icon: Icon, iconColor }) => (

@@ -17,10 +17,10 @@ const ReportsEmptyState: React.FC<ReportsEmptyStateProps> = ({ onClearFilters })
         </div>
         <div>
           <h3 className="text-2xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
-            Nenhum relatório encontrado
+            No reports found
           </h3>
           <p className="text-muted-foreground mt-2 text-lg">
-            Tente ajustar os filtros ou termo de busca para encontrar relatórios.
+            Try adjusting your filters or search term to find reports.
           </p>
         </div>
         <Button 
@@ -29,7 +29,7 @@ const ReportsEmptyState: React.FC<ReportsEmptyStateProps> = ({ onClearFilters })
           className="bg-white/50 backdrop-blur-sm border-white/20 hover:bg-white/70 transition-all duration-300"
         >
           <Sparkles className="w-4 h-4 mr-2" />
-          Limpar Filtros
+          Clear Filters
         </Button>
       </div>
     </Card>

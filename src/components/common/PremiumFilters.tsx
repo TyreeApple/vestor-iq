@@ -30,13 +30,13 @@ interface PremiumFiltersProps {
 const PremiumFilters: React.FC<PremiumFiltersProps> = ({
   searchValue,
   onSearchChange,
-  searchPlaceholder = "Buscar...",
+  searchPlaceholder = "Search...",
   filters,
   filterValues,
   onFilterChange,
   onClearFilters,
   className,
-  title = "Filtros Inteligentes"
+  title = "Smart Filters"
 }) => {
   const hasActiveFilters = searchValue || Object.values(filterValues).some(value => value && value !== 'all');
 
@@ -80,7 +80,7 @@ const PremiumFilters: React.FC<PremiumFiltersProps> = ({
                   <SlidersHorizontal className="w-4 h-4 text-white" />
                 </div>
                 <span className="text-lg font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
-                  Filtros Avançados
+                  Advanced Filters
                 </span>
               </div>
               
@@ -100,7 +100,7 @@ const PremiumFilters: React.FC<PremiumFiltersProps> = ({
                           <SelectValue placeholder={filter.label} />
                         </SelectTrigger>
                         <SelectContent className="bg-white/95 dark:bg-slate-800/95 backdrop-blur-xl border-2 border-slate-200/60 dark:border-slate-700/60 rounded-xl">
-                          <SelectItem value="all" className="font-medium">Todos</SelectItem>
+                          <SelectItem value="all" className="font-medium">All</SelectItem>
                           {filter.options?.map(option => (
                             <SelectItem key={option.value} value={option.value} className="font-medium">
                               {option.label}
@@ -127,7 +127,7 @@ const PremiumFilters: React.FC<PremiumFiltersProps> = ({
                     className="h-12 px-6 bg-red-50/80 dark:bg-red-900/20 border-2 border-red-200/60 dark:border-red-700/60 text-red-600 dark:text-red-400 hover:bg-red-100/80 dark:hover:bg-red-800/30 hover:border-red-300 dark:hover:border-red-600 rounded-xl font-semibold transition-all duration-300 group/clear"
                   >
                     <X className="w-4 h-4 mr-2 group-hover/clear:rotate-90 transition-transform duration-300" />
-                    Limpar Filtros
+                    Clear Filters
                   </Button>
                 )}
               </div>

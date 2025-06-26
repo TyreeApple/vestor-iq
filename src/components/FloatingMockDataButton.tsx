@@ -12,8 +12,8 @@ const FloatingMockDataButton = () => {
   const handleClick = () => {
     addMockData();
     toast({
-      title: "Dados fictícios carregados!",
-      description: "Agora você está visualizando o sistema com dados de demonstração.",
+      title: "Mock data loaded!",
+      description: "You are now viewing the system with demonstration data.",
       duration: 3500,
     });
   };
@@ -27,10 +27,10 @@ const FloatingMockDataButton = () => {
         variant="default"
         className="rounded-full shadow-lg p-4 aspect-square flex items-center justify-center bg-primary text-white hover:bg-primary/80 transition-all duration-300 animate-scale-in"
         onClick={handleClick}
-        aria-label="Carregar dados fictícios"
+        aria-label="Load mock data"
       >
         <Sparkles className="h-6 w-6 mr-2" />
-        <span className="hidden sm:inline font-medium">Carregar Dados Fictícios</span>
+        <span className="hidden sm:inline font-medium">Load Mock Data</span>
       </Button>
     </div>
   );

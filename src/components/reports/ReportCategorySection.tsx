@@ -55,7 +55,7 @@ const ReportCategorySection: React.FC<ReportCategorySectionProps> = ({ category 
           <div>
             <h2 className="text-3xl font-black text-foreground mb-2">{category.title}</h2>
             <p className="text-lg text-muted-foreground font-medium">
-              {category.reports.length} relatórios premium disponíveis
+              {category.reports.length} premium reports available
             </p>
           </div>
         </div>
@@ -109,7 +109,7 @@ const ReportCategorySection: React.FC<ReportCategorySectionProps> = ({ category 
                   <div className="flex gap-2">
                     <Button variant="ghost" size="sm" className="h-8 px-3 text-xs bg-white/50 hover:bg-white/70 backdrop-blur-sm">
                       <Eye className="w-3 h-3 mr-1" />
-                      Ver
+                      View
                     </Button>
                     <Button variant="ghost" size="sm" className="h-8 px-3 text-xs bg-white/50 hover:bg-white/70 backdrop-blur-sm">
                       <Download className="w-3 h-3" />
