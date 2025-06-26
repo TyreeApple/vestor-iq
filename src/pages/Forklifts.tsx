@@ -3,7 +3,7 @@ import { Forklift, StatusEmpilhadeira, TipoEmpilhadeira } from '@/types';
 import { useIsMobile } from '@/hooks/use-mobile';
 import { cn } from '@/lib/utils';
 import { Button } from '@/components/ui/button';
-import { Plus, Filter, Search, Grid, List, Download, Upload, Truck, CheckCircle, Wrench, AlertTriangle } from 'lucide-react';
+import { Plus, Filter, Search, Grid, List, Download, Upload, Bot, CheckCircle, Wrench, AlertTriangle } from 'lucide-react';
 import ForkliftList from '@/components/forklift/ForkliftList';
 import ForkliftCard from '@/components/forklift/ForkliftCard';
 import ForkliftDialog from '@/components/forklift/ForkliftDialog';
@@ -19,231 +19,222 @@ import ForkliftStatsCard from '@/components/forklift/ForkliftStatsCard';
 import ForkliftDeleteDialog from '@/components/forklift/ForkliftDeleteDialog';
 import { useAppStore } from '@/stores/useAppStore';
 
-// Mock data for the forklifts - Updated with proper data
+// Updated data for trading bots
 const initialForklifts: Forklift[] = [
   {
-    id: 'EMP001',
-    modelo: 'Toyota 8FGU25',
-    marca: 'Toyota',
+    id: 'BOT001',
+    modelo: 'Scalping Pro v2.1',
+    marca: 'Hedron',
     tipo: TipoEmpilhadeira.GAS,
     status: StatusEmpilhadeira.OPERACIONAL,
-    capacidade: 2500,
-    anoFabricacao: 2022,
-    dataAquisicao: '10/05/2022',
-    numeroSerie: 'TOY001',
+    capacidade: 50000,
+    anoFabricacao: 2024,
+    dataAquisicao: '10/05/2024',
+    numeroSerie: 'HED001',
     horimetro: 12583,
-    ultimaManutencao: '15/09/2023',
-    proximaManutencao: '15/12/2023',
-    localizacaoAtual: 'Setor A',
-    setor: 'Armazém',
-    custoHora: 45.50,
+    ultimaManutencao: '15/09/2024',
+    proximaManutencao: '15/12/2024',
+    localizacaoAtual: 'NASDAQ',
+    setor: 'Equities',
+    custoHora: 145.50,
     eficiencia: 87.5,
     disponibilidade: 92.3,
     qrCode: 'QR001',
-    // Legacy properties for compatibility
-    model: 'Toyota 8FGU25',
+    model: 'Scalping Pro v2.1',
     type: TipoEmpilhadeira.GAS,
-    capacity: '2.500 kg',
-    acquisitionDate: '10/05/2022',
-    lastMaintenance: '15/09/2023',
+    capacity: '$50,000',
+    acquisitionDate: '10/05/2024',
+    lastMaintenance: '15/09/2024',
     hourMeter: 12583,
   },
   {
-    id: 'EMP002',
-    modelo: 'Hyster E50XN',
-    marca: 'Hyster',
+    id: 'BOT002',
+    modelo: 'Swing Master v1.5',
+    marca: 'Hedron',
     tipo: TipoEmpilhadeira.ELETRICA,
     status: StatusEmpilhadeira.OPERACIONAL,
-    capacidade: 2250,
-    anoFabricacao: 2021,
-    dataAquisicao: '22/11/2021',
-    numeroSerie: 'HYS002',
+    capacidade: 75000,
+    anoFabricacao: 2023,
+    dataAquisicao: '22/08/2023',
+    numeroSerie: 'HED002',
     horimetro: 8452,
-    ultimaManutencao: '30/10/2023',
-    proximaManutencao: '30/01/2024',
-    localizacaoAtual: 'Setor B',
-    setor: 'Produção',
-    custoHora: 38.75,
+    ultimaManutencao: '30/10/2024',
+    proximaManutencao: '30/01/2025',
+    localizacaoAtual: 'FOREX',
+    setor: 'Forex',
+    custoHora: 138.75,
     eficiencia: 89.2,
     disponibilidade: 94.1,
     qrCode: 'QR002',
-    // Legacy properties for compatibility
-    model: 'Hyster E50XN',
+    model: 'Swing Master v1.5',
     type: TipoEmpilhadeira.ELETRICA,
-    capacity: '2.250 kg',
-    acquisitionDate: '22/11/2021',
-    lastMaintenance: '30/10/2023',
+    capacity: '$75,000',
+    acquisitionDate: '22/08/2023',
+    lastMaintenance: '30/10/2024',
     hourMeter: 8452,
   },
   {
-    id: 'EMP003',
-    modelo: 'Crown RR5725',
-    marca: 'Crown',
+    id: 'BOT003',
+    modelo: 'Day Trader Elite v3',
+    marca: 'Hedron',
     tipo: TipoEmpilhadeira.RETRATIL,
     status: StatusEmpilhadeira.EM_MANUTENCAO,
-    capacidade: 1800,
-    anoFabricacao: 2022,
-    dataAquisicao: '04/03/2022',
-    numeroSerie: 'CRW003',
+    capacidade: 25000,
+    anoFabricacao: 2024,
+    dataAquisicao: '04/03/2024',
+    numeroSerie: 'HED003',
     horimetro: 10974,
-    ultimaManutencao: '12/08/2023',
-    proximaManutencao: '12/11/2023',
-    localizacaoAtual: 'Oficina',
-    setor: 'Manutenção',
-    custoHora: 42.30,
+    ultimaManutencao: '12/08/2024',
+    proximaManutencao: '12/11/2024',
+    localizacaoAtual: 'Optimization Queue',
+    setor: 'Crypto',
+    custoHora: 142.30,
     eficiencia: 85.1,
     disponibilidade: 88.7,
     qrCode: 'QR003',
-    // Legacy properties for compatibility
-    model: 'Crown RR5725',
+    model: 'Day Trader Elite v3',
     type: TipoEmpilhadeira.RETRATIL,
-    capacity: '1.800 kg',
-    acquisitionDate: '04/03/2022',
-    lastMaintenance: '12/08/2023',
+    capacity: '$25,000',
+    acquisitionDate: '04/03/2024',
+    lastMaintenance: '12/08/2024',
     hourMeter: 10974,
   },
   {
-    id: 'EMP004',
-    modelo: 'Caterpillar EP25',
-    marca: 'Caterpillar',
+    id: 'BOT004',
+    modelo: 'Options Specialist v1',
+    marca: 'Hedron',
     tipo: TipoEmpilhadeira.ELETRICA,
     status: StatusEmpilhadeira.OPERACIONAL,
-    capacidade: 2500,
+    capacidade: 100000,
     anoFabricacao: 2023,
-    dataAquisicao: '15/07/2023',
-    numeroSerie: 'CAT004',
+    dataAquisicao: '15/07/2024',
+    numeroSerie: 'HED004',
     horimetro: 3245,
-    ultimaManutencao: '20/11/2023',
-    proximaManutencao: '20/02/2024',
-    localizacaoAtual: 'Setor C',
-    setor: 'Expedição',
-    custoHora: 41.20,
+    ultimaManutencao: '20/11/2024',
+    proximaManutencao: '20/02/2025',
+    localizacaoAtual: 'Options Chain',
+    setor: 'Options',
+    custoHora: 141.20,
     eficiencia: 91.8,
     disponibilidade: 96.5,
     qrCode: 'QR004',
-    // Legacy properties for compatibility
-    model: 'Caterpillar EP25',
+    model: 'Options Specialist v1',
     type: TipoEmpilhadeira.ELETRICA,
-    capacity: '2.500 kg',
-    acquisitionDate: '15/07/2023',
-    lastMaintenance: '20/11/2023',
+    capacity: '$100,000',
+    acquisitionDate: '15/07/2024',
+    lastMaintenance: '20/11/2024',
     hourMeter: 3245,
   },
   {
-    id: 'EMP005',
-    modelo: 'Yale GDP30',
-    marca: 'Yale',
+    id: 'BOT005',
+    modelo: 'Trend Follower AI v2',
+    marca: 'Hedron',
     tipo: TipoEmpilhadeira.GAS,
     status: StatusEmpilhadeira.PARADA,
-    capacidade: 3000,
-    anoFabricacao: 2020,
-    dataAquisicao: '08/02/2020',
-    numeroSerie: 'YAL005',
+    capacidade: 30000,
+    anoFabricacao: 2022,
+    dataAquisicao: '08/02/2022',
+    numeroSerie: 'HED005',
     horimetro: 18567,
-    ultimaManutencao: '05/12/2023',
-    proximaManutencao: '05/03/2024',
-    localizacaoAtual: 'Pátio',
-    setor: 'Armazém',
-    custoHora: 48.90,
+    ultimaManutencao: '05/12/2024',
+    proximaManutencao: '05/03/2025',
+    localizacaoAtual: 'Inactive',
+    setor: 'Futures',
+    custoHora: 148.90,
     eficiencia: 72.3,
     disponibilidade: 65.8,
     qrCode: 'QR005',
-    // Legacy properties for compatibility
-    model: 'Yale GDP30',
+    model: 'Trend Follower AI v2',
     type: TipoEmpilhadeira.GAS,
-    capacity: '3.000 kg',
-    acquisitionDate: '08/02/2020',
-    lastMaintenance: '05/12/2023',
+    capacity: '$30,000',
+    acquisitionDate: '08/02/2022',
+    lastMaintenance: '05/12/2024',
     hourMeter: 18567,
   },
   {
-    id: 'EMP006',
-    modelo: 'Linde H25T',
-    marca: 'Linde',
+    id: 'BOT006',
+    modelo: 'Arbitrage Hunter v4',
+    marca: 'Hedron',
     tipo: TipoEmpilhadeira.GAS,
     status: StatusEmpilhadeira.OPERACIONAL,
-    capacidade: 2500,
-    anoFabricacao: 2021,
-    dataAquisicao: '12/09/2021',
-    numeroSerie: 'LIN006',
+    capacidade: 60000,
+    anoFabricacao: 2023,
+    dataAquisicao: '12/09/2023',
+    numeroSerie: 'HED006',
     horimetro: 9834,
-    ultimaManutencao: '18/10/2023',
-    proximaManutencao: '18/01/2024',
-    localizacaoAtual: 'Setor D',
-    setor: 'Produção',
-    custoHora: 44.75,
+    ultimaManutencao: '18/10/2024',
+    proximaManutencao: '18/01/2025',
+    localizacaoAtual: 'Global Markets',
+    setor: 'Equities',
+    custoHora: 144.75,
     eficiencia: 88.9,
     disponibilidade: 93.2,
     qrCode: 'QR006',
-    // Legacy properties for compatibility
-    model: 'Linde H25T',
+    model: 'Arbitrage Hunter v4',
     type: TipoEmpilhadeira.GAS,
-    capacity: '2.500 kg',
-    acquisitionDate: '12/09/2021',
-    lastMaintenance: '18/10/2023',
+    capacity: '$60,000',
+    acquisitionDate: '12/09/2023',
+    lastMaintenance: '18/10/2024',
     hourMeter: 9834,
   },
   {
-    id: 'EMP007',
-    modelo: 'Still RX70',
-    marca: 'Still',
+    id: 'BOT007',
+    modelo: 'Mean Reversion Pro',
+    marca: 'Hedron',
     tipo: TipoEmpilhadeira.ELETRICA,
     status: StatusEmpilhadeira.EM_MANUTENCAO,
-    capacidade: 2000,
-    anoFabricacao: 2023,
-    dataAquisicao: '25/04/2023',
-    numeroSerie: 'STL007',
+    capacidade: 40000,
+    anoFabricacao: 2024,
+    dataAquisicao: '25/04/2024',
+    numeroSerie: 'HED007',
     horimetro: 1876,
-    ultimaManutencao: '10/12/2023',
-    proximaManutencao: '10/03/2024',
-    localizacaoAtual: 'Oficina',
-    setor: 'Manutenção',
-    custoHora: 39.60,
+    ultimaManutencao: '10/12/2024',
+    proximaManutencao: '10/03/2025',
+    localizacaoAtual: 'Optimization Queue',
+    setor: 'Forex',
+    custoHora: 139.60,
     eficiencia: 86.4,
     disponibilidade: 89.1,
     qrCode: 'QR007',
-    // Legacy properties for compatibility
-    model: 'Still RX70',
+    model: 'Mean Reversion Pro',
     type: TipoEmpilhadeira.ELETRICA,
-    capacity: '2.000 kg',
-    acquisitionDate: '25/04/2023',
-    lastMaintenance: '10/12/2023',
+    capacity: '$40,000',
+    acquisitionDate: '25/04/2024',
+    lastMaintenance: '10/12/2024',
     hourMeter: 1876,
   },
   {
-    id: 'EMP008',
-    modelo: 'Nissan PF02A25',
-    marca: 'Nissan',
+    id: 'BOT008',
+    modelo: 'Breakout Scanner v5',
+    marca: 'Hedron',
     tipo: TipoEmpilhadeira.GAS,
     status: StatusEmpilhadeira.OPERACIONAL,
-    capacidade: 2500,
-    anoFabricacao: 2022,
-    dataAquisicao: '30/01/2022',
-    numeroSerie: 'NIS008',
+    capacidade: 80000,
+    anoFabricacao: 2023,
+    dataAquisicao: '30/01/2023',
+    numeroSerie: 'HED008',
     horimetro: 7629,
-    ultimaManutencao: '02/11/2023',
-    proximaManutencao: '02/02/2024',
-    localizacaoAtual: 'Setor E',
-    setor: 'Expedição',
-    custoHora: 43.85,
+    ultimaManutencao: '02/11/2024',
+    proximaManutencao: '02/02/2025',
+    localizacaoAtual: 'Crypto Exchanges',
+    setor: 'Crypto',
+    custoHora: 143.85,
     eficiencia: 90.1,
     disponibilidade: 94.7,
     qrCode: 'QR008',
-    // Legacy properties for compatibility
-    model: 'Nissan PF02A25',
+    model: 'Breakout Scanner v5',
     type: TipoEmpilhadeira.GAS,
-    capacity: '2.500 kg',
-    acquisitionDate: '30/01/2022',
-    lastMaintenance: '02/11/2023',
+    capacity: '$80,000',
+    acquisitionDate: '30/01/2023',
+    lastMaintenance: '02/11/2024',
     hourMeter: 7629,
   }
 ];
 
-const ForkliftsPage = () => {
+const TradingBotsPage = () => {
   const isMobile = useIsMobile();
   const { toast } = useToast();
 
-  // Zustand como FONTE DE DADOS para empilhadeiras
   const forklifts = useAppStore((state) => state.empilhadeiras);
   const addEmpilhadeira = useAppStore((state) => state.addEmpilhadeira);
   const updateEmpilhadeira = useAppStore((state) => state.updateEmpilhadeira);
@@ -259,62 +250,58 @@ const ForkliftsPage = () => {
   const [detailsDialogOpen, setDetailsDialogOpen] = useState(false);
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
 
-  // Estado só de seleção, não de dados reais
   const [selectedForklift, setSelectedForklift] = useState<Forklift | null>(null);
 
-  // Advanced filter options
+  // Advanced filter options for trading
   const filterOptions = [
     {
       key: 'capacidadeMin',
-      label: 'Capacidade Mínima',
+      label: 'Minimum Capital',
       type: 'number' as const,
     },
     {
       key: 'capacidadeMax',
-      label: 'Capacidade Máxima',
+      label: 'Maximum Capital',
       type: 'number' as const,
     },
     {
       key: 'anoFabricacao',
-      label: 'Ano de Fabricação',
+      label: 'Bot Version',
       type: 'select' as const,
       options: [
-        { value: '2021', label: '2021' },
-        { value: '2022', label: '2022' },
-        { value: '2023', label: '2023' },
+        { value: '2022', label: 'v1.0' },
+        { value: '2023', label: 'v2.0' },
+        { value: '2024', label: 'v2.1' },
       ],
     },
     {
       key: 'setor',
-      label: 'Setor',
+      label: 'Market',
       type: 'select' as const,
       options: [
-        { value: 'Armazém', label: 'Armazém' },
-        { value: 'Produção', label: 'Produção' },
-        { value: 'Manutenção', label: 'Manutenção' },
+        { value: 'Equities', label: 'Equities' },
+        { value: 'Forex', label: 'Forex' },
+        { value: 'Crypto', label: 'Crypto' },
+        { value: 'Options', label: 'Options' },
       ],
     },
   ];
 
-  // Filter forklifts based on all filters
+  // Filter trading bots based on all filters
   const filteredForklifts = forklifts.filter(forklift => {
-    // Status filter
     if (statusFilter !== 'all' && forklift.status !== statusFilter) {
       return false;
     }
     
-    // Type filter
     if (typeFilter !== 'all' && forklift.tipo !== typeFilter) {
       return false;
     }
     
-    // Search query
     if (searchQuery && !forklift.id.toLowerCase().includes(searchQuery.toLowerCase()) && 
         !forklift.modelo.toLowerCase().includes(searchQuery.toLowerCase())) {
       return false;
     }
 
-    // Advanced filters
     if (advancedFilters.capacidadeMin && forklift.capacidade < parseInt(advancedFilters.capacidadeMin)) {
       return false;
     }
@@ -349,7 +336,7 @@ const ForkliftsPage = () => {
     itemsPerPage: viewMode === 'grid' ? 12 : 10
   });
 
-  // Calculate summary statistics (já usando forklifts do Zustand)
+  // Calculate summary statistics
   const stats = {
     total: forklifts.length,
     operational: forklifts.filter(f => f.status === StatusEmpilhadeira.OPERACIONAL).length,
@@ -357,24 +344,23 @@ const ForkliftsPage = () => {
     stopped: forklifts.filter(f => f.status === StatusEmpilhadeira.PARADA).length,
   };
 
-  // NOVO CRUD: todas ações refletem no Zustand 
+  // CRUD handlers
   const handleSaveForklift = (forkliftData: Forklift) => {
     if (editDialogOpen && selectedForklift) {
       updateEmpilhadeira(forkliftData.id, forkliftData);
       toast({
-        title: "Empilhadeira atualizada",
-        description: "A empilhadeira foi atualizada com sucesso."
+        title: "Bot updated",
+        description: "The trading bot has been updated successfully."
       });
     } else {
       addEmpilhadeira(forkliftData);
       toast({
-        title: "Empilhadeira adicionada",
-        description: "A empilhadeira foi adicionada com sucesso."
+        title: "Bot deployed",
+        description: "New trading bot has been deployed successfully."
       });
     }
   };
 
-  // Handle forklift click
   const handleForkliftClick = (id: string) => {
     const forklift = forklifts.find(f => f.id === id);
     if (forklift) {
@@ -383,13 +369,11 @@ const ForkliftsPage = () => {
     }
   };
 
-  // Handle edit from details view
   const handleEditFromDetails = () => {
     setDetailsDialogOpen(false);
     setEditDialogOpen(true);
   };
 
-  // Handle delete forklift - open confirmation dialog
   const handleDeleteForklift = (id: string) => {
     const forklift = forklifts.find(f => f.id === id);
     if (forklift) {
@@ -398,13 +382,12 @@ const ForkliftsPage = () => {
     }
   };
 
-  // Confirm delete forklift
   const handleConfirmDelete = () => {
     if (selectedForklift) {
       deleteEmpilhadeira(selectedForklift.id);
       toast({
-        title: "Empilhadeira excluída",
-        description: `A empilhadeira ${selectedForklift.id} foi excluída com sucesso.`,
+        title: "Bot deactivated",
+        description: `The trading bot ${selectedForklift.id} has been deactivated successfully.`,
         variant: "destructive"
       });
       setSelectedForklift(null);
@@ -412,46 +395,44 @@ const ForkliftsPage = () => {
     }
   };
 
-  // Handle export data
   const handleExportData = () => {
     toast({
-      title: "Exportando dados",
-      description: "Funcionalidade de exportação será implementada em breve."
+      title: "Exporting data",
+      description: "Export functionality will be implemented soon."
     });
   };
 
-  // Handle import data
   const handleImportData = () => {
     toast({
-      title: "Importando dados",
-      description: "Funcionalidade de importação será implementada em breve."
+      title: "Importing data",
+      description: "Import functionality will be implemented soon."
     });
   };
 
   return (
     <div className="space-y-6">
-      {/* Page Header Padronizado */}
+      {/* Page Header */}
       <PageHeader 
-        title="Gerenciamento de Empilhadeiras"
-        subtitle="Gerencie sua frota de empilhadeiras de forma inteligente"
-        description="Controle completo da sua frota com monitoramento em tempo real"
-        icon={Truck}
+        title="Trading Bot Management"
+        subtitle="Control your AI trading fleet with intelligent monitoring"
+        description="Real-time oversight of your automated trading strategies"
+        icon={Bot}
       >
         <div className="flex flex-wrap gap-2">
           <Button variant="outline" size="sm" onClick={handleImportData}>
             <Upload className="w-4 h-4 mr-2" />
-            Importar
+            Import Config
           </Button>
           <Button variant="outline" size="sm" onClick={handleExportData}>
             <Download className="w-4 h-4 mr-2" />
-            Exportar
+            Export Data
           </Button>
           <Button size="sm" onClick={() => {
             setSelectedForklift(null);
             setAddDialogOpen(true);
           }}>
             <Plus className="w-4 h-4 mr-2" />
-            Nova Empilhadeira
+            Deploy New Bot
           </Button>
         </div>
       </PageHeader>
@@ -459,34 +440,34 @@ const ForkliftsPage = () => {
       {/* Enhanced Statistics Cards */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
         <ForkliftStatsCard
-          title="Total"
+          title="Total Bots"
           value={stats.total}
-          icon={Truck}
-          info="Empilhadeiras"
+          icon={Bot}
+          info="Active Algorithms"
           variant="default"
         />
         
         <ForkliftStatsCard
-          title="Operacionais"
+          title="Trading Live"
           value={stats.operational}
           icon={CheckCircle}
-          info="Ativas"
+          info="Making Trades"
           variant="success"
         />
         
         <ForkliftStatsCard
-          title="Em Manutenção"
+          title="Under Review"
           value={stats.maintenance}
           icon={Wrench}
-          info="Manutenção"
+          info="Being Optimized"
           variant="warning"
         />
         
         <ForkliftStatsCard
-          title="Paradas"
+          title="Paused"
           value={stats.stopped}
           icon={AlertTriangle}
-          info="Inativas"
+          info="Temporarily Stopped"
           variant="danger"
         />
       </div>
@@ -494,14 +475,13 @@ const ForkliftsPage = () => {
       {/* Compact Filters Section */}
       <div className="bg-slate-800/30 backdrop-blur-sm border border-slate-700/50 rounded-xl p-4 shadow-lg">
         <div className="flex flex-col lg:flex-row gap-4">
-          {/* Left side - Search and basic filters */}
           <div className="flex-1 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
             {/* Search */}
             <div className="relative">
               <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-slate-400" size={16} />
               <input
                 type="text"
-                placeholder="Buscar por ID ou modelo..."
+                placeholder="Search by bot ID or strategy..."
                 className="pl-9 h-9 w-full rounded-lg border border-slate-600/50 bg-slate-700/50 px-3 py-2 text-sm text-slate-200 placeholder:text-slate-400 focus:border-blue-500/50 focus:outline-none focus:ring-1 focus:ring-blue-500/25"
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
@@ -514,28 +494,26 @@ const ForkliftsPage = () => {
               value={statusFilter}
               onChange={(e) => setStatusFilter(e.target.value as StatusEmpilhadeira | 'all')}
             >
-              <option value="all">Todos os Status</option>
-              <option value={StatusEmpilhadeira.OPERACIONAL}>{StatusEmpilhadeira.OPERACIONAL}</option>
-              <option value={StatusEmpilhadeira.EM_MANUTENCAO}>{StatusEmpilhadeira.EM_MANUTENCAO}</option>
-              <option value={StatusEmpilhadeira.PARADA}>{StatusEmpilhadeira.PARADA}</option>
+              <option value="all">All Statuses</option>
+              <option value={StatusEmpilhadeira.OPERACIONAL}>Trading Live</option>
+              <option value={StatusEmpilhadeira.EM_MANUTENCAO}>Under Review</option>
+              <option value={StatusEmpilhadeira.PARADA}>Paused</option>
             </select>
             
-            {/* Type filter */}
+            {/* Strategy filter */}
             <select 
               className="h-9 w-full rounded-lg border border-slate-600/50 bg-slate-700/50 px-3 py-1 text-sm text-slate-200 focus:border-blue-500/50 focus:outline-none focus:ring-1 focus:ring-blue-500/25"
               value={typeFilter}
               onChange={(e) => setTypeFilter(e.target.value as TipoEmpilhadeira | 'all')}
             >
-              <option value="all">Todos os Tipos</option>
-              <option value={TipoEmpilhadeira.GAS}>{TipoEmpilhadeira.GAS}</option>
-              <option value={TipoEmpilhadeira.ELETRICA}>{TipoEmpilhadeira.ELETRICA}</option>
-              <option value={TipoEmpilhadeira.RETRATIL}>{TipoEmpilhadeira.RETRATIL}</option>
+              <option value="all">All Strategies</option>
+              <option value={TipoEmpilhadeira.GAS}>Scalping</option>
+              <option value={TipoEmpilhadeira.ELETRICA}>Swing Trading</option>
+              <option value={TipoEmpilhadeira.RETRATIL}>Day Trading</option>
             </select>
           </div>
 
-          {/* Right side - Advanced filters and view mode */}
           <div className="flex items-center gap-2">
-            {/* Advanced filters */}
             <AdvancedFilters
               filters={filterOptions}
               values={advancedFilters}
@@ -543,7 +521,6 @@ const ForkliftsPage = () => {
               onClearFilters={() => setAdvancedFilters({})}
             />
             
-            {/* View mode toggle */}
             <div className="flex items-center bg-slate-700/30 rounded-lg p-1 border border-slate-600/30">
               <Button
                 variant={viewMode === 'grid' ? 'default' : 'ghost'}
@@ -571,7 +548,7 @@ const ForkliftsPage = () => {
         <CardHeader className="pb-4">
           <div className="flex justify-between items-center">
             <CardTitle className="text-lg text-slate-200">
-              Empilhadeiras ({filteredForklifts.length} de {forklifts.length})
+              Trading Bots ({filteredForklifts.length} of {forklifts.length})
             </CardTitle>
           </div>
         </CardHeader>
@@ -604,9 +581,9 @@ const ForkliftsPage = () => {
           
           {filteredForklifts.length === 0 && (
             <div className="text-center py-16 text-slate-400 animate-fade-in">
-              <div className="text-6xl mb-6 opacity-50">🔍</div>
-              <h3 className="text-xl font-semibold mb-3 text-slate-300">Nenhuma empilhadeira encontrada</h3>
-              <p className="text-slate-400">Tente ajustar os filtros ou adicionar uma nova empilhadeira.</p>
+              <div className="text-6xl mb-6 opacity-50">🤖</div>
+              <h3 className="text-xl font-semibold mb-3 text-slate-300">No trading bots found</h3>
+              <p className="text-slate-400">Try adjusting your filters or deploy a new trading bot.</p>
             </div>
           )}
         </CardContent>
@@ -659,4 +636,4 @@ const ForkliftsPage = () => {
   );
 };
 
-export default ForkliftsPage;
+export default TradingBotsPage;

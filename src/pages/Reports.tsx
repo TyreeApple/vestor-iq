@@ -5,7 +5,7 @@ import ReportsHeader from '@/components/reports/ReportsHeader';
 import ReportsFilters from '@/components/reports/ReportsFilters';
 import ReportCategorySection from '@/components/reports/ReportCategorySection';
 import ReportsEmptyState from '@/components/reports/ReportsEmptyState';
-import { FileBarChart, Download, Calendar as CalendarIcon, Clock, TrendingUp, Users, Wrench, Fuel, BarChart3, Sparkles, Activity, Zap, Target } from 'lucide-react';
+import { FileBarChart, Download, Calendar as CalendarIcon, Clock, TrendingUp, Users, Wrench, DollarSign, BarChart3, Sparkles, Activity, Zap, Target, Bot } from 'lucide-react';
 import { useAppStore } from '@/stores/useAppStore';
 import { useReports } from '@/hooks/useReports';
 import { StatusOperacao, StatusManutencao } from '@/types';
@@ -23,180 +23,180 @@ const ReportsPage = () => {
   const { empilhadeiras, operadores, operacoes, ordemServicos, abastecimentos } = useAppStore();
   const { resumoGeral } = useReports();
 
-  // Calculate real-time stats
-  const totalOperacoes = operacoes.length;
-  const operacoesAtivas = operacoes.filter(op => op.status === StatusOperacao.EM_ANDAMENTO).length;
-  const totalManutencoes = ordemServicos.length;
-  const manutencoesAbertas = ordemServicos.filter(os => os.status !== StatusManutencao.CONCLUIDA).length;
-  const totalAbastecimentos = abastecimentos.length;
+  // Calculate real-time trading stats
+  const totalPositions = operacoes.length;
+  const activePositions = operacoes.filter(op => op.status === StatusOperacao.EM_ANDAMENTO).length;
+  const totalOptimizations = ordemServicos.length;
+  const ongoingOptimizations = ordemServicos.filter(os => os.status !== StatusManutencao.CONCLUIDA).length;
+  const totalTransactions = abastecimentos.length;
 
   // Handle report generation
   const handleGenerateReport = (reportType: string, categoryId: string) => {
     toast({
-      title: "Relatório gerado",
-      description: `Relatório ${reportType} da categoria ${categoryId} foi gerado com sucesso.`
+      title: "Report generated",
+      description: `${reportType} report for ${categoryId} has been generated successfully.`
     });
     console.log(`Generating report: ${reportType} for category: ${categoryId}`);
   };
 
   const reportCategories = [
     {
-      id: 'operacoes',
-      title: 'Operações',
+      id: 'trading',
+      title: 'Trading Performance',
       icon: BarChart3,
       gradient: 'from-blue-500 via-blue-600 to-indigo-700',
       bgPattern: 'bg-gradient-to-br from-blue-50 to-indigo-100 dark:from-blue-950/50 dark:to-indigo-900/50',
       iconBg: 'bg-gradient-to-br from-blue-500 to-indigo-600',
       reports: [
         { 
-          name: 'Utilização de Empilhadeiras', 
-          description: `Análise de ${empilhadeiras.length} empilhadeiras com ${totalOperacoes} operações registradas`, 
-          type: 'Operacional',
+          name: 'Bot Performance Analytics', 
+          description: `Analysis of ${empilhadeiras.length} trading bots with ${totalPositions} positions executed`, 
+          type: 'Performance',
           icon: Activity,
-          trend: operacoesAtivas > 0 ? `+${operacoesAtivas}` : '0',
+          trend: activePositions > 0 ? `+${activePositions}` : '0',
           lastUpdate: '2 min',
           priority: 'high' as const,
-          onGenerate: () => handleGenerateReport('Utilização de Empilhadeiras', 'operacoes')
+          onGenerate: () => handleGenerateReport('Bot Performance Analytics', 'trading')
         },
         { 
-          name: 'Produtividade por Operador', 
-          description: `Dashboard de ${operadores.length} operadores ativos no sistema`, 
-          type: 'Performance',
+          name: 'Algorithm Efficiency Report', 
+          description: `Dashboard of ${operadores.length} algorithms active in the system`, 
+          type: 'Efficiency',
           icon: Target,
           trend: `${operadores.length}`,
           lastUpdate: '5 min',
           priority: 'medium' as const,
-          onGenerate: () => handleGenerateReport('Produtividade por Operador', 'operacoes')
+          onGenerate: () => handleGenerateReport('Algorithm Efficiency Report', 'trading')
         },
         { 
-          name: 'Movimentações por Período', 
-          description: `${totalOperacoes} operações com análise temporal avançada`, 
-          type: 'Operacional',
+          name: 'Position History Analysis', 
+          description: `${totalPositions} positions with advanced temporal analysis`, 
+          type: 'Historical',
           icon: TrendingUp,
-          trend: `${totalOperacoes}`,
+          trend: `${totalPositions}`,
           lastUpdate: '1 min',
           priority: 'high' as const,
-          onGenerate: () => handleGenerateReport('Movimentações por Período', 'operacoes')
+          onGenerate: () => handleGenerateReport('Position History Analysis', 'trading')
         }
       ]
     },
     {
-      id: 'manutencao',
-      title: 'Manutenção',
+      id: 'optimization',
+      title: 'System Optimization',
       icon: Wrench,
       gradient: 'from-orange-500 via-red-500 to-pink-600',
       bgPattern: 'bg-gradient-to-br from-orange-50 to-red-100 dark:from-orange-950/50 dark:to-red-900/50',
       iconBg: 'bg-gradient-to-br from-orange-500 to-red-600',
       reports: [
         { 
-          name: 'Histórico de Manutenções', 
-          description: `${totalManutencoes} registros com análise de custos e padrões`, 
-          type: 'Histórico',
+          name: 'Algorithm Optimization History', 
+          description: `${totalOptimizations} optimization cycles with performance analysis`, 
+          type: 'Historical',
           icon: Clock,
-          trend: `${totalManutencoes}`,
+          trend: `${totalOptimizations}`,
           lastUpdate: '10 min',
           priority: 'medium' as const,
-          onGenerate: () => handleGenerateReport('Histórico de Manutenções', 'manutencao')
+          onGenerate: () => handleGenerateReport('Algorithm Optimization History', 'optimization')
         },
         { 
-          name: 'Preventivas Programadas', 
-          description: `${manutencoesAbertas} manutenções abertas com alertas ativos`, 
-          type: 'Preventivo',
+          name: 'Scheduled Optimizations', 
+          description: `${ongoingOptimizations} active optimizations with performance alerts`, 
+          type: 'Scheduled',
           icon: CalendarIcon,
-          trend: manutencoesAbertas > 0 ? `${manutencoesAbertas}` : '0',
+          trend: ongoingOptimizations > 0 ? `${ongoingOptimizations}` : '0',
           lastUpdate: '3 min',
-          priority: manutencoesAbertas > 0 ? 'high' as const : 'low' as const,
-          onGenerate: () => handleGenerateReport('Preventivas Programadas', 'manutencao')
+          priority: ongoingOptimizations > 0 ? 'high' as const : 'low' as const,
+          onGenerate: () => handleGenerateReport('Scheduled Optimizations', 'optimization')
         },
         { 
-          name: 'Análise de Custos', 
-          description: 'Dashboard financeiro com projeções baseadas em dados reais', 
-          type: 'Financeiro',
+          name: 'Performance Cost Analysis', 
+          description: 'Financial dashboard with ROI projections based on real data', 
+          type: 'Financial',
           icon: TrendingUp,
-          trend: `R$ ${resumoGeral.totalCustoManutencao.toFixed(0)}`,
+          trend: `$${resumoGeral.totalCustoManutencao.toFixed(0)}`,
           lastUpdate: '15 min',
           priority: 'medium' as const,
-          onGenerate: () => handleGenerateReport('Análise de Custos', 'manutencao')
+          onGenerate: () => handleGenerateReport('Performance Cost Analysis', 'optimization')
         }
       ]
     },
     {
-      id: 'abastecimento',
-      title: 'Abastecimento',
-      icon: Fuel,
+      id: 'financial',
+      title: 'Financial Analysis',
+      icon: DollarSign,
       gradient: 'from-green-500 via-emerald-500 to-teal-600',
       bgPattern: 'bg-gradient-to-br from-green-50 to-emerald-100 dark:from-green-950/50 dark:to-emerald-900/50',
       iconBg: 'bg-gradient-to-br from-green-500 to-emerald-600',
       reports: [
         { 
-          name: 'Consumo Inteligente', 
-          description: `Análise de ${totalAbastecimentos} abastecimentos com ${resumoGeral.totalConsumo.toFixed(1)}L consumidos`, 
-          type: 'Consumo',
+          name: 'P&L Intelligence', 
+          description: `Analysis of ${totalTransactions} transactions with $${resumoGeral.totalConsumo.toFixed(1)}K total volume`, 
+          type: 'P&L',
           icon: Zap,
-          trend: `${resumoGeral.totalConsumo.toFixed(1)}L`,
+          trend: `$${resumoGeral.totalConsumo.toFixed(1)}K`,
           lastUpdate: '1 min',
           priority: 'high' as const,
-          onGenerate: () => handleGenerateReport('Consumo Inteligente', 'abastecimento')
+          onGenerate: () => handleGenerateReport('P&L Intelligence', 'financial')
         },
         { 
-          name: 'Eficiência Energética', 
-          description: `Otimização baseada em ${resumoGeral.eficienciaGeral.toFixed(1)}% de eficiência média`, 
-          type: 'Eficiência',
+          name: 'Risk-Adjusted Returns', 
+          description: `Optimization based on ${resumoGeral.eficienciaGeral.toFixed(1)}% average efficiency`, 
+          type: 'Risk Analysis',
           icon: Activity,
           trend: `${resumoGeral.eficienciaGeral.toFixed(1)}%`,
           lastUpdate: '2 min',
           priority: 'high' as const,
-          onGenerate: () => handleGenerateReport('Eficiência Energética', 'abastecimento')
+          onGenerate: () => handleGenerateReport('Risk-Adjusted Returns', 'financial')
         },
         { 
-          name: 'Histórico Avançado', 
-          description: `Machine learning aplicado em ${totalAbastecimentos} registros históricos`, 
-          type: 'Histórico',
+          name: 'Advanced Portfolio Analytics', 
+          description: `Machine learning applied to ${totalTransactions} historical records`, 
+          type: 'Portfolio',
           icon: BarChart3,
-          trend: `${totalAbastecimentos}`,
+          trend: `${totalTransactions}`,
           lastUpdate: '8 min',
           priority: 'medium' as const,
-          onGenerate: () => handleGenerateReport('Histórico Avançado', 'abastecimento')
+          onGenerate: () => handleGenerateReport('Advanced Portfolio Analytics', 'financial')
         }
       ]
     },
     {
-      id: 'operadores',
-      title: 'Operadores',
-      icon: Users,
+      id: 'algorithms',
+      title: 'Algorithm Management',
+      icon: Bot,
       gradient: 'from-purple-500 via-violet-500 to-indigo-600',
       bgPattern: 'bg-gradient-to-br from-purple-50 to-violet-100 dark:from-purple-950/50 dark:to-violet-900/50',
       iconBg: 'bg-gradient-to-br from-purple-500 to-violet-600',
       reports: [
         { 
-          name: 'Certificações Smart', 
-          description: `Monitoramento de ${operadores.length} operadores e suas certificações`, 
-          type: 'Certificação',
-          icon: Users,
+          name: 'AI Model Performance', 
+          description: `Monitoring of ${operadores.length} AI models and their configurations`, 
+          type: 'AI Performance',
+          icon: Bot,
           trend: `${operadores.length}`,
           lastUpdate: '30 min',
           priority: 'medium' as const,
-          onGenerate: () => handleGenerateReport('Certificações Smart', 'operadores')
+          onGenerate: () => handleGenerateReport('AI Model Performance', 'algorithms')
         },
         { 
-          name: 'Performance Analytics', 
-          description: `Dashboard de produtividade com ${resumoGeral.eficienciaGeral.toFixed(1)}% de eficiência`, 
-          type: 'Operacional',
+          name: 'Strategy Analytics', 
+          description: `Performance dashboard with ${resumoGeral.eficienciaGeral.toFixed(1)}% efficiency rating`, 
+          type: 'Strategy',
           icon: Target,
           trend: `${resumoGeral.eficienciaGeral.toFixed(1)}%`,
           lastUpdate: '5 min',
           priority: 'high' as const,
-          onGenerate: () => handleGenerateReport('Performance Analytics', 'operadores')
+          onGenerate: () => handleGenerateReport('Strategy Analytics', 'algorithms')
         },
         { 
-          name: 'Treinamentos 4.0', 
-          description: `Plataforma digital conectada com ${operadores.length} perfis ativos`, 
-          type: 'Treinamento',
+          name: 'ML Model Training', 
+          description: `Advanced learning platform with ${operadores.length} active models`, 
+          type: 'Machine Learning',
           icon: Sparkles,
           trend: `${operadores.length}`,
           lastUpdate: '12 min',
           priority: 'high' as const,
-          onGenerate: () => handleGenerateReport('Treinamentos 4.0', 'operadores')
+          onGenerate: () => handleGenerateReport('ML Model Training', 'algorithms')
         }
       ]
     }
@@ -204,28 +204,28 @@ const ReportsPage = () => {
 
   const quickStats = [
     { 
-      title: 'Relatórios Disponíveis', 
+      title: 'Available Reports', 
       value: reportCategories.reduce((sum, cat) => sum + cat.reports.length, 0), 
       icon: FileBarChart,
       trend: 'up',
       trendValue: 12
     },
     { 
-      title: 'Dados Atualizados', 
-      value: totalOperacoes + totalManutencoes + totalAbastecimentos, 
+      title: 'Data Points', 
+      value: totalPositions + totalOptimizations + totalTransactions, 
       icon: Download,
       trend: 'up',
       trendValue: 5
     },
     { 
-      title: 'Categorias Ativas', 
+      title: 'Active Categories', 
       value: reportCategories.length, 
       icon: CalendarIcon,
       trend: null,
       trendValue: 0
     },
     { 
-      title: 'Última Atualização', 
+      title: 'Last Update', 
       value: '2min', 
       icon: Clock,
       trend: null,

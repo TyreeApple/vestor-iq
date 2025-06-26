@@ -16,29 +16,28 @@ import ActiveOperationsSection from "@/components/operations/ActiveOperationsSec
 import CompletedOperationsSection from "@/components/operations/CompletedOperationsSection";
 import { AlertCircle, CheckCircle2 } from "lucide-react";
 
-// Mock data for available operators and forklifts
+// Available trading algorithms and strategies
 const availableOperators = [
-  { id: 'OP001', name: 'Carlos Silva' },
-  { id: 'OP002', name: 'Maria Oliveira' },
-  { id: 'OP003', name: 'João Pereira' },
-  { id: 'OP004', name: 'Ana Costa' },
-  { id: 'OP005', name: 'Pedro Santos' }
+  { id: 'ALG001', name: 'Momentum Pro' },
+  { id: 'ALG002', name: 'Mean Reversion' },
+  { id: 'ALG003', name: 'Breakout Scanner' },
+  { id: 'ALG004', name: 'Arbitrage Hunter' },
+  { id: 'ALG005', name: 'Trend Follower' }
 ];
 
 const availableForklifts = [
-  { id: 'G001', model: 'Toyota 8FGU25' },
-  { id: 'G004', model: 'Yale GLP050' },
-  { id: 'E002', model: 'Hyster E50XN' },
-  { id: 'G006', model: 'Caterpillar DP40' }
+  { id: 'BOT001', model: 'Scalping Pro v2.1' },
+  { id: 'BOT004', model: 'Swing Master' },
+  { id: 'BOT002', model: 'Day Trader Elite' },
+  { id: 'BOT006', model: 'Options Specialist' }
 ];
 
-// Tipo estendido simplificado para operações enriquecidas
 type EnrichedOperacao = Operacao & {
   operadorNome: string;
   empilhadeiraModelo: string;
 };
 
-const OperationsPage = () => {
+const PositionsPage = () => {
   const isMobile = useIsMobile();
   const { toast } = useToast();
 
@@ -70,15 +69,14 @@ const OperationsPage = () => {
     searchFields: ['id', 'setor']
   });
 
-  // Função simplificada para enriquecer dados da operação
+  // Enhanced data joining for trading context
   const joinOperationData = (operation: Operacao): EnrichedOperacao => {
-    // Buscar operador
+    // Find trading algorithm
     const operador = operators.find((op) => op.id === operation.operadorId) ||
       availableOperators.find((op) => op.id === operation.operadorId);
     
-    let operadorNome = "Operador Não Encontrado";
+    let operadorNome = "Algorithm Not Found";
     if (operador) {
-      // Handle both 'nome' and 'name' properties
       if ('nome' in operador) {
         operadorNome = operador.nome;
       } else if ('name' in operador) {
@@ -86,13 +84,12 @@ const OperationsPage = () => {
       }
     }
 
-    // Buscar empilhadeira
+    // Find trading bot
     const empilhadeira = forklifts.find((fork) => fork.id === operation.empilhadeiraId) ||
       availableForklifts.find((fork) => fork.id === operation.empilhadeiraId);
     
-    let empilhadeiraModelo = "Empilhadeira Não Encontrada";
+    let empilhadeiraModelo = "Bot Not Found";
     if (empilhadeira) {
-      // Handle both 'modelo' and 'model' properties
       if ('modelo' in empilhadeira) {
         empilhadeiraModelo = empilhadeira.modelo;
       } else if ('model' in empilhadeira) {
@@ -107,7 +104,7 @@ const OperationsPage = () => {
     };
   };
 
-  // FILTRANDO E ENRIQUECENDO OPERAÇÕES
+  // Filter and enrich positions
   const enrichedActiveOperations = filteredOperations
     .filter(op => op.status === StatusOperacao.EM_ANDAMENTO)
     .map(joinOperationData);
@@ -142,22 +139,22 @@ const OperationsPage = () => {
     const diff = endTime.getTime() - startTime.getTime();
     const hours = Math.floor(diff / (1000 * 60 * 60));
     const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
-    return `${hours}h ${minutes}m${!operation.dataFim ? ' (em andamento)' : ''}`;
+    return `${hours}h ${minutes}m${!operation.dataFim ? ' (in progress)' : ''}`;
   };
 
-  // Save operation (uses Zustand)
+  // Save position
   const handleSaveOperation = (operationData: Operacao) => {
     if (operations.some(op => op.id === operationData.id)) {
       updateOperacao(operationData.id, operationData);
       toast({
-        title: "Operação atualizada",
-        description: "A operação foi atualizada com sucesso."
+        title: "Position updated",
+        description: "The trading position has been updated successfully."
       });
     } else {
       addOperacao(operationData);
       toast({
-        title: "Operação criada",
-        description: "A operação foi criada com sucesso."
+        title: "Position opened",
+        description: "New trading position has been opened successfully."
       });
     }
   };
@@ -180,13 +177,13 @@ const OperationsPage = () => {
     setEditDialogOpen(true);
   };
 
-  // Delete operation (Zustand)
+  // Delete position
   const handleDeleteOperation = (id: string) => {
-    if (confirm("Tem certeza que deseja excluir esta operação?")) {
+    if (confirm("Are you sure you want to close this position?")) {
       deleteOperacao(id);
       toast({
-        title: "Operação excluída",
-        description: "A operação foi excluída com sucesso."
+        title: "Position closed",
+        description: "The trading position has been closed successfully."
       });
     }
   };
@@ -209,17 +206,17 @@ const OperationsPage = () => {
   const getOperationTypeInfo = (tipo: TipoOperacao) => {
     switch (tipo) {
       case TipoOperacao.MOVIMENTACAO:
-        return { label: 'Movimentação', color: 'text-blue-400' };
+        return { label: 'Long', color: 'text-blue-400' };
       case TipoOperacao.CARGA:
-        return { label: 'Carga', color: 'text-green-400' };
+        return { label: 'Buy', color: 'text-green-400' };
       case TipoOperacao.DESCARGA:
-        return { label: 'Descarga', color: 'text-orange-400' };
+        return { label: 'Sell', color: 'text-orange-400' };
       case TipoOperacao.ESTOQUE:
-        return { label: 'Estoque', color: 'text-cyan-400' };
+        return { label: 'Hold', color: 'text-cyan-400' };
       case TipoOperacao.PICKING:
-        return { label: 'Picking', color: 'text-yellow-400' };
+        return { label: 'Short', color: 'text-yellow-400' };
       default:
-        return { label: 'Outro', color: 'text-gray-400' };
+        return { label: 'Other', color: 'text-gray-400' };
     }
   };
 
@@ -240,12 +237,12 @@ const OperationsPage = () => {
   const filterOptions = [
     {
       key: 'prioridade',
-      label: 'Prioridade',
+      label: 'Priority',
       type: 'select' as const,
       options: [
-        { value: PrioridadeOperacao.ALTA, label: 'Alta' },
+        { value: PrioridadeOperacao.ALTA, label: 'High' },
         { value: PrioridadeOperacao.NORMAL, label: 'Normal' },
-        { value: PrioridadeOperacao.BAIXA, label: 'Baixa' }
+        { value: PrioridadeOperacao.BAIXA, label: 'Low' }
       ]
     }
   ];
@@ -273,7 +270,7 @@ const OperationsPage = () => {
         setViewMode={setViewMode}
       />
 
-      {/* Active Operations Section */}
+      {/* Active Positions Section */}
       <ActiveOperationsSection
         operations={enrichedActiveOperations}
         onDetails={handleViewDetails}
@@ -284,7 +281,7 @@ const OperationsPage = () => {
         formatTime={formatTime}
       />
 
-      {/* Completed Operations Section */}
+      {/* Completed Positions Section */}
       <CompletedOperationsSection
         operations={enrichedCompletedOperations}
         onDetails={handleViewDetails}
@@ -296,7 +293,7 @@ const OperationsPage = () => {
         getOperationTypeInfo={getOperationTypeInfo}
       />
 
-      {/* Add Operation Dialog */}
+      {/* Add Position Dialog */}
       <OperationDialog
         open={addDialogOpen}
         onOpenChange={setAddDialogOpen}
@@ -305,7 +302,7 @@ const OperationsPage = () => {
         availableForklifts={availableForklifts}
       />
 
-      {/* Edit Operation Dialog */}
+      {/* Edit Position Dialog */}
       <OperationDialog
         open={editDialogOpen}
         onOpenChange={setEditDialogOpen}
@@ -315,7 +312,7 @@ const OperationsPage = () => {
         availableForklifts={availableForklifts}
       />
 
-      {/* Operation Details Dialog */}
+      {/* Position Details Dialog */}
       <OperationDetails
         open={detailsDialogOpen}
         onOpenChange={setDetailsDialogOpen}
@@ -326,4 +323,4 @@ const OperationsPage = () => {
   );
 };
 
-export default OperationsPage;
+export default PositionsPage;

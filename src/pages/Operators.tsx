@@ -3,7 +3,7 @@ import React, { useState } from 'react';
 import { Button } from "@/components/ui/button";
 import { useIsMobile } from '@/hooks/use-mobile';
 import { Input } from '@/components/ui/input';
-import { Search, Plus, Users, UserCheck, Clock, Award, TrendingUp, Activity, Filter, Grid3X3, List } from 'lucide-react';
+import { Search, Plus, Bot, CheckCircle, Clock, Award, TrendingUp, Activity, Filter, Grid3X3, List } from 'lucide-react';
 import { Operador, FuncaoOperador, StatusOperador, TipoCertificacao, StatusCertificacao } from '@/types';
 import { useToast } from '@/hooks/use-toast';
 import OperatorDialog from '@/components/operators/OperatorDialog';
@@ -17,14 +17,11 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { useAppStore } from '@/stores/useAppStore';
 
-// ATUALIZAÇÃO: Removido o array local de operadores e suas manipulações.
-// Todos os dados e modificações são feitos pelo Zustand (useAppStore).
-
-const OperatorsPage = () => {
+const AlgorithmsPage = () => {
   const isMobile = useIsMobile();
   const { toast } = useToast();
 
-  // Consome operadores diretamente do Zustand
+  // Use Zustand for AI algorithms data
   const operadores = useAppStore((state) => state.operadores);
   const addOperador = useAppStore((state) => state.addOperador);
   const updateOperador = useAppStore((state) => state.updateOperador);
@@ -38,7 +35,7 @@ const OperatorsPage = () => {
   const [detailsDialogOpen, setDetailsDialogOpen] = useState(false);
   const [selectedOperator, setSelectedOperator] = useState<Operador | null>(null);
 
-  // Use filters hook, referenciar diretamente operadores do Zustand
+  // Use filters hook for AI algorithms
   const {
     search,
     setSearch,
@@ -54,48 +51,49 @@ const OperatorsPage = () => {
   const filterOptions = [
     {
       key: 'setor',
-      label: 'Setor',
+      label: 'Market Focus',
       type: 'select' as const,
       options: [
-        { value: 'Armazém', label: 'Armazém' },
-        { value: 'Produção', label: 'Produção' },
-        { value: 'Expedição', label: 'Expedição' },
-        { value: 'Recebimento', label: 'Recebimento' },
-        { value: 'Manutenção', label: 'Manutenção' }
+        { value: 'Equities', label: 'Equities' },
+        { value: 'Options', label: 'Options' },
+        { value: 'Forex', label: 'Forex' },
+        { value: 'Crypto', label: 'Crypto' },
+        { value: 'Futures', label: 'Futures' }
       ]
     },
     {
       key: 'turno',
-      label: 'Turno',
+      label: 'Trading Session',
       type: 'select' as const,
       options: [
-        { value: 'Matutino', label: 'Matutino' },
-        { value: 'Vespertino', label: 'Vespertino' },
-        { value: 'Noturno', label: 'Noturno' }
+        { value: 'Pre-Market', label: 'Pre-Market' },
+        { value: 'Regular Hours', label: 'Regular Hours' },
+        { value: 'After Hours', label: 'After Hours' },
+        { value: '24/7', label: '24/7' }
       ]
     },
     {
       key: 'produtividade',
-      label: 'Produtividade Mínima (%)',
+      label: 'Minimum Success Rate (%)',
       type: 'number' as const
     }
   ];
 
-  // NOVOS HANDLERS ATUALIZADOS PARA ESTADO GLOBAL
+  // Updated handlers for AI algorithms
   const handleSaveOperator = (operatorData: Operador) => {
     const operadorExistente = operadores.some(op => op.id === operatorData.id);
 
     if (operadorExistente) {
       updateOperador(operatorData.id, operatorData);
       toast({
-        title: "Operador atualizado",
-        description: "O operador foi atualizado com sucesso."
+        title: "Algorithm updated",
+        description: "The trading algorithm has been updated successfully."
       });
     } else {
       addOperador(operatorData);
       toast({
-        title: "Operador criado",
-        description: "O operador foi criado com sucesso."
+        title: "Algorithm deployed",
+        description: "New trading algorithm has been deployed successfully."
       });
     }
   };
@@ -116,16 +114,16 @@ const OperatorsPage = () => {
   };
 
   const handleDeleteOperator = (id: string) => {
-    if (confirm("Tem certeza que deseja excluir este operador?")) {
+    if (confirm("Are you sure you want to deactivate this algorithm?")) {
       deleteOperador(id);
       toast({
-        title: "Operador excluído",
-        description: "O operador foi excluído com sucesso."
+        title: "Algorithm deactivated",
+        description: "The trading algorithm has been deactivated successfully."
       });
     }
   };
 
-  // Estatísticas baseadas no Zustand
+  // Statistics based on AI algorithms
   const stats = {
     total: operadores.length,
     active: operadores.filter(op => op.status === StatusOperador.ATIVO).length,
@@ -137,8 +135,8 @@ const OperatorsPage = () => {
     <div className="space-y-8">
       {/* Enhanced Header */}
       <PageHeader
-        title="Operadores"
-        description="Gestão completa da equipe de operadores"
+        title="AI Trading Algorithms"
+        description="Manage your automated trading strategies and AI models"
       >
         <Button 
           className="gap-2 bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white shadow-lg hover:shadow-xl transition-all duration-200"
@@ -148,35 +146,35 @@ const OperatorsPage = () => {
           }}
         >
           <Plus className="w-4 h-4" />
-          Novo Operador
+          Deploy Algorithm
         </Button>
       </PageHeader>
 
       {/* Modern Statistics Cards */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
         <ModernKpiCard
-          title="Total de Operadores"
+          title="Total Algorithms"
           value={stats.total}
-          icon={Users}
+          icon={Bot}
           variant="default"
         />
         
         <ModernKpiCard
-          title="Operadores Ativos"
+          title="Active Models"
           value={stats.active}
-          icon={UserCheck}
+          icon={CheckCircle}
           variant="success"
         />
         
         <ModernKpiCard
-          title="Produtividade Média"
+          title="Avg Success Rate"
           value={stats.avgProductivity}
           icon={TrendingUp}
           variant="info"
         />
         
         <ModernKpiCard
-          title="Horas Trabalhadas"
+          title="Runtime Hours"
           value={stats.totalHours}
           icon={Clock}
           variant="warning"
@@ -191,7 +189,7 @@ const OperatorsPage = () => {
             <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-slate-400 w-4 h-4" />
             <Input 
               type="text" 
-              placeholder="Buscar por ID ou modelo..." 
+              placeholder="Search by algorithm name or strategy..." 
               className="pl-10 bg-slate-900/50 border-slate-600/50 text-slate-100 placeholder:text-slate-400 focus:border-blue-500/50 focus:ring-blue-500/20"
               value={search}
               onChange={(e) => setSearch(e.target.value)}
@@ -205,14 +203,14 @@ const OperatorsPage = () => {
               onValueChange={(value) => setFilters({ ...filters, status: value === 'all' ? '' : value })}
             >
               <SelectTrigger className="bg-slate-900/50 border-slate-600/50 text-slate-100 hover:bg-slate-800/70 transition-colors">
-                <SelectValue placeholder="Todos os Status" />
+                <SelectValue placeholder="All Statuses" />
               </SelectTrigger>
               <SelectContent className="bg-slate-800 border-slate-600">
-                <SelectItem value="all" className="text-slate-100 hover:bg-slate-700 focus:bg-slate-700">Todos os Status</SelectItem>
-                <SelectItem value={StatusOperador.ATIVO} className="text-slate-100 hover:bg-slate-700 focus:bg-slate-700">Ativo</SelectItem>
-                <SelectItem value={StatusOperador.INATIVO} className="text-slate-100 hover:bg-slate-700 focus:bg-slate-700">Inativo</SelectItem>
-                <SelectItem value={StatusOperador.FERIAS} className="text-slate-100 hover:bg-slate-700 focus:bg-slate-700">Férias</SelectItem>
-                <SelectItem value={StatusOperador.AFASTADO} className="text-slate-100 hover:bg-slate-700 focus:bg-slate-700">Afastado</SelectItem>
+                <SelectItem value="all" className="text-slate-100 hover:bg-slate-700 focus:bg-slate-700">All Statuses</SelectItem>
+                <SelectItem value={StatusOperador.ATIVO} className="text-slate-100 hover:bg-slate-700 focus:bg-slate-700">Active</SelectItem>
+                <SelectItem value={StatusOperador.INATIVO} className="text-slate-100 hover:bg-slate-700 focus:bg-slate-700">Inactive</SelectItem>
+                <SelectItem value={StatusOperador.FERIAS} className="text-slate-100 hover:bg-slate-700 focus:bg-slate-700">Paused</SelectItem>
+                <SelectItem value={StatusOperador.AFASTADO} className="text-slate-100 hover:bg-slate-700 focus:bg-slate-700">Disabled</SelectItem>
               </SelectContent>
             </Select>
           </div>
@@ -224,14 +222,14 @@ const OperatorsPage = () => {
               onValueChange={(value) => setFilters({ ...filters, funcao: value === 'all' ? '' : value })}
             >
               <SelectTrigger className="bg-slate-900/50 border-slate-600/50 text-slate-100 hover:bg-slate-800/70 transition-colors">
-                <SelectValue placeholder="Todas as Funções" />
+                <SelectValue placeholder="All Algorithm Types" />
               </SelectTrigger>
               <SelectContent className="bg-slate-800 border-slate-600">
-                <SelectItem value="all" className="text-slate-100 hover:bg-slate-700 focus:bg-slate-700">Todas as Funções</SelectItem>
-                <SelectItem value={FuncaoOperador.OPERADOR} className="text-slate-100 hover:bg-slate-700 focus:bg-slate-700">Operador</SelectItem>
-                <SelectItem value={FuncaoOperador.SUPERVISOR} className="text-slate-100 hover:bg-slate-700 focus:bg-slate-700">Supervisor</SelectItem>
-                <SelectItem value={FuncaoOperador.COORDENADOR} className="text-slate-100 hover:bg-slate-700 focus:bg-slate-700">Coordenador</SelectItem>
-                <SelectItem value={FuncaoOperador.GERENTE} className="text-slate-100 hover:bg-slate-700 focus:bg-slate-700">Gerente</SelectItem>
+                <SelectItem value="all" className="text-slate-100 hover:bg-slate-700 focus:bg-slate-700">All Types</SelectItem>
+                <SelectItem value={FuncaoOperador.OPERADOR} className="text-slate-100 hover:bg-slate-700 focus:bg-slate-700">Basic Algorithm</SelectItem>
+                <SelectItem value={FuncaoOperador.SUPERVISOR} className="text-slate-100 hover:bg-slate-700 focus:bg-slate-700">Advanced AI</SelectItem>
+                <SelectItem value={FuncaoOperador.COORDENADOR} className="text-slate-100 hover:bg-slate-700 focus:bg-slate-700">ML Model</SelectItem>
+                <SelectItem value={FuncaoOperador.GERENTE} className="text-slate-100 hover:bg-slate-700 focus:bg-slate-700">Master Strategy</SelectItem>
               </SelectContent>
             </Select>
           </div>
@@ -276,15 +274,15 @@ const OperatorsPage = () => {
         </div>
       </div>
 
-      {/* Operators Grid */}
+      {/* Algorithms Grid */}
       <div className="space-y-6">
         <div className="flex items-center justify-between">
           <h2 className="text-2xl font-semibold text-foreground flex items-center gap-2">
             <Activity className="w-6 h-6 text-primary" />
-            Equipe de Operadores
+            AI Trading Algorithms
           </h2>
           <span className="text-sm text-muted-foreground">
-            {filteredOperators.length} operador{filteredOperators.length !== 1 ? 'es' : ''} encontrado{filteredOperators.length !== 1 ? 's' : ''}
+            {filteredOperators.length} algorithm{filteredOperators.length !== 1 ? 's' : ''} found
           </span>
         </div>
 
@@ -304,34 +302,34 @@ const OperatorsPage = () => {
           <Card className="glass-card">
             <CardContent className="p-12 text-center">
               <div className="w-16 h-16 mx-auto mb-4 rounded-full bg-accent/30 flex items-center justify-center">
-                <Users className="w-8 h-8 text-muted-foreground" />
+                <Bot className="w-8 h-8 text-muted-foreground" />
               </div>
               <h3 className="text-lg font-semibold text-foreground mb-2">
-                Nenhum operador encontrado
+                No algorithms found
               </h3>
               <p className="text-muted-foreground mb-6">
-                Não há operadores que correspondam aos critérios de busca.
+                No trading algorithms match your search criteria.
               </p>
               <Button
                 variant="outline"
                 onClick={clearFilters}
                 className="hover:bg-accent/50"
               >
-                Limpar Filtros
+                Clear Filters
               </Button>
             </CardContent>
           </Card>
         )}
       </div>
 
-      {/* Add Operator Dialog */}
+      {/* Add Algorithm Dialog */}
       <OperatorDialog
         open={addDialogOpen}
         onOpenChange={setAddDialogOpen}
         onSave={handleSaveOperator}
       />
       
-      {/* Edit Operator Dialog */}
+      {/* Edit Algorithm Dialog */}
       <OperatorDialog
         open={editDialogOpen}
         onOpenChange={setEditDialogOpen}
@@ -339,7 +337,7 @@ const OperatorsPage = () => {
         onSave={handleSaveOperator}
       />
       
-      {/* Operator Details Dialog */}
+      {/* Algorithm Details Dialog */}
       <OperatorDetails
         open={detailsDialogOpen}
         onOpenChange={setDetailsDialogOpen}
@@ -350,5 +348,4 @@ const OperatorsPage = () => {
   );
 };
 
-export default OperatorsPage;
-
+export default AlgorithmsPage;
