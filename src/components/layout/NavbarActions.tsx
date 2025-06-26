@@ -1,3 +1,4 @@
+
 import React from "react";
 import { Search, User, Menu, X, Settings } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -17,7 +18,7 @@ const NavbarActions: React.FC<Props> = ({ isMobileMenuOpen, setIsMobileMenuOpen 
         variant="ghost"
         size="icon"
         className="hover:bg-accent transition-colors"
-        aria-label="Buscar"
+        aria-label="Search"
       >
         <Search className="w-5 h-5" />
       </Button>
@@ -25,8 +26,8 @@ const NavbarActions: React.FC<Props> = ({ isMobileMenuOpen, setIsMobileMenuOpen 
         variant="ghost"
         size="icon"
         className="hover:bg-accent transition-colors"
-        onClick={() => navigate('/configuracao')}
-        aria-label="Configurações"
+        onClick={() => navigate('/settings')}
+        aria-label="Settings"
       >
         <Settings className="w-5 h-5" />
       </Button>

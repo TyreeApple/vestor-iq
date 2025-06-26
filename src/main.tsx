@@ -4,7 +4,7 @@ import ReactDOM from "react-dom/client";
 import App from "./App";
 import "./index.css";
 
-// Forçar o dark mode sempre ativo no body
+// Force dark mode always active on body for trading interface
 if (typeof document !== "undefined" && !document.body.classList.contains("dark")) {
   document.body.classList.add("dark");
 }

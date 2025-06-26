@@ -32,34 +32,34 @@ const DashboardOverview: React.FC<DashboardOverviewProps> = ({
     <section className="w-full mx-auto px-2 md:px-0 mt-8">
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-6">
         <PremiumMetricCard
-          title="Total Frota"
+          title="Total Bots"
           value={stats.frotaTotal}
           icon={Activity}
           variant="primary"
-          subtitle="Empilhadeiras registradas"
+          subtitle="Trading bots registered"
           trend={{ value: 8, isPositive: true }}
         />
         <PremiumMetricCard
-          title="Operacionais"
+          title="Active"
           value={stats.empilhadeirasOperacionais}
           icon={CheckCircle}
           variant="success"
-          subtitle="Equipamentos ativos"
+          subtitle="Currently trading"
           trend={{ value: 15, isPositive: true }}
         />
         <PremiumMetricCard
-          title="Manutenção"
+          title="System Issues"
           value={stats.empilhadeirasManutencao}
           icon={AlertTriangle}
           variant="warning"
-          subtitle="Necessitam atenção"
+          subtitle="Need attention"
         />
         <PremiumMetricCard
-          title="Operadores"
+          title="Traders"
           value={stats.operadoresAtivos}
           icon={Users}
           variant="info"
-          subtitle="Equipe ativa"
+          subtitle="Active team"
           trend={{ value: 12, isPositive: true }}
         />
       </div>

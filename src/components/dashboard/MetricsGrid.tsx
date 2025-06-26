@@ -6,7 +6,7 @@ import {
   CheckCircle,
   Clock,
   DollarSign,
-  Gauge,
+  Bot,
   Users,
   Zap
 } from 'lucide-react';
@@ -18,63 +18,63 @@ const MetricsGrid: React.FC = () => {
 
   const metrics = [
     {
-      title: 'Frota Total',
+      title: 'Total Bots',
       value: metricas.frotaTotal,
       icon: Activity,
       variant: 'primary' as const,
-      subtitle: 'Empilhadeiras cadastradas'
+      subtitle: 'Trading bots registered'
     },
     {
-      title: 'Operacionais',
+      title: 'Active Bots',
       value: metricas.empilhadeirasOperacionais,
       icon: CheckCircle,
       variant: 'success' as const,
       trend: { value: 12, isPositive: true },
-      subtitle: 'Equipamentos ativos'
+      subtitle: 'Currently trading'
     },
     {
-      title: 'Em Manutenção',
+      title: 'System Issues',
       value: metricas.empilhadeirasManutencao,
       icon: AlertTriangle,
       variant: 'warning' as const,
-      subtitle: 'Necessitam atenção'
+      subtitle: 'Need attention'
     },
     {
-      title: 'Operadores Ativos',
+      title: 'Active Traders',
       value: metricas.operadoresAtivos,
       icon: Users,
       variant: 'info' as const,
       trend: { value: 8, isPositive: true },
-      subtitle: 'Equipe operacional'
+      subtitle: 'Operational team'
     },
     {
-      title: 'Eficiência Geral',
+      title: 'Overall Efficiency',
       value: `${metricas.eficienciaGeral}%`,
       icon: Zap,
       variant: 'primary' as const,
       trend: { value: 5, isPositive: true },
-      subtitle: 'Performance média'
+      subtitle: 'Average performance'
     },
     {
-      title: 'Custo Operacional',
-      value: new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(metricas.custoOperacionalDia),
+      title: 'Daily P&L',
+      value: new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format(metricas.custoOperacionalDia),
       icon: DollarSign,
       variant: 'danger' as const,
-      subtitle: 'Gasto diário médio'
+      subtitle: 'Today\'s profit/loss'
     },
     {
-      title: 'Tempo Médio/Operação',
+      title: 'Avg Position Time',
       value: `${metricas.tempoMedioOperacao}min`,
       icon: Clock,
       variant: 'warning' as const,
-      subtitle: 'Duração média'
+      subtitle: 'Average duration'
     },
     {
-      title: 'Operações Ativas',
+      title: 'Active Positions',
       value: metricas.operacoesAtivas,
-      icon: Gauge,
+      icon: Bot,
       variant: 'success' as const,
-      subtitle: 'Em execução agora'
+      subtitle: 'Currently open'
     },
   ];
 

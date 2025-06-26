@@ -2,9 +2,9 @@
 import React from "react";
 import { NavLink } from "react-router-dom";
 import {
-  BarChart3, Users, Activity, Wrench, Fuel, FileText, Gauge
+  BarChart3, Users, Activity, Wrench, TrendingUp, FileText, Settings
 } from "lucide-react";
-import { MdForklift } from "react-icons/md";
+import { Bot } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { StatusOperacao, StatusManutencao } from "@/types";
 import { useAppStore } from "@/stores/useAppStore";
@@ -21,10 +21,10 @@ const NavbarMenu: React.FC<MobileMenuProps> = ({
   const operacoes = useAppStore((state) => state.operacoes);
   const ordemServicos = useAppStore((state) => state.ordemServicos);
 
-  const operacoesAtivas = operacoes.filter(
+  const activePositions = operacoes.filter(
     op => op.status === StatusOperacao.EM_ANDAMENTO
   ).length;
-  const manutencoesPendentes = ordemServicos.filter(os =>
+  const systemIssues = ordemServicos.filter(os =>
     [StatusManutencao.ABERTA, StatusManutencao.EM_ANDAMENTO].includes(os.status)
   ).length;
 
@@ -36,42 +36,42 @@ const NavbarMenu: React.FC<MobileMenuProps> = ({
       path: '/'
     },
     {
-      id: 'empilhadeiras',
-      label: 'Empilhadeiras',
-      icon: MdForklift,
-      path: '/empilhadeiras'
+      id: 'trading-bots',
+      label: 'Trading Bots',
+      icon: Bot,
+      path: '/trading-bots'
     },
     {
-      id: 'operadores',
-      label: 'Operadores',
+      id: 'traders',
+      label: 'Traders',
       icon: Users,
-      path: '/operadores'
+      path: '/traders'
     },
     {
-      id: 'operacoes',
-      label: 'Operações',
+      id: 'positions',
+      label: 'Positions',
       icon: Activity,
-      path: '/operacoes',
-      badge: operacoesAtivas > 0 ? operacoesAtivas : undefined
+      path: '/positions',
+      badge: activePositions > 0 ? activePositions : undefined
     },
     {
-      id: 'manutencao',
-      label: 'Manutenção',
+      id: 'system-health',
+      label: 'System Health',
       icon: Wrench,
-      path: '/manutencao',
-      badge: manutencoesPendentes > 0 ? manutencoesPendentes : undefined
+      path: '/system-health',
+      badge: systemIssues > 0 ? systemIssues : undefined
     },
     {
-      id: 'abastecimento',
-      label: 'Abastecimento',
-      icon: Fuel,
-      path: '/abastecimento'
+      id: 'market-data',
+      label: 'Market Data',
+      icon: TrendingUp,
+      path: '/market-data'
     },
     {
-      id: 'relatorios',
-      label: 'Relatórios',
+      id: 'reports',
+      label: 'Reports',
       icon: FileText,
-      path: '/relatorios'
+      path: '/reports'
     }
   ];
 

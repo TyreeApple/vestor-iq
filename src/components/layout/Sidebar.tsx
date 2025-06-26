@@ -1,23 +1,21 @@
+
 import React from 'react';
 import { NavLink } from 'react-router-dom';
-import { BarChart3, Users, Activity, Wrench, Fuel, FileText, ChevronLeft, ChevronRight, Gauge } from 'lucide-react';
-import { MdForklift } from 'react-icons/md';
+import { BarChart3, Users, Activity, Wrench, TrendingUp, FileText, ChevronLeft, ChevronRight, Bot } from 'lucide-react';
 import { useAppStore } from '@/stores/useAppStore';
 import { cn } from '@/lib/utils';
 import { StatusOperacao, StatusManutencao } from "@/types";
 
 const Sidebar: React.FC = () => {
   const { sidebarCollapsed, setSidebarCollapsed } = useAppStore();
-  // Obter status global de operações e manutenções
+  // Get global status of positions and system health
   const operacoes = useAppStore((state) => state.operacoes);
   const ordemServicos = useAppStore((state) => state.ordemServicos);
 
-  const operacoesAtivas = operacoes.filter(op => op.status === StatusOperacao.EM_ANDAMENTO).length;
-  const manutencoesPendentes = ordemServicos.filter(os => 
+  const activePositions = operacoes.filter(op => op.status === StatusOperacao.EM_ANDAMENTO).length;
+  const systemIssues = ordemServicos.filter(os => 
     [StatusManutencao.ABERTA, StatusManutencao.EM_ANDAMENTO].includes(os.status)
   ).length;
-  // const relatoriosCount = 0; // ex: relatorios.length
-  // const abastecimentosCount = 0; // ex: abastecimentos.length
 
   const menuItems = [
     {
@@ -27,44 +25,42 @@ const Sidebar: React.FC = () => {
       path: '/'
     },
     {
-      id: 'empilhadeiras',
-      label: 'Empilhadeiras',
-      icon: MdForklift,
-      path: '/empilhadeiras'
+      id: 'trading-bots',
+      label: 'Trading Bots',
+      icon: Bot,
+      path: '/trading-bots'
     },
     {
-      id: 'operadores',
-      label: 'Operadores',
+      id: 'traders',
+      label: 'Traders',
       icon: Users,
-      path: '/operadores'
+      path: '/traders'
     },
     {
-      id: 'operacoes',
-      label: 'Operações',
+      id: 'positions',
+      label: 'Positions',
       icon: Activity,
-      path: '/operacoes',
-      badge: operacoesAtivas > 0 ? operacoesAtivas : undefined
+      path: '/positions',
+      badge: activePositions > 0 ? activePositions : undefined
     },
     {
-      id: 'manutencao',
-      label: 'Manutenção',
+      id: 'system-health',
+      label: 'System Health',
       icon: Wrench,
-      path: '/manutencao',
-      badge: manutencoesPendentes > 0 ? manutencoesPendentes : undefined
+      path: '/system-health',
+      badge: systemIssues > 0 ? systemIssues : undefined
     },
     {
-      id: 'abastecimento',
-      label: 'Abastecimento',
-      icon: Fuel,
-      path: '/abastecimento'
-      // , badge: abastecimentosCount > 0 ? abastecimentosCount : undefined
+      id: 'market-data',
+      label: 'Market Data',
+      icon: TrendingUp,
+      path: '/market-data'
     },
     {
-      id: 'relatorios',
-      label: 'Relatórios',
+      id: 'reports',
+      label: 'Reports',
       icon: FileText,
-      path: '/relatorios'
-      // , badge: relatoriosCount > 0 ? relatoriosCount : undefined
+      path: '/reports'
     }
   ];
 
@@ -78,11 +74,11 @@ const Sidebar: React.FC = () => {
         {!sidebarCollapsed && (
           <div className="flex items-center space-x-3">
             <div className="p-2 bg-white/20 backdrop-blur-sm rounded-xl border border-white/30 interactive-scale">
-              <Gauge className="w-6 h-6 text-white" />
+              <Bot className="w-6 h-6 text-white" />
             </div>
             <div className="text-white">
-              <h1 className="font-bold text-lg tracking-tight animate-slide-in-right">FleetPro</h1>
-              <p className="text-xs text-white/80 font-medium">Gestão de Frotas</p>
+              <h1 className="font-bold text-lg tracking-tight animate-slide-in-right">Hedron AI</h1>
+              <p className="text-xs text-white/80 font-medium">Trading Dashboard</p>
             </div>
           </div>
         )}
@@ -90,7 +86,7 @@ const Sidebar: React.FC = () => {
         {sidebarCollapsed && (
           <div className="flex items-center justify-center w-full">
             <div className="p-2 bg-white/20 backdrop-blur-sm rounded-xl border border-white/30 interactive-scale">
-              <Gauge className="w-6 h-6 text-white" />
+              <Bot className="w-6 h-6 text-white" />
             </div>
           </div>
         )}
