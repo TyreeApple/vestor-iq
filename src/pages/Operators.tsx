@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { Button } from "@/components/ui/button";
 import { useIsMobile } from '@/hooks/use-mobile';
@@ -229,14 +228,14 @@ const AlgorithmsPage = () => {
         
         <ModernKpiCard
           title="Avg Success Rate"
-          value={`${stats.avgSuccessRate}%`}
+          value={stats.avgSuccessRate}
           icon={Target}
           variant="info"
         />
         
         <ModernKpiCard
           title="Today's Profit"
-          value={`$${stats.totalProfitToday.toLocaleString()}`}
+          value={stats.totalProfitToday}
           icon={DollarSign}
           variant="success"
         />
