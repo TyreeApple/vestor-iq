@@ -43,31 +43,31 @@ const ForkliftDeleteDialog: React.FC<ForkliftDeleteDialogProps> = ({
             </div>
             <div>
               <AlertDialogTitle className="text-xl font-bold text-slate-100">
-                Excluir Empilhadeira
+                Delete Trading Bot
               </AlertDialogTitle>
             </div>
           </div>
           <AlertDialogDescription className="text-slate-400 text-base leading-relaxed">
-            Tem certeza que deseja excluir a empilhadeira{' '}
+            Are you sure you want to delete the trading bot{' '}
             <span className="font-bold text-slate-200">{forklift.id}</span>{' '}
             ({forklift.modelo})?
             <br />
             <br />
             <span className="text-red-400 font-medium">
-              Esta ação não pode ser desfeita.
+              This action cannot be undone.
             </span>
           </AlertDialogDescription>
         </AlertDialogHeader>
         <AlertDialogFooter className="gap-3">
           <AlertDialogCancel className="bg-slate-700 text-slate-200 border-slate-600 hover:bg-slate-600 hover:text-white">
-            Cancelar
+            Cancel
           </AlertDialogCancel>
           <AlertDialogAction 
             onClick={handleConfirm}
             className="bg-red-600 text-white hover:bg-red-700 focus:ring-red-500"
           >
             <Trash2 className="w-4 h-4 mr-2" />
-            Excluir
+            Delete
           </AlertDialogAction>
         </AlertDialogFooter>
       </AlertDialogContent>

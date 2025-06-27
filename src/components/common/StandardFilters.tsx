@@ -29,7 +29,7 @@ interface StandardFiltersProps {
 const StandardFilters: React.FC<StandardFiltersProps> = ({
   searchValue,
   onSearchChange,
-  searchPlaceholder = "Buscar...",
+  searchPlaceholder = "Search...",
   filters,
   filterValues,
   onFilterChange,
@@ -58,7 +58,7 @@ const StandardFilters: React.FC<StandardFiltersProps> = ({
             <div className="flex flex-wrap gap-3 items-center">
               <div className="flex items-center gap-2 text-slate-600 dark:text-slate-300">
                 <Filter className="w-4 h-4" />
-                <span className="text-sm font-medium">Filtros:</span>
+                <span className="text-sm font-medium">Filters:</span>
               </div>
               
               {filters.map((filter) => (
@@ -72,7 +72,7 @@ const StandardFilters: React.FC<StandardFiltersProps> = ({
                         <SelectValue placeholder={filter.label} />
                       </SelectTrigger>
                       <SelectContent className="bg-white/95 dark:bg-slate-800/95 backdrop-blur-xl border-slate-200/60 dark:border-slate-700/60">
-                        <SelectItem value="all">Todos</SelectItem>
+                        <SelectItem value="all">All</SelectItem>
                         {filter.options?.map(option => (
                           <SelectItem key={option.value} value={option.value}>
                             {option.label}
@@ -100,7 +100,7 @@ const StandardFilters: React.FC<StandardFiltersProps> = ({
                   className="h-10 px-3 bg-slate-50/50 dark:bg-slate-800/50 border-slate-300/60 dark:border-slate-600/60 text-slate-600 dark:text-slate-300 hover:bg-slate-100/50 dark:hover:bg-slate-700/50 hover:text-slate-900 dark:hover:text-slate-100 transition-all duration-200"
                 >
                   <X className="w-4 h-4 mr-1" />
-                  Limpar
+                  Clear
                 </Button>
               )}
             </div>
