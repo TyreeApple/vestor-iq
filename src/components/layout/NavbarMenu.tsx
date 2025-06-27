@@ -1,4 +1,3 @@
-
 import React from "react";
 import { NavLink } from "react-router-dom";
 import {
@@ -36,10 +35,10 @@ const NavbarMenu: React.FC<Props> = ({ isMobileMenuOpen, setIsMobileMenuOpen }) 
       path: '/trading-bots'
     },
     {
-      id: 'algorithms',
+      id: 'traders',
       label: 'AI Algorithms',
       icon: TrendingUp,
-      path: '/algorithms'
+      path: '/traders'
     },
     {
       id: 'positions',
@@ -56,10 +55,10 @@ const NavbarMenu: React.FC<Props> = ({ isMobileMenuOpen, setIsMobileMenuOpen }) 
       badge: pendingOptimizations > 0 ? pendingOptimizations : undefined
     },
     {
-      id: 'portfolio',
-      label: 'Portfolio',
+      id: 'market-data',
+      label: 'Market Data',
       icon: TrendingUp,
-      path: '/portfolio'
+      path: '/market-data'
     },
     {
       id: 'reports',
