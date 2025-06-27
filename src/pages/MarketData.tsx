@@ -1,86 +1,137 @@
 
-import React, { useState } from 'react';
+import React, { useState, useMemo } from 'react';
+import { PageHeader } from '@/components/layout/PageHeader';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
-import { 
-  TrendingUp, 
-  TrendingDown, 
-  DollarSign, 
-  BarChart3, 
-  Activity, 
-  Search,
-  Filter,
-  RefreshCw,
-  Eye,
-  Plus,
-  AlertCircle
-} from 'lucide-react';
-import PageHeader from '@/components/layout/PageHeader';
-import ModernKpiCard from '@/components/dashboard/ModernKpiCard';
+import { ModernKpiCard } from '@/components/dashboard/ModernKpiCard';
+import { TrendingUp, TrendingDown, BarChart3, Activity } from 'lucide-react';
+import StandardFilters from '@/components/common/StandardFilters';
+import { useSearchParams } from 'react-router-dom';
 
-// Mock market data
-const marketData = [
-  {
-    symbol: 'AAPL',
-    name: 'Apple Inc.',
-    price: 175.84,
-    change: 2.45,
-    changePercent: 1.41,
-    volume: '52.3M',
-    marketCap: '2.8T',
-    sector: 'Technology'
-  },
-  {
-    symbol: 'GOOGL',
-    name: 'Alphabet Inc.',
-    price: 142.56,
-    change: -1.23,
-    changePercent: -0.86,
-    volume: '28.1M',
-    marketCap: '1.8T',
-    sector: 'Technology'
-  },
-  {
-    symbol: 'MSFT',
-    name: 'Microsoft Corp.',
-    price: 378.91,
-    change: 5.67,
-    changePercent: 1.52,
-    volume: '31.4M',
-    marketCap: '2.9T',
-    sector: 'Technology'
-  },
-  {
-    symbol: 'TSLA',
-    name: 'Tesla Inc.',
-    price: 248.73,
-    change: -8.45,
-    changePercent: -3.29,
-    volume: '89.2M',
-    marketCap: '791B',
-    sector: 'Automotive'
-  }
-];
+interface MarketStock {
+  symbol: string;
+  name: string;
+  price: number;
+  change: number;
+  changePercent: number;
+  volume: number;
+  marketCap: string;
+  sector: string;
+}
 
-const MarketDataPage = () => {
-  const [search, setSearch] = useState('');
-  const [selectedSector, setSelectedSector] = useState('');
-  const [selectedSort, setSelectedSort] = useState('symbol');
+const MarketData = () => {
+  const [searchParams] = useSearchParams();
+  const initialSearch = searchParams.get('search') || '';
+  
+  const [searchValue, setSearchValue] = useState(initialSearch);
+  const [filterValues, setFilterValues] = useState<Record<string, string>>({});
 
-  const filteredData = marketData.filter(stock => 
-    stock.symbol.toLowerCase().includes(search.toLowerCase()) ||
-    stock.name.toLowerCase().includes(search.toLowerCase())
-  ).filter(stock => 
-    !selectedSector || stock.sector === selectedSector
-  );
+  // Sample market data
+  const marketData: MarketStock[] = [
+    {
+      symbol: 'AAPL',
+      name: 'Apple Inc.',
+      price: 173.50,
+      change: 2.25,
+      changePercent: 1.31,
+      volume: 45234567,
+      marketCap: '$2.8T',
+      sector: 'Technology'
+    },
+    {
+      symbol: 'GOOGL',
+      name: 'Alphabet Inc.',
+      price: 138.21,
+      change: -1.15,
+      changePercent: -0.82,
+      volume: 32187654,
+      marketCap: '$1.7T',
+      sector: 'Technology'
+    },
+    {
+      symbol: 'MSFT',
+      name: 'Microsoft Corporation',
+      price: 378.85,
+      change: 4.12,
+      changePercent: 1.10,
+      volume: 28543210,
+      marketCap: '$2.8T',
+      sector: 'Technology'
+    },
+    {
+      symbol: 'TSLA',
+      name: 'Tesla Inc.',
+      price: 208.98,
+      change: -8.45,
+      changePercent: -3.89,
+      volume: 87654321,
+      marketCap: '$665B',
+      sector: 'Automotive'
+    },
+    {
+      symbol: 'AMZN',
+      name: 'Amazon.com Inc.',
+      price: 151.94,
+      change: 0.85,
+      changePercent: 0.56,
+      volume: 41234567,
+      marketCap: '$1.6T',
+      sector: 'E-commerce'
+    },
+    {
+      symbol: 'NVDA',
+      name: 'NVIDIA Corporation',
+      price: 875.28,
+      change: 12.45,
+      changePercent: 1.44,
+      volume: 29876543,
+      marketCap: '$2.2T',
+      sector: 'Technology'
+    }
+  ];
 
-  const formatPrice = (price: number) => `$${price.toFixed(2)}`;
-  const formatChange = (change: number) => change > 0 ? `+$${change.toFixed(2)}` : `-$${Math.abs(change).toFixed(2)}`;
-  const formatPercent = (percent: number) => percent > 0 ? `+${percent.toFixed(2)}%` : `${percent.toFixed(2)}%`;
+  const filterOptions = [
+    {
+      key: 'sector',
+      label: 'Sector',
+      type: 'select' as const,
+      options: [
+        { value: 'technology', label: 'Technology' },
+        { value: 'automotive', label: 'Automotive' },
+        { value: 'ecommerce', label: 'E-commerce' },
+        { value: 'finance', label: 'Finance' },
+        { value: 'healthcare', label: 'Healthcare' }
+      ]
+    },
+    {
+      key: 'performance',
+      label: 'Performance',
+      type: 'select' as const,
+      options: [
+        { value: 'gainers', label: 'Gainers' },
+        { value: 'losers', label: 'Losers' },
+        { value: 'neutral', label: 'Neutral' }
+      ]
+    }
+  ];
+
+  const filteredData = useMemo(() => {
+    return marketData.filter(stock => {
+      const matchesSearch = searchValue === '' || 
+        stock.symbol.toLowerCase().includes(searchValue.toLowerCase()) ||
+        stock.name.toLowerCase().includes(searchValue.toLowerCase());
+      
+      const matchesSector = !filterValues.sector || 
+        stock.sector.toLowerCase() === filterValues.sector.toLowerCase();
+      
+      const matchesPerformance = !filterValues.performance || 
+        (filterValues.performance === 'gainers' && stock.change > 0) ||
+        (filterValues.performance === 'losers' && stock.change < 0) ||
+        (filterValues.performance === 'neutral' && stock.change === 0);
+      
+      return matchesSearch && matchesSector && matchesPerformance;
+    });
+  }, [searchValue, filterValues]);
 
   const stats = {
     totalStocks: marketData.length,
@@ -91,25 +142,12 @@ const MarketDataPage = () => {
 
   return (
     <div className="space-y-8">
-      {/* Header */}
       <PageHeader
         title="Market Data"
-        description="Real-time market data and trading insights"
-        icon={BarChart3}
-      >
-        <div className="flex gap-3">
-          <Button variant="outline" className="gap-2">
-            <RefreshCw className="w-4 h-4" />
-            Refresh Data
-          </Button>
-          <Button className="gap-2 bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700">
-            <Plus className="w-4 h-4" />
-            Add Watchlist
-          </Button>
-        </div>
-      </PageHeader>
+        description="Real-time stock market data and analytics"
+      />
 
-      {/* Statistics Cards */}
+      {/* KPI Cards */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
         <ModernKpiCard
           title="Total Stocks"
@@ -141,163 +179,90 @@ const MarketDataPage = () => {
       </div>
 
       {/* Filters */}
-      <Card className="glass-card">
-        <CardContent className="p-6">
-          <div className="flex flex-col lg:flex-row gap-4 items-start lg:items-center">
-            {/* Search */}
-            <div className="flex-1 relative">
-              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-slate-400 w-4 h-4" />
-              <Input 
-                type="text" 
-                placeholder="Search stocks by symbol or name..." 
-                className="pl-10"
-                value={search}
-                onChange={(e) => setSearch(e.target.value)}
-              />
-            </div>
+      <StandardFilters
+        searchValue={searchValue}
+        onSearchChange={setSearchValue}
+        searchPlaceholder="Search stocks by symbol or name..."
+        filters={filterOptions}
+        filterValues={filterValues}
+        onFilterChange={(key, value) => setFilterValues(prev => ({ ...prev, [key]: value }))}
+        onClearFilters={() => {
+          setSearchValue('');
+          setFilterValues({});
+        }}
+      />
 
-            {/* Sector Filter */}
-            <div className="w-full lg:w-auto min-w-[160px]">
-              <Select
-                value={selectedSector || 'all'}
-                onValueChange={(value) => setSelectedSector(value === 'all' ? '' : value)}
-              >
-                <SelectTrigger>
-                  <SelectValue placeholder="All Sectors" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="all">All Sectors</SelectItem>
-                  <SelectItem value="Technology">Technology</SelectItem>
-                  <SelectItem value="Automotive">Automotive</SelectItem>
-                  <SelectItem value="Finance">Finance</SelectItem>
-                  <SelectItem value="Healthcare">Healthcare</SelectItem>
-                </SelectContent>
-              </Select>
-            </div>
-
-            {/* Sort */}
-            <div className="w-full lg:w-auto min-w-[140px]">
-              <Select
-                value={selectedSort}
-                onValueChange={setSelectedSort}
-              >
-                <SelectTrigger>
-                  <SelectValue placeholder="Sort By" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="symbol">Symbol</SelectItem>
-                  <SelectItem value="price">Price</SelectItem>
-                  <SelectItem value="change">Change</SelectItem>
-                  <SelectItem value="volume">Volume</SelectItem>
-                </SelectContent>
-              </Select>
-            </div>
-          </div>
-        </CardContent>
-      </Card>
-
-      {/* Market Data Table */}
-      <Card className="glass-card">
-        <CardHeader>
-          <CardTitle className="flex items-center gap-2">
-            <Activity className="w-5 h-5 text-blue-500" />
-            Live Market Data
-          </CardTitle>
-        </CardHeader>
-        <CardContent className="p-0">
-          <Table>
-            <TableHeader>
-              <TableRow>
-                <TableHead>Symbol</TableHead>
-                <TableHead>Company</TableHead>
-                <TableHead>Price</TableHead>
-                <TableHead>Change</TableHead>
-                <TableHead>Change %</TableHead>
-                <TableHead>Volume</TableHead>
-                <TableHead>Market Cap</TableHead>
-                <TableHead>Sector</TableHead>
-                <TableHead>Actions</TableHead>
-              </TableRow>
-            </TableHeader>
-            <TableBody>
-              {filteredData.map((stock) => (
-                <TableRow key={stock.symbol} className="hover:bg-muted/50">
-                  <TableCell className="font-mono font-bold text-blue-600">
+      {/* Stock Data Grid */}
+      <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-6">
+        {filteredData.map((stock) => (
+          <Card key={stock.symbol} className="glass-card border-slate-200/60 dark:border-slate-700/60 hover:shadow-lg transition-all duration-300">
+            <CardHeader className="pb-3">
+              <div className="flex items-center justify-between">
+                <div>
+                  <CardTitle className="text-lg font-bold text-slate-900 dark:text-slate-100">
                     {stock.symbol}
-                  </TableCell>
-                  <TableCell>{stock.name}</TableCell>
-                  <TableCell className="font-medium">
-                    {formatPrice(stock.price)}
-                  </TableCell>
-                  <TableCell className={stock.change > 0 ? 'text-green-600' : 'text-red-600'}>
-                    {formatChange(stock.change)}
-                  </TableCell>
-                  <TableCell>
-                    <Badge 
-                      variant={stock.changePercent > 0 ? 'default' : 'destructive'}
-                      className={stock.changePercent > 0 ? 'bg-green-600' : 'bg-red-600'}
-                    >
-                      {formatPercent(stock.changePercent)}
-                    </Badge>
-                  </TableCell>
-                  <TableCell>{stock.volume}</TableCell>
-                  <TableCell>{stock.marketCap}</TableCell>
-                  <TableCell>
-                    <Badge variant="outline">{stock.sector}</Badge>
-                  </TableCell>
-                  <TableCell>
-                    <div className="flex gap-2">
-                      <Button size="sm" variant="outline">
-                        <Eye className="w-4 h-4" />
-                      </Button>
-                      <Button size="sm">
-                        <Plus className="w-4 h-4" />
-                      </Button>
-                    </div>
-                  </TableCell>
-                </TableRow>
-              ))}
-            </TableBody>
-          </Table>
-        </CardContent>
-      </Card>
+                  </CardTitle>
+                  <p className="text-sm text-slate-600 dark:text-slate-400 mt-1">
+                    {stock.name}
+                  </p>
+                </div>
+                <Badge variant="outline" className="text-xs">
+                  {stock.sector}
+                </Badge>
+              </div>
+            </CardHeader>
+            <CardContent className="space-y-4">
+              <div className="flex items-center justify-between">
+                <div>
+                  <p className="text-2xl font-bold text-slate-900 dark:text-slate-100">
+                    ${stock.price.toFixed(2)}
+                  </p>
+                  <p className="text-sm text-slate-600 dark:text-slate-400">
+                    Market Cap: {stock.marketCap}
+                  </p>
+                </div>
+                <div className="text-right">
+                  <p className={`text-sm font-medium ${
+                    stock.change >= 0 
+                      ? 'text-green-600 dark:text-green-400' 
+                      : 'text-red-600 dark:text-red-400'
+                  }`}>
+                    {stock.change >= 0 ? '+' : ''}{stock.change.toFixed(2)}
+                  </p>
+                  <p className={`text-xs ${
+                    stock.changePercent >= 0 
+                      ? 'text-green-600 dark:text-green-400' 
+                      : 'text-red-600 dark:text-red-400'
+                  }`}>
+                    {stock.changePercent >= 0 ? '+' : ''}{stock.changePercent.toFixed(2)}%
+                  </p>
+                </div>
+              </div>
+              
+              <div className="pt-3 border-t border-slate-200/60 dark:border-slate-700/60">
+                <div className="flex items-center justify-between text-sm">
+                  <span className="text-slate-600 dark:text-slate-400">Volume:</span>
+                  <span className="font-medium text-slate-900 dark:text-slate-100">
+                    {stock.volume.toLocaleString()}
+                  </span>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+        ))}
+      </div>
 
-      {/* Market Alerts */}
-      <Card className="glass-card">
-        <CardHeader>
-          <CardTitle className="flex items-center gap-2">
-            <AlertCircle className="w-5 h-5 text-orange-500" />
-            Market Alerts
-          </CardTitle>
-        </CardHeader>
-        <CardContent>
-          <div className="space-y-4">
-            <div className="flex items-center justify-between p-4 bg-yellow-50 dark:bg-yellow-900/20 border border-yellow-200 dark:border-yellow-800 rounded-lg">
-              <div className="flex items-center gap-3">
-                <AlertCircle className="w-5 h-5 text-yellow-600" />
-                <div>
-                  <p className="font-medium">High Volume Alert</p>
-                  <p className="text-sm text-muted-foreground">TSLA volume 3x above average</p>
-                </div>
-              </div>
-              <Badge variant="outline">Active</Badge>
-            </div>
-            
-            <div className="flex items-center justify-between p-4 bg-green-50 dark:bg-green-900/20 border border-green-200 dark:border-green-800 rounded-lg">
-              <div className="flex items-center gap-3">
-                <TrendingUp className="w-5 h-5 text-green-600" />
-                <div>
-                  <p className="font-medium">Price Breakout</p>
-                  <p className="text-sm text-muted-foreground">AAPL broke resistance at $175</p>
-                </div>
-              </div>
-              <Badge variant="outline">Triggered</Badge>
-            </div>
-          </div>
-        </CardContent>
-      </Card>
+      {filteredData.length === 0 && (
+        <Card className="glass-card border-slate-200/60 dark:border-slate-700/60">
+          <CardContent className="py-12 text-center">
+            <p className="text-slate-600 dark:text-slate-400">
+              No stocks found matching your search criteria.
+            </p>
+          </CardContent>
+        </Card>
+      )}
     </div>
   );
 };
 
-export default MarketDataPage;
+export default MarketData;

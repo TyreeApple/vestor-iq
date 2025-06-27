@@ -20,6 +20,7 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { useToast } from "@/hooks/use-toast";
 
 type Props = {
   isMobileMenuOpen: boolean;
@@ -28,6 +29,7 @@ type Props = {
 
 const NavbarActions: React.FC<Props> = ({ isMobileMenuOpen, setIsMobileMenuOpen }) => {
   const navigate = useNavigate();
+  const { toast } = useToast();
   const [searchOpen, setSearchOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
 
@@ -38,21 +40,43 @@ const NavbarActions: React.FC<Props> = ({ isMobileMenuOpen, setIsMobileMenuOpen 
       navigate(`/market-data?search=${encodeURIComponent(searchQuery.trim())}`);
       setSearchOpen(false);
       setSearchQuery('');
+      toast({
+        title: "Search initiated",
+        description: `Searching for "${searchQuery.trim()}"`,
+      });
     }
   };
 
   const handleProfileAction = (action: string) => {
     switch (action) {
       case 'profile':
-        // Navigate to profile page or open profile modal
-        console.log('Navigate to profile');
+        toast({
+          title: "Profile",
+          description: "Profile page functionality coming soon",
+        });
         break;
       case 'settings':
         navigate('/settings');
         break;
+      case 'notifications':
+        toast({
+          title: "Notifications",
+          description: "You have no new notifications",
+        });
+        break;
+      case 'messages':
+        toast({
+          title: "Messages",
+          description: "No new messages",
+        });
+        break;
       case 'logout':
-        // Handle logout logic
-        console.log('Logout user');
+        toast({
+          title: "Logged out",
+          description: "You have been successfully logged out",
+          variant: "destructive",
+        });
+        // Here you would typically handle actual logout logic
         break;
       default:
         break;
@@ -164,11 +188,17 @@ const NavbarActions: React.FC<Props> = ({ isMobileMenuOpen, setIsMobileMenuOpen 
             <Settings className="w-4 h-4 mr-2" />
             Account Settings
           </DropdownMenuItem>
-          <DropdownMenuItem className="cursor-pointer">
+          <DropdownMenuItem 
+            onClick={() => handleProfileAction('notifications')}
+            className="cursor-pointer"
+          >
             <Bell className="w-4 h-4 mr-2" />
             Notifications
           </DropdownMenuItem>
-          <DropdownMenuItem className="cursor-pointer">
+          <DropdownMenuItem 
+            onClick={() => handleProfileAction('messages')}
+            className="cursor-pointer"
+          >
             <Mail className="w-4 h-4 mr-2" />
             Messages
           </DropdownMenuItem>
