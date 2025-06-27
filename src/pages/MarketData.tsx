@@ -86,7 +86,7 @@ const MarketDataPage = () => {
     totalStocks: marketData.length,
     gainers: marketData.filter(s => s.change > 0).length,
     losers: marketData.filter(s => s.change < 0).length,
-    avgChange: (marketData.reduce((sum, s) => sum + s.changePercent, 0) / marketData.length).toFixed(2)
+    avgChange: parseFloat((marketData.reduce((sum, s) => sum + s.changePercent, 0) / marketData.length).toFixed(2))
   };
 
   return (
@@ -129,12 +129,12 @@ const MarketDataPage = () => {
           title="Losers"
           value={stats.losers}
           icon={TrendingDown}
-          variant="destructive"
+          variant="danger"
         />
         
         <ModernKpiCard
           title="Avg Change"
-          value={`${stats.avgChange}%`}
+          value={stats.avgChange}
           icon={BarChart3}
           variant="info"
         />
