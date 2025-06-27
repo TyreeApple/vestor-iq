@@ -1,9 +1,9 @@
 
 import React, { useState, useMemo } from 'react';
-import { PageHeader } from '@/components/layout/PageHeader';
+import PageHeader from '@/components/layout/PageHeader';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
-import { ModernKpiCard } from '@/components/dashboard/ModernKpiCard';
+import ModernKpiCard from '@/components/dashboard/ModernKpiCard';
 import { TrendingUp, TrendingDown, BarChart3, Activity } from 'lucide-react';
 import StandardFilters from '@/components/common/StandardFilters';
 import { useSearchParams } from 'react-router-dom';
