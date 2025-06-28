@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { useIsMobile } from '@/hooks/use-mobile';
 import { cn } from '@/lib/utils';
@@ -234,16 +233,16 @@ const PositionsPage = () => {
   // View mode state
   const [viewMode, setViewMode] = useState<"grid" | "list">("grid");
 
-  // Filter configuration for advanced filters
+  // Filter configuration for advanced filters with trading terminology
   const filterOptions = [
     {
       key: 'prioridade',
-      label: 'Priority',
+      label: 'Risk Level',
       type: 'select' as const,
       options: [
-        { value: PrioridadeOperacao.ALTA, label: 'High' },
-        { value: PrioridadeOperacao.NORMAL, label: 'Normal' },
-        { value: PrioridadeOperacao.BAIXA, label: 'Low' }
+        { value: PrioridadeOperacao.ALTA, label: 'High Risk' },
+        { value: PrioridadeOperacao.NORMAL, label: 'Medium Risk' },
+        { value: PrioridadeOperacao.BAIXA, label: 'Low Risk' }
       ]
     }
   ];
