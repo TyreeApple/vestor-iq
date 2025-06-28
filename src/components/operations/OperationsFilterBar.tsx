@@ -35,7 +35,7 @@ const OperationsFilterBar: React.FC<OperationsFilterBarProps> = ({
           <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground w-4 h-4" />
           <Input
             type="text"
-            placeholder="Buscar por ID ou modelo..."
+            placeholder="Search by ID or model..."
             className="pl-10 h-10 bg-background/50 border-border/50 focus:border-primary/50 focus:ring-primary/20"
             value={search}
             onChange={(e) => setSearch(e.target.value)}
@@ -51,12 +51,12 @@ const OperationsFilterBar: React.FC<OperationsFilterBarProps> = ({
           }
         >
           <SelectTrigger className="h-10 bg-background/50 border-border/50">
-            <SelectValue placeholder="Todos os Status" />
+            <SelectValue placeholder="All Statuses" />
           </SelectTrigger>
           <SelectContent className="bg-background border-border">
-            <SelectItem value="all">Todos os Status</SelectItem>
-            <SelectItem value={StatusOperacao.EM_ANDAMENTO}>Em Andamento</SelectItem>
-            <SelectItem value={StatusOperacao.CONCLUIDA}>Concluídas</SelectItem>
+            <SelectItem value="all">All Statuses</SelectItem>
+            <SelectItem value={StatusOperacao.EM_ANDAMENTO}>In Progress</SelectItem>
+            <SelectItem value={StatusOperacao.CONCLUIDA}>Completed</SelectItem>
           </SelectContent>
         </Select>
       </div>
@@ -69,14 +69,14 @@ const OperationsFilterBar: React.FC<OperationsFilterBarProps> = ({
           }
         >
           <SelectTrigger className="h-10 bg-background/50 border-border/50">
-            <SelectValue placeholder="Todos os Tipos" />
+            <SelectValue placeholder="All Types" />
           </SelectTrigger>
           <SelectContent className="bg-background border-border">
-            <SelectItem value="all">Todos os Tipos</SelectItem>
-            <SelectItem value={TipoOperacao.MOVIMENTACAO}>Movimentação</SelectItem>
-            <SelectItem value={TipoOperacao.CARGA}>Carga</SelectItem>
-            <SelectItem value={TipoOperacao.DESCARGA}>Descarga</SelectItem>
-            <SelectItem value={TipoOperacao.ESTOQUE}>Estoque</SelectItem>
+            <SelectItem value="all">All Types</SelectItem>
+            <SelectItem value={TipoOperacao.MOVIMENTACAO}>Movement</SelectItem>
+            <SelectItem value={TipoOperacao.CARGA}>Loading</SelectItem>
+            <SelectItem value={TipoOperacao.DESCARGA}>Unloading</SelectItem>
+            <SelectItem value={TipoOperacao.ESTOQUE}>Inventory</SelectItem>
             <SelectItem value={TipoOperacao.PICKING}>Picking</SelectItem>
           </SelectContent>
         </Select>
