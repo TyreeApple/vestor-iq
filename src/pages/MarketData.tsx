@@ -1,4 +1,3 @@
-
 import React, { useState, useMemo } from 'react';
 import PageHeader from '@/components/layout/PageHeader';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
@@ -8,7 +7,7 @@ import { TrendingUp, TrendingDown, BarChart3, Activity } from 'lucide-react';
 import StandardFilters from '@/components/common/StandardFilters';
 import { useSearchParams } from 'react-router-dom';
 
-interface MarketStock {
+interface Stock {
   symbol: string;
   name: string;
   price: number;
@@ -24,10 +23,10 @@ const MarketData = () => {
   const initialSearch = searchParams.get('search') || '';
   
   const [searchValue, setSearchValue] = useState(initialSearch);
-  const [filterValues, setFilterValues] = useState<Record<string, string>>({});
+  const [filters, setFilters] = useState<Record<string, string>>({});
 
-  // Sample market data
-  const marketData: MarketStock[] = [
+  // Example stock data
+  const stocks: Stock[] = [
     {
       symbol: 'AAPL',
       name: 'Apple Inc.',
@@ -115,63 +114,60 @@ const MarketData = () => {
     }
   ];
 
-  const filteredData = useMemo(() => {
-    return marketData.filter(stock => {
-      const matchesSearch = searchValue === '' || 
+  const filteredStocks = useMemo(() => {
+    return stocks.filter(stock => {
+      const matchesSearch = searchValue === '' ||
         stock.symbol.toLowerCase().includes(searchValue.toLowerCase()) ||
         stock.name.toLowerCase().includes(searchValue.toLowerCase());
-      
-      const matchesSector = !filterValues.sector || 
-        stock.sector.toLowerCase() === filterValues.sector.toLowerCase();
-      
-      const matchesPerformance = !filterValues.performance || 
-        (filterValues.performance === 'gainers' && stock.change > 0) ||
-        (filterValues.performance === 'losers' && stock.change < 0) ||
-        (filterValues.performance === 'neutral' && stock.change === 0);
-      
+
+      const matchesSector = !filters.sector ||
+        stock.sector.toLowerCase() === filters.sector.toLowerCase();
+
+      const matchesPerformance = !filters.performance ||
+        (filters.performance === 'gainers' && stock.change > 0) ||
+        (filters.performance === 'losers' && stock.change < 0) ||
+        (filters.performance === 'neutral' && stock.change === 0);
+
       return matchesSearch && matchesSector && matchesPerformance;
     });
-  }, [searchValue, filterValues]);
+  }, [searchValue, filters]);
 
   const stats = {
-    totalStocks: marketData.length,
-    gainers: marketData.filter(s => s.change > 0).length,
-    losers: marketData.filter(s => s.change < 0).length,
-    avgChange: parseFloat((marketData.reduce((sum, s) => sum + s.changePercent, 0) / marketData.length).toFixed(2))
+    total: stocks.length,
+    gainers: stocks.filter(s => s.change > 0).length,
+    losers: stocks.filter(s => s.change < 0).length,
+    avgChange: parseFloat((stocks.reduce((sum, s) => sum + s.changePercent, 0) / stocks.length).toFixed(2))
   };
 
   return (
     <div className="space-y-8">
       <PageHeader
-        title="Market Data"
-        description="Real-time stock market data and analytics"
+        title="Market Overview"
+        description="Live stock data, price changes, and performance trends."
       />
 
       {/* KPI Cards */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
         <ModernKpiCard
           title="Total Stocks"
-          value={stats.totalStocks}
+          value={stats.total}
           icon={Activity}
           variant="default"
         />
-        
         <ModernKpiCard
           title="Gainers"
           value={stats.gainers}
           icon={TrendingUp}
           variant="success"
         />
-        
         <ModernKpiCard
           title="Losers"
           value={stats.losers}
           icon={TrendingDown}
           variant="danger"
         />
-        
         <ModernKpiCard
-          title="Avg Change"
+          title="Average Change"
           value={stats.avgChange}
           icon={BarChart3}
           variant="info"
@@ -182,19 +178,19 @@ const MarketData = () => {
       <StandardFilters
         searchValue={searchValue}
         onSearchChange={setSearchValue}
-        searchPlaceholder="Search stocks by symbol or name..."
+        searchPlaceholder="Search by stock symbol or company name..."
         filters={filterOptions}
-        filterValues={filterValues}
-        onFilterChange={(key, value) => setFilterValues(prev => ({ ...prev, [key]: value }))}
+        filterValues={filters}
+        onFilterChange={(key, value) => setFilters(prev => ({ ...prev, [key]: value }))}
         onClearFilters={() => {
           setSearchValue('');
-          setFilterValues({});
+          setFilters({});
         }}
       />
 
-      {/* Stock Data Grid */}
+      {/* Stocks Grid */}
       <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-6">
-        {filteredData.map((stock) => (
+        {filteredStocks.map((stock) => (
           <Card key={stock.symbol} className="glass-card border-slate-200/60 dark:border-slate-700/60 hover:shadow-lg transition-all duration-300">
             <CardHeader className="pb-3">
               <div className="flex items-center justify-between">
@@ -238,7 +234,7 @@ const MarketData = () => {
                   </p>
                 </div>
               </div>
-              
+
               <div className="pt-3 border-t border-slate-200/60 dark:border-slate-700/60">
                 <div className="flex items-center justify-between text-sm">
                   <span className="text-slate-600 dark:text-slate-400">Volume:</span>
@@ -252,11 +248,11 @@ const MarketData = () => {
         ))}
       </div>
 
-      {filteredData.length === 0 && (
+      {filteredStocks.length === 0 && (
         <Card className="glass-card border-slate-200/60 dark:border-slate-700/60">
           <CardContent className="py-12 text-center">
             <p className="text-slate-600 dark:text-slate-400">
-              No stocks found matching your search criteria.
+              No stocks match your search.
             </p>
           </CardContent>
         </Card>
