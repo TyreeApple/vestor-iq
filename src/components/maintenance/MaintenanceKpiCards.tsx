@@ -16,32 +16,32 @@ interface MaintenanceKpiCardsProps {
 
 const MaintenanceKpiCards: React.FC<MaintenanceKpiCardsProps> = ({ maintenanceData }) => {
   // Calculate metrics
-  const totalMaintenance = maintenanceData.length;
-  const pendingMaintenance = maintenanceData.filter(m => m.status !== StatusManutencao.CONCLUIDA).length;
-  const completedMaintenance = maintenanceData.filter(m => m.status === StatusManutencao.CONCLUIDA).length;
+  const totalOptimizations = maintenanceData.length;
+  const pendingOptimizations = maintenanceData.filter(m => m.status !== StatusManutencao.CONCLUIDA).length;
+  const completedOptimizations = maintenanceData.filter(m => m.status === StatusManutencao.CONCLUIDA).length;
   
   const totalCosts = maintenanceData.reduce((sum, m) => sum + (m.custos?.total || 0), 0);
   
-  const urgentMaintenance = maintenanceData.filter(m => 
+  const urgentOptimizations = maintenanceData.filter(m => 
     m.prioridade === PrioridadeOperacao.CRITICA || m.prioridade === PrioridadeOperacao.ALTA
   ).length;
 
   const kpis = [
     {
-      title: 'Total Maintenance',
-      value: totalMaintenance,
+      title: 'Total Optimizations',
+      value: totalOptimizations,
       icon: Wrench,
       variant: 'info' as const
     },
     {
       title: 'Pending',
-      value: pendingMaintenance,
+      value: pendingOptimizations,
       icon: Clock,
       variant: 'warning' as const
     },
     {
       title: 'Completed',
-      value: completedMaintenance,
+      value: completedOptimizations,
       icon: CheckCircle,
       variant: 'success' as const
     },
@@ -53,7 +53,7 @@ const MaintenanceKpiCards: React.FC<MaintenanceKpiCardsProps> = ({ maintenanceDa
     },
     {
       title: 'Urgent',
-      value: urgentMaintenance,
+      value: urgentOptimizations,
       icon: AlertTriangle,
       variant: 'danger' as const
     }

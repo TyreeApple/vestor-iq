@@ -15,10 +15,10 @@ const MaintenanceHeader: React.FC<MaintenanceHeaderProps> = ({
   <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4">
     <div>
       <h1 className="text-3xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
-        Maintenance Management
+        Bot Optimization Management
       </h1>
       <p className="text-muted-foreground mt-1">
-        Complete control of service orders and maintenance
+        Complete control of optimization orders and bot maintenance
       </p>
     </div>
     <div className="flex items-center gap-3">
@@ -35,7 +35,7 @@ const MaintenanceHeader: React.FC<MaintenanceHeaderProps> = ({
         className="gap-2 bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700"
       >
         <Plus className="w-4 h-4" />
-        New Maintenance
+        New Optimization
       </Button>
     </div>
   </div>

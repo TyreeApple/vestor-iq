@@ -43,7 +43,7 @@ const GasSupplyDialog = ({
   
   const [formData, setFormData] = useState<Partial<Abastecimento>>(
     gasSupply || {
-      id: `GS${Math.floor(Math.random() * 10000).toString().padStart(3, '0')}`,
+      id: `CP${Math.floor(Math.random() * 10000).toString().padStart(3, '0')}`,
       dataAbastecimento: format(new Date(), 'yyyy-MM-dd'),
       empilhadeiraId: '',
       quantidadeLitros: 0,
@@ -53,7 +53,7 @@ const GasSupplyDialog = ({
     }
   );
 
-  // Handle forklift selection
+  // Handle bot selection
   const handleForkliftChange = (empilhadeiraId: string) => {
     const selectedForklift = availableForklifts.find(f => f.id === empilhadeiraId);
     setFormData(prev => ({ 
@@ -62,7 +62,7 @@ const GasSupplyDialog = ({
     }));
   };
 
-  // Handle operator selection
+  // Handle trader selection
   const handleOperatorChange = (operatorId: string) => {
     setFormData(prev => ({ ...prev, operadorId: operatorId }));
   };
@@ -99,8 +99,8 @@ const GasSupplyDialog = ({
     // Validate form
     if (!formData.empilhadeiraId || !formData.quantidadeLitros || !formData.horimetroInicial || !formData.horimetroFinal || !formData.operadorId) {
       toast({
-        title: "Erro ao salvar",
-        description: "Preencha todos os campos obrigatórios",
+        title: "Error saving",
+        description: "Please fill in all required fields",
         variant: "destructive"
       });
       return;
@@ -108,20 +108,20 @@ const GasSupplyDialog = ({
     
     if (formData.horimetroFinal! <= formData.horimetroInicial!) {
       toast({
-        title: "Erro de validação",
-        description: "O horímetro final deve ser maior que o inicial",
+        title: "Validation error",
+        description: "Final runtime must be greater than initial runtime",
         variant: "destructive"
       });
       return;
     }
     
-    // Save gas supply
+    // Save capital allocation
     onSave(formData as Abastecimento);
     
     // Reset form and close dialog
     if (!isEditing) {
       setFormData({
-        id: `GS${Math.floor(Math.random() * 10000).toString().padStart(3, '0')}`,
+        id: `CP${Math.floor(Math.random() * 10000).toString().padStart(3, '0')}`,
         dataAbastecimento: format(new Date(), 'yyyy-MM-dd'),
         empilhadeiraId: '',
         quantidadeLitros: 0,
@@ -134,8 +134,8 @@ const GasSupplyDialog = ({
     onOpenChange(false);
     
     toast({
-      title: isEditing ? "Abastecimento atualizado" : "Abastecimento registrado",
-      description: `Abastecimento ${isEditing ? 'atualizado' : 'registrado'} com sucesso!`
+      title: isEditing ? "Capital allocation updated" : "Capital allocation recorded",
+      description: `Capital allocation ${isEditing ? 'updated' : 'recorded'} successfully!`
     });
   };
 
@@ -143,18 +143,18 @@ const GasSupplyDialog = ({
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="sm:max-w-[500px]">
         <DialogHeader>
-          <DialogTitle>{isEditing ? 'Editar Abastecimento' : 'Novo Abastecimento'}</DialogTitle>
+          <DialogTitle>{isEditing ? 'Edit Capital Allocation' : 'New Capital Allocation'}</DialogTitle>
           <DialogDescription>
             {isEditing 
-              ? 'Edite as informações do abastecimento nos campos abaixo.' 
-              : 'Preencha as informações do novo abastecimento nos campos abaixo.'}
+              ? 'Edit the capital allocation information in the fields below.' 
+              : 'Fill in the new capital allocation information in the fields below.'}
           </DialogDescription>
         </DialogHeader>
         
         <form onSubmit={handleSubmit} className="space-y-4 pt-4">
           <div className="grid grid-cols-2 gap-4">
             <div className="space-y-2">
-              <Label htmlFor="dataAbastecimento">Data</Label>
+              <Label htmlFor="dataAbastecimento">Date</Label>
               <Popover>
                 <PopoverTrigger asChild>
                   <Button
@@ -178,13 +178,13 @@ const GasSupplyDialog = ({
             </div>
             
             <div className="space-y-2">
-              <Label htmlFor="empilhadeiraId">Empilhadeira</Label>
+              <Label htmlFor="empilhadeiraId">Trading Bot</Label>
               <Select 
                 value={formData.empilhadeiraId} 
                 onValueChange={handleForkliftChange}
               >
                 <SelectTrigger>
-                  <SelectValue placeholder="Selecione a empilhadeira" />
+                  <SelectValue placeholder="Select trading bot" />
                 </SelectTrigger>
                 <SelectContent>
                   {availableForklifts.map(forklift => (
@@ -197,26 +197,26 @@ const GasSupplyDialog = ({
             </div>
             
             <div className="space-y-2">
-              <Label htmlFor="quantidadeLitros">Quantidade (L)</Label>
+              <Label htmlFor="quantidadeLitros">Capital Amount ($)</Label>
               <Input 
                 id="quantidadeLitros" 
                 type="number"
-                step="0.1"
+                step="0.01"
                 min="0"
                 value={formData.quantidadeLitros} 
                 onChange={(e) => handleChange('quantidadeLitros', parseFloat(e.target.value))}
-                placeholder="0.0"
+                placeholder="0.00"
               />
             </div>
             
             <div className="space-y-2">
-              <Label htmlFor="operadorId">Operador</Label>
+              <Label htmlFor="operadorId">Trader</Label>
               <Select 
                 value={formData.operadorId} 
                 onValueChange={handleOperatorChange}
               >
                 <SelectTrigger>
-                  <SelectValue placeholder="Selecione o operador" />
+                  <SelectValue placeholder="Select trader" />
                 </SelectTrigger>
                 <SelectContent>
                   {availableOperators.map(operator => (
@@ -229,7 +229,7 @@ const GasSupplyDialog = ({
             </div>
             
             <div className="space-y-2">
-              <Label htmlFor="horimetroInicial">Horímetro Inicial</Label>
+              <Label htmlFor="horimetroInicial">Initial Runtime</Label>
               <Input 
                 id="horimetroInicial" 
                 type="number"
@@ -240,7 +240,7 @@ const GasSupplyDialog = ({
             </div>
             
             <div className="space-y-2">
-              <Label htmlFor="horimetroFinal">Horímetro Final</Label>
+              <Label htmlFor="horimetroFinal">Final Runtime</Label>
               <Input 
                 id="horimetroFinal" 
                 type="number"
@@ -253,9 +253,9 @@ const GasSupplyDialog = ({
           
           <DialogFooter>
             <Button variant="outline" type="button" onClick={() => onOpenChange(false)}>
-              Cancelar
+              Cancel
             </Button>
-            <Button type="submit">{isEditing ? 'Salvar Alterações' : 'Registrar Abastecimento'}</Button>
+            <Button type="submit">{isEditing ? 'Save Changes' : 'Record Allocation'}</Button>
           </DialogFooter>
         </form>
       </DialogContent>

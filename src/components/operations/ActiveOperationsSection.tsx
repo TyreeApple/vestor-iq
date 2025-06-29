@@ -3,7 +3,7 @@ import React from "react";
 import { Operacao, StatusOperacao, PrioridadeOperacao, TipoOperacao } from "@/types";
 import { cn } from "@/lib/utils";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
-import { Activity, Truck, MapPin, Clock, Fuel, CheckCircle2, AlertCircle, Play } from "lucide-react";
+import { Activity, Bot, MapPin, Clock, DollarSign, CheckCircle2, AlertCircle, Play } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
 type EnrichedOperacao = Operacao & {
@@ -34,7 +34,7 @@ const ActiveOperationsSection: React.FC<ActiveOperationsSectionProps> = ({
     <div className="flex items-center justify-between">
       <h2 className="text-xl lg:text-2xl font-semibold text-foreground flex items-center gap-2">
         <Activity className="w-5 h-5 lg:w-6 lg:h-6 text-primary" />
-        <span className="hidden sm:inline">Active Operations</span>
+        <span className="hidden sm:inline">Active Trading Operations</span>
         <span className="sm:hidden">Active</span>
       </h2>
       <span className="text-xs lg:text-sm text-muted-foreground">
@@ -90,7 +90,7 @@ const ActiveOperationsSection: React.FC<ActiveOperationsSectionProps> = ({
               </div>
               <div className="grid grid-cols-2 gap-2 lg:gap-3 text-xs lg:text-sm">
                 <div className="flex items-center gap-2 p-2 bg-background/50 rounded-md border border-border/30">
-                  <Truck className="w-3 h-3 lg:w-4 lg:h-4 text-blue-500 flex-shrink-0" />
+                  <Bot className="w-3 h-3 lg:w-4 lg:h-4 text-blue-500 flex-shrink-0" />
                   <span className="text-foreground truncate">{operation.empilhadeiraModelo}</span>
                 </div>
                 <div className="flex items-center gap-2 p-2 bg-background/50 rounded-md border border-border/30">
@@ -103,8 +103,8 @@ const ActiveOperationsSection: React.FC<ActiveOperationsSectionProps> = ({
                 </div>
                 {operation.consumoGas && (
                   <div className="flex items-center gap-2 p-2 bg-background/50 rounded-md border border-border/30">
-                    <Fuel className="w-3 h-3 lg:w-4 lg:h-4 text-red-500 flex-shrink-0" />
-                    <span className="text-foreground">{operation.consumoGas}L</span>
+                    <DollarSign className="w-3 h-3 lg:w-4 lg:h-4 text-red-500 flex-shrink-0" />
+                    <span className="text-foreground">${operation.consumoGas}</span>
                   </div>
                 )}
               </div>
@@ -126,7 +126,7 @@ const ActiveOperationsSection: React.FC<ActiveOperationsSectionProps> = ({
             <div className="w-12 h-12 lg:w-16 lg:h-16 mx-auto mb-4 rounded-full bg-accent/30 flex items-center justify-center">
               <Clock className="w-6 h-6 lg:w-8 lg:h-8 text-muted-foreground" />
             </div>
-            <p className="text-muted-foreground text-base lg:text-lg">No active operations</p>
+            <p className="text-muted-foreground text-base lg:text-lg">No active trading operations</p>
           </CardContent>
         </Card>
       )}

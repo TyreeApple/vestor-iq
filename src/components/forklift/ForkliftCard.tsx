@@ -18,7 +18,7 @@ const ForkliftCard: React.FC<ForkliftCardProps> = ({ forklift, onClick, onDelete
       case StatusEmpilhadeira.OPERACIONAL:
         return {
           icon: CheckCircle,
-          text: 'Operacional',
+          text: 'Active',
           bgColor: 'bg-green-100 dark:bg-green-900/30',
           textColor: 'text-green-700 dark:text-green-400',
           iconColor: 'text-green-600'
@@ -26,7 +26,7 @@ const ForkliftCard: React.FC<ForkliftCardProps> = ({ forklift, onClick, onDelete
       case StatusEmpilhadeira.EM_MANUTENCAO:
         return {
           icon: AlertTriangle,
-          text: 'Manutenção',
+          text: 'Optimizing',
           bgColor: 'bg-orange-100 dark:bg-orange-900/30',
           textColor: 'text-orange-700 dark:text-orange-400',
           iconColor: 'text-orange-600'
@@ -34,7 +34,7 @@ const ForkliftCard: React.FC<ForkliftCardProps> = ({ forklift, onClick, onDelete
       case StatusEmpilhadeira.PARADA:
         return {
           icon: XCircle,
-          text: 'Parada',
+          text: 'Stopped',
           bgColor: 'bg-red-100 dark:bg-red-900/30',
           textColor: 'text-red-700 dark:text-red-400',
           iconColor: 'text-red-600'
@@ -86,7 +86,7 @@ const ForkliftCard: React.FC<ForkliftCardProps> = ({ forklift, onClick, onDelete
           size="sm"
           onClick={handleDelete}
           className="absolute top-2 right-2 h-8 w-8 p-0 text-muted-foreground hover:text-red-500 z-10"
-          title="Excluir empilhadeira"
+          title="Delete trading bot"
         >
           <Trash2 className="h-4 w-4" />
         </Button>
@@ -126,14 +126,13 @@ const ForkliftCard: React.FC<ForkliftCardProps> = ({ forklift, onClick, onDelete
           </span>
         </div>
 
-        {/* Capacity */}
+        {/* Capital Capacity */}
         <div className="text-center py-4 bg-muted/30 rounded-lg">
           <div className="text-sm text-muted-foreground font-medium mb-1">
-            CAPACIDADE
+            CAPITAL CAPACITY
           </div>
           <div className="text-2xl font-bold text-foreground">
-            {forklift.capacidade.toLocaleString()}
-            <span className="text-sm font-normal text-muted-foreground ml-1">kg</span>
+            ${forklift.capacidade.toLocaleString()}
           </div>
         </div>
 
@@ -142,17 +141,17 @@ const ForkliftCard: React.FC<ForkliftCardProps> = ({ forklift, onClick, onDelete
           <div className="flex items-center justify-between text-sm">
             <div className="flex items-center gap-2 text-muted-foreground">
               <Clock className="w-4 h-4" />
-              <span>Horímetro</span>
+              <span>Runtime</span>
             </div>
             <span className="font-mono font-medium text-foreground">
-              {forklift.horimetro?.toString().padStart(5, '0') || 'N/A'}
+              {forklift.horimetro?.toString().padStart(5, '0') || 'N/A'}h
             </span>
           </div>
 
           <div className="flex items-center justify-between text-sm">
             <div className="flex items-center gap-2 text-muted-foreground">
               <Calendar className="w-4 h-4" />
-              <span>Últ. Manutenção</span>
+              <span>Last Update</span>
             </div>
             <span className="text-foreground">
               {forklift.ultimaManutencao || 'N/A'}
@@ -162,7 +161,7 @@ const ForkliftCard: React.FC<ForkliftCardProps> = ({ forklift, onClick, onDelete
           <div className="flex items-center justify-between text-sm">
             <div className="flex items-center gap-2 text-muted-foreground">
               <MapPin className="w-4 h-4" />
-              <span>Localização</span>
+              <span>Location</span>
             </div>
             <span className="text-foreground truncate max-w-[120px]">
               {forklift.localizacaoAtual || forklift.setor || 'N/A'}

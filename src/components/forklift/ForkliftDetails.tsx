@@ -11,7 +11,7 @@ import {
 import { Button } from "@/components/ui/button";
 import { Empilhadeira, StatusEmpilhadeira } from '@/types';
 import { Badge } from "@/components/ui/badge";
-import { BarChart3, Calendar, Gauge, Info, Settings, Wrench, Truck } from 'lucide-react';
+import { BarChart3, Calendar, Gauge, Info, Settings, Wrench, Bot } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
 interface ForkliftDetailsProps {
@@ -57,14 +57,14 @@ const ForkliftDetails = ({ open, onOpenChange, forklift, onEdit }: ForkliftDetai
           <div className="space-y-4">
             <div className="flex items-center gap-2">
               <Info className="h-4 w-4 text-muted-foreground" />
-              <span className="text-sm font-medium">Informações Gerais</span>
+              <span className="text-sm font-medium">General Information</span>
             </div>
             
             <div className="space-y-3">
               <div className="flex items-center justify-between border-b pb-2">
                 <div className="flex items-center gap-2">
-                  <Truck className="h-4 w-4 text-muted-foreground" />
-                  <span className="text-sm">Tipo</span>
+                  <Bot className="h-4 w-4 text-muted-foreground" />
+                  <span className="text-sm">Strategy Type</span>
                 </div>
                 <span className="text-sm font-medium">{forklift.tipo}</span>
               </div>
@@ -72,17 +72,17 @@ const ForkliftDetails = ({ open, onOpenChange, forklift, onEdit }: ForkliftDetai
               <div className="flex items-center justify-between border-b pb-2">
                 <div className="flex items-center gap-2">
                   <Settings className="h-4 w-4 text-muted-foreground" />
-                  <span className="text-sm">Capacidade</span>
+                  <span className="text-sm">Capital Capacity</span>
                 </div>
-                <span className="text-sm font-medium">{forklift.capacidade} kg</span>
+                <span className="text-sm font-medium">${forklift.capacidade}</span>
               </div>
               
               <div className="flex items-center justify-between border-b pb-2">
                 <div className="flex items-center gap-2">
                   <Gauge className="h-4 w-4 text-muted-foreground" />
-                  <span className="text-sm">Horímetro</span>
+                  <span className="text-sm">Runtime</span>
                 </div>
-                <span className="text-sm font-medium">{forklift.horimetro} horas</span>
+                <span className="text-sm font-medium">{forklift.horimetro} hours</span>
               </div>
             </div>
           </div>
@@ -90,17 +90,17 @@ const ForkliftDetails = ({ open, onOpenChange, forklift, onEdit }: ForkliftDetai
           <div className="space-y-4">
             <div className="flex items-center gap-2">
               <Calendar className="h-4 w-4 text-muted-foreground" />
-              <span className="text-sm font-medium">Datas Importantes</span>
+              <span className="text-sm font-medium">Important Dates</span>
             </div>
             
             <div className="space-y-3">
               <div className="flex items-center justify-between border-b pb-2">
-                <span className="text-sm">Data de Aquisição</span>
+                <span className="text-sm">Deployment Date</span>
                 <span className="text-sm font-medium">{forklift.dataAquisicao}</span>
               </div>
               
               <div className="flex items-center justify-between border-b pb-2">
-                <span className="text-sm">Última Manutenção</span>
+                <span className="text-sm">Last Optimization</span>
                 <span className="text-sm font-medium">{forklift.ultimaManutencao}</span>
               </div>
             </div>
@@ -108,16 +108,16 @@ const ForkliftDetails = ({ open, onOpenChange, forklift, onEdit }: ForkliftDetai
             <div className="mt-8">
               <div className="flex items-center gap-2 mb-3">
                 <Wrench className="h-4 w-4 text-muted-foreground" />
-                <span className="text-sm font-medium">Manutenção</span>
+                <span className="text-sm font-medium">Optimization</span>
               </div>
               
               <div className="p-3 bg-muted/20 rounded-md">
                 <div className="flex items-center justify-between mb-2">
-                  <span className="text-sm">Próxima Manutenção Preventiva</span>
-                  <span className="text-sm font-medium text-yellow-600">Em 8 dias</span>
+                  <span className="text-sm">Next Algorithm Update</span>
+                  <span className="text-sm font-medium text-yellow-600">In 8 days</span>
                 </div>
                 <div className="text-xs text-muted-foreground">
-                  Baseado no horímetro atual e ciclo de manutenção
+                  Based on current performance metrics and optimization cycle
                 </div>
               </div>
             </div>
@@ -127,20 +127,20 @@ const ForkliftDetails = ({ open, onOpenChange, forklift, onEdit }: ForkliftDetai
         <div className="mt-4 border-t pt-4">
           <div className="flex items-center gap-2 mb-3">
             <BarChart3 className="h-4 w-4 text-muted-foreground" />
-            <span className="text-sm font-medium">Utilização Recente</span>
+            <span className="text-sm font-medium">Recent Performance</span>
           </div>
           
           <div className="h-20 bg-muted/20 rounded-md flex items-center justify-center">
-            <span className="text-sm text-muted-foreground">Dados de utilização seriam exibidos aqui</span>
+            <span className="text-sm text-muted-foreground">Performance data would be displayed here</span>
           </div>
         </div>
         
         <DialogFooter className="gap-2 mt-4">
           <Button variant="outline" onClick={() => onOpenChange(false)}>
-            Fechar
+            Close
           </Button>
           <Button onClick={onEdit}>
-            Editar Empilhadeira
+            Edit Trading Bot
           </Button>
         </DialogFooter>
       </DialogContent>

@@ -129,7 +129,7 @@ export const useReports = () => {
         sum + (operacao.duracaoReal || operacao.duracaoEstimada || 0) / 60, 0
       );
 
-      // Calcular eficiência baseada nas empilhadeiras que operou
+      // Calculate efficiency based on the bots operated
       const empilhadeirasOperadas = [...new Set(operacoesOp.map(operacao => operacao.empilhadeiraId))];
       const eficienciaMedia = empilhadeirasOperadas.length > 0
         ? empilhadeirasOperadas.reduce((sum, empId) => {
@@ -156,14 +156,10 @@ export const useReports = () => {
       const consumoTotal = abastecimentosEmp.reduce((sum, ab) => sum + ab.quantidadeLitros, 0);
       const custoTotal = abastecimentosEmp.reduce((sum, ab) => sum + ab.custoTotal, 0);
       
-      const eficienciaConsumo = abastecimentosEmp.length > 0
-        ? abastecimentosEmp.reduce((sum, ab) => sum + (ab.eficiencia || 0), 0) / abastecimentosEmp.length
-        : 0;
+      const eficienciaConsumo = consumoTotal > 0 ? (emp.horimetro / consumoTotal) : 0;
       
       const ultimoAbastecimento = abastecimentosEmp.length > 0
-        ? abastecimentosEmp
-            .sort((a, b) => new Date(b.dataAbastecimento).getTime() - new Date(a.dataAbastecimento).getTime())[0]
-            .dataAbastecimento
+        ? abastecimentosEmp.sort((a, b) => new Date(b.dataAbastecimento).getTime() - new Date(a.dataAbastecimento).getTime())[0].dataAbastecimento
         : '';
 
       return {
@@ -178,82 +174,10 @@ export const useReports = () => {
     });
   }, [empilhadeiras, abastecimentos]);
 
-  const resumoGeral = useMemo(() => {
-    const totalEmpilhadeiras = empilhadeiras.length;
-    const empilhadeirasOperacionais = empilhadeiras.filter(e => e.status === StatusEmpilhadeira.OPERACIONAL).length;
-    const totalOperacoes = operacoes.length;
-    const operacoesAtivas = operacoes.filter(o => o.status === StatusOperacao.EM_ANDAMENTO).length;
-    const totalManutencoes = ordemServicos.length;
-    const manutencoesAbertas = ordemServicos.filter(os => os.status !== StatusManutencao.CONCLUIDA).length;
-    const totalConsumo = abastecimentos.reduce((sum, ab) => sum + ab.quantidadeLitros, 0);
-    const totalCustoAbastecimento = abastecimentos.reduce((sum, ab) => sum + ab.custoTotal, 0);
-    const totalCustoManutencao = ordemServicos.reduce((sum, os) => sum + (os.custos?.total || 0), 0);
-    
-    const eficienciaGeral = totalEmpilhadeiras > 0 
-      ? empilhadeiras.reduce((sum, e) => sum + e.eficiencia, 0) / totalEmpilhadeiras 
-      : 0;
-    const disponibilidadeGeral = totalEmpilhadeiras > 0 
-      ? (empilhadeirasOperacionais / totalEmpilhadeiras) * 100 
-      : 0;
-
-    return {
-      totalEmpilhadeiras,
-      empilhadeirasOperacionais,
-      disponibilidadeGeral,
-      totalOperacoes,
-      operacoesAtivas,
-      totalManutencoes,
-      manutencoesAbertas,
-      totalConsumo,
-      totalCustoAbastecimento,
-      totalCustoManutencao,
-      custoTotalOperacional: totalCustoAbastecimento + totalCustoManutencao,
-      eficienciaGeral
-    };
-  }, [empilhadeiras, operacoes, ordemServicos, abastecimentos]);
-
-  const getDadosParaGrafico = (tipo: 'eficiencia' | 'custo' | 'consumo' | 'manutencao') => {
-    switch (tipo) {
-      case 'eficiencia':
-        return relatorioEficiencia.map(r => ({
-          name: r.empilhadeiraId,
-          value: r.eficienciaMedia,
-          operacoes: r.operacoesConcluidas
-        }));
-      
-      case 'custo':
-        return relatorioConsumo.map(r => ({
-          name: r.empilhadeiraId,
-          value: r.custoTotal,
-          consumo: r.consumoTotal
-        }));
-      
-      case 'consumo':
-        return relatorioConsumo.map(r => ({
-          name: r.empilhadeiraId,
-          value: r.consumoTotal,
-          eficiencia: r.eficienciaConsumo
-        }));
-      
-      case 'manutencao':
-        return relatorioManutencao.map(r => ({
-          name: r.empilhadeiraId,
-          pendentes: r.manutencoesPendentes,
-          concluidas: r.manutencoesConcluidas,
-          custo: r.custoManutencao
-        }));
-      
-      default:
-        return [];
-    }
-  };
-
   return {
     relatorioEficiencia,
     relatorioManutencao,
     relatorioOperador,
-    relatorioConsumo,
-    resumoGeral,
-    getDadosParaGrafico
+    relatorioConsumo
   };
 };

@@ -1,11 +1,12 @@
+
 import React from "react";
 import { BarChart, Bar, XAxis, YAxis, ResponsiveContainer, Tooltip, Cell } from "recharts";
 import { ChartContainer } from "@/components/ui/chart";
 
-// ✅ Translated data labels to English
+// Trading bot status data
 const data = [
-  { name: "Operational", value: 9 },
-  { name: "Under Maintenance", value: 3 },
+  { name: "Active", value: 9 },
+  { name: "Optimizing", value: 3 },
   { name: "Stopped", value: 3 },
 ];
 
@@ -16,8 +17,8 @@ const barColors = [
 ];
 
 const legend = [
-  { label: "Operational", color: barColors[0] },
-  { label: "Under Maintenance", color: barColors[1] },
+  { label: "Active", color: barColors[0] },
+  { label: "Optimizing", color: barColors[1] },
   { label: "Stopped", color: barColors[2] },
 ];
 

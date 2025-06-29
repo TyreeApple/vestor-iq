@@ -67,13 +67,13 @@ const ForkliftList: React.FC<ForkliftListProps> = ({
           <TableHeader>
             <TableRow>
               <TableHead className="w-[100px]">ID</TableHead>
-              <TableHead>Modelo</TableHead>
-              <TableHead className="hidden md:table-cell">Tipo</TableHead>
-              <TableHead className="hidden lg:table-cell">Capacidade</TableHead>
-              <TableHead className="hidden xl:table-cell">Horímetro</TableHead>
-              <TableHead className="hidden xl:table-cell">Última Manutenção</TableHead>
+              <TableHead>Bot Name</TableHead>
+              <TableHead className="hidden md:table-cell">Type</TableHead>
+              <TableHead className="hidden lg:table-cell">Capital</TableHead>
+              <TableHead className="hidden xl:table-cell">Runtime</TableHead>
+              <TableHead className="hidden xl:table-cell">Last Update</TableHead>
               <TableHead>Status</TableHead>
-              <TableHead className="text-right">Ações</TableHead>
+              <TableHead className="text-right">Actions</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
@@ -88,7 +88,7 @@ const ForkliftList: React.FC<ForkliftListProps> = ({
                   <div>
                     <div className="font-medium">{forklift.modelo}</div>
                     <div className="text-sm text-muted-foreground md:hidden">
-                      {forklift.capacidade} kg • {forklift.tipo}
+                      ${forklift.capacidade} • {forklift.tipo}
                     </div>
                   </div>
                 </TableCell>
@@ -97,10 +97,10 @@ const ForkliftList: React.FC<ForkliftListProps> = ({
                     {forklift.tipo}
                   </Badge>
                 </TableCell>
-                <TableCell className="hidden lg:table-cell">{forklift.capacidade} kg</TableCell>
+                <TableCell className="hidden lg:table-cell">${forklift.capacidade}</TableCell>
                 <TableCell className="hidden xl:table-cell">
                   <div className="font-mono text-sm bg-muted px-2 py-1 rounded">
-                    {forklift.horimetro.toString().padStart(5, '0')}
+                    {forklift.horimetro.toString().padStart(5, '0')}h
                   </div>
                 </TableCell>
                 <TableCell className="hidden xl:table-cell">{forklift.ultimaManutencao}</TableCell>
@@ -139,9 +139,9 @@ const ForkliftList: React.FC<ForkliftListProps> = ({
       
       {forklifts.length === 0 && (
         <div className="text-center p-8 text-muted-foreground">
-          <div className="text-4xl mb-4">📋</div>
-          <h3 className="text-lg font-medium mb-2">Nenhuma empilhadeira encontrada</h3>
-          <p>Os dados aparecerão aqui quando disponíveis.</p>
+          <div className="text-4xl mb-4">🤖</div>
+          <h3 className="text-lg font-medium mb-2">No trading bots found</h3>
+          <p>Data will appear here when available.</p>
         </div>
       )}
     </div>

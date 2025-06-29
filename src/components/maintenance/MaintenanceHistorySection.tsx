@@ -24,7 +24,7 @@ const MaintenanceHistorySection: React.FC<MaintenanceHistorySectionProps> = ({
         <div>
           <h2 className="text-2xl font-bold text-foreground">Complete History</h2>
           <p className="text-muted-foreground">
-            All maintenance records in the system
+            All optimization records in the system
           </p>
         </div>
         <Button variant="outline" className="gap-2" onClick={onReport}>

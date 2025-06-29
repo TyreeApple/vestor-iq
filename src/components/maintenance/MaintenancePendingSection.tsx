@@ -22,9 +22,9 @@ const MaintenancePendingSection: React.FC<MaintenancePendingSectionProps> = ({
     <div>
       <div className="flex items-center justify-between mb-6">
         <div>
-          <h2 className="text-2xl font-bold text-foreground">Pending Maintenance</h2>
+          <h2 className="text-2xl font-bold text-foreground">Pending Optimizations</h2>
           <p className="text-muted-foreground">
-            {pendingMaintenance.length} {pendingMaintenance.length === 1 ? 'maintenance awaiting' : 'maintenance awaiting'} attention
+            {pendingMaintenance.length} {pendingMaintenance.length === 1 ? 'optimization awaiting' : 'optimizations awaiting'} attention
           </p>
         </div>
         <div className="flex items-center gap-2">

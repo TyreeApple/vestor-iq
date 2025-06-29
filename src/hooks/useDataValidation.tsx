@@ -21,28 +21,28 @@ export const useDataValidation = () => {
     const errors: string[] = [];
     
     if (!empilhadeira.modelo?.trim()) {
-      errors.push('Modelo é obrigatório');
+      errors.push('Bot name is required');
     }
     
     if (!empilhadeira.marca?.trim()) {
-      errors.push('Marca é obrigatória');
+      errors.push('Brand is required');
     }
     
     if (!empilhadeira.capacidade || empilhadeira.capacidade <= 0) {
-      errors.push('Capacidade deve ser maior que zero');
+      errors.push('Capital capacity must be greater than zero');
     }
     
     if (!empilhadeira.numeroSerie?.trim()) {
-      errors.push('Número de série é obrigatório');
+      errors.push('Serial number is required');
     }
     
-    // Verifica duplicação de número de série
+    // Check for duplicate serial number
     if (empilhadeira.numeroSerie) {
-      const existeOutra = empilhadeiras.find(e => 
+      const existingBot = empilhadeiras.find(e => 
         e.numeroSerie === empilhadeira.numeroSerie && e.id !== empilhadeira.id
       );
-      if (existeOutra) {
-        errors.push('Número de série já existe em outra empilhadeira');
+      if (existingBot) {
+        errors.push('Serial number already exists for another trading bot');
       }
     }
     
@@ -53,38 +53,38 @@ export const useDataValidation = () => {
     const errors: string[] = [];
     
     if (!operador.nome?.trim()) {
-      errors.push('Nome é obrigatório');
+      errors.push('Name is required');
     }
     
     if (!operador.cpf?.trim()) {
-      errors.push('CPF é obrigatório');
+      errors.push('CPF is required');
     } else if (!/^\d{3}\.\d{3}\.\d{3}-\d{2}$/.test(operador.cpf)) {
-      errors.push('CPF deve estar no formato 000.000.000-00');
+      errors.push('CPF must be in format 000.000.000-00');
     }
     
     if (!operador.email?.trim()) {
-      errors.push('Email é obrigatório');
+      errors.push('Email is required');
     } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(operador.email)) {
-      errors.push('Email deve ter formato válido');
+      errors.push('Email must have valid format');
     }
     
-    // Verifica duplicação de CPF
+    // Check for duplicate CPF
     if (operador.cpf) {
-      const existeOutro = operadores.find(o => 
+      const existingTrader = operadores.find(o => 
         o.cpf === operador.cpf && o.id !== operador.id
       );
-      if (existeOutro) {
-        errors.push('CPF já cadastrado para outro operador');
+      if (existingTrader) {
+        errors.push('CPF already registered for another trader');
       }
     }
     
-    // Verifica duplicação de email
+    // Check for duplicate email
     if (operador.email) {
-      const existeOutro = operadores.find(o => 
+      const existingTrader = operadores.find(o => 
         o.email === operador.email && o.id !== operador.id
       );
-      if (existeOutro) {
-        errors.push('Email já cadastrado para outro operador');
+      if (existingTrader) {
+        errors.push('Email already registered for another trader');
       }
     }
     
@@ -95,49 +95,49 @@ export const useDataValidation = () => {
     const errors: string[] = [];
     
     if (!operacao.empilhadeiraId) {
-      errors.push('Empilhadeira é obrigatória');
+      errors.push('Trading bot is required');
     } else {
-      // Verifica se empilhadeira existe e está disponível
+      // Check if bot exists and is available
       const empilhadeira = empilhadeiras.find(e => e.id === operacao.empilhadeiraId);
       if (!empilhadeira) {
-        errors.push('Empilhadeira não encontrada');
+        errors.push('Trading bot not found');
       } else if (empilhadeira.status !== StatusEmpilhadeira.OPERACIONAL) {
-        errors.push('Empilhadeira não está operacional');
+        errors.push('Trading bot is not operational');
       } else if (operacao.status === StatusOperacao.EM_ANDAMENTO) {
-        // Verifica se empilhadeira já está em uso
-        const operacaoAtiva = operacoes.find(o => 
+        // Check if bot is already in use
+        const activeOperation = operacoes.find(o => 
           o.empilhadeiraId === operacao.empilhadeiraId && 
           o.status === StatusOperacao.EM_ANDAMENTO &&
           o.id !== operacao.id
         );
-        if (operacaoAtiva) {
-          errors.push('Empilhadeira já está em uso em outra operação');
+        if (activeOperation) {
+          errors.push('Trading bot is already in use in another operation');
         }
       }
     }
     
     if (!operacao.operadorId) {
-      errors.push('Operador é obrigatório');
+      errors.push('Trader is required');
     } else {
-      // Verifica se operador existe e está ativo
+      // Check if trader exists and is active
       const operador = operadores.find(o => o.id === operacao.operadorId);
       if (!operador) {
-        errors.push('Operador não encontrado');
+        errors.push('Trader not found');
       } else if (operador.status !== 'Ativo') {
-        errors.push('Operador não está ativo');
+        errors.push('Trader is not active');
       }
     }
     
     if (!operacao.tipo) {
-      errors.push('Tipo de operação é obrigatório');
+      errors.push('Operation type is required');
     }
     
     if (!operacao.setor?.trim()) {
-      errors.push('Setor é obrigatório');
+      errors.push('Trading floor is required');
     }
     
     if (!operacao.duracaoEstimada || operacao.duracaoEstimada <= 0) {
-      errors.push('Duração estimada deve ser maior que zero');
+      errors.push('Estimated duration must be greater than zero');
     }
     
     return errors;
@@ -147,38 +147,38 @@ export const useDataValidation = () => {
     const errors: string[] = [];
     
     if (!ordem.empilhadeiraId) {
-      errors.push('Empilhadeira é obrigatória');
+      errors.push('Trading bot is required');
     } else {
       const empilhadeira = empilhadeiras.find(e => e.id === ordem.empilhadeiraId);
       if (!empilhadeira) {
-        errors.push('Empilhadeira não encontrada');
+        errors.push('Trading bot not found');
       }
     }
     
     if (!ordem.problema?.trim()) {
-      errors.push('Descrição do problema é obrigatória');
+      errors.push('Problem description is required');
     }
     
     if (!ordem.tecnicoId) {
-      errors.push('Técnico responsável é obrigatório');
+      errors.push('Responsible technician is required');
     } else {
       const tecnico = operadores.find(o => o.id === ordem.tecnicoId);
       if (!tecnico) {
-        errors.push('Técnico não encontrado');
+        errors.push('Technician not found');
       }
     }
     
     if (!ordem.tipo) {
-      errors.push('Tipo de manutenção é obrigatório');
+      errors.push('Optimization type is required');
     }
     
     if (!ordem.dataAbertura) {
-      errors.push('Data de abertura é obrigatória');
+      errors.push('Opening date is required');
     }
     
-    // Se status é concluída, deve ter data de conclusão
+    // If status is completed, must have completion date
     if (ordem.status === StatusManutencao.CONCLUIDA && !ordem.dataConclusao) {
-      errors.push('Data de conclusão é obrigatória para ordens concluídas');
+      errors.push('Completion date is required for completed orders');
     }
     
     return errors;
@@ -188,37 +188,37 @@ export const useDataValidation = () => {
     const errors: string[] = [];
     
     if (!abastecimento.empilhadeiraId) {
-      errors.push('Empilhadeira é obrigatória');
+      errors.push('Trading bot is required');
     } else {
       const empilhadeira = empilhadeiras.find(e => e.id === abastecimento.empilhadeiraId);
       if (!empilhadeira) {
-        errors.push('Empilhadeira não encontrada');
+        errors.push('Trading bot not found');
       }
     }
     
     if (!abastecimento.operadorId) {
-      errors.push('Operador é obrigatório');
+      errors.push('Trader is required');
     } else {
       const operador = operadores.find(o => o.id === abastecimento.operadorId);
       if (!operador) {
-        errors.push('Operador não encontrado');
+        errors.push('Trader not found');
       }
     }
     
     if (!abastecimento.quantidadeLitros || abastecimento.quantidadeLitros <= 0) {
-      errors.push('Quantidade de litros deve ser maior que zero');
+      errors.push('Capital amount must be greater than zero');
     }
     
     if (!abastecimento.precoLitro || abastecimento.precoLitro <= 0) {
-      errors.push('Preço por litro deve ser maior que zero');
+      errors.push('Price per unit must be greater than zero');
     }
     
     if (!abastecimento.fornecedor?.trim()) {
-      errors.push('Fornecedor é obrigatório');
+      errors.push('Provider is required');
     }
     
     if (!abastecimento.dataAbastecimento) {
-      errors.push('Data de abastecimento é obrigatória');
+      errors.push('Allocation date is required');
     }
     
     return errors;
@@ -227,7 +227,7 @@ export const useDataValidation = () => {
   const showValidationErrors = useCallback((errors: string[]) => {
     if (errors.length > 0) {
       toast({
-        title: "Erro de Validação",
+        title: "Validation Error",
         description: errors.join('\n'),
         variant: "destructive"
       });

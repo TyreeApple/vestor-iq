@@ -90,19 +90,19 @@ const MaintenancePage = () => {
     searchFields: ['problema', 'empilhadeiraId', 'reportedBy']
   });
 
-  // Handle add/edit maintenance
-  const handleSaveMaintenance = (maintenanceData: OrdemServico) => {
+  // Handle add/edit optimization
+  const handleSaveOptimization = (maintenanceData: OrdemServico) => {
     if (editDialogOpen && selectedMaintenance) {
       updateOrdemServico(maintenanceData.id, maintenanceData);
       toast({
-        title: "Maintenance updated",
-        description: "The maintenance data has been updated successfully."
+        title: "Optimization updated",
+        description: "The optimization data has been updated successfully."
       });
     } else {
       addOrdemServico(maintenanceData);
       toast({
-        title: "Maintenance created",
-        description: "New service order created successfully."
+        title: "Optimization created",
+        description: "New optimization order created successfully."
       });
     }
     setAddDialogOpen(false);
@@ -110,19 +110,19 @@ const MaintenancePage = () => {
     setSelectedMaintenance(null);
   };
 
-  // Handle edit maintenance
-  const handleEditMaintenance = (maintenance: OrdemServico) => {
+  // Handle edit optimization
+  const handleEditOptimization = (maintenance: OrdemServico) => {
     setSelectedMaintenance(maintenance);
     setEditDialogOpen(true);
   };
 
-  // Handle delete maintenance
-  const handleDeleteMaintenance = (id: string) => {
-    if (confirm("Are you sure you want to delete this maintenance record?")) {
+  // Handle delete optimization
+  const handleDeleteOptimization = (id: string) => {
+    if (confirm("Are you sure you want to delete this optimization record?")) {
       deleteOrdemServico(id);
       toast({
-        title: "Maintenance deleted",
-        description: "The maintenance record has been deleted successfully."
+        title: "Optimization deleted",
+        description: "The optimization record has been deleted successfully."
       });
     }
   };
@@ -134,7 +134,7 @@ const MaintenancePage = () => {
     updateOrdemServico(id, { ...item, status: newStatus });
     toast({
       title: "Status updated",
-      description: `Maintenance status changed to ${newStatus}.`
+      description: `Optimization status changed to ${newStatus}.`
     });
   };
 
@@ -150,12 +150,12 @@ const MaintenancePage = () => {
   const handleGenerateReport = () => {
     toast({
       title: "Report generated",
-      description: "The complete maintenance report has been generated."
+      description: "The complete optimization report has been generated."
     });
   };
 
-  // Get pending maintenance
-  const pendingMaintenance = filteredData.filter(m => m.status !== StatusManutencao.CONCLUIDA);
+  // Get pending optimizations
+  const pendingOptimizations = filteredData.filter(m => m.status !== StatusManutencao.CONCLUIDA);
 
   return (
     <div className="space-y-8">
@@ -180,27 +180,27 @@ const MaintenancePage = () => {
         setViewMode={setViewMode}
       />
       
-      {/* Pending Maintenance Section */}
+      {/* Pending Optimizations Section */}
       <MaintenancePendingSection
-        pendingMaintenance={pendingMaintenance}
-        onEdit={handleEditMaintenance}
-        onDelete={handleDeleteMaintenance}
+        pendingMaintenance={pendingOptimizations}
+        onEdit={handleEditOptimization}
+        onDelete={handleDeleteOptimization}
         onStatusChange={handleStatusChange}
       />
 
-      {/* Maintenance History Section */}
+      {/* Optimization History Section */}
       <MaintenanceHistorySection
         data={maintenanceItems}
-        onEdit={handleEditMaintenance}
-        onDelete={handleDeleteMaintenance}
+        onEdit={handleEditOptimization}
+        onDelete={handleDeleteOptimization}
         onReport={handleGenerateReport}
       />
       
-      {/* Add/Edit Maintenance Dialog */}
+      {/* Add/Edit Optimization Dialog */}
       <MaintenanceDialog 
         open={addDialogOpen} 
         onOpenChange={setAddDialogOpen}
-        onSave={handleSaveMaintenance}
+        onSave={handleSaveOptimization}
         availableForklifts={availableForklifts}
         availableOperators={availableOperators}
       />
@@ -208,7 +208,7 @@ const MaintenancePage = () => {
         open={editDialogOpen} 
         onOpenChange={setEditDialogOpen}
         maintenance={selectedMaintenance || undefined}
-        onSave={handleSaveMaintenance}
+        onSave={handleSaveOptimization}
         availableForklifts={availableForklifts}
         availableOperators={availableOperators}
       />

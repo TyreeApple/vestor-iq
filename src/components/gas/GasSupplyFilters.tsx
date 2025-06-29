@@ -29,7 +29,7 @@ const GasSupplyFilters: React.FC<GasSupplyFiltersProps> = ({
           <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-slate-400 w-4 h-4" />
           <Input 
             type="text" 
-            placeholder="Search by ID or model..." 
+            placeholder="Search by ID or trading pair..." 
             className="pl-10 bg-slate-900/50 border-slate-600/50 text-slate-100 placeholder:text-slate-400 focus:border-blue-500/50 focus:ring-blue-500/20"
             value={search}
             onChange={(e) => setSearch(e.target.value)}
@@ -65,9 +65,9 @@ const GasSupplyFilters: React.FC<GasSupplyFiltersProps> = ({
             </SelectTrigger>
             <SelectContent className="bg-slate-800 border-slate-600">
               <SelectItem value="all" className="text-slate-100 hover:bg-slate-700 focus:bg-slate-700">All Types</SelectItem>
-              <SelectItem value="glp" className="text-slate-100 hover:bg-slate-700 focus:bg-slate-700">LPG</SelectItem>
-              <SelectItem value="gnv" className="text-slate-100 hover:bg-slate-700 focus:bg-slate-700">CNG</SelectItem>
-              <SelectItem value="diesel" className="text-slate-100 hover:bg-slate-700 focus:bg-slate-700">Diesel</SelectItem>
+              <SelectItem value="glp" className="text-slate-100 hover:bg-slate-700 focus:bg-slate-700">Scalping</SelectItem>
+              <SelectItem value="gnv" className="text-slate-100 hover:bg-slate-700 focus:bg-slate-700">Swing</SelectItem>
+              <SelectItem value="diesel" className="text-slate-100 hover:bg-slate-700 focus:bg-slate-700">Arbitrage</SelectItem>
             </SelectContent>
           </Select>
         </div>
