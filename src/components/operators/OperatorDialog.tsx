@@ -130,6 +130,7 @@ const OperatorDialog = ({ open, onOpenChange, operator, onSave }: OperatorDialog
       {
         id: `cert-aso-${formData.id}`,
         tipo: 'ASO' as const,
+        numero: `ASO-${Math.floor(Math.random() * 10000).toString().padStart(4, '0')}`,
         dataEmissao: format(new Date(), 'dd/MM/yyyy'),
         dataVencimento: formData.asoExpirationDate || '',
         status: formData.asoStatus || StatusCertificacao.VALIDO,
@@ -138,6 +139,7 @@ const OperatorDialog = ({ open, onOpenChange, operator, onSave }: OperatorDialog
       {
         id: `cert-nr11-${formData.id}`,
         tipo: 'NR-11' as const,
+        numero: `NR11-${Math.floor(Math.random() * 10000).toString().padStart(4, '0')}`,
         dataEmissao: format(new Date(), 'dd/MM/yyyy'),
         dataVencimento: formData.nrExpirationDate || '',
         status: formData.nrStatus || StatusCertificacao.VALIDO,
