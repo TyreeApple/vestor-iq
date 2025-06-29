@@ -49,46 +49,46 @@ const GasSupplyPage = () => {
   const filterOptions = [
     {
       key: 'empilhadeiraId',
-      label: 'Empilhadeira',
+      label: 'Forklift',
       type: 'select' as const,
       options: forkliftIds.map(id => ({ value: id, label: id }))
     },
     {
       key: 'operadorNome',
-      label: 'Operador',
+      label: 'Operator',
       type: 'select' as const,
       options: operatorNames.map(name => ({ value: name, label: name }))
     },
     {
       key: 'fornecedor',
-      label: 'Fornecedor',
+      label: 'Supplier',
       type: 'select' as const,
       options: suppliers.map(supplier => ({ value: supplier, label: supplier }))
     },
     {
       key: 'localAbastecimento',
-      label: 'Local',
+      label: 'Location',
       type: 'select' as const,
       options: locations.map(location => ({ value: location, label: location }))
     },
     {
       key: 'dataInicial',
-      label: 'Data Inicial',
+      label: 'Start Date',
       type: 'date' as const
     },
     {
       key: 'dataFinal',
-      label: 'Data Final',
+      label: 'End Date',
       type: 'date' as const
     },
     {
       key: 'quantidadeMinima',
-      label: 'Quantidade Mínima (L)',
+      label: 'Minimum Quantity (L)',
       type: 'number' as const
     },
     {
       key: 'quantidadeMaxima',
-      label: 'Quantidade Máxima (L)',
+      label: 'Maximum Quantity (L)',
       type: 'number' as const
     }
   ];
@@ -140,7 +140,7 @@ const GasSupplyPage = () => {
   // Format date
   const formatDate = (dateString: string) => {
     const date = new Date(dateString);
-    return date.toLocaleDateString('pt-BR', {
+    return date.toLocaleDateString('en-US', {
       day: '2-digit',
       month: '2-digit',
       year: 'numeric'
@@ -169,14 +169,14 @@ const GasSupplyPage = () => {
     if (editDialogOpen && selectedGasSupply) {
       updateAbastecimento(supplyData.id, supplyData);
       toast({
-        title: "Abastecimento atualizado",
-        description: "O abastecimento foi atualizado com sucesso."
+        title: "Fuel supply updated",
+        description: "The fuel supply has been updated successfully."
       });
     } else {
       addAbastecimento(supplyData);
       toast({
-        title: "Abastecimento criado",
-        description: "Novo abastecimento registrado com sucesso."
+        title: "Fuel supply created",
+        description: "New fuel supply registered successfully."
       });
     }
     setAddDialogOpen(false);
@@ -186,11 +186,11 @@ const GasSupplyPage = () => {
 
   // Handle delete gas supply
   const handleDeleteGasSupply = (id: string) => {
-    if (confirm("Tem certeza que deseja excluir este abastecimento?")) {
+    if (confirm("Are you sure you want to delete this fuel supply?")) {
       deleteAbastecimento(id);
       toast({
-        title: "Abastecimento excluído",
-        description: "O abastecimento foi excluído com sucesso."
+        title: "Fuel supply deleted",
+        description: "The fuel supply has been deleted successfully."
       });
     }
   };
@@ -201,10 +201,10 @@ const GasSupplyPage = () => {
       <div className="flex flex-col lg:flex-row justify-between items-start lg:items-center gap-6">
         <div className="space-y-2">
           <h1 className="text-4xl font-bold bg-gradient-to-r from-blue-600 via-purple-600 to-blue-800 bg-clip-text text-transparent">
-            Gestão de Abastecimento
+            Fuel Supply Management
           </h1>
           <p className="text-lg text-muted-foreground font-medium">
-            Controle Inteligente de Abastecimento de Combustível
+            Intelligent Fuel Supply Control
           </p>
         </div>
         
@@ -217,7 +217,7 @@ const GasSupplyPage = () => {
             }}
           >
             <Plus className="w-4 h-4" />
-            Novo Abastecimento
+            New Fuel Supply
           </Button>
         </div>
       </div>
@@ -225,28 +225,28 @@ const GasSupplyPage = () => {
       {/* KPI Cards */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
         <StandardCard
-          title="Total de Abastecimentos"
+          title="Total Fuel Supplies"
           value={hasRealData ? finalFilteredSupplies.length : 0}
           icon={Truck}
           variant="info"
         />
         
         <StandardCard
-          title="Consumo Total"
+          title="Total Consumption"
           value={hasRealData ? `${totalConsumption.toFixed(1)}L` : "0L"}
           icon={Fuel}
           variant="success"
         />
         
         <StandardCard
-          title="Custo Total"
-          value={hasRealData ? `R$ ${totalCost.toFixed(0)}` : "R$ 0"}
+          title="Total Cost"
+          value={hasRealData ? `$${totalCost.toFixed(0)}` : "$0"}
           icon={Gauge}
           variant="warning"
         />
         
         <StandardCard
-          title="Eficiência Média"
+          title="Average Efficiency"
           value={hasRealData ? averageEfficiency.toFixed(2) : "N/A"}
           icon={Droplets}
           variant="default"
@@ -264,7 +264,7 @@ const GasSupplyPage = () => {
                 <Search className="absolute left-4 top-1/2 transform -translate-y-1/2 text-muted-foreground w-5 h-5" />
                 <Input 
                   type="text" 
-                  placeholder="Buscar por empilhadeira, fornecedor ou local..." 
+                  placeholder="Search by forklift, supplier or location..." 
                   className="pl-12 pr-4 py-4 text-lg bg-white dark:bg-slate-900 border-2 border-slate-200 dark:border-slate-700 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 rounded-xl shadow-lg transition-all duration-200"
                   value={search}
                   onChange={(e) => setSearch(e.target.value)}
@@ -281,13 +281,13 @@ const GasSupplyPage = () => {
                 )}
               </div>
 
-              {/* Quick Filter - Operador */}
+              {/* Quick Filter - Operator */}
               <Select value={quickOperator} onValueChange={setQuickOperator}>
                 <SelectTrigger className="w-[160px] border-2 border-slate-200 dark:border-slate-700 hover:border-blue-300 dark:hover:border-blue-600 transition-colors">
-                  <SelectValue placeholder="Operador" />
+                  <SelectValue placeholder="Operator" />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="all">Todos Operadores</SelectItem>
+                  <SelectItem value="all">All Operators</SelectItem>
                   {operatorNames.map(operator => (
                     <SelectItem key={operator} value={operator}>
                       {operator}
@@ -296,13 +296,13 @@ const GasSupplyPage = () => {
                 </SelectContent>
               </Select>
 
-              {/* Quick Filter - Empilhadeira */}
+              {/* Quick Filter - Forklift */}
               <Select value={quickForklift} onValueChange={setQuickForklift}>
                 <SelectTrigger className="w-[160px] border-2 border-slate-200 dark:border-slate-700 hover:border-blue-300 dark:hover:border-blue-600 transition-colors">
-                  <SelectValue placeholder="Empilhadeira" />
+                  <SelectValue placeholder="Forklift" />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="all">Todas Empilhadeiras</SelectItem>
+                  <SelectItem value="all">All Forklifts</SelectItem>
                   {forkliftIds.map(forklift => (
                     <SelectItem key={forklift} value={forklift}>
                       {forklift}
@@ -311,13 +311,13 @@ const GasSupplyPage = () => {
                 </SelectContent>
               </Select>
 
-              {/* Quick Filter - Local */}
+              {/* Quick Filter - Location */}
               <Select value={quickLocation} onValueChange={setQuickLocation}>
                 <SelectTrigger className="w-[160px] border-2 border-slate-200 dark:border-slate-700 hover:border-blue-300 dark:hover:border-blue-600 transition-colors">
-                  <SelectValue placeholder="Local" />
+                  <SelectValue placeholder="Location" />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="all">Todos Locais</SelectItem>
+                  <SelectItem value="all">All Locations</SelectItem>
                   {locations.map(location => (
                     <SelectItem key={location} value={location}>
                       {location}
@@ -346,7 +346,7 @@ const GasSupplyPage = () => {
                   onClick={clearAllFilters}
                 >
                   <X className="w-4 h-4" />
-                  Limpar ({activeFiltersCount})
+                  Clear ({activeFiltersCount})
                 </Button>
               )}
             </div>
@@ -359,7 +359,7 @@ const GasSupplyPage = () => {
                 <div className="flex items-center gap-2">
                   <Filter className="w-4 h-4 text-blue-600" />
                   <span className="text-sm font-medium text-blue-900 dark:text-blue-100">
-                    {activeFiltersCount} filtro{activeFiltersCount > 1 ? 's' : ''} ativo{activeFiltersCount > 1 ? 's' : ''} • {finalFilteredSupplies.length} resultado{finalFilteredSupplies.length !== 1 ? 's' : ''} encontrado{finalFilteredSupplies.length !== 1 ? 's' : ''}
+                    {activeFiltersCount} active filter{activeFiltersCount > 1 ? 's' : ''} • {finalFilteredSupplies.length} result{finalFilteredSupplies.length !== 1 ? 's' : ''} found
                   </span>
                 </div>
               </div>
@@ -372,10 +372,10 @@ const GasSupplyPage = () => {
       <div className="space-y-4">
         <div className="flex items-center justify-between">
           <h2 className="text-2xl font-bold text-slate-800 dark:text-slate-200">
-            Registros de Abastecimento
+            Fuel Supply Records
           </h2>
           <div className="text-sm text-muted-foreground bg-slate-100 dark:bg-slate-800 px-3 py-1 rounded-full">
-            {finalFilteredSupplies.length} registros encontrados
+            {finalFilteredSupplies.length} records found
           </div>
         </div>
         
@@ -442,7 +442,7 @@ const GasSupplyPage = () => {
                         <p className="font-semibold text-slate-800 dark:text-slate-200">
                           {supply.operador?.nome || 'N/A'}
                         </p>
-                        <p className="text-xs text-muted-foreground">Operador</p>
+                        <p className="text-xs text-muted-foreground">Operator</p>
                       </div>
                     </div>
                   </div>
@@ -453,7 +453,7 @@ const GasSupplyPage = () => {
                       <p className="text-2xl font-bold text-blue-700 dark:text-blue-400">
                         {supply.quantidadeLitros.toFixed(1)}
                       </p>
-                      <p className="text-xs text-muted-foreground">Litros</p>
+                      <p className="text-xs text-muted-foreground">Liters</p>
                     </div>
                     
                     <div className="text-center p-3 bg-gradient-to-br from-green-50 to-green-100 dark:from-green-900/20 dark:to-green-800/20 rounded-lg">
@@ -474,7 +474,7 @@ const GasSupplyPage = () => {
                     </div>
                     <div className="flex items-center gap-2">
                       <span className="text-sm font-semibold text-slate-800 dark:text-slate-200">
-                        R$ {supply.custoTotal.toFixed(2)}
+                        ${supply.custoTotal.toFixed(2)}
                       </span>
                     </div>
                   </div>
@@ -490,10 +490,10 @@ const GasSupplyPage = () => {
               </div>
               <div>
                 <h3 className="text-lg font-semibold text-slate-600 dark:text-slate-400">
-                  Nenhum abastecimento encontrado
+                  No fuel supplies found
                 </h3>
                 <p className="text-muted-foreground mt-1">
-                  Tente ajustar os filtros ou adicione um novo registro de abastecimento
+                  Try adjusting the filters or add a new fuel supply record
                 </p>
               </div>
               <Button 
@@ -504,7 +504,7 @@ const GasSupplyPage = () => {
                 }}
               >
                 <Plus className="w-4 h-4" />
-                Novo Abastecimento
+                New Fuel Supply
               </Button>
             </div>
           </Card>

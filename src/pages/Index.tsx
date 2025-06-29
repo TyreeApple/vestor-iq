@@ -8,7 +8,7 @@ import Operations from './Operations';
 import Maintenance from './Maintenance';
 import GasSupply from './GasSupply';
 import Reports from './Reports';
-import Configuracao from './Configuracao';
+import Settings from './Settings';
 import MarketData from './MarketData';
 import NotFound from './NotFound';
 
@@ -28,7 +28,7 @@ const Index = () => {
       <Route path="/relatorios" element={<Reports />} />
       <Route path="/reports" element={<Reports />} />
       <Route path="/market-data" element={<MarketData />} />
-      <Route path="/settings" element={<Configuracao />} />
+      <Route path="/settings" element={<Settings />} />
       <Route path="*" element={<NotFound />} />
     </Routes>
   );
