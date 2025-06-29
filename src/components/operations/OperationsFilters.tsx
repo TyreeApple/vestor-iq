@@ -33,7 +33,7 @@ const OperationsFilters: React.FC<OperationsFiltersProps> = ({
           <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-slate-400 w-4 h-4" />
           <Input 
             type="text" 
-            placeholder="Buscar por empilhadeira, operador, ID ou responsável..." 
+            placeholder="Search by algorithm, bot, ID or responsible..." 
             className="pl-10 bg-slate-900/50 border-slate-600/50 text-slate-100 placeholder:text-slate-400 focus:border-blue-500/50 focus:ring-blue-500/20"
             value={search}
             onChange={(e) => setSearch(e.target.value)}
@@ -47,11 +47,11 @@ const OperationsFilters: React.FC<OperationsFiltersProps> = ({
             onValueChange={(value) => setSelectedOperator(value === 'all' ? '' : value)}
           >
             <SelectTrigger className="bg-slate-900/50 border-slate-600/50 text-slate-100 hover:bg-slate-800/70 transition-colors">
-              <SelectValue placeholder="Todos os Operadores" />
+              <SelectValue placeholder="All Algorithms" />
             </SelectTrigger>
             <SelectContent className="bg-slate-800 border-slate-600">
-              <SelectItem value="all" className="text-slate-100 hover:bg-slate-700 focus:bg-slate-700">Todos os Operadores</SelectItem>
-              <SelectItem value="joao-silva" className="text-slate-100 hover:bg-slate-700 focus:bg-slate-700">João Silva</SelectItem>
+              <SelectItem value="all" className="text-slate-100 hover:bg-slate-700 focus:bg-slate-700">All Algorithms</SelectItem>
+              <SelectItem value="joao-silva" className="text-slate-100 hover:bg-slate-700 focus:bg-slate-700">John Silva</SelectItem>
               <SelectItem value="maria-santos" className="text-slate-100 hover:bg-slate-700 focus:bg-slate-700">Maria Santos</SelectItem>
               <SelectItem value="pedro-oliveira" className="text-slate-100 hover:bg-slate-700 focus:bg-slate-700">Pedro Oliveira</SelectItem>
               <SelectItem value="ana-costa" className="text-slate-100 hover:bg-slate-700 focus:bg-slate-700">Ana Costa</SelectItem>
@@ -66,15 +66,15 @@ const OperationsFilters: React.FC<OperationsFiltersProps> = ({
             onValueChange={(value) => setSelectedForklift(value === 'all' ? '' : value)}
           >
             <SelectTrigger className="bg-slate-900/50 border-slate-600/50 text-slate-100 hover:bg-slate-800/70 transition-colors">
-              <SelectValue placeholder="Todas as Empilhadeiras" />
+              <SelectValue placeholder="All Trading Bots" />
             </SelectTrigger>
             <SelectContent className="bg-slate-800 border-slate-600">
-              <SelectItem value="all" className="text-slate-100 hover:bg-slate-700 focus:bg-slate-700">Todas as Empilhadeiras</SelectItem>
-              <SelectItem value="emp-001" className="text-slate-100 hover:bg-slate-700 focus:bg-slate-700">EMP-001</SelectItem>
-              <SelectItem value="emp-002" className="text-slate-100 hover:bg-slate-700 focus:bg-slate-700">EMP-002</SelectItem>
-              <SelectItem value="emp-003" className="text-slate-100 hover:bg-slate-700 focus:bg-slate-700">EMP-003</SelectItem>
-              <SelectItem value="emp-004" className="text-slate-100 hover:bg-slate-700 focus:bg-slate-700">EMP-004</SelectItem>
-              <SelectItem value="emp-005" className="text-slate-100 hover:bg-slate-700 focus:bg-slate-700">EMP-005</SelectItem>
+              <SelectItem value="all" className="text-slate-100 hover:bg-slate-700 focus:bg-slate-700">All Trading Bots</SelectItem>
+              <SelectItem value="emp-001" className="text-slate-100 hover:bg-slate-700 focus:bg-slate-700">BOT-001</SelectItem>
+              <SelectItem value="emp-002" className="text-slate-100 hover:bg-slate-700 focus:bg-slate-700">BOT-002</SelectItem>
+              <SelectItem value="emp-003" className="text-slate-100 hover:bg-slate-700 focus:bg-slate-700">BOT-003</SelectItem>
+              <SelectItem value="emp-004" className="text-slate-100 hover:bg-slate-700 focus:bg-slate-700">BOT-004</SelectItem>
+              <SelectItem value="emp-005" className="text-slate-100 hover:bg-slate-700 focus:bg-slate-700">BOT-005</SelectItem>
             </SelectContent>
           </Select>
         </div>
@@ -86,14 +86,14 @@ const OperationsFilters: React.FC<OperationsFiltersProps> = ({
             onValueChange={(value) => setSelectedLocation(value === 'all' ? '' : value)}
           >
             <SelectTrigger className="bg-slate-900/50 border-slate-600/50 text-slate-100 hover:bg-slate-800/70 transition-colors">
-              <SelectValue placeholder="Todos os Locais" />
+              <SelectValue placeholder="All Markets" />
             </SelectTrigger>
             <SelectContent className="bg-slate-800 border-slate-600">
-              <SelectItem value="all" className="text-slate-100 hover:bg-slate-700 focus:bg-slate-700">Todos os Locais</SelectItem>
-              <SelectItem value="armazem-a" className="text-slate-100 hover:bg-slate-700 focus:bg-slate-700">Armazém A</SelectItem>
-              <SelectItem value="armazem-b" className="text-slate-100 hover:bg-slate-700 focus:bg-slate-700">Armazém B</SelectItem>
-              <SelectItem value="area-externa" className="text-slate-100 hover:bg-slate-700 focus:bg-slate-700">Área Externa</SelectItem>
-              <SelectItem value="docas" className="text-slate-100 hover:bg-slate-700 focus:bg-slate-700">Docas</SelectItem>
+              <SelectItem value="all" className="text-slate-100 hover:bg-slate-700 focus:bg-slate-700">All Markets</SelectItem>
+              <SelectItem value="armazem-a" className="text-slate-100 hover:bg-slate-700 focus:bg-slate-700">NYSE</SelectItem>
+              <SelectItem value="armazem-b" className="text-slate-100 hover:bg-slate-700 focus:bg-slate-700">NASDAQ</SelectItem>
+              <SelectItem value="area-externa" className="text-slate-100 hover:bg-slate-700 focus:bg-slate-700">FOREX</SelectItem>
+              <SelectItem value="docas" className="text-slate-100 hover:bg-slate-700 focus:bg-slate-700">Crypto</SelectItem>
             </SelectContent>
           </Select>
         </div>

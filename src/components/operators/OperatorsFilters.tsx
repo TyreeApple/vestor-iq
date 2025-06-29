@@ -29,7 +29,7 @@ const OperatorsFilters: React.FC<OperatorsFiltersProps> = ({
           <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-slate-400 w-4 h-4" />
           <Input 
             type="text" 
-            placeholder="Buscar por ID ou modelo..." 
+            placeholder="Search by ID or name..." 
             className="pl-10 bg-slate-900/50 border-slate-600/50 text-slate-100 placeholder:text-slate-400 focus:border-blue-500/50 focus:ring-blue-500/20"
             value={search}
             onChange={(e) => setSearch(e.target.value)}
@@ -43,13 +43,13 @@ const OperatorsFilters: React.FC<OperatorsFiltersProps> = ({
             onValueChange={(value) => setSelectedStatus(value === 'all' ? '' : value)}
           >
             <SelectTrigger className="bg-slate-900/50 border-slate-600/50 text-slate-100 hover:bg-slate-800/70 transition-colors">
-              <SelectValue placeholder="Todos os Status" />
+              <SelectValue placeholder="All Status" />
             </SelectTrigger>
             <SelectContent className="bg-slate-800 border-slate-600">
-              <SelectItem value="all" className="text-slate-100 hover:bg-slate-700 focus:bg-slate-700">Todos os Status</SelectItem>
-              <SelectItem value="ativo" className="text-slate-100 hover:bg-slate-700 focus:bg-slate-700">Ativo</SelectItem>
-              <SelectItem value="inativo" className="text-slate-100 hover:bg-slate-700 focus:bg-slate-700">Inativo</SelectItem>
-              <SelectItem value="treinamento" className="text-slate-100 hover:bg-slate-700 focus:bg-slate-700">Em Treinamento</SelectItem>
+              <SelectItem value="all" className="text-slate-100 hover:bg-slate-700 focus:bg-slate-700">All Status</SelectItem>
+              <SelectItem value="ativo" className="text-slate-100 hover:bg-slate-700 focus:bg-slate-700">Active</SelectItem>
+              <SelectItem value="inativo" className="text-slate-100 hover:bg-slate-700 focus:bg-slate-700">Inactive</SelectItem>
+              <SelectItem value="treinamento" className="text-slate-100 hover:bg-slate-700 focus:bg-slate-700">In Training</SelectItem>
             </SelectContent>
           </Select>
         </div>
@@ -61,12 +61,12 @@ const OperatorsFilters: React.FC<OperatorsFiltersProps> = ({
             onValueChange={(value) => setSelectedFunction(value === 'all' ? '' : value)}
           >
             <SelectTrigger className="bg-slate-900/50 border-slate-600/50 text-slate-100 hover:bg-slate-800/70 transition-colors">
-              <SelectValue placeholder="Todas as Funções" />
+              <SelectValue placeholder="All Functions" />
             </SelectTrigger>
             <SelectContent className="bg-slate-800 border-slate-600">
-              <SelectItem value="all" className="text-slate-100 hover:bg-slate-700 focus:bg-slate-700">Todas as Funções</SelectItem>
-              <SelectItem value="operador-senior" className="text-slate-100 hover:bg-slate-700 focus:bg-slate-700">Operador Sênior</SelectItem>
-              <SelectItem value="operador-junior" className="text-slate-100 hover:bg-slate-700 focus:bg-slate-700">Operador Júnior</SelectItem>
+              <SelectItem value="all" className="text-slate-100 hover:bg-slate-700 focus:bg-slate-700">All Functions</SelectItem>
+              <SelectItem value="operador-senior" className="text-slate-100 hover:bg-slate-700 focus:bg-slate-700">Senior Operator</SelectItem>
+              <SelectItem value="operador-junior" className="text-slate-100 hover:bg-slate-700 focus:bg-slate-700">Junior Operator</SelectItem>
               <SelectItem value="supervisor" className="text-slate-100 hover:bg-slate-700 focus:bg-slate-700">Supervisor</SelectItem>
               <SelectItem value="trainee" className="text-slate-100 hover:bg-slate-700 focus:bg-slate-700">Trainee</SelectItem>
             </SelectContent>

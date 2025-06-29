@@ -20,19 +20,19 @@ const OperatorCard: React.FC<OperatorCardProps> = ({ operator, onViewDetails, on
       case StatusCertificacao.VALIDO:
         return (
           <Badge className="bg-gradient-to-r from-emerald-500 to-emerald-600 hover:from-emerald-600 hover:to-emerald-700 text-white border-0 font-semibold tracking-wide shadow-lg shadow-emerald-500/25 text-xs px-3 py-1.5 whitespace-nowrap shrink-0 rounded-full">
-            ✓ Válido
+            ✓ Valid
           </Badge>
         );
       case StatusCertificacao.VENCENDO:
         return (
           <Badge className="bg-gradient-to-r from-amber-500 to-orange-600 hover:from-amber-600 hover:to-orange-700 text-white border-0 font-semibold tracking-wide shadow-lg shadow-amber-500/25 animate-pulse text-xs px-3 py-1.5 whitespace-nowrap shrink-0 rounded-full">
-            ⚠ Vencendo
+            ⚠ Expiring
           </Badge>
         );
       case StatusCertificacao.VENCIDO:
         return (
           <Badge className="bg-gradient-to-r from-red-500 to-red-600 hover:from-red-600 hover:to-red-700 text-white border-0 font-semibold tracking-wide shadow-lg shadow-red-500/25 text-xs px-3 py-1.5 whitespace-nowrap shrink-0 rounded-full">
-            ✗ Vencido
+            ✗ Expired
           </Badge>
         );
       default:
@@ -86,7 +86,7 @@ const OperatorCard: React.FC<OperatorCardProps> = ({ operator, onViewDetails, on
         size="sm"
         onClick={handleDelete}
         className="absolute top-2 right-2 h-6 w-6 p-0 text-slate-400 hover:text-red-400 hover:bg-red-500/20 transition-all duration-200 z-20 bg-slate-800/80 backdrop-blur-sm border border-slate-600/50 rounded-full opacity-80 hover:opacity-100"
-        title="Excluir operador"
+        title="Delete operator"
       >
         <Trash2 className="h-3 w-3" />
       </Button>
@@ -117,7 +117,7 @@ const OperatorCard: React.FC<OperatorCardProps> = ({ operator, onViewDetails, on
         {/* Contact Content - Centered */}
         <div className="text-center pt-4">
           <div className="text-slate-400 text-xs font-bold tracking-[2px] uppercase mb-3" style={{ color: '#6b7280' }}>
-            CONTATO
+            CONTACT
           </div>
           <div className="flex items-center justify-center text-lg font-semibold text-blue-400">
             <Phone className="w-4 h-4 mr-2" />
@@ -130,13 +130,13 @@ const OperatorCard: React.FC<OperatorCardProps> = ({ operator, onViewDetails, on
       <div className="space-y-3 mb-3">
         <div className="flex items-center gap-2">
           <BadgeCheck className="w-4 h-4 text-slate-400" />
-          <span className="text-xs font-bold tracking-[2px] uppercase text-slate-400">Certificações</span>
+          <span className="text-xs font-bold tracking-[2px] uppercase text-slate-400">Certifications</span>
         </div>
         
         <div className="grid grid-cols-2 gap-3">
           <div className="p-3 rounded-lg border border-slate-700/30 bg-slate-800/30">
             <div className="flex justify-between items-center mb-1">
-              <span className="text-xs font-medium text-slate-300">ASO</span>
+              <span className="text-xs font-medium text-slate-300">Medical</span>
               {getStatusBadge(asoCert?.status || StatusCertificacao.VALIDO)}
             </div>
             <div className="text-xs text-slate-400">
@@ -146,7 +146,7 @@ const OperatorCard: React.FC<OperatorCardProps> = ({ operator, onViewDetails, on
           
           <div className="p-3 rounded-lg border border-slate-700/30 bg-slate-800/30">
             <div className="flex justify-between items-center mb-1">
-              <span className="text-xs font-medium text-slate-300">NR-11</span>
+              <span className="text-xs font-medium text-slate-300">Safety</span>
               {getStatusBadge(nrCert?.status || StatusCertificacao.VALIDO)}
             </div>
             <div className="text-xs text-slate-400">
@@ -161,7 +161,7 @@ const OperatorCard: React.FC<OperatorCardProps> = ({ operator, onViewDetails, on
         <div className="flex items-center justify-between text-xs">
           <div className="flex items-center gap-1.5 text-slate-400 min-w-0 flex-1" style={{ color: '#64748b' }}>
             <UserIcon className="w-3 h-3 flex-shrink-0" />
-            <span className="font-medium tracking-wide truncate">Turno</span>
+            <span className="font-medium tracking-wide truncate">Shift</span>
           </div>
           <span className="font-semibold text-slate-200 text-xs flex-shrink-0" style={{ color: '#e2e8f0' }}>
             {operator.turno}
@@ -171,7 +171,7 @@ const OperatorCard: React.FC<OperatorCardProps> = ({ operator, onViewDetails, on
         <div className="flex items-center justify-between text-xs">
           <div className="flex items-center gap-1.5 text-slate-400 min-w-0 flex-1" style={{ color: '#64748b' }}>
             <Calendar className="w-3 h-3 flex-shrink-0" />
-            <span className="font-medium tracking-wide truncate">Admissão</span>
+            <span className="font-medium tracking-wide truncate">Hire Date</span>
           </div>
           <span className="font-semibold text-slate-200 text-xs flex-shrink-0" style={{ color: '#e2e8f0' }}>
             {operator.dataAdmissao}

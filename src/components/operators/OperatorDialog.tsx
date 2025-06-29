@@ -42,8 +42,8 @@ const OperatorDialog = ({ open, onOpenChange, operator, onSave }: OperatorDialog
       cpf: '',
       contact: '',
       telefone: '',
-      shift: 'Manhã',
-      turno: 'Manhã',
+      shift: 'Morning',
+      turno: 'Morning',
       registrationDate: format(new Date(), 'dd/MM/yyyy'),
       dataAdmissao: format(new Date(), 'dd/MM/yyyy'),
       asoExpirationDate: format(new Date(new Date().setMonth(new Date().getMonth() + 12)), 'dd/MM/yyyy'),
@@ -101,7 +101,7 @@ const OperatorDialog = ({ open, onOpenChange, operator, onSave }: OperatorDialog
     let status: StatusCertificacao;
     if (diffDays < 0) {
       status = StatusCertificacao.VENCIDO;
-    } else if (diffDays < 30) {
+    } else if (diffDays <= 30) {
       status = StatusCertificacao.VENCENDO;
     } else {
       status = StatusCertificacao.VALIDO;
@@ -115,188 +115,214 @@ const OperatorDialog = ({ open, onOpenChange, operator, onSave }: OperatorDialog
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     
-    // Validate form
-    if (!formData.name && !formData.nome || !formData.cpf || (!formData.contact && !formData.telefone)) {
+    // Validation
+    if (!formData.nome || !formData.cpf || !formData.telefone) {
       toast({
-        title: "Erro ao salvar",
-        description: "Preencha todos os campos obrigatórios",
+        title: "Validation Error",
+        description: "Please fill in all required fields.",
         variant: "destructive"
       });
       return;
     }
-    
-    // Save operator
-    onSave(formData as Operador);
-    
-    // Reset form and close dialog
-    if (!isEditing) {
-      setFormData({
-        id: `OP${Math.floor(Math.random() * 10000).toString().padStart(3, '0')}`,
-        name: '',
-        nome: '',
-        role: FuncaoOperador.OPERADOR,
-        funcao: FuncaoOperador.OPERADOR,
-        cpf: '',
-        contact: '',
-        telefone: '',
-        shift: 'Manhã',
-        turno: 'Manhã',
-        registrationDate: format(new Date(), 'dd/MM/yyyy'),
-        dataAdmissao: format(new Date(), 'dd/MM/yyyy'),
-        asoExpirationDate: format(new Date(new Date().setMonth(new Date().getMonth() + 12)), 'dd/MM/yyyy'),
-        nrExpirationDate: format(new Date(new Date().setMonth(new Date().getMonth() + 12)), 'dd/MM/yyyy'),
-        asoStatus: StatusCertificacao.VALIDO,
-        nrStatus: StatusCertificacao.VALIDO,
-        certificacoes: [],
-        avaliacoes: [],
-        horasTrabalhadas: 0,
-        produtividade: 0,
-        status: StatusOperador.ATIVO,
-        email: '',
-        setor: ''
-      });
-    }
-    
+
+    // Create certificates based on form data
+    const certificates = [
+      {
+        id: `cert-aso-${formData.id}`,
+        tipo: 'ASO' as const,
+        dataEmissao: format(new Date(), 'dd/MM/yyyy'),
+        dataVencimento: formData.asoExpirationDate || '',
+        status: formData.asoStatus || StatusCertificacao.VALIDO,
+        orgaoEmissor: 'Medical Department'
+      },
+      {
+        id: `cert-nr11-${formData.id}`,
+        tipo: 'NR-11' as const,
+        dataEmissao: format(new Date(), 'dd/MM/yyyy'),
+        dataVencimento: formData.nrExpirationDate || '',
+        status: formData.nrStatus || StatusCertificacao.VALIDO,
+        orgaoEmissor: 'Safety Department'
+      }
+    ];
+
+    const operatorData: Operador = {
+      ...formData as Operador,
+      certificacoes: certificates,
+      avaliacoes: formData.avaliacoes || []
+    };
+
+    onSave(operatorData);
     onOpenChange(false);
     
     toast({
-      title: isEditing ? "Operador atualizado" : "Operador adicionado",
-      description: `${formData.name || formData.nome} foi ${isEditing ? 'atualizado' : 'adicionado'} com sucesso!`
+      title: isEditing ? "Operator Updated" : "Operator Created",
+      description: isEditing ? "The operator has been updated successfully." : "New operator has been created successfully."
     });
   };
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="sm:max-w-[500px]">
+      <DialogContent className="sm:max-w-[600px] max-h-[90vh] overflow-y-auto">
         <DialogHeader>
-          <DialogTitle>{isEditing ? 'Editar Operador' : 'Adicionar Novo Operador'}</DialogTitle>
+          <DialogTitle>
+            {isEditing ? 'Edit Operator' : 'New Operator'}
+          </DialogTitle>
           <DialogDescription>
-            {isEditing 
-              ? 'Edite as informações do operador nos campos abaixo.' 
-              : 'Preencha as informações do novo operador nos campos abaixo.'}
+            {isEditing ? 'Edit the operator information below.' : 'Fill in the information to create a new operator.'}
           </DialogDescription>
         </DialogHeader>
         
-        <form onSubmit={handleSubmit} className="space-y-4 pt-4">
-          <div className="grid grid-cols-2 gap-4">
+        <form onSubmit={handleSubmit} className="space-y-4 py-4">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div className="space-y-2">
-              <Label htmlFor="name">Nome Completo</Label>
-              <Input 
-                id="name" 
-                value={formData.name || formData.nome || ''} 
-                onChange={(e) => handleChange('name', e.target.value)}
-                placeholder="Nome do operador"
+              <Label htmlFor="id">ID *</Label>
+              <Input
+                id="id"
+                value={formData.id}
+                onChange={(e) => handleChange('id', e.target.value)}
+                disabled={isEditing}
+                required
               />
             </div>
             
             <div className="space-y-2">
-              <Label htmlFor="role">Função</Label>
-              <Select 
-                value={formData.role || formData.funcao || ''} 
-                onValueChange={(value) => handleChange('role', value)}
-              >
-                <SelectTrigger>
-                  <SelectValue placeholder="Selecione a função" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value={FuncaoOperador.OPERADOR}>Operador</SelectItem>
-                  <SelectItem value={FuncaoOperador.SUPERVISOR}>Supervisor</SelectItem>
-                </SelectContent>
-              </Select>
+              <Label htmlFor="nome">Name *</Label>
+              <Input
+                id="nome"
+                value={formData.nome}
+                onChange={(e) => handleChange('nome', e.target.value)}
+                required
+              />
             </div>
-            
+          </div>
+          
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div className="space-y-2">
-              <Label htmlFor="cpf">CPF</Label>
-              <Input 
-                id="cpf" 
-                value={formData.cpf || ''} 
+              <Label htmlFor="cpf">CPF *</Label>
+              <Input
+                id="cpf"
+                value={formData.cpf}
                 onChange={(e) => handleChange('cpf', e.target.value)}
                 placeholder="000.000.000-00"
+                required
               />
             </div>
             
             <div className="space-y-2">
-              <Label htmlFor="contact">Contato</Label>
-              <Input 
-                id="contact" 
-                value={formData.contact || formData.telefone || ''} 
-                onChange={(e) => handleChange('contact', e.target.value)}
+              <Label htmlFor="telefone">Phone *</Label>
+              <Input
+                id="telefone"
+                value={formData.telefone}
+                onChange={(e) => handleChange('telefone', e.target.value)}
                 placeholder="(00) 00000-0000"
+                required
               />
             </div>
-            
+          </div>
+          
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div className="space-y-2">
-              <Label htmlFor="shift">Turno</Label>
+              <Label htmlFor="funcao">Role</Label>
               <Select 
-                value={formData.shift || formData.turno || ''} 
-                onValueChange={(value) => handleChange('shift', value)}
+                value={formData.funcao} 
+                onValueChange={(value) => handleChange('funcao', value)}
               >
                 <SelectTrigger>
-                  <SelectValue placeholder="Selecione o turno" />
+                  <SelectValue placeholder="Select a role" />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="Manhã">Manhã</SelectItem>
-                  <SelectItem value="Tarde">Tarde</SelectItem>
-                  <SelectItem value="Noite">Noite</SelectItem>
-                  <SelectItem value="Integral">Integral</SelectItem>
+                  <SelectItem value={FuncaoOperador.OPERADOR}>Operator</SelectItem>
+                  <SelectItem value={FuncaoOperador.SUPERVISOR}>Supervisor</SelectItem>
+                  <SelectItem value={FuncaoOperador.TECNICO}>Technician</SelectItem>
+                  <SelectItem value={FuncaoOperador.COORDENADOR}>Coordinator</SelectItem>
+                  <SelectItem value={FuncaoOperador.GERENTE}>Manager</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+            
+            <div className="space-y-2">
+              <Label htmlFor="turno">Shift</Label>
+              <Select 
+                value={formData.turno} 
+                onValueChange={(value) => handleChange('turno', value)}
+              >
+                <SelectTrigger>
+                  <SelectValue placeholder="Select a shift" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="Morning">Morning</SelectItem>
+                  <SelectItem value="Afternoon">Afternoon</SelectItem>
+                  <SelectItem value="Night">Night</SelectItem>
                 </SelectContent>
               </Select>
             </div>
           </div>
           
-          <div className="space-y-2">
-            <Label>Validade do ASO</Label>
-            <Popover>
-              <PopoverTrigger asChild>
-                <Button
-                  variant="outline"
-                  className="w-full justify-start text-left font-normal"
-                >
-                  <CalendarIcon className="mr-2 h-4 w-4" />
-                  {formData.asoExpirationDate || ''}
-                </Button>
-              </PopoverTrigger>
-              <PopoverContent className="w-auto p-0" align="start">
-                <Calendar
-                  mode="single"
-                  selected={parseDate(formData.asoExpirationDate || '')}
-                  onSelect={(date) => handleDateChange('asoExpirationDate', date)}
-                  locale={ptBR}
-                  className={cn("p-3 pointer-events-auto")}
-                />
-              </PopoverContent>
-            </Popover>
-          </div>
-          
-          <div className="space-y-2">
-            <Label>Validade da NR-11</Label>
-            <Popover>
-              <PopoverTrigger asChild>
-                <Button
-                  variant="outline"
-                  className="w-full justify-start text-left font-normal"
-                >
-                  <CalendarIcon className="mr-2 h-4 w-4" />
-                  {formData.nrExpirationDate || ''}
-                </Button>
-              </PopoverTrigger>
-              <PopoverContent className="w-auto p-0" align="start">
-                <Calendar
-                  mode="single"
-                  selected={parseDate(formData.nrExpirationDate || '')}
-                  onSelect={(date) => handleDateChange('nrExpirationDate', date)}
-                  locale={ptBR}
-                  className={cn("p-3 pointer-events-auto")}
-                />
-              </PopoverContent>
-            </Popover>
+          <div className="space-y-4">
+            <h4 className="text-sm font-medium">Certifications</h4>
+            
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div className="space-y-2">
+                <Label>Medical Exam (ASO) - Expiration Date</Label>
+                <Popover>
+                  <PopoverTrigger asChild>
+                    <Button
+                      variant="outline"
+                      className={cn(
+                        "w-full justify-start text-left font-normal",
+                        !formData.asoExpirationDate && "text-muted-foreground"
+                      )}
+                    >
+                      <CalendarIcon className="mr-2 h-4 w-4" />
+                      {formData.asoExpirationDate || "Select date"}
+                    </Button>
+                  </PopoverTrigger>
+                  <PopoverContent className="w-auto p-0">
+                    <Calendar
+                      mode="single"
+                      selected={formData.asoExpirationDate ? parseDate(formData.asoExpirationDate) : undefined}
+                      onSelect={(date) => handleDateChange('asoExpirationDate', date)}
+                      initialFocus
+                    />
+                  </PopoverContent>
+                </Popover>
+              </div>
+              
+              <div className="space-y-2">
+                <Label>Safety Training (NR-11) - Expiration Date</Label>
+                <Popover>
+                  <PopoverTrigger asChild>
+                    <Button
+                      variant="outline"
+                      className={cn(
+                        "w-full justify-start text-left font-normal",
+                        !formData.nrExpirationDate && "text-muted-foreground"
+                      )}
+                    >
+                      <CalendarIcon className="mr-2 h-4 w-4" />
+                      {formData.nrExpirationDate || "Select date"}
+                    </Button>
+                  </PopoverTrigger>
+                  <PopoverContent className="w-auto p-0">
+                    <Calendar
+                      mode="single"
+                      selected={formData.nrExpirationDate ? parseDate(formData.nrExpirationDate) : undefined}
+                      onSelect={(date) => handleDateChange('nrExpirationDate', date)}
+                      initialFocus
+                    />
+                  </PopoverContent>
+                </Popover>
+              </div>
+            </div>
           </div>
           
           <DialogFooter>
-            <Button variant="outline" type="button" onClick={() => onOpenChange(false)}>
-              Cancelar
+            <Button type="button" variant="outline" onClick={() => onOpenChange(false)}>
+              Cancel
             </Button>
-            <Button type="submit">{isEditing ? 'Salvar Alterações' : 'Adicionar Operador'}</Button>
+            <Button type="submit">
+              {isEditing ? 'Update' : 'Create'}
+            </Button>
           </DialogFooter>
         </form>
       </DialogContent>

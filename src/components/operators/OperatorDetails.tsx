@@ -55,7 +55,7 @@ const OperatorDetails = ({ open, onOpenChange, operator, onEdit }: OperatorDetai
           <div className="space-y-4">
             <div className="flex items-center gap-2">
               <UserIcon className="h-4 w-4 text-muted-foreground" />
-              <span className="text-sm font-medium">Informações Pessoais</span>
+              <span className="text-sm font-medium">Personal Information</span>
             </div>
             
             <div className="space-y-2">
@@ -65,7 +65,7 @@ const OperatorDetails = ({ open, onOpenChange, operator, onEdit }: OperatorDetai
               </div>
               
               <div className="text-sm flex items-center">
-                <span className="text-muted-foreground">Contato:</span>
+                <span className="text-muted-foreground">Contact:</span>
                 <span className="ml-2 flex items-center">
                   <Phone className="h-3 w-3 mr-1" />
                   {operator.contact || operator.telefone}
@@ -73,7 +73,7 @@ const OperatorDetails = ({ open, onOpenChange, operator, onEdit }: OperatorDetai
               </div>
               
               <div className="text-sm">
-                <span className="text-muted-foreground">Turno:</span>
+                <span className="text-muted-foreground">Shift:</span>
                 <span className="ml-2">
                   <Badge variant="secondary" className="font-normal">{operator.shift || operator.turno}</Badge>
                 </span>
@@ -82,11 +82,11 @@ const OperatorDetails = ({ open, onOpenChange, operator, onEdit }: OperatorDetai
             
             <div className="flex items-center gap-2 pt-2">
               <CalendarDays className="h-4 w-4 text-muted-foreground" />
-              <span className="text-sm font-medium">Registro</span>
+              <span className="text-sm font-medium">Registration</span>
             </div>
             
             <div className="text-sm">
-              <span className="text-muted-foreground">Data de Registro:</span>
+              <span className="text-muted-foreground">Registration Date:</span>
               <span className="ml-2">{operator.registrationDate || operator.dataAdmissao}</span>
             </div>
           </div>
@@ -94,13 +94,13 @@ const OperatorDetails = ({ open, onOpenChange, operator, onEdit }: OperatorDetai
           <div className="space-y-4">
             <div className="flex items-center gap-2">
               <FileText className="h-4 w-4 text-muted-foreground" />
-              <span className="text-sm font-medium">Certificações</span>
+              <span className="text-sm font-medium">Certifications</span>
             </div>
             
             <div className="space-y-3">
               <div className="p-3 rounded-md border">
                 <div className="flex justify-between items-center mb-2">
-                  <span className="text-sm font-medium">ASO</span>
+                  <span className="text-sm font-medium">Medical Exam (ASO)</span>
                   <Badge className={cn("font-normal", getStatusClass(operator.asoStatus || StatusCertificacao.VALIDO))}>
                     <BadgeCheck className="mr-1 h-3 w-3" />
                     {operator.asoStatus || StatusCertificacao.VALIDO}
@@ -108,13 +108,13 @@ const OperatorDetails = ({ open, onOpenChange, operator, onEdit }: OperatorDetai
                 </div>
                 <div className="flex items-center text-sm text-muted-foreground">
                   <Calendar className="h-3 w-3 mr-1" />
-                  <span>Validade: {operator.asoExpirationDate || 'N/A'}</span>
+                  <span>Validity: {operator.asoExpirationDate || 'N/A'}</span>
                 </div>
               </div>
               
               <div className="p-3 rounded-md border">
                 <div className="flex justify-between items-center mb-2">
-                  <span className="text-sm font-medium">NR-11</span>
+                  <span className="text-sm font-medium">Safety Training (NR-11)</span>
                   <Badge className={cn("font-normal", getStatusClass(operator.nrStatus || StatusCertificacao.VALIDO))}>
                     <BadgeCheck className="mr-1 h-3 w-3" />
                     {operator.nrStatus || StatusCertificacao.VALIDO}
@@ -122,7 +122,7 @@ const OperatorDetails = ({ open, onOpenChange, operator, onEdit }: OperatorDetai
                 </div>
                 <div className="flex items-center text-sm text-muted-foreground">
                   <Calendar className="h-3 w-3 mr-1" />
-                  <span>Validade: {operator.nrExpirationDate || 'N/A'}</span>
+                  <span>Validity: {operator.nrExpirationDate || 'N/A'}</span>
                 </div>
               </div>
             </div>
@@ -131,10 +131,10 @@ const OperatorDetails = ({ open, onOpenChange, operator, onEdit }: OperatorDetai
         
         <DialogFooter className="gap-2">
           <Button variant="outline" onClick={() => onOpenChange(false)}>
-            Fechar
+            Close
           </Button>
           <Button onClick={onEdit}>
-            Editar Operador
+            Edit Operator
           </Button>
         </DialogFooter>
       </DialogContent>

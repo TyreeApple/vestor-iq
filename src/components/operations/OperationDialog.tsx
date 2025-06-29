@@ -72,19 +72,19 @@ const OperationDialog = ({
     const newErrors: Record<string, string> = {};
 
     if (!formData.operadorId) {
-      newErrors.operadorId = 'Operador é obrigatório';
+      newErrors.operadorId = 'Algorithm is required';
     }
     if (!formData.empilhadeiraId) {
-      newErrors.empilhadeiraId = 'Empilhadeira é obrigatória';
+      newErrors.empilhadeiraId = 'Trading bot is required';
     }
     if (!formData.setor?.trim()) {
-      newErrors.setor = 'Setor é obrigatório';
+      newErrors.setor = 'Market is required';
     }
     if (!formData.dataInicio) {
-      newErrors.dataInicio = 'Data/hora de início é obrigatória';
+      newErrors.dataInicio = 'Start date/time is required';
     }
     if (formData.dataFim && formData.dataInicio && new Date(formData.dataFim) <= new Date(formData.dataInicio)) {
-      newErrors.dataFim = 'Data/hora de término deve ser posterior ao início';
+      newErrors.dataFim = 'End date/time must be after start time';
     }
 
     setErrors(newErrors);
@@ -142,8 +142,8 @@ const OperationDialog = ({
     
     if (!validateForm()) {
       toast({
-        title: "Erro de validação",
-        description: "Por favor, corrija os erros no formulário.",
+        title: "Validation Error",
+        description: "Please correct the errors in the form.",
         variant: "destructive"
       });
       return;
@@ -151,7 +151,7 @@ const OperationDialog = ({
 
     // Generate ID for new operations
     const operationData: Operacao = {
-      id: operation?.id || `OP${Math.floor(Math.random() * 1000).toString().padStart(3, '0')}`,
+      id: operation?.id || `POS${Math.floor(Math.random() * 1000).toString().padStart(3, '0')}`,
       ...formData as Operacao
     };
 
@@ -182,23 +182,23 @@ const OperationDialog = ({
     onOpenChange(false);
     
     toast({
-      title: "Operação concluída",
-      description: "A operação foi finalizada com sucesso."
+      title: "Position closed",
+      description: "The trading position has been closed successfully."
     });
   };
 
-  // Predefined sectors
-  const sectors = [
-    'Armazém A',
-    'Armazém B', 
-    'Armazém C',
-    'Expedição',
-    'Recebimento',
-    'Produção',
-    'Estoque',
-    'Doca 1',
-    'Doca 2',
-    'Pátio'
+  // Predefined markets
+  const markets = [
+    'NYSE',
+    'NASDAQ', 
+    'LSE',
+    'FOREX',
+    'Crypto',
+    'Commodities',
+    'Futures',
+    'Options',
+    'Bonds',
+    'ETFs'
   ];
 
   return (
@@ -206,13 +206,13 @@ const OperationDialog = ({
       <DialogContent className="sm:max-w-[600px] max-h-[90vh] overflow-y-auto">
         <DialogHeader>
           <DialogTitle className="flex items-center gap-2">
-            {isEditing ? 'Editar Operação' : 'Nova Operação'}
+            {isEditing ? 'Edit Position' : 'New Position'}
             {isEditing && (
               <Badge 
                 variant={operation?.status === StatusOperacao.EM_ANDAMENTO ? 'default' : 'secondary'}
                 className={operation?.status === StatusOperacao.EM_ANDAMENTO ? 'bg-green-500 text-white' : ''}
               >
-                {operation?.status === StatusOperacao.EM_ANDAMENTO ? 'Em Andamento' : 'Concluída'}
+                {operation?.status === StatusOperacao.EM_ANDAMENTO ? 'Active' : 'Closed'}
               </Badge>
             )}
           </DialogTitle>
@@ -221,13 +221,13 @@ const OperationDialog = ({
         <form onSubmit={handleSubmit} className="space-y-4 py-4">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div className="space-y-2">
-              <Label htmlFor="operadorId">Operador *</Label>
+              <Label htmlFor="operadorId">Trading Algorithm *</Label>
               <Select 
                 value={formData.operadorId} 
                 onValueChange={handleOperatorChange}
               >
                 <SelectTrigger id="operadorId" className={errors.operadorId ? 'border-red-500' : ''}>
-                  <SelectValue placeholder="Selecione um operador" />
+                  <SelectValue placeholder="Select an algorithm" />
                 </SelectTrigger>
                 <SelectContent>
                   {availableOperators.map(operator => (
@@ -241,13 +241,13 @@ const OperationDialog = ({
             </div>
             
             <div className="space-y-2">
-              <Label htmlFor="empilhadeiraId">Empilhadeira *</Label>
+              <Label htmlFor="empilhadeiraId">Trading Bot *</Label>
               <Select 
                 value={formData.empilhadeiraId}
                 onValueChange={handleForkliftChange}
               >
                 <SelectTrigger id="empilhadeiraId" className={errors.empilhadeiraId ? 'border-red-500' : ''}>
-                  <SelectValue placeholder="Selecione uma empilhadeira" />
+                  <SelectValue placeholder="Select a trading bot" />
                 </SelectTrigger>
                 <SelectContent>
                   {availableForklifts.map(forklift => (
@@ -262,15 +262,15 @@ const OperationDialog = ({
           </div>
           
           <div className="space-y-2">
-            <Label htmlFor="setor">Setor *</Label>
+            <Label htmlFor="setor">Market *</Label>
             <Select value={formData.setor} onValueChange={handleSectorChange}>
               <SelectTrigger className={errors.setor ? 'border-red-500' : ''}>
-                <SelectValue placeholder="Selecione um setor" />
+                <SelectValue placeholder="Select a market" />
               </SelectTrigger>
               <SelectContent>
-                {sectors.map(sector => (
-                  <SelectItem key={sector} value={sector}>
-                    {sector}
+                {markets.map(market => (
+                  <SelectItem key={market} value={market}>
+                    {market}
                   </SelectItem>
                 ))}
               </SelectContent>
@@ -280,7 +280,7 @@ const OperationDialog = ({
           
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div className="space-y-2">
-              <Label htmlFor="dataInicio">Data/Hora de Início *</Label>
+              <Label htmlFor="dataInicio">Start Date/Time *</Label>
               <Input
                 id="dataInicio"
                 name="dataInicio"
@@ -294,7 +294,7 @@ const OperationDialog = ({
             
             {isEditing && (
               <div className="space-y-2">
-                <Label htmlFor="dataFim">Data/Hora de Término</Label>
+                <Label htmlFor="dataFim">End Date/Time</Label>
                 <Input
                   id="dataFim"
                   name="dataFim"
@@ -317,14 +317,14 @@ const OperationDialog = ({
                 className="mr-auto" 
                 onClick={handleComplete}
               >
-                Finalizar Operação
+                Close Position
               </Button>
             )}
             <Button type="button" variant="outline" onClick={() => onOpenChange(false)}>
-              Cancelar
+              Cancel
             </Button>
             <Button type="submit">
-              {isEditing ? 'Salvar Alterações' : 'Criar Operação'}
+              {isEditing ? 'Save Changes' : 'Open Position'}
             </Button>
           </DialogFooter>
         </form>
