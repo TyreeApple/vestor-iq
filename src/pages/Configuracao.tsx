@@ -22,7 +22,7 @@ const techs = [
   { name: "Radix UI", icon: SiRadixui, iconColor: "#00c790" },
 ];
 
-export default function Configuracao() {
+export default function Settings() {
   return (
     <div className="w-full max-w-4xl mx-auto space-y-7 py-8 px-2">
       {/* About the System */}

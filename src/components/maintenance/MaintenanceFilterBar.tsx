@@ -36,7 +36,7 @@ const MaintenanceFilterBar: React.FC<MaintenanceFilterBarProps> = ({
           <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-slate-400 w-4 h-4" />
           <Input 
             type="text" 
-            placeholder="Search by problem, forklift or responsible..." 
+            placeholder="Search by problem, bot or responsible..." 
             className="pl-10 bg-slate-800 border-slate-600 text-white placeholder:text-slate-400 focus:border-blue-500 focus:ring-blue-500"
             value={search}
             onChange={(e) => setSearch(e.target.value)}

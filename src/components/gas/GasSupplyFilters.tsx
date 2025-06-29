@@ -29,7 +29,7 @@ const GasSupplyFilters: React.FC<GasSupplyFiltersProps> = ({
           <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-slate-400 w-4 h-4" />
           <Input 
             type="text" 
-            placeholder="Buscar por ID ou modelo..." 
+            placeholder="Search by ID or model..." 
             className="pl-10 bg-slate-900/50 border-slate-600/50 text-slate-100 placeholder:text-slate-400 focus:border-blue-500/50 focus:ring-blue-500/20"
             value={search}
             onChange={(e) => setSearch(e.target.value)}
@@ -43,13 +43,13 @@ const GasSupplyFilters: React.FC<GasSupplyFiltersProps> = ({
             onValueChange={(value) => setSelectedStatus(value === 'all' ? '' : value)}
           >
             <SelectTrigger className="bg-slate-900/50 border-slate-600/50 text-slate-100 hover:bg-slate-800/70 transition-colors">
-              <SelectValue placeholder="Todos os Status" />
+              <SelectValue placeholder="All Status" />
             </SelectTrigger>
             <SelectContent className="bg-slate-800 border-slate-600">
-              <SelectItem value="all" className="text-slate-100 hover:bg-slate-700 focus:bg-slate-700">Todos os Status</SelectItem>
-              <SelectItem value="disponivel" className="text-slate-100 hover:bg-slate-700 focus:bg-slate-700">Disponível</SelectItem>
-              <SelectItem value="em-uso" className="text-slate-100 hover:bg-slate-700 focus:bg-slate-700">Em Uso</SelectItem>
-              <SelectItem value="manutencao" className="text-slate-100 hover:bg-slate-700 focus:bg-slate-700">Manutenção</SelectItem>
+              <SelectItem value="all" className="text-slate-100 hover:bg-slate-700 focus:bg-slate-700">All Status</SelectItem>
+              <SelectItem value="disponivel" className="text-slate-100 hover:bg-slate-700 focus:bg-slate-700">Available</SelectItem>
+              <SelectItem value="em-uso" className="text-slate-100 hover:bg-slate-700 focus:bg-slate-700">In Use</SelectItem>
+              <SelectItem value="manutencao" className="text-slate-100 hover:bg-slate-700 focus:bg-slate-700">Maintenance</SelectItem>
             </SelectContent>
           </Select>
         </div>
@@ -61,12 +61,12 @@ const GasSupplyFilters: React.FC<GasSupplyFiltersProps> = ({
             onValueChange={(value) => setSelectedType(value === 'all' ? '' : value)}
           >
             <SelectTrigger className="bg-slate-900/50 border-slate-600/50 text-slate-100 hover:bg-slate-800/70 transition-colors">
-              <SelectValue placeholder="Todos os Tipos" />
+              <SelectValue placeholder="All Types" />
             </SelectTrigger>
             <SelectContent className="bg-slate-800 border-slate-600">
-              <SelectItem value="all" className="text-slate-100 hover:bg-slate-700 focus:bg-slate-700">Todos os Tipos</SelectItem>
-              <SelectItem value="glp" className="text-slate-100 hover:bg-slate-700 focus:bg-slate-700">GLP</SelectItem>
-              <SelectItem value="gnv" className="text-slate-100 hover:bg-slate-700 focus:bg-slate-700">GNV</SelectItem>
+              <SelectItem value="all" className="text-slate-100 hover:bg-slate-700 focus:bg-slate-700">All Types</SelectItem>
+              <SelectItem value="glp" className="text-slate-100 hover:bg-slate-700 focus:bg-slate-700">LPG</SelectItem>
+              <SelectItem value="gnv" className="text-slate-100 hover:bg-slate-700 focus:bg-slate-700">CNG</SelectItem>
               <SelectItem value="diesel" className="text-slate-100 hover:bg-slate-700 focus:bg-slate-700">Diesel</SelectItem>
             </SelectContent>
           </Select>

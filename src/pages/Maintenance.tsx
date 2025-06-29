@@ -44,35 +44,35 @@ const MaintenancePage = () => {
       label: 'Status',
       type: 'select' as const,
       options: [
-        { value: StatusManutencao.ABERTA, label: 'Aberta' },
-        { value: StatusManutencao.EM_ANDAMENTO, label: 'Em Andamento' },
-        { value: StatusManutencao.CONCLUIDA, label: 'Concluída' }
+        { value: StatusManutencao.ABERTA, label: 'Open' },
+        { value: StatusManutencao.EM_ANDAMENTO, label: 'In Progress' },
+        { value: StatusManutencao.CONCLUIDA, label: 'Completed' }
       ]
     },
     {
       key: 'tipo',
-      label: 'Tipo',
+      label: 'Type',
       type: 'select' as const,
       options: [
-        { value: TipoManutencao.PREVENTIVA, label: 'Preventiva' },
-        { value: TipoManutencao.CORRETIVA, label: 'Corretiva' },
-        { value: TipoManutencao.PREDITIVA, label: 'Preditiva' }
+        { value: TipoManutencao.PREVENTIVA, label: 'Preventive' },
+        { value: TipoManutencao.CORRETIVA, label: 'Corrective' },
+        { value: TipoManutencao.PREDITIVA, label: 'Predictive' }
       ]
     },
     {
       key: 'prioridade',
-      label: 'Prioridade',
+      label: 'Priority',
       type: 'select' as const,
       options: [
-        { value: PrioridadeOperacao.BAIXA, label: 'Baixa' },
+        { value: PrioridadeOperacao.BAIXA, label: 'Low' },
         { value: PrioridadeOperacao.NORMAL, label: 'Normal' },
-        { value: PrioridadeOperacao.ALTA, label: 'Alta' },
-        { value: PrioridadeOperacao.CRITICA, label: 'Crítica' }
+        { value: PrioridadeOperacao.ALTA, label: 'High' },
+        { value: PrioridadeOperacao.CRITICA, label: 'Critical' }
       ]
     },
     {
       key: 'dataAbertura',
-      label: 'Data de Abertura',
+      label: 'Opening Date',
       type: 'date' as const
     }
   ];
@@ -95,14 +95,14 @@ const MaintenancePage = () => {
     if (editDialogOpen && selectedMaintenance) {
       updateOrdemServico(maintenanceData.id, maintenanceData);
       toast({
-        title: "Manutenção atualizada",
-        description: "Os dados da manutenção foram atualizados com sucesso."
+        title: "Maintenance updated",
+        description: "The maintenance data has been updated successfully."
       });
     } else {
       addOrdemServico(maintenanceData);
       toast({
-        title: "Manutenção criada",
-        description: "Nova ordem de serviço criada com sucesso."
+        title: "Maintenance created",
+        description: "New service order created successfully."
       });
     }
     setAddDialogOpen(false);
@@ -118,11 +118,11 @@ const MaintenancePage = () => {
 
   // Handle delete maintenance
   const handleDeleteMaintenance = (id: string) => {
-    if (confirm("Tem certeza que deseja excluir este registro de manutenção?")) {
+    if (confirm("Are you sure you want to delete this maintenance record?")) {
       deleteOrdemServico(id);
       toast({
-        title: "Manutenção excluída",
-        description: "O registro de manutenção foi excluído com sucesso."
+        title: "Maintenance deleted",
+        description: "The maintenance record has been deleted successfully."
       });
     }
   };
@@ -133,24 +133,24 @@ const MaintenancePage = () => {
     if (!item) return;
     updateOrdemServico(id, { ...item, status: newStatus });
     toast({
-      title: "Status atualizado",
-      description: `Status da manutenção alterado para ${newStatus}.`
+      title: "Status updated",
+      description: `Maintenance status changed to ${newStatus}.`
     });
   };
 
   // Handle export
   const handleExport = () => {
     toast({
-      title: "Exportando dados",
-      description: "O relatório será gerado em breve."
+      title: "Exporting data",
+      description: "The report will be generated shortly."
     });
   };
 
   // Handle report
   const handleGenerateReport = () => {
     toast({
-      title: "Relatório gerado",
-      description: "O relatório completo de manutenções foi gerado."
+      title: "Report generated",
+      description: "The complete maintenance report has been generated."
     });
   };
 

@@ -32,42 +32,42 @@ const Navbar: React.FC = () => {
       path: '/'
     },
     {
-      id: 'empilhadeiras',
-      label: 'Empilhadeiras',
+      id: 'trading-bots',
+      label: 'Trading Bots',
       icon: MdForklift,
-      path: '/empilhadeiras'
+      path: '/trading-bots'
     },
     {
-      id: 'operadores',
-      label: 'Operadores',
+      id: 'traders',
+      label: 'Traders',
       icon: Users,
-      path: '/operadores'
+      path: '/traders'
     },
     {
-      id: 'operacoes',
-      label: 'Operações',
+      id: 'positions',
+      label: 'Positions',
       icon: Activity,
-      path: '/operacoes',
+      path: '/positions',
       badge: operacoesAtivas > 0 ? operacoesAtivas : undefined
     },
     {
-      id: 'manutencao',
-      label: 'Manutenção',
+      id: 'system-health',
+      label: 'System Health',
       icon: Wrench,
-      path: '/manutencao',
+      path: '/system-health',
       badge: manutencoesPendentes > 0 ? manutencoesPendentes : undefined
     },
     {
-      id: 'abastecimento',
-      label: 'Abastecimento',
+      id: 'market-data',
+      label: 'Market Data',
       icon: Fuel,
-      path: '/abastecimento'
+      path: '/market-data'
     },
     {
-      id: 'relatorios',
-      label: 'Relatórios',
+      id: 'reports',
+      label: 'Reports',
       icon: FileText,
-      path: '/relatorios'
+      path: '/reports'
     }
   ];
 
