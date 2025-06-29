@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { Button } from "@/components/ui/button";
 import {
@@ -11,7 +10,7 @@ import {
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { StatusCertificacao, Operador, FuncaoOperador, StatusOperador } from '@/types';
+import { StatusCertificacao, Operador, FuncaoOperador, StatusOperador, TipoCertificacao } from '@/types';
 import { useToast } from '@/hooks/use-toast';
 import { Calendar } from '@/components/ui/calendar';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
@@ -129,7 +128,7 @@ const OperatorDialog = ({ open, onOpenChange, operator, onSave }: OperatorDialog
     const certificates = [
       {
         id: `cert-aso-${formData.id}`,
-        tipo: 'ASO' as const,
+        tipo: TipoCertificacao.ASO,
         numero: `ASO-${Math.floor(Math.random() * 10000).toString().padStart(4, '0')}`,
         dataEmissao: format(new Date(), 'dd/MM/yyyy'),
         dataVencimento: formData.asoExpirationDate || '',
@@ -138,7 +137,7 @@ const OperatorDialog = ({ open, onOpenChange, operator, onSave }: OperatorDialog
       },
       {
         id: `cert-nr11-${formData.id}`,
-        tipo: 'NR-11' as const,
+        tipo: TipoCertificacao.NR11,
         numero: `NR11-${Math.floor(Math.random() * 10000).toString().padStart(4, '0')}`,
         dataEmissao: format(new Date(), 'dd/MM/yyyy'),
         dataVencimento: formData.nrExpirationDate || '',
