@@ -77,7 +77,7 @@ const Sidebar: React.FC = () => {
               <Bot className="w-6 h-6 text-white" />
             </div>
             <div className="text-white">
-              <h1 className="font-bold text-lg tracking-tight animate-slide-in-right">Hedron AI</h1>
+              <h1 className="font-bold text-lg tracking-tight animate-slide-in-right">VestorIQ</h1>
               <p className="text-xs text-white/80 font-medium">Trading Dashboard</p>
             </div>
           </div>

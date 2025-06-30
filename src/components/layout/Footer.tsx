@@ -14,7 +14,7 @@ const Footer: React.FC = () => {
                 <TrendingUp className="w-4 h-4 text-white" />
               </div>
               <div>
-                <h4 className="font-semibold text-sm text-foreground">Hedron AI</h4>
+                <h4 className="font-semibold text-sm text-foreground">VestorIQ</h4>
                 <p className="text-xs text-muted-foreground">v2.1.0</p>
               </div>
             </div>
@@ -58,7 +58,7 @@ const Footer: React.FC = () => {
         <div className="mt-4 pt-3 border-t border-border">
           <div className="flex flex-col md:flex-row justify-between items-center">
             <p className="text-xs text-muted-foreground">
-              © 2024 Hedron AI. Advanced Trading Systems - All rights reserved.
+              © 2024 VestorIQ. Advanced Trading Systems - All rights reserved.
             </p>
             <div className="flex items-center space-x-2 text-xs text-muted-foreground">
               <span>Built for traders</span>

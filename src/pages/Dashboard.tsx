@@ -74,7 +74,7 @@ const Dashboard: React.FC = () => {
     <div className="space-y-6">
       {/* Standardized Header */}
       <PageHeader 
-        title="Hedron AI Dashboard"
+        title="VestorIQ Dashboard"
         subtitle="Real-time trading operation overview"
         description={`Monitor ${empilhadeiras.length} trading bots and ${operadores.length} active traders`}
         icon={Monitor}
