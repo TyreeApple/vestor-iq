@@ -2,9 +2,9 @@
 import React, { useState } from 'react';
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Calendar, Filter, Fuel, Plus, Search, Truck, User, TrendingUp, TrendingDown, Gauge, Droplets, Clock, MapPin, Wrench, Eye, Edit, Trash2, X, ChevronDown, SlidersHorizontal } from 'lucide-react';
+import { Calendar, Filter, DollarSign, Plus, Search, TrendingUp, User, TrendingDown, Gauge, Droplets, Clock, MapPin, Wrench, Eye, Edit, Trash2, X, ChevronDown, SlidersHorizontal } from 'lucide-react';
 import { Abastecimento } from '@/types';
-import GasSupplyDialog from '@/components/gas/GasSupplyDialog';
+import CapitalAllocationDialog from '@/components/capital/CapitalAllocationDialog';
 import { useToast } from '@/hooks/use-toast';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
@@ -14,62 +14,62 @@ import StandardCard from '@/components/common/StandardCard';
 import { useFilters } from '@/hooks/use-filters';
 import { useAppStore } from '@/stores/useAppStore';
 
-const GasSupplyPage = () => {
+const CapitalAllocationPage = () => {
   const { toast } = useToast();
   
   // Zustand store usage
-  const gasSupplies = useAppStore((state) => state.abastecimentos);
+  const capitalAllocations = useAppStore((state) => state.abastecimentos);
   const operators = useAppStore((state) => state.operadores);
-  const forklifts = useAppStore((state) => state.empilhadeiras);
+  const tradingBots = useAppStore((state) => state.empilhadeiras);
   const addAbastecimento = useAppStore((state) => state.addAbastecimento);
   const updateAbastecimento = useAppStore((state) => state.updateAbastecimento);
   const deleteAbastecimento = useAppStore((state) => state.deleteAbastecimento);
 
   // Quick filter states
   const [quickOperator, setQuickOperator] = useState('');
-  const [quickForklift, setQuickForklift] = useState('');
-  const [quickLocation, setQuickLocation] = useState('');
+  const [quickTradingBot, setQuickTradingBot] = useState('');
+  const [quickMarket, setQuickMarket] = useState('');
 
   // Dialog states
   const [addDialogOpen, setAddDialogOpen] = useState(false);
   const [editDialogOpen, setEditDialogOpen] = useState(false);
-  const [selectedGasSupply, setSelectedGasSupply] = useState<Abastecimento | null>(null);
+  const [selectedCapitalAllocation, setSelectedCapitalAllocation] = useState<Abastecimento | null>(null);
 
   // Available options from store data
-  const availableForklifts = forklifts.map(f => ({ id: f.id, model: f.modelo }));
+  const availableTradingBots = tradingBots.map(f => ({ id: f.id, model: f.modelo }));
   const availableOperators = operators.map(o => ({ id: o.id, name: o.nome }));
 
   // Get unique values for filter options
-  const operatorNames = [...new Set(gasSupplies.map(supply => supply.operador?.nome).filter(Boolean))];
-  const forkliftIds = [...new Set(gasSupplies.map(supply => supply.empilhadeiraId))];
-  const suppliers = [...new Set(gasSupplies.map(supply => supply.fornecedor).filter(Boolean))];
-  const locations = [...new Set(gasSupplies.map(supply => supply.localAbastecimento).filter(Boolean))];
+  const operatorNames = [...new Set(capitalAllocations.map(allocation => allocation.operador?.nome).filter(Boolean))];
+  const tradingBotIds = [...new Set(capitalAllocations.map(allocation => allocation.empilhadeiraId))];
+  const providers = [...new Set(capitalAllocations.map(allocation => allocation.fornecedor).filter(Boolean))];
+  const markets = [...new Set(capitalAllocations.map(allocation => allocation.localAbastecimento).filter(Boolean))];
 
   // Define filter configuration for AdvancedFilters component
   const filterOptions = [
     {
       key: 'empilhadeiraId',
-      label: 'Forklift',
+      label: 'Trading Bot',
       type: 'select' as const,
-      options: forkliftIds.map(id => ({ value: id, label: id }))
+      options: tradingBotIds.map(id => ({ value: id, label: id }))
     },
     {
       key: 'operadorNome',
-      label: 'Operator',
+      label: 'Trader',
       type: 'select' as const,
       options: operatorNames.map(name => ({ value: name, label: name }))
     },
     {
       key: 'fornecedor',
-      label: 'Supplier',
+      label: 'Broker',
       type: 'select' as const,
-      options: suppliers.map(supplier => ({ value: supplier, label: supplier }))
+      options: providers.map(provider => ({ value: provider, label: provider }))
     },
     {
       key: 'localAbastecimento',
-      label: 'Location',
+      label: 'Market',
       type: 'select' as const,
-      options: locations.map(location => ({ value: location, label: location }))
+      options: markets.map(market => ({ value: market, label: market }))
     },
     {
       key: 'dataInicial',
@@ -83,12 +83,12 @@ const GasSupplyPage = () => {
     },
     {
       key: 'quantidadeMinima',
-      label: 'Minimum Quantity (L)',
+      label: 'Minimum Amount ($)',
       type: 'number' as const
     },
     {
       key: 'quantidadeMaxima',
-      label: 'Maximum Quantity (L)',
+      label: 'Maximum Amount ($)',
       type: 'number' as const
     }
   ];
@@ -99,25 +99,25 @@ const GasSupplyPage = () => {
     setSearch,
     filters,
     setFilters,
-    filteredData: filteredGasSupplies,
+    filteredData: filteredCapitalAllocations,
     clearFilters
   } = useFilters({
-    data: gasSupplies,
+    data: capitalAllocations,
     searchFields: ['empilhadeiraId', 'fornecedor', 'localAbastecimento']
   });
 
   // Apply additional quick filters
-  const finalFilteredSupplies = filteredGasSupplies.filter(supply => {
+  const finalFilteredAllocations = filteredCapitalAllocations.filter(allocation => {
     const matchesQuickOperator = quickOperator === '' || quickOperator === 'all' || 
-      supply.operador?.nome === quickOperator;
+      allocation.operador?.nome === quickOperator;
     
-    const matchesQuickForklift = quickForklift === '' || quickForklift === 'all' || 
-      supply.empilhadeiraId === quickForklift;
+    const matchesQuickTradingBot = quickTradingBot === '' || quickTradingBot === 'all' || 
+      allocation.empilhadeiraId === quickTradingBot;
     
-    const matchesQuickLocation = quickLocation === '' || quickLocation === 'all' || 
-      supply.localAbastecimento === quickLocation;
+    const matchesQuickMarket = quickMarket === '' || quickMarket === 'all' || 
+      allocation.localAbastecimento === quickMarket;
     
-    return matchesQuickOperator && matchesQuickForklift && matchesQuickLocation;
+    return matchesQuickOperator && matchesQuickTradingBot && matchesQuickMarket;
   });
 
   // Clear all filters
@@ -125,8 +125,8 @@ const GasSupplyPage = () => {
     setSearch('');
     setFilters({});
     setQuickOperator('');
-    setQuickForklift('');
-    setQuickLocation('');
+    setQuickTradingBot('');
+    setQuickMarket('');
   };
 
   // Count active filters
@@ -134,8 +134,8 @@ const GasSupplyPage = () => {
     filters[key] && filters[key] !== '' && filters[key] !== 'all'
   ).length + (search ? 1 : 0) + 
   (quickOperator && quickOperator !== 'all' ? 1 : 0) +
-  (quickForklift && quickForklift !== 'all' ? 1 : 0) +
-  (quickLocation && quickLocation !== 'all' ? 1 : 0);
+  (quickTradingBot && quickTradingBot !== 'all' ? 1 : 0) +
+  (quickMarket && quickMarket !== 'all' ? 1 : 0);
 
   // Format date
   const formatDate = (dateString: string) => {
@@ -148,49 +148,49 @@ const GasSupplyPage = () => {
   };
   
   // Calculate KPIs
-  const hasRealData = finalFilteredSupplies.length > 0;
-  const totalConsumption = hasRealData
-    ? finalFilteredSupplies.reduce((sum, supply) => sum + supply.quantidadeLitros, 0)
+  const hasRealData = finalFilteredAllocations.length > 0;
+  const totalCapitalAllocated = hasRealData
+    ? finalFilteredAllocations.reduce((sum, allocation) => sum + allocation.quantidadeLitros, 0)
     : 0;
-  const totalCost = hasRealData
-    ? finalFilteredSupplies.reduce((sum, supply) => sum + supply.custoTotal, 0)
+  const totalInvestment = hasRealData
+    ? finalFilteredAllocations.reduce((sum, allocation) => sum + allocation.custoTotal, 0)
     : 0;
-  const averageEfficiency = hasRealData
-    ? finalFilteredSupplies.reduce((sum, supply) => sum + (supply.eficiencia || 0), 0) / finalFilteredSupplies.length
+  const averageReturn = hasRealData
+    ? finalFilteredAllocations.reduce((sum, allocation) => sum + (allocation.eficiencia || 0), 0) / finalFilteredAllocations.length
     : 0;
 
-  const calculateEfficiency = (supply: Abastecimento) => {
-    const hours = supply.horimetroFinal - supply.horimetroInicial;
-    return hours > 0 ? supply.quantidadeLitros / hours : 0;
+  const calculateReturn = (allocation: Abastecimento) => {
+    const hours = allocation.horimetroFinal - allocation.horimetroInicial;
+    return hours > 0 ? allocation.quantidadeLitros / hours : 0;
   };
 
-  // Handle add/edit gas supply
-  const handleSaveGasSupply = (supplyData: Abastecimento) => {
-    if (editDialogOpen && selectedGasSupply) {
-      updateAbastecimento(supplyData.id, supplyData);
+  // Handle add/edit capital allocation
+  const handleSaveCapitalAllocation = (allocationData: Abastecimento) => {
+    if (editDialogOpen && selectedCapitalAllocation) {
+      updateAbastecimento(allocationData.id, allocationData);
       toast({
-        title: "Fuel supply updated",
-        description: "The fuel supply has been updated successfully."
+        title: "Capital allocation updated",
+        description: "The capital allocation has been updated successfully."
       });
     } else {
-      addAbastecimento(supplyData);
+      addAbastecimento(allocationData);
       toast({
-        title: "Fuel supply created",
-        description: "New fuel supply registered successfully."
+        title: "Capital allocation created",
+        description: "New capital allocation registered successfully."
       });
     }
     setAddDialogOpen(false);
     setEditDialogOpen(false);
-    setSelectedGasSupply(null);
+    setSelectedCapitalAllocation(null);
   };
 
-  // Handle delete gas supply
-  const handleDeleteGasSupply = (id: string) => {
-    if (confirm("Are you sure you want to delete this fuel supply?")) {
+  // Handle delete capital allocation
+  const handleDeleteCapitalAllocation = (id: string) => {
+    if (confirm("Are you sure you want to delete this capital allocation?")) {
       deleteAbastecimento(id);
       toast({
-        title: "Fuel supply deleted",
-        description: "The fuel supply has been deleted successfully."
+        title: "Capital allocation deleted",
+        description: "The capital allocation has been deleted successfully."
       });
     }
   };
@@ -201,10 +201,10 @@ const GasSupplyPage = () => {
       <div className="flex flex-col lg:flex-row justify-between items-start lg:items-center gap-6">
         <div className="space-y-2">
           <h1 className="text-4xl font-bold bg-gradient-to-r from-blue-600 via-purple-600 to-blue-800 bg-clip-text text-transparent">
-            Fuel Supply Management
+            Capital Allocation Management
           </h1>
           <p className="text-lg text-muted-foreground font-medium">
-            Intelligent Fuel Supply Control
+            Intelligent Capital Distribution Control
           </p>
         </div>
         
@@ -212,12 +212,12 @@ const GasSupplyPage = () => {
           <Button 
             className="gap-2 bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-105"
             onClick={() => {
-              setSelectedGasSupply(null);
+              setSelectedCapitalAllocation(null);
               setAddDialogOpen(true);
             }}
           >
             <Plus className="w-4 h-4" />
-            New Fuel Supply
+            New Capital Allocation
           </Button>
         </div>
       </div>
@@ -225,30 +225,30 @@ const GasSupplyPage = () => {
       {/* KPI Cards */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
         <StandardCard
-          title="Total Fuel Supplies"
-          value={hasRealData ? finalFilteredSupplies.length : 0}
-          icon={Truck}
+          title="Total Allocations"
+          value={hasRealData ? finalFilteredAllocations.length : 0}
+          icon={TrendingUp}
           variant="info"
         />
         
         <StandardCard
-          title="Total Consumption"
-          value={hasRealData ? `${totalConsumption.toFixed(1)}L` : "0L"}
-          icon={Fuel}
+          title="Total Capital"
+          value={hasRealData ? `$${totalCapitalAllocated.toFixed(0)}` : "$0"}
+          icon={DollarSign}
           variant="success"
         />
         
         <StandardCard
-          title="Total Cost"
-          value={hasRealData ? `$${totalCost.toFixed(0)}` : "$0"}
+          title="Total Investment"
+          value={hasRealData ? `$${totalInvestment.toFixed(0)}` : "$0"}
           icon={Gauge}
           variant="warning"
         />
         
         <StandardCard
-          title="Average Efficiency"
-          value={hasRealData ? averageEfficiency.toFixed(2) : "N/A"}
-          icon={Droplets}
+          title="Average Return"
+          value={hasRealData ? `${averageReturn.toFixed(2)}%` : "N/A"}
+          icon={TrendingUp}
           variant="default"
         />
       </div>
@@ -264,7 +264,7 @@ const GasSupplyPage = () => {
                 <Search className="absolute left-4 top-1/2 transform -translate-y-1/2 text-muted-foreground w-5 h-5" />
                 <Input 
                   type="text" 
-                  placeholder="Search by forklift, supplier or location..." 
+                  placeholder="Search by trading bot, broker or market..." 
                   className="pl-12 pr-4 py-4 text-lg bg-white dark:bg-slate-900 border-2 border-slate-200 dark:border-slate-700 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 rounded-xl shadow-lg transition-all duration-200"
                   value={search}
                   onChange={(e) => setSearch(e.target.value)}
@@ -281,13 +281,13 @@ const GasSupplyPage = () => {
                 )}
               </div>
 
-              {/* Quick Filter - Operator */}
+              {/* Quick Filter - Trader */}
               <Select value={quickOperator} onValueChange={setQuickOperator}>
                 <SelectTrigger className="w-[160px] border-2 border-slate-200 dark:border-slate-700 hover:border-blue-300 dark:hover:border-blue-600 transition-colors">
-                  <SelectValue placeholder="Operator" />
+                  <SelectValue placeholder="Trader" />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="all">All Operators</SelectItem>
+                  <SelectItem value="all">All Traders</SelectItem>
                   {operatorNames.map(operator => (
                     <SelectItem key={operator} value={operator}>
                       {operator}
@@ -296,31 +296,31 @@ const GasSupplyPage = () => {
                 </SelectContent>
               </Select>
 
-              {/* Quick Filter - Forklift */}
-              <Select value={quickForklift} onValueChange={setQuickForklift}>
+              {/* Quick Filter - Trading Bot */}
+              <Select value={quickTradingBot} onValueChange={setQuickTradingBot}>
                 <SelectTrigger className="w-[160px] border-2 border-slate-200 dark:border-slate-700 hover:border-blue-300 dark:hover:border-blue-600 transition-colors">
-                  <SelectValue placeholder="Forklift" />
+                  <SelectValue placeholder="Trading Bot" />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="all">All Forklifts</SelectItem>
-                  {forkliftIds.map(forklift => (
-                    <SelectItem key={forklift} value={forklift}>
-                      {forklift}
+                  <SelectItem value="all">All Trading Bots</SelectItem>
+                  {tradingBotIds.map(bot => (
+                    <SelectItem key={bot} value={bot}>
+                      {bot}
                     </SelectItem>
                   ))}
                 </SelectContent>
               </Select>
 
-              {/* Quick Filter - Location */}
-              <Select value={quickLocation} onValueChange={setQuickLocation}>
+              {/* Quick Filter - Market */}
+              <Select value={quickMarket} onValueChange={setQuickMarket}>
                 <SelectTrigger className="w-[160px] border-2 border-slate-200 dark:border-slate-700 hover:border-blue-300 dark:hover:border-blue-600 transition-colors">
-                  <SelectValue placeholder="Location" />
+                  <SelectValue placeholder="Market" />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="all">All Locations</SelectItem>
-                  {locations.map(location => (
-                    <SelectItem key={location} value={location}>
-                      {location}
+                  <SelectItem value="all">All Markets</SelectItem>
+                  {markets.map(market => (
+                    <SelectItem key={market} value={market}>
+                      {market}
                     </SelectItem>
                   ))}
                 </SelectContent>
@@ -331,205 +331,112 @@ const GasSupplyPage = () => {
                 filters={filterOptions}
                 values={filters}
                 onFiltersChange={setFilters}
-                onClearFilters={() => setFilters({})}
-                triggerProps={{
-                  className: "gap-2 hover:bg-slate-100 dark:hover:bg-slate-800 transition-all duration-200 shadow-md border-2 border-slate-200 dark:border-slate-700"
-                }}
+                onClearFilters={clearFilters}
               />
               
-              {/* Clear All Filters */}
+              {/* Clear All Filters Button */}
               {activeFiltersCount > 0 && (
                 <Button
                   variant="outline"
                   size="sm"
-                  className="gap-2 text-red-600 border-red-200 hover:bg-red-50 dark:hover:bg-red-900/20 shadow-md"
                   onClick={clearAllFilters}
+                  className="gap-2 hover:bg-red-50 hover:border-red-200 hover:text-red-700 dark:hover:bg-red-900/20 dark:hover:border-red-800 dark:hover:text-red-400 transition-colors"
                 >
                   <X className="w-4 h-4" />
-                  Clear ({activeFiltersCount})
+                  Clear All ({activeFiltersCount})
                 </Button>
               )}
             </div>
           </div>
+        </CardContent>
+      </Card>
 
-          {/* Filter Summary */}
-          {activeFiltersCount > 0 && (
-            <div className="mt-6 p-4 bg-blue-50 dark:bg-blue-900/20 rounded-lg border border-blue-200 dark:border-blue-800">
-              <div className="flex items-center justify-between">
-                <div className="flex items-center gap-2">
-                  <Filter className="w-4 h-4 text-blue-600" />
-                  <span className="text-sm font-medium text-blue-900 dark:text-blue-100">
-                    {activeFiltersCount} active filter{activeFiltersCount > 1 ? 's' : ''} • {finalFilteredSupplies.length} result{finalFilteredSupplies.length !== 1 ? 's' : ''} found
-                  </span>
-                </div>
+      {/* Capital Allocations Table */}
+      <Card className="shadow-xl border-0 bg-white/90 dark:bg-slate-800/90 backdrop-blur-lg">
+        <CardHeader className="pb-4">
+          <CardTitle className="text-xl font-bold text-slate-800 dark:text-slate-200">
+            Capital Allocations ({finalFilteredAllocations.length})
+          </CardTitle>
+        </CardHeader>
+        <CardContent>
+          <div className="overflow-x-auto">
+            <table className="w-full">
+              <thead>
+                <tr className="border-b border-slate-200 dark:border-slate-700">
+                  <th className="text-left p-4 font-semibold text-slate-700 dark:text-slate-300">Trading Bot</th>
+                  <th className="text-left p-4 font-semibold text-slate-700 dark:text-slate-300">Trader</th>
+                  <th className="text-left p-4 font-semibold text-slate-700 dark:text-slate-300">Amount</th>
+                  <th className="text-left p-4 font-semibold text-slate-700 dark:text-slate-300">Market</th>
+                  <th className="text-left p-4 font-semibold text-slate-700 dark:text-slate-300">Date</th>
+                  <th className="text-left p-4 font-semibold text-slate-700 dark:text-slate-300">Actions</th>
+                </tr>
+              </thead>
+              <tbody>
+                {finalFilteredAllocations.map((allocation) => (
+                  <tr key={allocation.id} className="border-b border-slate-100 dark:border-slate-800 hover:bg-slate-50 dark:hover:bg-slate-800/50 transition-colors">
+                    <td className="p-4 text-slate-800 dark:text-slate-200 font-medium">{allocation.empilhadeiraId}</td>
+                    <td className="p-4 text-slate-600 dark:text-slate-400">{allocation.operador?.nome}</td>
+                    <td className="p-4 text-slate-800 dark:text-slate-200 font-mono">${allocation.quantidadeLitros.toFixed(0)}</td>
+                    <td className="p-4 text-slate-600 dark:text-slate-400">{allocation.localAbastecimento}</td>
+                    <td className="p-4 text-slate-600 dark:text-slate-400">{formatDate(allocation.dataAbastecimento)}</td>
+                    <td className="p-4">
+                      <div className="flex items-center gap-2">
+                        <Button
+                          variant="ghost"
+                          size="sm"
+                          onClick={() => {
+                            setSelectedCapitalAllocation(allocation);
+                            setEditDialogOpen(true);
+                          }}
+                          className="text-blue-600 hover:text-blue-800 hover:bg-blue-50 dark:hover:bg-blue-900/20"
+                        >
+                          <Edit className="w-4 h-4" />
+                        </Button>
+                        <Button
+                          variant="ghost"
+                          size="sm"
+                          onClick={() => handleDeleteCapitalAllocation(allocation.id)}
+                          className="text-red-600 hover:text-red-800 hover:bg-red-50 dark:hover:bg-red-900/20"
+                        >
+                          <Trash2 className="w-4 h-4" />
+                        </Button>
+                      </div>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+            
+            {finalFilteredAllocations.length === 0 && (
+              <div className="text-center py-12 text-slate-500 dark:text-slate-400">
+                <div className="text-6xl mb-4">💰</div>
+                <h3 className="text-lg font-medium mb-2">No capital allocations found</h3>
+                <p>Create a new capital allocation to get started.</p>
               </div>
-            </div>
-          )}
+            )}
+          </div>
         </CardContent>
       </Card>
       
-      {/* Gas Supply Cards Grid */}
-      <div className="space-y-4">
-        <div className="flex items-center justify-between">
-          <h2 className="text-2xl font-bold text-slate-800 dark:text-slate-200">
-            Fuel Supply Records
-          </h2>
-          <div className="text-sm text-muted-foreground bg-slate-100 dark:bg-slate-800 px-3 py-1 rounded-full">
-            {finalFilteredSupplies.length} records found
-          </div>
-        </div>
-        
-        {finalFilteredSupplies.length > 0 ? (
-          <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-6">
-            {finalFilteredSupplies.map((supply) => (
-              <Card key={supply.id} className="group hover:shadow-xl transition-all duration-300 transform hover:scale-[1.02] bg-gradient-to-br from-white to-slate-50 dark:from-slate-800 dark:to-slate-900 border-0 shadow-lg">
-                <CardHeader className="pb-3">
-                  <div className="flex items-center justify-between">
-                    <div className="flex items-center gap-3">
-                      <div className="w-12 h-12 bg-gradient-to-br from-blue-500 to-purple-600 rounded-xl flex items-center justify-center text-white font-bold text-lg shadow-lg">
-                        {supply.id.slice(-2)}
-                      </div>
-                      <div>
-                        <CardTitle className="text-lg font-bold text-slate-800 dark:text-slate-200">
-                          {supply.id}
-                        </CardTitle>
-                        <p className="text-sm text-muted-foreground">
-                          {formatDate(supply.dataAbastecimento)}
-                        </p>
-                      </div>
-                    </div>
-                    <div className="flex gap-1">
-                      <Button 
-                        variant="ghost" 
-                        size="sm"
-                        className="opacity-0 group-hover:opacity-100 transition-opacity duration-200 hover:bg-blue-50 dark:hover:bg-blue-900/20"
-                        onClick={() => {
-                          setSelectedGasSupply(supply);
-                          setEditDialogOpen(true);
-                        }}
-                      >
-                        <Edit className="w-4 h-4 text-blue-600" />
-                      </Button>
-                      <Button 
-                        variant="ghost" 
-                        size="sm"
-                        className="opacity-0 group-hover:opacity-100 transition-opacity duration-200 hover:bg-red-50 dark:hover:bg-red-900/20"
-                        onClick={() => handleDeleteGasSupply(supply.id)}
-                      >
-                        <Trash2 className="w-4 h-4 text-red-500" />
-                      </Button>
-                    </div>
-                  </div>
-                </CardHeader>
-                
-                <CardContent className="space-y-4">
-                  <div className="space-y-3">
-                    <div className="flex items-center gap-3 p-3 bg-slate-100 dark:bg-slate-800 rounded-lg">
-                      <Truck className="w-5 h-5 text-blue-600" />
-                      <div>
-                        <p className="font-semibold text-slate-800 dark:text-slate-200">
-                          {supply.empilhadeira?.modelo || 'N/A'}
-                        </p>
-                        <p className="text-xs text-muted-foreground">
-                          ID: {supply.empilhadeiraId}
-                        </p>
-                      </div>
-                    </div>
-                    
-                    <div className="flex items-center gap-3 p-3 bg-slate-100 dark:bg-slate-800 rounded-lg">
-                      <User className="w-5 h-5 text-green-600" />
-                      <div>
-                        <p className="font-semibold text-slate-800 dark:text-slate-200">
-                          {supply.operador?.nome || 'N/A'}
-                        </p>
-                        <p className="text-xs text-muted-foreground">Operator</p>
-                      </div>
-                    </div>
-                  </div>
-                  
-                  <div className="grid grid-cols-2 gap-4">
-                    <div className="text-center p-3 bg-gradient-to-br from-blue-50 to-blue-100 dark:from-blue-900/20 dark:to-blue-800/20 rounded-lg">
-                      <Fuel className="w-5 h-5 mx-auto mb-1 text-blue-600" />
-                      <p className="text-2xl font-bold text-blue-700 dark:text-blue-400">
-                        {supply.quantidadeLitros.toFixed(1)}
-                      </p>
-                      <p className="text-xs text-muted-foreground">Liters</p>
-                    </div>
-                    
-                    <div className="text-center p-3 bg-gradient-to-br from-green-50 to-green-100 dark:from-green-900/20 dark:to-green-800/20 rounded-lg">
-                      <Gauge className="w-5 h-5 mx-auto mb-1 text-green-600" />
-                      <p className="text-2xl font-bold text-green-700 dark:text-green-400">
-                        {calculateEfficiency(supply).toFixed(2)}
-                      </p>
-                      <p className="text-xs text-muted-foreground">L/h</p>
-                    </div>
-                  </div>
-                  
-                  <div className="flex items-center justify-between pt-2 border-t border-slate-200 dark:border-slate-700">
-                    <div className="flex items-center gap-2">
-                      <Clock className="w-4 h-4 text-muted-foreground" />
-                      <span className="text-sm text-muted-foreground">
-                        {supply.horimetroInicial} → {supply.horimetroFinal}h
-                      </span>
-                    </div>
-                    <div className="flex items-center gap-2">
-                      <span className="text-sm font-semibold text-slate-800 dark:text-slate-200">
-                        ${supply.custoTotal.toFixed(2)}
-                      </span>
-                    </div>
-                  </div>
-                </CardContent>
-              </Card>
-            ))}
-          </div>
-        ) : (
-          <Card className="p-12 text-center border-2 border-dashed border-slate-300 dark:border-slate-600 bg-slate-50 dark:bg-slate-800">
-            <div className="space-y-4">
-              <div className="w-16 h-16 mx-auto bg-slate-200 dark:bg-slate-700 rounded-full flex items-center justify-center">
-                <Search className="w-8 h-8 text-slate-400" />
-              </div>
-              <div>
-                <h3 className="text-lg font-semibold text-slate-600 dark:text-slate-400">
-                  No fuel supplies found
-                </h3>
-                <p className="text-muted-foreground mt-1">
-                  Try adjusting the filters or add a new fuel supply record
-                </p>
-              </div>
-              <Button 
-                className="gap-2 bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700"
-                onClick={() => {
-                  setSelectedGasSupply(null);
-                  setAddDialogOpen(true);
-                }}
-              >
-                <Plus className="w-4 h-4" />
-                New Fuel Supply
-              </Button>
-            </div>
-          </Card>
-        )}
-      </div>
-
-      {/* Add/Edit Gas Supply Dialogs */}
-      <GasSupplyDialog 
+      {/* Add/Edit Capital Allocation Dialog */}
+      <CapitalAllocationDialog 
         open={addDialogOpen} 
         onOpenChange={setAddDialogOpen}
-        onSave={handleSaveGasSupply}
-        availableForklifts={availableForklifts}
+        onSave={handleSaveCapitalAllocation}
+        availableTradingBots={availableTradingBots}
         availableOperators={availableOperators}
       />
       
-      <GasSupplyDialog 
+      <CapitalAllocationDialog 
         open={editDialogOpen} 
         onOpenChange={setEditDialogOpen}
-        gasSupply={selectedGasSupply || undefined}
-        onSave={handleSaveGasSupply}
-        availableForklifts={availableForklifts}
+        capitalAllocation={selectedCapitalAllocation || undefined}
+        onSave={handleSaveCapitalAllocation}
+        availableTradingBots={availableTradingBots}
         availableOperators={availableOperators}
       />
     </div>
   );
 };
 
-export default GasSupplyPage;
+export default CapitalAllocationPage;
