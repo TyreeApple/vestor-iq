@@ -57,10 +57,10 @@ const AdvancedFilters = ({
             onValueChange={(value) => handleFilterChange(filter.key, value === 'all' ? '' : value)}
           >
             <SelectTrigger className="h-10 bg-slate-50/50 dark:bg-slate-800/50 border-slate-300/60 dark:border-slate-600/60 text-slate-900 dark:text-slate-100 focus:border-blue-500 focus:ring-blue-500/20">
-              <SelectValue placeholder={`Selecione ${filter.label.toLowerCase()}`} />
+              <SelectValue placeholder={`Select ${filter.label.toLowerCase()}`} />
             </SelectTrigger>
             <SelectContent className="bg-white/95 dark:bg-slate-800/95 backdrop-blur-xl border-slate-200/60 dark:border-slate-700/60">
-              <SelectItem value="all">Todos</SelectItem>
+              <SelectItem value="all">All</SelectItem>
               {filter.options?.map(option => (
                 <SelectItem key={option.value} value={option.value}>
                   {option.label}
@@ -84,7 +84,7 @@ const AdvancedFilters = ({
             type="number"
             value={values[filter.key] || ''}
             onChange={(e) => handleFilterChange(filter.key, e.target.value)}
-            placeholder={`Digite ${filter.label.toLowerCase()}`}
+            placeholder={`Enter ${filter.label.toLowerCase()}`}
             className="h-10 bg-slate-50/50 dark:bg-slate-800/50 border-slate-300/60 dark:border-slate-600/60 text-slate-900 dark:text-slate-100 placeholder:text-slate-500 dark:placeholder:text-slate-400 focus:border-blue-500 focus:ring-blue-500/20"
           />
         );
@@ -94,7 +94,7 @@ const AdvancedFilters = ({
             type="text"
             value={values[filter.key] || ''}
             onChange={(e) => handleFilterChange(filter.key, e.target.value)}
-            placeholder={`Digite ${filter.label.toLowerCase()}`}
+            placeholder={`Enter ${filter.label.toLowerCase()}`}
             className="h-10 bg-slate-50/50 dark:bg-slate-800/50 border-slate-300/60 dark:border-slate-600/60 text-slate-900 dark:text-slate-100 placeholder:text-slate-500 dark:placeholder:text-slate-400 focus:border-blue-500 focus:ring-blue-500/20"
           />
         );
@@ -112,7 +112,7 @@ const AdvancedFilters = ({
           {...triggerProps}
         >
           <Filter className="w-4 h-4" />
-          Filtros
+          Filters
           {activeFiltersCount > 0 && (
             <span className="bg-blue-500 text-white rounded-full px-2 py-1 text-xs font-medium">
               {activeFiltersCount}
@@ -124,7 +124,7 @@ const AdvancedFilters = ({
         <Card className="border-0 shadow-none bg-transparent">
           <CardHeader className="pb-4">
             <div className="flex items-center justify-between">
-              <CardTitle className="text-base text-slate-900 dark:text-slate-100">Filtros</CardTitle>
+              <CardTitle className="text-base text-slate-900 dark:text-slate-100">Filters</CardTitle>
               {activeFiltersCount > 0 && (
                 <Button
                   variant="ghost"
@@ -132,7 +132,7 @@ const AdvancedFilters = ({
                   onClick={onClearFilters}
                   className="text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-100 h-8 px-2"
                 >
-                  Limpar
+                  Clear
                 </Button>
               )}
             </div>
@@ -163,7 +163,7 @@ const AdvancedFilters = ({
                 onClick={() => setOpen(false)} 
                 className="h-10 bg-blue-600 hover:bg-blue-700 text-white"
               >
-                Aplicar
+                Apply
               </Button>
             </div>
           </CardContent>

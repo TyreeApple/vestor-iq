@@ -51,7 +51,7 @@ const OperationsFilters: React.FC<OperationsFiltersProps> = ({
             </SelectTrigger>
             <SelectContent className="bg-slate-800 border-slate-600">
               <SelectItem value="all" className="text-slate-100 hover:bg-slate-700 focus:bg-slate-700">All Algorithms</SelectItem>
-              <SelectItem value="joao-silva" className="text-slate-100 hover:bg-slate-700 focus:bg-slate-700">John Silva</SelectItem>
+              <SelectItem value="john-silva" className="text-slate-100 hover:bg-slate-700 focus:bg-slate-700">John Silva</SelectItem>
               <SelectItem value="maria-santos" className="text-slate-100 hover:bg-slate-700 focus:bg-slate-700">Maria Santos</SelectItem>
               <SelectItem value="pedro-oliveira" className="text-slate-100 hover:bg-slate-700 focus:bg-slate-700">Pedro Oliveira</SelectItem>
               <SelectItem value="ana-costa" className="text-slate-100 hover:bg-slate-700 focus:bg-slate-700">Ana Costa</SelectItem>
@@ -70,11 +70,11 @@ const OperationsFilters: React.FC<OperationsFiltersProps> = ({
             </SelectTrigger>
             <SelectContent className="bg-slate-800 border-slate-600">
               <SelectItem value="all" className="text-slate-100 hover:bg-slate-700 focus:bg-slate-700">All Trading Bots</SelectItem>
-              <SelectItem value="emp-001" className="text-slate-100 hover:bg-slate-700 focus:bg-slate-700">BOT-001</SelectItem>
-              <SelectItem value="emp-002" className="text-slate-100 hover:bg-slate-700 focus:bg-slate-700">BOT-002</SelectItem>
-              <SelectItem value="emp-003" className="text-slate-100 hover:bg-slate-700 focus:bg-slate-700">BOT-003</SelectItem>
-              <SelectItem value="emp-004" className="text-slate-100 hover:bg-slate-700 focus:bg-slate-700">BOT-004</SelectItem>
-              <SelectItem value="emp-005" className="text-slate-100 hover:bg-slate-700 focus:bg-slate-700">BOT-005</SelectItem>
+              <SelectItem value="bot-001" className="text-slate-100 hover:bg-slate-700 focus:bg-slate-700">BOT-001</SelectItem>
+              <SelectItem value="bot-002" className="text-slate-100 hover:bg-slate-700 focus:bg-slate-700">BOT-002</SelectItem>
+              <SelectItem value="bot-003" className="text-slate-100 hover:bg-slate-700 focus:bg-slate-700">BOT-003</SelectItem>
+              <SelectItem value="bot-004" className="text-slate-100 hover:bg-slate-700 focus:bg-slate-700">BOT-004</SelectItem>
+              <SelectItem value="bot-005" className="text-slate-100 hover:bg-slate-700 focus:bg-slate-700">BOT-005</SelectItem>
             </SelectContent>
           </Select>
         </div>
@@ -90,10 +90,10 @@ const OperationsFilters: React.FC<OperationsFiltersProps> = ({
             </SelectTrigger>
             <SelectContent className="bg-slate-800 border-slate-600">
               <SelectItem value="all" className="text-slate-100 hover:bg-slate-700 focus:bg-slate-700">All Markets</SelectItem>
-              <SelectItem value="armazem-a" className="text-slate-100 hover:bg-slate-700 focus:bg-slate-700">NYSE</SelectItem>
-              <SelectItem value="armazem-b" className="text-slate-100 hover:bg-slate-700 focus:bg-slate-700">NASDAQ</SelectItem>
-              <SelectItem value="area-externa" className="text-slate-100 hover:bg-slate-700 focus:bg-slate-700">FOREX</SelectItem>
-              <SelectItem value="docas" className="text-slate-100 hover:bg-slate-700 focus:bg-slate-700">Crypto</SelectItem>
+              <SelectItem value="nyse" className="text-slate-100 hover:bg-slate-700 focus:bg-slate-700">NYSE</SelectItem>
+              <SelectItem value="nasdaq" className="text-slate-100 hover:bg-slate-700 focus:bg-slate-700">NASDAQ</SelectItem>
+              <SelectItem value="forex" className="text-slate-100 hover:bg-slate-700 focus:bg-slate-700">FOREX</SelectItem>
+              <SelectItem value="crypto" className="text-slate-100 hover:bg-slate-700 focus:bg-slate-700">Crypto</SelectItem>
             </SelectContent>
           </Select>
         </div>

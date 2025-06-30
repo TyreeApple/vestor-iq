@@ -47,9 +47,9 @@ const GasSupplyFilters: React.FC<GasSupplyFiltersProps> = ({
             </SelectTrigger>
             <SelectContent className="bg-slate-800 border-slate-600">
               <SelectItem value="all" className="text-slate-100 hover:bg-slate-700 focus:bg-slate-700">All Status</SelectItem>
-              <SelectItem value="disponivel" className="text-slate-100 hover:bg-slate-700 focus:bg-slate-700">Available</SelectItem>
-              <SelectItem value="em-uso" className="text-slate-100 hover:bg-slate-700 focus:bg-slate-700">In Use</SelectItem>
-              <SelectItem value="manutencao" className="text-slate-100 hover:bg-slate-700 focus:bg-slate-700">Maintenance</SelectItem>
+              <SelectItem value="available" className="text-slate-100 hover:bg-slate-700 focus:bg-slate-700">Available</SelectItem>
+              <SelectItem value="in-use" className="text-slate-100 hover:bg-slate-700 focus:bg-slate-700">In Use</SelectItem>
+              <SelectItem value="maintenance" className="text-slate-100 hover:bg-slate-700 focus:bg-slate-700">Maintenance</SelectItem>
             </SelectContent>
           </Select>
         </div>
@@ -65,9 +65,9 @@ const GasSupplyFilters: React.FC<GasSupplyFiltersProps> = ({
             </SelectTrigger>
             <SelectContent className="bg-slate-800 border-slate-600">
               <SelectItem value="all" className="text-slate-100 hover:bg-slate-700 focus:bg-slate-700">All Types</SelectItem>
-              <SelectItem value="glp" className="text-slate-100 hover:bg-slate-700 focus:bg-slate-700">Scalping</SelectItem>
-              <SelectItem value="gnv" className="text-slate-100 hover:bg-slate-700 focus:bg-slate-700">Swing</SelectItem>
-              <SelectItem value="diesel" className="text-slate-100 hover:bg-slate-700 focus:bg-slate-700">Arbitrage</SelectItem>
+              <SelectItem value="scalping" className="text-slate-100 hover:bg-slate-700 focus:bg-slate-700">Scalping</SelectItem>
+              <SelectItem value="swing" className="text-slate-100 hover:bg-slate-700 focus:bg-slate-700">Swing</SelectItem>
+              <SelectItem value="arbitrage" className="text-slate-100 hover:bg-slate-700 focus:bg-slate-700">Arbitrage</SelectItem>
             </SelectContent>
           </Select>
         </div>

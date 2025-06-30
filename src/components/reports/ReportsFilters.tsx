@@ -51,10 +51,10 @@ const ReportsFilters: React.FC<ReportsFiltersProps> = ({
             </SelectTrigger>
             <SelectContent className="bg-slate-800 border-slate-600">
               <SelectItem value="all" className="text-slate-100 hover:bg-slate-700 focus:bg-slate-700">All Categories</SelectItem>
-              <SelectItem value="operacoes" className="text-slate-100 hover:bg-slate-700 focus:bg-slate-700">Operations</SelectItem>
-              <SelectItem value="manutencao" className="text-slate-100 hover:bg-slate-700 focus:bg-slate-700">Maintenance</SelectItem>
-              <SelectItem value="abastecimento" className="text-slate-100 hover:bg-slate-700 focus:bg-slate-700">Fuel Supply</SelectItem>
-              <SelectItem value="operadores" className="text-slate-100 hover:bg-slate-700 focus:bg-slate-700">Operators</SelectItem>
+              <SelectItem value="positions" className="text-slate-100 hover:bg-slate-700 focus:bg-slate-700">Positions</SelectItem>
+              <SelectItem value="maintenance" className="text-slate-100 hover:bg-slate-700 focus:bg-slate-700">Maintenance</SelectItem>
+              <SelectItem value="capital" className="text-slate-100 hover:bg-slate-700 focus:bg-slate-700">Capital Supply</SelectItem>
+              <SelectItem value="traders" className="text-slate-100 hover:bg-slate-700 focus:bg-slate-700">Traders</SelectItem>
             </SelectContent>
           </Select>
         </div>
@@ -70,11 +70,11 @@ const ReportsFilters: React.FC<ReportsFiltersProps> = ({
             </SelectTrigger>
             <SelectContent className="bg-slate-800 border-slate-600">
               <SelectItem value="all" className="text-slate-100 hover:bg-slate-700 focus:bg-slate-700">All Periods</SelectItem>
-              <SelectItem value="hoje" className="text-slate-100 hover:bg-slate-700 focus:bg-slate-700">Today</SelectItem>
-              <SelectItem value="semana" className="text-slate-100 hover:bg-slate-700 focus:bg-slate-700">This Week</SelectItem>
-              <SelectItem value="mes" className="text-slate-100 hover:bg-slate-700 focus:bg-slate-700">This Month</SelectItem>
-              <SelectItem value="trimestre" className="text-slate-100 hover:bg-slate-700 focus:bg-slate-700">Quarter</SelectItem>
-              <SelectItem value="ano" className="text-slate-100 hover:bg-slate-700 focus:bg-slate-700">This Year</SelectItem>
+              <SelectItem value="today" className="text-slate-100 hover:bg-slate-700 focus:bg-slate-700">Today</SelectItem>
+              <SelectItem value="week" className="text-slate-100 hover:bg-slate-700 focus:bg-slate-700">This Week</SelectItem>
+              <SelectItem value="month" className="text-slate-100 hover:bg-slate-700 focus:bg-slate-700">This Month</SelectItem>
+              <SelectItem value="quarter" className="text-slate-100 hover:bg-slate-700 focus:bg-slate-700">Quarter</SelectItem>
+              <SelectItem value="year" className="text-slate-100 hover:bg-slate-700 focus:bg-slate-700">This Year</SelectItem>
             </SelectContent>
           </Select>
         </div>
@@ -90,11 +90,11 @@ const ReportsFilters: React.FC<ReportsFiltersProps> = ({
             </SelectTrigger>
             <SelectContent className="bg-slate-800 border-slate-600">
               <SelectItem value="all" className="text-slate-100 hover:bg-slate-700 focus:bg-slate-700">All Algorithms</SelectItem>
-              <SelectItem value="emp-001" className="text-slate-100 hover:bg-slate-700 focus:bg-slate-700">ALG-001</SelectItem>
-              <SelectItem value="emp-002" className="text-slate-100 hover:bg-slate-700 focus:bg-slate-700">ALG-002</SelectItem>
-              <SelectItem value="emp-003" className="text-slate-100 hover:bg-slate-700 focus:bg-slate-700">ALG-003</SelectItem>
-              <SelectItem value="emp-004" className="text-slate-100 hover:bg-slate-700 focus:bg-slate-700">ALG-004</SelectItem>
-              <SelectItem value="emp-005" className="text-slate-100 hover:bg-slate-700 focus:bg-slate-700">ALG-005</SelectItem>
+              <SelectItem value="alg-001" className="text-slate-100 hover:bg-slate-700 focus:bg-slate-700">ALG-001</SelectItem>
+              <SelectItem value="alg-002" className="text-slate-100 hover:bg-slate-700 focus:bg-slate-700">ALG-002</SelectItem>
+              <SelectItem value="alg-003" className="text-slate-100 hover:bg-slate-700 focus:bg-slate-700">ALG-003</SelectItem>
+              <SelectItem value="alg-004" className="text-slate-100 hover:bg-slate-700 focus:bg-slate-700">ALG-004</SelectItem>
+              <SelectItem value="alg-005" className="text-slate-100 hover:bg-slate-700 focus:bg-slate-700">ALG-005</SelectItem>
             </SelectContent>
           </Select>
         </div>

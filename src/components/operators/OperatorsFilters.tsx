@@ -47,9 +47,9 @@ const OperatorsFilters: React.FC<OperatorsFiltersProps> = ({
             </SelectTrigger>
             <SelectContent className="bg-slate-800 border-slate-600">
               <SelectItem value="all" className="text-slate-100 hover:bg-slate-700 focus:bg-slate-700">All Status</SelectItem>
-              <SelectItem value="ativo" className="text-slate-100 hover:bg-slate-700 focus:bg-slate-700">Active</SelectItem>
-              <SelectItem value="inativo" className="text-slate-100 hover:bg-slate-700 focus:bg-slate-700">Inactive</SelectItem>
-              <SelectItem value="treinamento" className="text-slate-100 hover:bg-slate-700 focus:bg-slate-700">In Training</SelectItem>
+              <SelectItem value="active" className="text-slate-100 hover:bg-slate-700 focus:bg-slate-700">Active</SelectItem>
+              <SelectItem value="inactive" className="text-slate-100 hover:bg-slate-700 focus:bg-slate-700">Inactive</SelectItem>
+              <SelectItem value="training" className="text-slate-100 hover:bg-slate-700 focus:bg-slate-700">In Training</SelectItem>
             </SelectContent>
           </Select>
         </div>
@@ -65,8 +65,8 @@ const OperatorsFilters: React.FC<OperatorsFiltersProps> = ({
             </SelectTrigger>
             <SelectContent className="bg-slate-800 border-slate-600">
               <SelectItem value="all" className="text-slate-100 hover:bg-slate-700 focus:bg-slate-700">All Functions</SelectItem>
-              <SelectItem value="operador-senior" className="text-slate-100 hover:bg-slate-700 focus:bg-slate-700">Senior Operator</SelectItem>
-              <SelectItem value="operador-junior" className="text-slate-100 hover:bg-slate-700 focus:bg-slate-700">Junior Operator</SelectItem>
+              <SelectItem value="senior-trader" className="text-slate-100 hover:bg-slate-700 focus:bg-slate-700">Senior Trader</SelectItem>
+              <SelectItem value="junior-trader" className="text-slate-100 hover:bg-slate-700 focus:bg-slate-700">Junior Trader</SelectItem>
               <SelectItem value="supervisor" className="text-slate-100 hover:bg-slate-700 focus:bg-slate-700">Supervisor</SelectItem>
               <SelectItem value="trainee" className="text-slate-100 hover:bg-slate-700 focus:bg-slate-700">Trainee</SelectItem>
             </SelectContent>
