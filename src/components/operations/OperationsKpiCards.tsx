@@ -21,25 +21,25 @@ const OperationsKpiCards: React.FC<OperationsKpiCardsProps> = ({ data }) => {
   return (
     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
       <ModernKpiCard
-        title="Total de Operações"
+        title="Total Positions"
         value={stats.total}
         icon={Activity}
         variant="default"
       />
       <ModernKpiCard
-        title="Em Andamento"
+        title="Active Positions"
         value={stats.active}
         icon={Play}
         variant="success"
       />
       <ModernKpiCard
-        title="Concluídas"
+        title="Completed Positions"
         value={stats.completed}
         icon={CheckCircle2}
         variant="info"
       />
       <ModernKpiCard
-        title="Consumo Total (L)"
+        title="Total Capital Used ($)"
         value={stats.totalGasConsumption}
         icon={Fuel}
         variant="warning"
