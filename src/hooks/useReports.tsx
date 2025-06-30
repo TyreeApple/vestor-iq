@@ -48,6 +48,16 @@ export interface RelatorioConsumo {
   ultimoAbastecimento: string;
 }
 
+export interface ResumoGeral {
+  totalBots: number;
+  botsAtivos: number;
+  eficienciaGeral: number;
+  totalOperacoes: number;
+  totalCustoManutencao: number;
+  totalConsumo: number;
+  produtividadeMedia: number;
+}
+
 export const useReports = () => {
   const { empilhadeiras, operadores, operacoes, ordemServicos, abastecimentos } = useAppStore();
 
@@ -174,10 +184,35 @@ export const useReports = () => {
     });
   }, [empilhadeiras, abastecimentos]);
 
+  const resumoGeral = useMemo((): ResumoGeral => {
+    const totalBots = empilhadeiras.length;
+    const botsAtivos = empilhadeiras.filter(emp => emp.status === StatusEmpilhadeira.OPERACIONAL).length;
+    const eficienciaGeral = totalBots > 0 
+      ? empilhadeiras.reduce((sum, emp) => sum + emp.eficiencia, 0) / totalBots 
+      : 0;
+    const totalOperacoes = operacoes.length;
+    const totalCustoManutencao = ordemServicos.reduce((sum, os) => sum + (os.custos?.total || 0), 0);
+    const totalConsumo = abastecimentos.reduce((sum, ab) => sum + ab.custoTotal, 0);
+    const produtividadeMedia = operadores.length > 0
+      ? operadores.reduce((sum, op) => sum + op.produtividade, 0) / operadores.length
+      : 0;
+
+    return {
+      totalBots,
+      botsAtivos,
+      eficienciaGeral,
+      totalOperacoes,
+      totalCustoManutencao,
+      totalConsumo,
+      produtividadeMedia
+    };
+  }, [empilhadeiras, operacoes, ordemServicos, abastecimentos, operadores]);
+
   return {
     relatorioEficiencia,
     relatorioManutencao,
     relatorioOperador,
-    relatorioConsumo
+    relatorioConsumo,
+    resumoGeral
   };
 };
