@@ -2,7 +2,7 @@
 import React from 'react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
-import { TrendingUp, Zap, Check, X, ArrowRight } from 'lucide-react';
+import { TrendingUp, Zap, Check, X, ArrowRight, Target, Shield, Clock, Bolt, Eye, ChevronLeft } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 
 const Landing: React.FC = () => {
@@ -119,91 +119,409 @@ const Landing: React.FC = () => {
         </div>
       </section>
 
-      {/* Comparison Section */}
-      <section className="container mx-auto px-6 py-20">
+      {/* How It Works Section */}
+      <section id="how-it-works" className="container mx-auto px-6 py-20">
         <div className="text-center mb-16">
-          <p className="text-blue-600 dark:text-blue-400 font-medium mb-4">Why Manual Trading Is Limiting Your Profits</p>
           <h2 className="text-4xl md:text-5xl font-bold mb-6">
-            Manual Trading Can't Keep Up.
-            <br />
-            <span className="bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">AI Trading</span> Does.
+            How <span className="bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">VestorIQ</span> Trades for You in 3 Steps
           </h2>
           <p className="text-xl text-muted-foreground max-w-3xl mx-auto">
-            Markets move 24/7, but human traders need sleep. While you're away, 
-            opportunities slip by and emotions cloud judgment. VestorIQ trades with 
-            precision when you can't.
+            Our AI-driven platform automates day trading for busy professionals, transforming manual analysis into systematic profit generation.
           </p>
         </div>
 
-        <div className="grid md:grid-cols-2 gap-12 max-w-6xl mx-auto">
-          {/* Manual Trading */}
-          <Card className="p-8 bg-red-50/50 dark:bg-red-900/10 border-red-200 dark:border-red-800/50">
-            <div className="flex items-center justify-between mb-8">
-              <h3 className="text-2xl font-bold">Manual Trading</h3>
-              <X className="w-8 h-8 text-red-500" />
+        <div className="grid lg:grid-cols-2 gap-12 max-w-7xl mx-auto items-center">
+          {/* Left side - Steps */}
+          <div className="space-y-8">
+            <div className="flex items-start space-x-4 p-6 rounded-xl bg-card/50 border border-blue-200 dark:border-blue-800/50">
+              <div className="flex-shrink-0 w-8 h-8 bg-gradient-to-r from-blue-600 to-purple-600 rounded-full flex items-center justify-center text-white font-bold">
+                1
+              </div>
+              <div>
+                <h3 className="text-xl font-bold mb-2">AI Analyzes Market Patterns</h3>
+                <p className="text-muted-foreground mb-4">
+                  Our AI continuously scans thousands of stocks, analyzing...
+                </p>
+                <div className="text-sm space-y-1">
+                  <p>• AI monitors: Technical indicators, volume patterns, and market sentiment across all major exchanges</p>
+                </div>
+              </div>
             </div>
-            
-            <div className="space-y-6">
-              <div className="flex items-start space-x-4">
-                <X className="w-5 h-5 text-red-500 mt-1 flex-shrink-0" />
-                <div>
-                  <h4 className="font-semibold mb-1">Miss 70% of opportunities</h4>
-                  <p className="text-muted-foreground">Markets move while you sleep or work</p>
+
+            <div className="flex items-start space-x-4 p-6 rounded-xl bg-card/50">
+              <div className="flex-shrink-0 w-8 h-8 bg-gradient-to-r from-blue-600 to-purple-600 rounded-full flex items-center justify-center text-white font-bold">
+                2
+              </div>
+              <div>
+                <h3 className="text-xl font-bold mb-2">AI Executes Trades Automatically</h3>
+                <p className="text-muted-foreground">
+                  When optimal conditions are met, VestorIQ automatically executes...
+                </p>
+              </div>
+            </div>
+
+            <div className="flex items-start space-x-4 p-6 rounded-xl bg-card/50">
+              <div className="flex-shrink-0 w-8 h-8 bg-gradient-to-r from-blue-600 to-purple-600 rounded-full flex items-center justify-center text-white font-bold">
+                3
+              </div>
+              <div>
+                <h3 className="text-xl font-bold mb-2">AI Maximizes Your Returns</h3>
+                <p className="text-muted-foreground">
+                  Through continuous learning and adaptation, our AI optimizes your...
+                </p>
+              </div>
+            </div>
+          </div>
+
+          {/* Right side - Dashboard mockup */}
+          <div className="relative">
+            <div className="bg-gradient-to-br from-orange-200 to-orange-300 rounded-lg p-8 mb-4">
+              {/* Simulated dashboard content */}
+              <div className="space-y-4">
+                <div className="bg-white rounded-lg p-4 shadow-sm">
+                  <div className="flex items-center justify-between mb-2">
+                    <span className="font-semibold">Candice Gasperini</span>
+                    <div className="flex space-x-2">
+                      <span className="px-2 py-1 bg-green-100 text-green-800 rounded text-xs">42.6k - 8k</span>
+                    </div>
+                  </div>
+                  <p className="text-sm text-gray-600 mb-2">Scaling Small Businesses from 6 to 7 Figures Without Hiring a Big Team | Part-time CMO |</p>
+                  <div className="text-xs text-gray-500">
+                    <p>If LinkedIn is your #1 lead source, why treat it like an inbox? You wouldn't track sales in a Gmail thread. So why are you doing it in LinkedIn DMs?</p>
+                  </div>
+                </div>
+                <div className="grid grid-cols-2 gap-4">
+                  <div className="bg-white rounded-lg p-3">
+                    <div className="text-xs text-gray-500 mb-1">Reach Potential</div>
+                    <div className="font-bold">12.6k - 8k</div>
+                  </div>
+                  <div className="bg-white rounded-lg p-3">
+                    <div className="text-xs text-gray-500 mb-1">Top Personas</div>
+                    <div className="space-y-1">
+                      <div className="flex justify-between">
+                        <span className="text-xs">Sales Leaders</span>
+                        <span className="text-xs">90%</span>
+                      </div>
+                      <div className="flex justify-between">
+                        <span className="text-xs">Growth Leaders</span>
+                        <span className="text-xs">80%</span>
+                      </div>
+                    </div>
+                  </div>
                 </div>
               </div>
-              
-              <div className="flex items-start space-x-4">
-                <X className="w-5 h-5 text-red-500 mt-1 flex-shrink-0" />
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* AI Trading Features Section */}
+      <section id="product" className="container mx-auto px-6 py-20 bg-slate-50/50 dark:bg-slate-900/50">
+        <div className="text-center mb-16">
+          <div className="inline-block px-4 py-2 bg-purple-100 dark:bg-purple-900/30 text-purple-600 dark:text-purple-400 rounded-full text-sm font-medium mb-4">
+            AI Trading Features
+          </div>
+          <h2 className="text-4xl md:text-5xl font-bold mb-6">
+            Advanced <span className="bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">AI Trading</span> Technology
+          </h2>
+          <p className="text-xl text-muted-foreground max-w-3xl mx-auto">
+            Our sophisticated AI platform combines machine learning with proven trading strategies to maximize your returns while minimizing risk.
+          </p>
+        </div>
+
+        <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8 max-w-6xl mx-auto">
+          <Card className="p-6 text-center bg-white/80 dark:bg-card/80 backdrop-blur-sm">
+            <div className="w-16 h-16 bg-gradient-to-r from-blue-600 to-purple-600 rounded-2xl flex items-center justify-center mx-auto mb-4">
+              <TrendingUp className="w-8 h-8 text-white" />
+            </div>
+            <h3 className="text-xl font-bold mb-3">AI-Powered Trading</h3>
+            <p className="text-muted-foreground">
+              Advanced algorithms analyze market patterns and execute trades automatically
+            </p>
+          </Card>
+
+          <Card className="p-6 text-center bg-white/80 dark:bg-card/80 backdrop-blur-sm">
+            <div className="w-16 h-16 bg-gradient-to-r from-blue-600 to-purple-600 rounded-2xl flex items-center justify-center mx-auto mb-4">
+              <Shield className="w-8 h-8 text-white" />
+            </div>
+            <h3 className="text-xl font-bold mb-3">Risk Management</h3>
+            <p className="text-muted-foreground">
+              Built-in stop-losses and position sizing to protect your capital
+            </p>
+          </Card>
+
+          <Card className="p-6 text-center bg-white/80 dark:bg-card/80 backdrop-blur-sm">
+            <div className="w-16 h-16 bg-gradient-to-r from-blue-600 to-purple-600 rounded-2xl flex items-center justify-center mx-auto mb-4">
+              <Clock className="w-8 h-8 text-white" />
+            </div>
+            <h3 className="text-xl font-bold mb-3">24/7 Trading</h3>
+            <p className="text-muted-foreground">
+              Never miss an opportunity - our AI trades around the clock
+            </p>
+          </Card>
+
+          <Card className="p-6 text-center bg-white/80 dark:bg-card/80 backdrop-blur-sm">
+            <div className="w-16 h-16 bg-gradient-to-r from-blue-600 to-purple-600 rounded-2xl flex items-center justify-center mx-auto mb-4">
+              <Bolt className="w-8 h-8 text-white" />
+            </div>
+            <h3 className="text-xl font-bold mb-3">Instant Execution</h3>
+            <p className="text-muted-foreground">
+              Lightning-fast trade execution when optimal conditions are met
+            </p>
+          </Card>
+        </div>
+      </section>
+
+      {/* Pricing Section */}
+      <section id="pricing" className="container mx-auto px-6 py-20">
+        <div className="text-center mb-16">
+          <div className="inline-block px-4 py-2 bg-purple-100 dark:bg-purple-900/30 text-purple-600 dark:text-purple-400 rounded-full text-sm font-medium mb-4">
+            Pricing
+          </div>
+          <h2 className="text-4xl md:text-5xl font-bold mb-6">
+            Simple, Transparent <span className="bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">Profit Sharing</span>
+          </h2>
+          <p className="text-xl text-muted-foreground max-w-3xl mx-auto">
+            Pay just $10/month and we take 15% of your trading profits. You only pay more when you make more.
+          </p>
+        </div>
+
+        <div className="max-w-lg mx-auto">
+          <Card className="p-8 bg-white/80 dark:bg-card/80 backdrop-blur-sm border-2">
+            <div className="text-center mb-6">
+              <div className="inline-block px-4 py-2 bg-purple-100 dark:bg-purple-900/30 text-purple-600 dark:text-purple-400 rounded-full text-sm font-medium mb-4">
+                Profit Sharing Model
+              </div>
+              <h3 className="text-2xl font-bold mb-2">VestorIQ Trading</h3>
+              <p className="text-muted-foreground">AI trades for you, we profit together</p>
+            </div>
+
+            <div className="text-center mb-8">
+              <div className="flex items-center justify-center space-x-4">
                 <div>
-                  <h4 className="font-semibold mb-1">Emotional trading decisions</h4>
-                  <p className="text-muted-foreground">Fear and greed destroy profitable strategies</p>
+                  <div className="text-4xl font-bold">$10</div>
+                  <div className="text-muted-foreground text-sm">monthly fee</div>
+                </div>
+                <div className="text-2xl text-muted-foreground">+</div>
+                <div>
+                  <div className="text-4xl font-bold text-purple-600">15%</div>
+                  <div className="text-muted-foreground text-sm">of profits</div>
                 </div>
               </div>
-              
-              <div className="flex items-start space-x-4">
-                <X className="w-5 h-5 text-red-500 mt-1 flex-shrink-0" />
-                <div>
-                  <h4 className="font-semibold mb-1">Limited analysis capability</h4>
-                  <p className="text-muted-foreground">Can't process multiple data points simultaneously</p>
+            </div>
+
+            <div className="space-y-4 mb-8">
+              <div className="flex items-center space-x-3 p-4 bg-purple-50 dark:bg-purple-900/20 rounded-lg">
+                <TrendingUp className="w-5 h-5 text-purple-600" />
+                <span className="text-sm">We only win when you win</span>
+              </div>
+              <div className="flex items-center space-x-3">
+                <Check className="w-5 h-5 text-green-500" />
+                <span className="text-sm">AI trades 24/7 on your behalf</span>
+              </div>
+              <div className="flex items-center space-x-3">
+                <Check className="w-5 h-5 text-green-500" />
+                <span className="text-sm">Advanced risk management</span>
+              </div>
+              <div className="flex items-center space-x-3">
+                <Check className="w-5 h-5 text-green-500" />
+                <span className="text-sm">No hidden fees or commissions</span>
+              </div>
+            </div>
+
+            <Button 
+              onClick={handleStartTrading}
+              className="w-full bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-lg py-3"
+            >
+              Start AI Trading
+            </Button>
+
+            <div className="mt-6 p-4 bg-slate-50 dark:bg-slate-800 rounded-lg">
+              <p className="text-sm text-muted-foreground text-center">
+                <strong>Example:</strong> If you make $1,000 in trading profits, you keep $850 and we take $150. If you don't profit, you only pay the $10 monthly fee.
+              </p>
+            </div>
+          </Card>
+        </div>
+
+        {/* Free Trial Section */}
+        <div className="mt-16 max-w-4xl mx-auto">
+          <Card className="p-8 bg-slate-900 dark:bg-slate-800 text-white">
+            <div className="flex items-center justify-between">
+              <div>
+                <div className="flex items-center space-x-2 mb-4">
+                  <Zap className="w-5 h-5" />
+                  <span className="text-sm font-medium">Free Trial</span>
                 </div>
+                <h3 className="text-3xl font-bold mb-2">Try Risk-Free for 14 Days</h3>
+                <p className="text-slate-300 mb-6 max-w-md">
+                  Start with our free trial and see how our AI performs before committing to the profit-sharing model.
+                </p>
+              </div>
+              <Button 
+                onClick={handleStartTrading}
+                size="lg"
+                className="bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700"
+              >
+                Start Free Trial
+              </Button>
+            </div>
+          </Card>
+        </div>
+      </section>
+
+      {/* Testimonials Section */}
+      <section className="container mx-auto px-6 py-20 bg-slate-50/50 dark:bg-slate-900/50">
+        <div className="text-center mb-16">
+          <h2 className="text-4xl md:text-5xl font-bold mb-6">Trusted by professional traders</h2>
+        </div>
+
+        <div className="grid md:grid-cols-3 gap-8 max-w-6xl mx-auto">
+          {/* Stats Card */}
+          <Card className="p-8 text-center bg-purple-50 dark:bg-purple-900/20">
+            <div className="text-5xl font-bold mb-2">92%</div>
+            <div className="text-muted-foreground">success rate on trades</div>
+            <div className="mt-4 text-sm font-medium">VI • Q VestorIQ</div>
+          </Card>
+
+          {/* Testimonial 1 */}
+          <Card className="p-6 bg-white/80 dark:bg-card/80">
+            <p className="text-lg mb-4">
+              "VestorIQ's AI trading system has transformed my portfolio. It executes trades 24/7 with precision I could never achieve manually."
+            </p>
+            <div className="flex items-center space-x-3">
+              <div className="w-10 h-10 bg-slate-200 dark:bg-slate-700 rounded-full"></div>
+              <div>
+                <div className="font-semibold">Sarah Chen</div>
+                <div className="text-sm text-muted-foreground">Portfolio Manager at Meridian Capital</div>
               </div>
             </div>
           </Card>
 
-          {/* AI Day-Trading */}
-          <Card className="p-8 bg-gradient-to-br from-blue-50 to-purple-50 dark:from-blue-900/10 dark:to-purple-900/10 border-blue-200 dark:border-blue-800/50">
-            <div className="flex items-center justify-between mb-8">
-              <h3 className="text-2xl font-bold">AI Day-Trading</h3>
-              <div className="flex items-center space-x-2">
-                <Check className="w-8 h-8 text-green-500" />
-                <span className="text-sm font-medium text-blue-600 dark:text-blue-400">VestorIQ</span>
-              </div>
+          {/* Testimonial 2 */}
+          <Card className="p-6 bg-orange-50 dark:bg-orange-900/20">
+            <p className="text-lg mb-4">
+              "The AI identifies market patterns and executes trades faster than any human trader. Our returns have increased by 40% since implementation."
+            </p>
+          </Card>
+        </div>
+
+        <div className="grid md:grid-cols-2 gap-8 max-w-4xl mx-auto mt-8">
+          <Card className="p-6 bg-white/80 dark:bg-card/80">
+            <div className="flex items-center space-x-3 mb-4">
+              <div className="font-bold text-lg">TradeTech</div>
             </div>
-            
-            <div className="space-y-6">
-              <div className="flex items-start space-x-4">
-                <Check className="w-5 h-5 text-green-500 mt-1 flex-shrink-0" />
-                <div>
-                  <h4 className="font-semibold mb-1">Never miss opportunities</h4>
-                  <p className="text-muted-foreground">AI trades 24/7 across global markets</p>
+            <p className="text-muted-foreground">
+              "VestorIQ's risk management algorithms protect my capital while maximizing opportunities."
+            </p>
+          </Card>
+
+          <Card className="p-6 bg-slate-100 dark:bg-slate-800">
+            <p className="text-lg">
+              "VestorIQ's risk management algorithms protect my capital while maximizing opportunities."
+            </p>
+          </Card>
+        </div>
+      </section>
+
+      {/* Final CTA Section */}
+      <section className="container mx-auto px-6 py-20">
+        <Card className="p-12 bg-slate-900 dark:bg-slate-800 text-white text-center max-w-4xl mx-auto">
+          <div className="inline-flex items-center space-x-2 bg-purple-600/20 px-4 py-2 rounded-full text-purple-300 text-sm font-medium mb-8">
+            <Zap className="w-4 h-4" />
+            <span>Start Trading with AI Today</span>
+          </div>
+
+          <h2 className="text-4xl md:text-5xl font-bold mb-6">
+            Ready to Let AI <span className="text-red-400">Trade</span> for <span className="text-purple-400">You?</span>
+          </h2>
+
+          <p className="text-xl text-slate-300 mb-8 max-w-2xl mx-auto">
+            Join thousands of traders who have transformed their portfolio with AI-driven day trading strategies.
+          </p>
+
+          <div className="space-y-4 mb-8 max-w-md mx-auto text-left">
+            <div className="flex items-center space-x-3">
+              <Check className="w-5 h-5 text-green-400" />
+              <span>AI executes trades 24/7 while you sleep</span>
+            </div>
+            <div className="flex items-center space-x-3">
+              <Check className="w-5 h-5 text-green-400" />
+              <span>Advanced risk management and stop-losses</span>
+            </div>
+            <div className="flex items-center space-x-3">
+              <Check className="w-5 h-5 text-green-400" />
+              <span>Backtested strategies with proven results</span>
+            </div>
+          </div>
+
+          <Button 
+            onClick={handleStartTrading}
+            size="lg" 
+            className="bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-lg px-8 py-4 h-auto"
+          >
+            Start Trading Free – No Credit Card Needed <ArrowRight className="ml-2 w-5 h-5" />
+          </Button>
+        </Card>
+      </section>
+
+      {/* Login Section */}
+      <section className="container mx-auto px-6 py-20 bg-slate-50/50 dark:bg-slate-900/50">
+        <div className="max-w-md mx-auto">
+          <div className="flex items-center mb-6">
+            <Button variant="ghost" size="sm" className="p-0 h-auto">
+              <ChevronLeft className="w-4 h-4 mr-2" />
+              <span className="text-purple-600">Back to Home</span>
+            </Button>
+          </div>
+
+          <Card className="p-8 bg-white/80 dark:bg-card/80 backdrop-blur-sm">
+            <div className="text-center mb-8">
+              <h2 className="text-2xl font-bold mb-2">Welcome Back</h2>
+              <p className="text-muted-foreground">Sign in to your VestorIQ account</p>
+            </div>
+
+            <form className="space-y-6">
+              <div>
+                <label htmlFor="email" className="block text-sm font-medium mb-2">Email</label>
+                <input
+                  id="email"
+                  type="email"
+                  placeholder="Enter your email"
+                  className="w-full px-4 py-3 rounded-lg border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                />
+              </div>
+
+              <div>
+                <label htmlFor="password" className="block text-sm font-medium mb-2">Password</label>
+                <div className="relative">
+                  <input
+                    id="password"
+                    type="password"
+                    placeholder="Enter your password"
+                    className="w-full px-4 py-3 rounded-lg border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 focus:outline-none focus:ring-2 focus:ring-blue-500 pr-12"
+                  />
+                  <Button type="button" variant="ghost" size="sm" className="absolute right-3 top-1/2 -translate-y-1/2 p-0 h-auto">
+                    <Eye className="w-4 h-4" />
+                  </Button>
+                </div>
+                <div className="mt-2">
+                  <a href="#" className="text-sm text-purple-600 hover:underline">Forgot password?</a>
                 </div>
               </div>
-              
-              <div className="flex items-start space-x-4">
-                <Check className="w-5 h-5 text-green-500 mt-1 flex-shrink-0" />
-                <div>
-                  <h4 className="font-semibold mb-1">Emotion-free execution</h4>
-                  <p className="text-muted-foreground">Data-driven decisions without fear or greed</p>
-                </div>
-              </div>
-              
-              <div className="flex items-start space-x-4">
-                <Check className="w-5 h-5 text-green-500 mt-1 flex-shrink-0" />
-                <div>
-                  <h4 className="font-semibold mb-1">Advanced pattern recognition</h4>
-                  <p className="text-muted-foreground">Processes thousands of indicators instantly</p>
-                </div>
-              </div>
+
+              <Button 
+                onClick={handleStartTrading}
+                className="w-full bg-slate-900 dark:bg-slate-700 hover:bg-slate-800 dark:hover:bg-slate-600 text-white py-3"
+              >
+                Sign In
+              </Button>
+            </form>
+
+            <div className="mt-6 text-center">
+              <p className="text-muted-foreground">
+                Don't have an account? <a href="#" className="text-purple-600 hover:underline">Sign up</a>
+              </p>
             </div>
           </Card>
         </div>
