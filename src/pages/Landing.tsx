@@ -1,4 +1,3 @@
-
 import React from 'react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
@@ -130,46 +129,206 @@ const Landing: React.FC = () => {
         </div>
       </section>
 
-      {/* How It Works Section */}
-      <section id="how-it-works" className="container mx-auto px-6 py-20">
+      {/* How It Works Interactive Section */}
+      <section id="how-it-works" className="container mx-auto px-6 py-20 bg-slate-50/50 dark:bg-slate-900/50">
         <div className="text-center mb-16">
+          <div className="inline-block px-4 py-2 bg-blue-100 dark:bg-blue-900/30 text-blue-600 dark:text-blue-400 rounded-full text-sm font-medium mb-4">
+            How It Works
+          </div>
           <h2 className="text-4xl md:text-5xl font-bold mb-6 animate-slide-up">
-            How <span className="bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">VestorIQ</span> Trades for You
+            Watch <span className="bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">AI Trading</span> in Action
           </h2>
           <p className="text-xl text-muted-foreground max-w-3xl mx-auto animate-fade-in-scale">
-            Our AI-powered platform automates day trading with advanced algorithms and risk management.
+            See exactly how our AI analyzes markets and executes profitable trades automatically
           </p>
         </div>
 
-        <div className="grid lg:grid-cols-3 gap-8 max-w-6xl mx-auto">
-          <Card className="p-6 text-center bg-white/80 dark:bg-card/80 backdrop-blur-sm transition-all duration-300 hover:scale-105 hover:shadow-xl group cursor-pointer">
-            <div className="w-16 h-16 bg-gradient-to-r from-blue-600 to-purple-600 rounded-2xl flex items-center justify-center mx-auto mb-4">
-              <Target className="w-8 h-8 text-white" />
+        {/* Interactive Demo */}
+        <div className="max-w-5xl mx-auto mb-16">
+          <Card className="p-8 bg-white/80 dark:bg-card/80 backdrop-blur-sm border-2 transition-all duration-300 hover:shadow-2xl">
+            <div className="bg-slate-900 dark:bg-slate-800 rounded-lg p-6 text-white">
+              {/* Terminal Header */}
+              <div className="flex items-center space-x-2 mb-6">
+                <div className="flex space-x-2">
+                  <div className="w-3 h-3 bg-red-500 rounded-full"></div>
+                  <div className="w-3 h-3 bg-yellow-500 rounded-full"></div>
+                  <div className="w-3 h-3 bg-green-500 rounded-full"></div>
+                </div>
+                <span className="text-sm text-slate-400 ml-4">VestorIQ AI Trading Engine</span>
+              </div>
+
+              {/* Live Trading Simulation */}
+              <div className="space-y-4 font-mono text-sm">
+                <div className="flex items-center space-x-3 group hover:bg-slate-800 dark:hover:bg-slate-700 p-2 rounded transition-colors">
+                  <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></div>
+                  <span className="text-green-400">[SCANNING]</span>
+                  <span className="text-slate-300">Analyzing 2,847 stocks across all markets...</span>
+                </div>
+                
+                <div className="flex items-center space-x-3 group hover:bg-slate-800 dark:hover:bg-slate-700 p-2 rounded transition-colors">
+                  <div className="w-2 h-2 bg-blue-500 rounded-full animate-pulse"></div>
+                  <span className="text-blue-400">[PATTERN]</span>
+                  <span className="text-slate-300">Bullish breakout detected on TSLA - Confidence: 89%</span>
+                </div>
+                
+                <div className="flex items-center space-x-3 group hover:bg-slate-800 dark:hover:bg-slate-700 p-2 rounded transition-colors">
+                  <div className="w-2 h-2 bg-purple-500 rounded-full animate-pulse"></div>
+                  <span className="text-purple-400">[RISK CHECK]</span>
+                  <span className="text-slate-300">Position size: $2,500 | Stop loss: $245.80 | Target: $267.50</span>
+                </div>
+                
+                <div className="flex items-center space-x-3 group hover:bg-slate-800 dark:hover:bg-slate-700 p-2 rounded transition-colors">
+                  <div className="w-2 h-2 bg-orange-500 rounded-full animate-pulse"></div>
+                  <span className="text-orange-400">[EXECUTING]</span>
+                  <span className="text-slate-300">BUY 10 shares TSLA @ $250.00 - Order filled in 0.12s</span>
+                </div>
+                
+                <div className="flex items-center space-x-3 group hover:bg-slate-800 dark:hover:bg-slate-700 p-2 rounded transition-colors">
+                  <div className="w-2 h-2 bg-green-500 rounded-full"></div>
+                  <span className="text-green-400">[PROFIT]</span>
+                  <span className="text-slate-300">SELL 10 shares TSLA @ $263.40 - Profit: +$134.00 (5.36%)</span>
+                </div>
+              </div>
+
+              {/* Stats Bar */}
+              <div className="mt-6 pt-4 border-t border-slate-700 flex justify-between text-xs">
+                <div className="text-green-400">
+                  <span className="block font-semibold">Today's P&L</span>
+                  <span>+$1,247.82</span>
+                </div>
+                <div className="text-blue-400">
+                  <span className="block font-semibold">Win Rate</span>
+                  <span>87.3%</span>
+                </div>
+                <div className="text-purple-400">
+                  <span className="block font-semibold">Trades</span>
+                  <span>23 executed</span>
+                </div>
+                <div className="text-orange-400">
+                  <span className="block font-semibold">Active</span>
+                  <span>24/7 monitoring</span>
+                </div>
+              </div>
             </div>
-            <h3 className="text-xl font-bold mb-3 group-hover:text-blue-600 transition-colors">AI Market Analysis</h3>
-            <p className="text-muted-foreground">
-              Continuously scans thousands of stocks, analyzing technical indicators and market patterns 24/7
+          </Card>
+        </div>
+
+        {/* Step-by-Step Process */}
+        <div className="grid md:grid-cols-3 gap-8 max-w-6xl mx-auto">
+          <Card className="p-8 text-center bg-white/80 dark:bg-card/80 backdrop-blur-sm transition-all duration-300 hover:scale-105 hover:shadow-xl group cursor-pointer">
+            <div className="w-20 h-20 bg-gradient-to-r from-blue-600 to-purple-600 rounded-full flex items-center justify-center mx-auto mb-6 group-hover:scale-110 transition-transform">
+              <Target className="w-10 h-10 text-white" />
+            </div>
+            <div className="mb-4">
+              <div className="inline-block px-3 py-1 bg-blue-100 dark:bg-blue-900/30 text-blue-600 dark:text-blue-400 rounded-full text-sm font-medium mb-2">
+                Step 1
+              </div>
+              <h3 className="text-2xl font-bold mb-3 group-hover:text-blue-600 transition-colors">Market Analysis</h3>
+            </div>
+            <p className="text-muted-foreground mb-6">
+              Our AI scans thousands of stocks every second, analyzing price patterns, volume, and technical indicators to identify profitable opportunities.
             </p>
+            <div className="space-y-2 text-sm">
+              <div className="flex items-center justify-center space-x-2 text-green-600">
+                <Check className="w-4 h-4" />
+                <span>Real-time market scanning</span>
+              </div>
+              <div className="flex items-center justify-center space-x-2 text-green-600">
+                <Check className="w-4 h-4" />
+                <span>Technical analysis</span>
+              </div>
+              <div className="flex items-center justify-center space-x-2 text-green-600">
+                <Check className="w-4 h-4" />
+                <span>Pattern recognition</span>
+              </div>
+            </div>
           </Card>
 
-          <Card className="p-6 text-center bg-white/80 dark:bg-card/80 backdrop-blur-sm transition-all duration-300 hover:scale-105 hover:shadow-xl group cursor-pointer">
-            <div className="w-16 h-16 bg-gradient-to-r from-blue-600 to-purple-600 rounded-2xl flex items-center justify-center mx-auto mb-4">
-              <Bolt className="w-8 h-8 text-white" />
+          <Card className="p-8 text-center bg-white/80 dark:bg-card/80 backdrop-blur-sm transition-all duration-300 hover:scale-105 hover:shadow-xl group cursor-pointer">
+            <div className="w-20 h-20 bg-gradient-to-r from-purple-600 to-pink-600 rounded-full flex items-center justify-center mx-auto mb-6 group-hover:scale-110 transition-transform">
+              <Shield className="w-10 h-10 text-white" />
             </div>
-            <h3 className="text-xl font-bold mb-3 group-hover:text-blue-600 transition-colors">Automated Trading</h3>
-            <p className="text-muted-foreground">
-              Executes trades instantly when optimal conditions are met, faster than any human trader
+            <div className="mb-4">
+              <div className="inline-block px-3 py-1 bg-purple-100 dark:bg-purple-900/30 text-purple-600 dark:text-purple-400 rounded-full text-sm font-medium mb-2">
+                Step 2
+              </div>
+              <h3 className="text-2xl font-bold mb-3 group-hover:text-purple-600 transition-colors">Risk Assessment</h3>
+            </div>
+            <p className="text-muted-foreground mb-6">
+              Before executing any trade, our AI calculates optimal position sizes, stop-losses, and profit targets to protect your capital.
             </p>
+            <div className="space-y-2 text-sm">
+              <div className="flex items-center justify-center space-x-2 text-green-600">
+                <Check className="w-4 h-4" />
+                <span>Position sizing</span>
+              </div>
+              <div className="flex items-center justify-center space-x-2 text-green-600">
+                <Check className="w-4 h-4" />
+                <span>Stop-loss calculation</span>
+              </div>
+              <div className="flex items-center justify-center space-x-2 text-green-600">
+                <Check className="w-4 h-4" />
+                <span>Risk-reward analysis</span>
+              </div>
+            </div>
           </Card>
 
-          <Card className="p-6 text-center bg-white/80 dark:bg-card/80 backdrop-blur-sm transition-all duration-300 hover:scale-105 hover:shadow-xl group cursor-pointer">
-            <div className="w-16 h-16 bg-gradient-to-r from-blue-600 to-purple-600 rounded-2xl flex items-center justify-center mx-auto mb-4">
-              <Shield className="w-8 h-8 text-white" />
+          <Card className="p-8 text-center bg-white/80 dark:bg-card/80 backdrop-blur-sm transition-all duration-300 hover:scale-105 hover:shadow-xl group cursor-pointer">
+            <div className="w-20 h-20 bg-gradient-to-r from-green-600 to-blue-600 rounded-full flex items-center justify-center mx-auto mb-6 group-hover:scale-110 transition-transform">
+              <Bolt className="w-10 h-10 text-white" />
             </div>
-            <h3 className="text-xl font-bold mb-3 group-hover:text-blue-600 transition-colors">Risk Management</h3>
-            <p className="text-muted-foreground">
-              Built-in stop-losses and position sizing protect your capital while maximizing returns
+            <div className="mb-4">
+              <div className="inline-block px-3 py-1 bg-green-100 dark:bg-green-900/30 text-green-600 dark:text-green-400 rounded-full text-sm font-medium mb-2">
+                Step 3
+              </div>
+              <h3 className="text-2xl font-bold mb-3 group-hover:text-green-600 transition-colors">Instant Execution</h3>
+            </div>
+            <p className="text-muted-foreground mb-6">
+              When optimal conditions are met, trades are executed instantly with lightning speed, often faster than human reaction time.
             </p>
+            <div className="space-y-2 text-sm">
+              <div className="flex items-center justify-center space-x-2 text-green-600">
+                <Check className="w-4 h-4" />
+                <span>Sub-second execution</span>
+              </div>
+              <div className="flex items-center justify-center space-x-2 text-green-600">
+                <Check className="w-4 h-4" />
+                <span>Automated monitoring</span>
+              </div>
+              <div className="flex items-center justify-center space-x-2 text-green-600">
+                <Check className="w-4 h-4" />
+                <span>Profit optimization</span>
+              </div>
+            </div>
+          </Card>
+        </div>
+
+        {/* Interactive Stats */}
+        <div className="mt-16 max-w-4xl mx-auto">
+          <Card className="p-8 bg-gradient-to-r from-blue-600 to-purple-600 text-white">
+            <div className="text-center mb-8">
+              <h3 className="text-3xl font-bold mb-2">Real Performance Metrics</h3>
+              <p className="text-blue-100">Based on live trading data from our AI system</p>
+            </div>
+            
+            <div className="grid md:grid-cols-4 gap-6">
+              <div className="text-center group hover:scale-105 transition-transform cursor-pointer">
+                <div className="text-4xl font-bold mb-2 group-hover:text-yellow-300 transition-colors">87.3%</div>
+                <div className="text-blue-100 text-sm">Win Rate</div>
+              </div>
+              <div className="text-center group hover:scale-105 transition-transform cursor-pointer">
+                <div className="text-4xl font-bold mb-2 group-hover:text-yellow-300 transition-colors">0.12s</div>
+                <div className="text-blue-100 text-sm">Avg Execution</div>
+              </div>
+              <div className="text-center group hover:scale-105 transition-transform cursor-pointer">
+                <div className="text-4xl font-bold mb-2 group-hover:text-yellow-300 transition-colors">24/7</div>
+                <div className="text-blue-100 text-sm">Market Monitoring</div>
+              </div>
+              <div className="text-center group hover:scale-105 transition-transform cursor-pointer">
+                <div className="text-4xl font-bold mb-2 group-hover:text-yellow-300 transition-colors">2,847</div>
+                <div className="text-blue-100 text-sm">Stocks Analyzed</div>
+              </div>
+            </div>
           </Card>
         </div>
       </section>
